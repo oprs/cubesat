@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <breakpoints>
 <breakpoint enabled="true" persistant="true" registered="true">
 <resource path="/ODB_Cpp/adcs-class.h" type="1"/>
@@ -20,3 +21,6 @@
 </marker>
 </breakpoint>
 </breakpoints>
+=======
+<breakpoints/>
+>>>>>>> 5cb1e208229fd046ff96524755d033f10bd1a35f
