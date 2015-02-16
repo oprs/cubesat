@@ -25,28 +25,24 @@ namespace qb50 {
 
          void isr( void );
 
-         /* synchronous read */
-         size_t read  (                  void *dst, size_t len, bool useDMA = false );
-         /* synchronous write */
-         size_t write ( const void *src,            size_t len, bool useDMA = false );
          /* synchronous transfer */
          size_t xfer  ( const void *src, void *dst, size_t len, bool useDMA = false );
-
-         DMAChannel& ch1;
-         DMAChannel& ch2;
 
       private:
 
          void setupGPIO ( void );
          void setupNVIC ( void );
 
-         xSemaphoreHandle lock;    /**< global lock on the device */
-         xSemaphoreHandle isrRXNE; /**< ISR semaphore bound to RXNE  */
-         xSemaphoreHandle isrTXE;  /**< ISR semaphore bound to TXE   */
+         xSemaphoreHandle _lock;    /**< global lock on the device */
+         xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
+         xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
 
          GPIO_InitTypeDef GPIOis;
          NVIC_InitTypeDef NVICis;
          SPI_InitTypeDef  SPIis;
+
+         DMAChannel&      _ch1;
+         DMAChannel&      _ch2;
    };
 
    /* CMSIS keeps polluting the whole namespace with

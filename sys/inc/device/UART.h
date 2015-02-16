@@ -7,6 +7,7 @@
 
 #include "stm32f4xx_usart.h"
 #include "CoreDevice.h"
+#include "GPIOPin.h"
 
 
 namespace qb50 {
@@ -15,7 +16,13 @@ namespace qb50 {
    {
       public:
 
-         UART( Bus& bus, const uint32_t periph, const uint32_t iobase );
+         UART( Bus&           bus,
+               const uint32_t periph,
+               const uint32_t iobase,
+               GPIOPin&       rxPin,
+               GPIOPin&       txPin
+         );
+
          ~UART();
 
          void isr     ( void );
@@ -37,10 +44,13 @@ namespace qb50 {
          size_t _writeIRQ ( const void *x, size_t len, TickType_t timeout );
          size_t _writeDMA ( const void *x, size_t len, TickType_t timeout );
 
-         xSemaphoreHandle rdLock;  /**< global lock on the read end  */
-         xSemaphoreHandle wrLock;  /**< global lock on the write end */
-         xSemaphoreHandle isrRXNE; /**< ISR semaphore bound to RXNE  */
-         xSemaphoreHandle isrTXE;  /**< ISR semaphore bound to TXE   */
+         xSemaphoreHandle _rdLock;  /**< global lock on the read end  */
+         xSemaphoreHandle _wrLock;  /**< global lock on the write end */
+         xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
+         xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
+
+         GPIOPin& _rxPin;
+         GPIOPin& _txPin;
    };
 
    /* CMSIS keeps polluting the whole namespace with

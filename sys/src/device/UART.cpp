@@ -9,14 +9,19 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-UART::UART( Bus& bus, const uint32_t periph, const uint32_t iobase )
-   : CoreDevice( bus, periph, iobase )
+UART::UART( Bus&           bus,
+            const uint32_t periph,
+            const uint32_t iobase,
+            GPIOPin&       rxPin,
+            GPIOPin&       txPin )
+   : CoreDevice( bus, periph, iobase ),
+     _rxPin( rxPin ),
+     _txPin( txPin )
 {
-   rdLock  = xSemaphoreCreateMutex();
-   wrLock  = xSemaphoreCreateMutex();
-
-   isrRXNE = xSemaphoreCreateBinary();
-   isrTXE  = xSemaphoreCreateBinary();
+   _rdLock  = xSemaphoreCreateMutex();
+   _wrLock  = xSemaphoreCreateMutex();
+   _isrRXNE = xSemaphoreCreateBinary();
+   _isrTXE  = xSemaphoreCreateBinary();
 
    reset();
 }
@@ -27,8 +32,8 @@ UART::~UART()
    reset();
    disable();
 
-   vSemaphoreDelete( wrLock );
-   vSemaphoreDelete( rdLock );
+   vSemaphoreDelete( _wrLock );
+   vSemaphoreDelete( _rdLock );
 }
 
 
@@ -162,7 +167,7 @@ size_t UART::read( void *x, size_t len, TickType_t timeout )
    if( timeout < portMAX_DELAY )
       timeout = timeout / portTICK_RATE_MS;
 
-   xSemaphoreTake( rdLock, portMAX_DELAY );
+   xSemaphoreTake( _rdLock, portMAX_DELAY );
 
    if( len < 16 ) {
       rv = _readIRQ( x, len, timeout );
@@ -173,7 +178,7 @@ size_t UART::read( void *x, size_t len, TickType_t timeout )
 
    // release the read lock
 
-   xSemaphoreGive( rdLock );
+   xSemaphoreGive( _rdLock );
 
    return rv;
 }
@@ -188,7 +193,7 @@ size_t UART::write( const void *x, size_t len, TickType_t timeout )
    if( timeout < portMAX_DELAY )
       timeout = timeout / portTICK_RATE_MS;
 
-   xSemaphoreTake( wrLock, timeout );
+   xSemaphoreTake( _wrLock, timeout );
 
    if( len < 16 ) {
       rv = _writeIRQ( x, len, timeout );
@@ -199,7 +204,7 @@ size_t UART::write( const void *x, size_t len, TickType_t timeout )
 
    // release the write lock
 
-   xSemaphoreGive( wrLock );
+   xSemaphoreGive( _wrLock );
 
    return rv;
 }
@@ -219,7 +224,7 @@ size_t UART::_readIRQ( void *x, size_t len, TickType_t timeout )
    size_t n;
 
    for( n = 0 ; n < len ; ++n ) {
-      xSemaphoreTake( isrRXNE, timeout );
+      xSemaphoreTake( _isrRXNE, timeout );
       ((uint8_t*)x)[ n ] = USARTx->DR;
    }
 
@@ -238,7 +243,7 @@ size_t UART::_writeIRQ( const void *x, size_t len, TickType_t timeout )
 
    for( n = 0 ; n < len ; ++n ) {
       USARTx->CR1 |= USART_FLAG_TXE;
-      xSemaphoreTake( isrTXE, timeout );
+      xSemaphoreTake( _isrTXE, timeout );
       USARTx->DR = ((uint8_t*)x)[ n ];
    }
 
@@ -257,12 +262,12 @@ void UART::isr( void )
 
    if( SR & USART_FLAG_RXNE ) {
       USARTx->SR &= ~USART_FLAG_RXNE;
-      xSemaphoreGiveFromISR( isrRXNE, &hpTask );
+      xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
    }
 
    if( SR & USART_FLAG_TXE ) {
       USARTx->SR &= ~USART_FLAG_TXE;
-      xSemaphoreGiveFromISR( isrTXE, &hpTask );
+      xSemaphoreGiveFromISR( _isrTXE, &hpTask );
       USARTx->CR1 &= ~USART_FLAG_TXE;
    }
 

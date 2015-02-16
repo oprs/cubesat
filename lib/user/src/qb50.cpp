@@ -4,16 +4,22 @@
 
 namespace qb50 {
 
-/* CORE BUS */
+//  - - - - - - - - - -  //
+//  C O R E   B U S E S  //
+//  - - - - - - - - - -  //
 
+   /*       id */
    AHB AHB1( 0 );
    AHB AHB2( 1 );
    AHB AHB3( 2 );
 
+   /*       id */
    APB APB1( 0 );
    APB APB2( 1 );
 
-/* DMA */
+//  - - - - - - - - - - - -  //
+//  D M A   C H A N N E L S  //
+//  - - - - - - - - - - - -  //
 
    static DMAChannel DMA1_Channels[ 8 ] = {
       DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream0_BASE ),
@@ -37,10 +43,17 @@ namespace qb50 {
       DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream7_BASE )
    };
 
+//  - - - - - - - - - - - - - - -  //
+//  D M A   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - -  //
+
+   /*        bus   periph               iobase     channels */
    DMA DMA1( AHB1, RCC_AHB1Periph_DMA1, DMA1_BASE, DMA1_Channels );
    DMA DMA2( AHB1, RCC_AHB1Periph_DMA2, DMA2_BASE, DMA2_Channels );
 
-/* GPIO */
+//  - - - - - - - - -  //
+//  G P I O   P I N S  //
+//  - - - - - - - - -  //
 
    static GPIOPin GPIOA_Pins[ 16 ] = {
       GPIOPin( GPIOA,  0, 0x0001 ),  GPIOPin( GPIOA,  1, 0x0002 ),
@@ -96,6 +109,8 @@ namespace qb50 {
       GPIOPin( GPIOE, 12, 0x1000 ),  GPIOPin( GPIOE, 13, 0x2000 ),
       GPIOPin( GPIOE, 14, 0x4000 ),  GPIOPin( GPIOE, 15, 0x8000 )
    };
+
+   /* aliases */
 
    GPIOPin& PA0  = GPIOA_Pins[  0 ];
    GPIOPin& PA1  = GPIOA_Pins[  1 ];
@@ -182,29 +197,43 @@ namespace qb50 {
    GPIOPin& PE14 = GPIOE_Pins[ 14 ];
    GPIOPin& PE15 = GPIOE_Pins[ 15 ];
 
+//  - - - - - - - - - - - - - - - -  //
+//  G P I O   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - - -  //
+
+   /*          bus   periph                iobase      pins */
    GPIO GPIOA( AHB1, RCC_AHB1Periph_GPIOA, GPIOA_BASE, GPIOA_Pins );
    GPIO GPIOB( AHB1, RCC_AHB1Periph_GPIOB, GPIOB_BASE, GPIOB_Pins );
    GPIO GPIOC( AHB1, RCC_AHB1Periph_GPIOC, GPIOC_BASE, GPIOC_Pins );
    GPIO GPIOD( AHB1, RCC_AHB1Periph_GPIOD, GPIOD_BASE, GPIOD_Pins );
    GPIO GPIOE( AHB1, RCC_AHB1Periph_GPIOE, GPIOE_BASE, GPIOE_Pins );
 
-/* UART */
+//  - - - - - - - - - - - - - - - -  //
+//  U A R T   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - - -  //
 
-   UART UART1( APB2, RCC_APB2Periph_USART1, USART1_BASE );
-   UART UART2( APB1, RCC_APB1Periph_USART2, USART2_BASE );
-   UART UART3( APB1, RCC_APB1Periph_USART3, USART3_BASE );
-   UART UART4( APB1, RCC_APB1Periph_UART4,  UART4_BASE  );
- //UART UART5( APB1, RCC_APB1Periph_UART5,  UART5_BASE  );
-   UART UART6( APB2, RCC_APB2Periph_USART6, USART6_BASE );
+   /*          bus   periph                 iobase       rxPin txPin */
+   UART UART1( APB2, RCC_APB2Periph_USART1, USART1_BASE, PB7,  PB6  );
+   UART UART2( APB1, RCC_APB1Periph_USART2, USART2_BASE, PA3,  PA2  );
+   UART UART3( APB1, RCC_APB1Periph_USART3, USART3_BASE, PB11, PB10 );
+   UART UART4( APB1, RCC_APB1Periph_UART4,  UART4_BASE,  PA1,  PA0  );
+ //UART UART5( APB1, RCC_APB1Periph_UART5,  UART5_BASE,  PD2,  PC12 );
+   UART UART6( APB2, RCC_APB2Periph_USART6, USART6_BASE, PC7,  PC6  );
 
-/* SPI */
+//  - - - - - - - - - - - - - - -  //
+//  S P I   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - -  //
 
+   /*        bus   periph               iobase     MISO channel  MOSI channel */
    SPI SPI1( APB2, RCC_APB2Periph_SPI1, SPI1_BASE, DMA2.chan[0], DMA2.chan[1] );
    SPI SPI2( APB1, RCC_APB1Periph_SPI2, SPI2_BASE, DMA1.chan[0], DMA1.chan[1] );
    SPI SPI3( APB1, RCC_APB1Periph_SPI3, SPI3_BASE, DMA1.chan[0], DMA1.chan[1] );
 
-/* EXTMEM */
+//  - - - - - - - - - - - - - - -  //
+//  E X T E R N A L   M E M O R Y  //
+//  - - - - - - - - - - - - - - -  //
 
+   /*             id */
    EXTMEM EXTMEM1( 0 );
    EXTMEM EXTMEM2( 1 );
 

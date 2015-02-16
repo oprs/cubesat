@@ -26,7 +26,13 @@ GPIOPin::~GPIOPin()
 //  - - - - - - -  //
 
 void GPIOPin::reset( void )
-{ ; }
+{
+   _mode  = GPIO_Mode_IN;
+   _speed = GPIO_Speed_2MHz;
+   _oType = GPIO_OType_PP;
+   _PuPd  = GPIO_PuPd_NOPULL;
+   _alt   = 0;
+}
 
 
 void GPIOPin::enable( void )

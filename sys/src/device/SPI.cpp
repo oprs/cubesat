@@ -9,13 +9,18 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPI::SPI( Bus& bus, const uint32_t periph, const uint32_t iobase, DMAChannel& ch1, DMAChannel& ch2 )
-   : CoreDevice( bus, periph, iobase ), ch1( ch1 ), ch2( ch2 )
+SPI::SPI( Bus&           bus,
+          const uint32_t periph,
+          const uint32_t iobase,
+          DMAChannel&    ch1,
+          DMAChannel&    ch2 )
+   : CoreDevice( bus, periph, iobase ),
+     _ch1( ch1 ),
+     _ch2( ch2 )
 {
-   lock = xSemaphoreCreateMutex();
-
-   isrRXNE = xSemaphoreCreateBinary();
-   isrTXE  = xSemaphoreCreateBinary();
+   _lock    = xSemaphoreCreateMutex();
+   _isrRXNE = xSemaphoreCreateBinary();
+   _isrTXE  = xSemaphoreCreateBinary();
 
    reset();
 }
@@ -54,7 +59,8 @@ void SPI::enable( void )
    SPIis.SPI_NSS               = SPI_NSS_Soft;
    SPIis.SPI_FirstBit          = SPI_FirstBit_MSB;
    SPIis.SPI_CRCPolynomial     = 7;
-   SPIis.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
+ //SPIis.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
+   SPIis.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
 
    switch( periph ) {
 
@@ -93,10 +99,11 @@ void SPI::enable( void )
    }
 
    SPI_Init(( SPI_TypeDef* )iobase, &SPIis );
-   //SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_TXE, ENABLE );
- //SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_RXNE, ENABLE );
 
- //NVIC_Init( &NVICis );
+   // SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_TXE, ENABLE );
+   // SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_RXNE, ENABLE );
+   // NVIC_Init( &NVICis );
+
    SPI_Cmd(( SPI_TypeDef* )iobase, ENABLE );
 }
 
@@ -105,85 +112,35 @@ void SPI::disable( void )
 { bus.disable( this ); }
 
 
-size_t SPI::read( void *x, size_t len, bool useDMA )
-{
-   int rv = 0;
-
-   // acquire the lock
-
-   xSemaphoreTake( lock, portMAX_DELAY );
-
-/*
-   USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-   size_t n;
-
-   for( n = 0 ; n < len ; ++n ) {
-      xSemaphoreTake( isrRXNE, portMAX_DELAY );
-      ((uint8_t*)x)[ n ] = USARTx->DR;
-   }
-
-   return n;
-*/
-
-   // release the lock
-
-   xSemaphoreGive( lock );
-
-   return rv;
-}
-
-
 size_t SPI::xfer( const void *src, void *dst, size_t len, bool useDMA )
 {
-   //mbuf m( x, len );
    size_t n;
 
    // acquire the lock
 
-   xSemaphoreTake( lock, portMAX_DELAY );
+   xSemaphoreTake( _lock, portMAX_DELAY );
 
    // perform the write
 
-// SPI_Mode
-
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-
-#if 0
-   if( src == NULL ) {
-
-      uint16_t dummy = 0xffff;
-
-      for( n = 0 ; n < len ; ++n ) {
-         SPIx->DR = dummy;
-         if( dst == NULL ) {
-            /* dummy read & write (just generate clock signals) */
-         } else {
-            /* read only */
-         }
-      }
-
-   } else {
-
-      if( dst == NULL ) {
-         /* write only */
-      } else {
-         /* full exchange */
-      }
-
-   }
-#endif
 
    for( n = 0 ; n < len ; ++n ) {
       while(( SPIx->SR & SPI_I2S_FLAG_TXE ) == RESET );
-      SPIx->DR = ((uint8_t*)src)[ n ];
+      if( src == NULL ) {
+         SPIx->DR = 0xffff;
+      } else {
+         SPIx->DR = ((uint8_t*)src)[ n ];
+      }
 
       while(( SPIx->SR & SPI_I2S_FLAG_RXNE ) == RESET );
-      ((uint8_t*)dst)[ n ] = SPIx->DR;
+      if( dst != NULL ) {
+         ((uint8_t*)dst)[ n ] = SPIx->DR;
+      }
    }
 
    // release the lock
 
-   xSemaphoreGive( lock );
+   xSemaphoreGive( _lock );
 
    return n;
 }
@@ -265,12 +222,12 @@ void SPI::isr( void )
 
    if( SR & SPI_FLAG_RXNE ) {
       SPIx->SR &= ~SPI_FLAG_RXNE;
-      xSemaphoreGiveFromISR( isrRXNE, &hpTask );
+      xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
    }
 
    if( SR & SPI_FLAG_TXE ) {
       SPIx->SR &= ~SPI_FLAG_TXE;
-      xSemaphoreGiveFromISR( isrTXE, &hpTask );
+      xSemaphoreGiveFromISR( _isrTXE, &hpTask );
       SPIx->CR1 &= ~SPI_FLAG_TXE;
    }
 
