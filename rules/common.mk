@@ -27,7 +27,7 @@ RTOS_CFLAGS += -I$(TOPDIR)/sys/FreeRTOS/portable/$(ARCH)
 
 APP_CFLAGS   = $(ARCH_CFLAGS) $(RTOS_CFLAGS)
 APP_CFLAGS  += -I$(TOPDIR)/sys/inc
-APP_CFLAGS  += -I$(TOPDIR)/lib/user/inc
+APP_CFLAGS  += -I$(TOPDIR)/sys/inc/system
 
 $(SUBDIRS):
 	@$(MAKE) -C $@ TOPDIR=$(TOPDIR) ARCH=$(ARCH)

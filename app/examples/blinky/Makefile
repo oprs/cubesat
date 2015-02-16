@@ -11,7 +11,6 @@ TARGETS = main.hex main.elf
 CFLAGS += -I. $(APP_CFLAGS)
 
 LDFLAGS += -T$(TOPDIR)/rules/arch-$(ARCH).ld
-LDFLAGS += -L$(TOPDIR)/lib/user/ -luser
 LDFLAGS += -L$(TOPDIR)/sys/ -lsystem
 LDFLAGS += --specs=nosys.specs
 

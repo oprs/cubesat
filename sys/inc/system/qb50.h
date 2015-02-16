@@ -14,7 +14,7 @@
 #include "device/UART.h"
 #include "device/EXTMEM.h"
 
-#include "Application.h"
+#include "system/Application.h"
 
 
 #endif /*_QB50_H*/

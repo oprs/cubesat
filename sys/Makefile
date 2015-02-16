@@ -17,16 +17,16 @@ OBJ_DEVICE = \
    $(patsubst %c,%o,$(wildcard ./src/device/*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./src/device/*.cpp))
 
-OBJ_BASE = \
-   $(patsubst %c,%o,$(wildcard ./src/*.c)) \
-   $(patsubst %cpp,%o,$(wildcard ./src/*.cpp))
+OBJ_SYSTEM = \
+   $(patsubst %c,%o,$(wildcard ./src/system/*.c)) \
+   $(patsubst %cpp,%o,$(wildcard ./src/system/*.cpp))
 
-OBJFILES = $(OBJ_ARCH) $(OBJ_RTOS) $(OBJ_DEVICE) $(OBJ_BASE)
+OBJFILES = $(OBJ_ARCH) $(OBJ_RTOS) $(OBJ_DEVICE) $(OBJ_SYSTEM)
 
 $(OBJ_ARCH):   CFLAGS += $(ARCH_CFLAGS)
 $(OBJ_RTOS):   CFLAGS += -I./inc $(RTOS_CFLAGS)
 $(OBJ_DEVICE): CFLAGS += -I. -I./inc $(ARCH_CFLAGS) $(RTOS_CFLAGS)
-$(OBJ_BASE):   CFLAGS += -I. -I./inc $(ARCH_CFLAGS) $(RTOS_CFLAGS)
+$(OBJ_SYSTEM): CFLAGS += -I. -I./inc $(ARCH_CFLAGS) $(RTOS_CFLAGS)
 
 default: $(ARCHIVE)
 

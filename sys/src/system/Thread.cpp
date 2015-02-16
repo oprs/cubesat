@@ -1,7 +1,7 @@
 
 #include <stddef.h>
 
-#include "Thread.h"
+#include "system/Thread.h"
 
 using namespace qb50;
 
