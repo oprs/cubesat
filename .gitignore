@@ -1,0 +1,13 @@
+tags
+# local CoIDE files
+*.cogui
+*.comarker
+# local code::blocks files
+*.layout
+# vi backup files
+*.swp
+# object files
+*.a
+*.o
+*.elf
+*.hex
