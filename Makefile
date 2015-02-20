@@ -17,6 +17,9 @@ $(SUB_APP): $(SUB_SYS)
 $(SUB_ALL):
 	@$(MAKE) -C $@ TOPDIR=$(TOPDIR) ARCH=$(ARCH)
 
+check:
+	$(CHECK) -I. -I$(TOPDIR)/sys/inc -I$(TOPDIR)/sys/inc/device -I$(TOPDIR)/sys/inc/system ./sys/src ./app
+
 clean: $(SUB_CLN)
 
 $(SUB_CLN): %.clean:
@@ -26,7 +29,7 @@ tags:
 	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print | xargs ctags
 
 
-.PHONY: all clean tags $(SUB_ALL)
+.PHONY: all check clean tags $(SUB_ALL)
 
 include ./rules/common.mk
 

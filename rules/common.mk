@@ -7,7 +7,9 @@ fallback:
 
 include $(TOPDIR)/rules/arch-$(ARCH).mk
 
-RM := rm -f
+RM     := rm -f
+CHECK  := cppcheck --enable=all
+#CHECK  := cppcheck --force --enable=warning,style
 
 CFLAGS += -Wall
 CFLAGS += -DARCH=$(ARCH)
