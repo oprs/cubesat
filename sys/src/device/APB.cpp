@@ -1,6 +1,8 @@
 
-#include "device/APB.h"
 #include <stm32f4xx.h>
+#include <stm32f4xx_rcc.h>
+
+#include "device/APB.h"
 
 using namespace qb50;
 
@@ -21,7 +23,7 @@ APB::~APB()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void APB::enable( BusDevice *dev )
+APB& APB::enable( BusDevice *dev )
 {
    switch( _APBn ) {
 
@@ -31,10 +33,12 @@ void APB::enable( BusDevice *dev )
       default:
          throw 42; /* XXX */
    }
+
+   return *this;
 }
 
 
-void APB::disable( BusDevice *dev )
+APB& APB::disable( BusDevice *dev )
 {
    switch( _APBn ) {
 
@@ -44,6 +48,28 @@ void APB::disable( BusDevice *dev )
       default:
          throw 42; /* XXX */
    }
+
+   return *this;
+}
+
+
+uint32_t APB::freq( void )
+{
+   RCC_ClocksTypeDef clocks;
+   RCC_GetClocksFreq( &clocks );
+
+   uint32_t rv = 0;
+
+   switch( _APBn ) {
+
+      case 1: rv = clocks.PCLK1_Frequency; break;
+      case 2: rv = clocks.PCLK2_Frequency; break;
+
+      default:
+         throw 42; /* XXX */
+   }
+
+   return rv;
 }
 
 /*EoF*/

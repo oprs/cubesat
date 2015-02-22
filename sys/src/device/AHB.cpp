@@ -1,6 +1,7 @@
 
-#include "device/AHB.h"
 #include <stm32f4xx.h>
+
+#include "device/AHB.h"
 
 using namespace qb50;
 
@@ -21,7 +22,7 @@ AHB::~AHB()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void AHB::enable( BusDevice *dev )
+AHB& AHB::enable( BusDevice *dev )
 {
    switch( _AHBn ) {
 
@@ -32,10 +33,12 @@ void AHB::enable( BusDevice *dev )
       default:
          throw 42; /* XXX */
    }
+
+   return *this;
 }
 
 
-void AHB::disable( BusDevice *dev )
+AHB& AHB::disable( BusDevice *dev )
 {
    switch( _AHBn ) {
 
@@ -46,6 +49,14 @@ void AHB::disable( BusDevice *dev )
       default:
          throw 42; /* XXX */
    }
+
+   return *this;
+}
+
+
+uint32_t AHB::freq( void )
+{
+   return 0; /* XXX */
 }
 
 /*EoF*/

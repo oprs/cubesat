@@ -26,14 +26,16 @@ namespace qb50 {
 
          ~UART();
 
-         UART& reset   ( void );
-         UART& enable  ( void );
-         UART& disable ( void );
+         UART& reset    ( void );
+         UART& enable   ( void );
+         UART& disable  ( void );
+
+         UART& baudRate ( unsigned rate );
 
          /* synchronous read */
-         size_t read  (       void *x, size_t len );
+         size_t read    (       void *x, size_t len );
          /* synchronous write */
-         size_t write ( const void *x, size_t len );
+         size_t write   ( const void *x, size_t len );
 
          void isr( void );
 
@@ -65,7 +67,7 @@ extern "C" {
    void USART2_IRQHandler ( void );
    void USART3_IRQHandler ( void );
    void UART4_IRQHandler  ( void );
- //void UART5_IRQHandler  ( void );
+   void UART5_IRQHandler  ( void );
    void USART6_IRQHandler ( void );
 }
 

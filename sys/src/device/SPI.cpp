@@ -113,9 +113,14 @@ SPI& SPI::disable( void )
    SPIx->CR1 &= ~SPI_CR1_SPE;
    bus.disable( this );
 
-   _clkPin.disable();
-   _stMOSI.disable();
-   _stMISO.disable();
+   _clkPin.reset()
+          .disable();
+
+   _stMOSI.reset()
+          .disable();
+
+   _stMISO.reset()
+          .disable();
 
    return *this;
 }

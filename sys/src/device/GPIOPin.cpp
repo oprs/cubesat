@@ -144,7 +144,7 @@ GPIOPin& GPIOPin::oType( OType type )
 }
 
 
-GPIOPin& GPIOPin::PuPd( PullUpDown pud )
+GPIOPin& GPIOPin::PuPd( PullUpDn pud )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;

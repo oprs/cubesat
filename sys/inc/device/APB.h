@@ -15,8 +15,9 @@ namespace qb50 {
          APB( uint32_t APBn );
          ~APB();
 
-         void enable  ( BusDevice *dev );
-         void disable ( BusDevice *dev );
+         APB&     enable  ( BusDevice *dev );
+         APB&     disable ( BusDevice *dev );
+         uint32_t freq    ( void );
 
          uint32_t _APBn;
    };

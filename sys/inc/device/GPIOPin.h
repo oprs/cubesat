@@ -16,21 +16,21 @@ namespace qb50 {
          GPIOPin( GPIO& gpio, const unsigned id, const uint16_t mask );
          ~GPIOPin();
 
-         GPIOPin& reset    ( void );
-         GPIOPin& enable   ( void );
-         GPIOPin& disable  ( void );
+         GPIOPin& reset  ( void );
+         GPIOPin& enable ( void );
+         GPIOPin& disable( void );
 
-         GPIOPin& on       ( void );
-         GPIOPin& off      ( void );
-         GPIOPin& toggle   ( void );
+         GPIOPin& on     ( void );
+         GPIOPin& off    ( void );
+         GPIOPin& toggle ( void );
 
          /* mode */
 
          enum Mode {
-            INPUT      = 0x00,
-            OUTPUT     = 0x01,
-            ALTERNATE  = 0x02,
-            ANALOG     = 0x03
+            INPUT        = 0x00,
+            OUTPUT       = 0x01,
+            ALTERNATE    = 0x02,
+            ANALOG       = 0x03
          };
 
          GPIOPin& mode   ( Mode mode );
@@ -84,47 +84,47 @@ namespace qb50 {
             AF15 = 0x0f, EVENTOUT = AF15
          };
 
-         GPIOPin& alt( Alt alt );
+         GPIOPin& alt    ( Alt alt );
 
          /* output speed */
 
          enum OSpeed {
-            SLOW       = 0x00, /*   2MHz */
-            MEDIUM     = 0x01, /*  25MHz */
-            FAST       = 0x02, /*  50MHz */
-            HIGH       = 0x03  /* 100MHz */
+            SLOW         = 0x00, /*   2MHz */
+            MEDIUM       = 0x01, /*  25MHz */
+            FAST         = 0x02, /*  50MHz */
+            HIGH         = 0x03  /* 100MHz */
          };
 
-         GPIOPin& oSpeed( OSpeed speed );
+         GPIOPin& oSpeed ( OSpeed speed );
 
          /* output type */
 
          enum OType {
-            PUSHPULL   = 0x00,
-            OPENDRAIN  = 0x01
+            PUSHPULL     = 0x00,
+            OPENDRAIN    = 0x01
          };
 
-         GPIOPin& oType( OType type );
+         GPIOPin& oType  ( OType type );
 
          /* pull-up / pull-down */
 
-         enum PullUpDown {
-            NOPULL     = 0x00,
-            PULLUP     = 0x01,
-            PULLDN     = 0x02
+         enum PullUpDn {
+            NOPULL       = 0x00,
+            PULLUP       = 0x01,
+            PULLDN       = 0x02
          };
 
-         GPIOPin& PuPd     ( PullUpDown pud );
+         GPIOPin& PuPd   ( PullUpDn pud );
 
-         GPIOPin& noPull   ( void ) { return PuPd( NOPULL ); }
-         GPIOPin& pullUp   ( void ) { return PuPd( PULLUP ); }
-         GPIOPin& pullDown ( void ) { return PuPd( PULLDN ); }
+         GPIOPin& noPull ( void ) { return PuPd( NOPULL ); }
+         GPIOPin& pullUp ( void ) { return PuPd( PULLUP ); }
+         GPIOPin& pullDn ( void ) { return PuPd( PULLDN ); }
 
       private:
 
-         GPIO&             _gpio;
-         const unsigned    _id;
-         const uint16_t    _mask;
+         GPIO&           _gpio;
+         const unsigned  _id;
+         const uint16_t  _mask;
    };
 
    extern qb50::GPIOPin& PA0;
