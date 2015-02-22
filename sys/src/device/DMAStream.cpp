@@ -14,8 +14,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-DMAStream::DMAStream( DMA& dma, const uint32_t iobase )
-   : dma( dma ), iobase( iobase )
+DMAStream::DMAStream( DMA& dma,
+                      const uint32_t iobase,
+                      const uint32_t shl )
+   : _dma( dma ),
+     _iobase( iobase ),
+     _shl( shl )
 {
    reset();
 }
@@ -34,23 +38,29 @@ DMAStream::~DMAStream()
 
 DMAStream& DMAStream::reset( void )
 {
-   DMA_Stream_TypeDef *CHANx = (DMA_Stream_TypeDef*)iobase;
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   DMA_TypeDef        *DMAx  = (DMA_TypeDef*)_dma.iobase;
 
-   /* disable the stream */
-   //CHANx->CR  &= ~((uint32_t)DMA_SxCR_EN);
-
-   //disable();
+   //_dma.enable();
 
    /* reset the stream */
-   CHANx->CR   = 0;
-   CHANx->NDTR = 0;
-   CHANx->PAR  = 0;
-   CHANx->M0AR = 0;
-   CHANx->M1AR = 0;
-   CHANx->FCR  = (uint32_t)0x00000021; /* FIFO control register */
 
-   /* clear interrupt mask */
-   dma.resetStream( this );
+   STRMx->CR   = 0x00000000;
+   STRMx->NDTR = 0x00000000;
+   STRMx->PAR  = 0x00000000;
+   STRMx->M0AR = 0x00000000;
+   STRMx->M1AR = 0x00000000;
+   STRMx->FCR  = 0x00000001;
+
+   /* clear interrupt flags */
+
+   if( _shl & 0x20 ) {
+      DMAx->HIFCR |= ( 0x3f << ( _shl & 0x1f ));
+   } else {
+      DMAx->LIFCR |= ( 0x3f <<   _shl         );
+   }
+
+   //_dma.disable();
 
    return *this;
 }
@@ -58,10 +68,10 @@ DMAStream& DMAStream::reset( void )
 
 DMAStream& DMAStream::enable( void )
 {
-   dma.enable();
+   _dma.enable(); /* _dma.refcount */
 
-   DMA_Stream_TypeDef *CHANx = (DMA_Stream_TypeDef*)iobase;
-   CHANx->CR |= (uint32_t)DMA_SxCR_EN;
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->CR |= DMA_SxCR_EN;
 
    return *this;
 }
@@ -69,10 +79,64 @@ DMAStream& DMAStream::enable( void )
 
 DMAStream& DMAStream::disable( void )
 {
-   DMA_Stream_TypeDef *CHANx = (DMA_Stream_TypeDef*)iobase;
-   CHANx->CR &= ~((uint32_t)DMA_SxCR_EN);
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->CR &= ~DMA_SxCR_EN;
 
-   dma.disable();
+   _dma.disable(); /* _dma.refcount */
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::counter( uint16_t cnt )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->NDTR = (uint32_t)cnt;
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::pAddr( uint32_t addr )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->PAR = addr;
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::m0Addr( uint32_t addr )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->M0AR = addr;
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::m1Addr( uint32_t addr )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->M1AR = addr;
+
+   return *this;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+DMAStream& DMAStream::_updateCR( uint32_t val, uint32_t mask, int shift )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   register uint32_t tmp32;
+
+   tmp32  = STRMx->CR;
+   tmp32 &= ~( mask << shift );
+   tmp32 |=  (  val << shift );
+   STRMx->CR = tmp32;
 
    return *this;
 }

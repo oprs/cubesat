@@ -44,25 +44,25 @@ namespace qb50 {
 //  - - - - - - - - - - - -  //
 
    static DMAStream DMA1_Streams[ 8 ] = {
-      DMAStream( DMA1, DMA1_Stream0_BASE ),
-      DMAStream( DMA1, DMA1_Stream1_BASE ),
-      DMAStream( DMA1, DMA1_Stream2_BASE ),
-      DMAStream( DMA1, DMA1_Stream3_BASE ),
-      DMAStream( DMA1, DMA1_Stream4_BASE ),
-      DMAStream( DMA1, DMA1_Stream5_BASE ),
-      DMAStream( DMA1, DMA1_Stream6_BASE ),
-      DMAStream( DMA1, DMA1_Stream7_BASE )
+      DMAStream( DMA1, DMA1_Stream0_BASE, 0x00 ),
+      DMAStream( DMA1, DMA1_Stream1_BASE, 0x06 ),
+      DMAStream( DMA1, DMA1_Stream2_BASE, 0x10 ),
+      DMAStream( DMA1, DMA1_Stream3_BASE, 0x16 ),
+      DMAStream( DMA1, DMA1_Stream4_BASE, 0x20 ),
+      DMAStream( DMA1, DMA1_Stream5_BASE, 0x26 ),
+      DMAStream( DMA1, DMA1_Stream6_BASE, 0x30 ),
+      DMAStream( DMA1, DMA1_Stream7_BASE, 0x36 )
    };
 
    static DMAStream DMA2_Streams[ 8 ] = {
-      DMAStream( DMA2, DMA2_Stream0_BASE ),
-      DMAStream( DMA2, DMA2_Stream1_BASE ),
-      DMAStream( DMA2, DMA2_Stream2_BASE ),
-      DMAStream( DMA2, DMA2_Stream3_BASE ),
-      DMAStream( DMA2, DMA2_Stream4_BASE ),
-      DMAStream( DMA2, DMA2_Stream5_BASE ),
-      DMAStream( DMA2, DMA2_Stream6_BASE ),
-      DMAStream( DMA2, DMA2_Stream7_BASE )
+      DMAStream( DMA2, DMA2_Stream0_BASE, 0x00 ),
+      DMAStream( DMA2, DMA2_Stream1_BASE, 0x06 ),
+      DMAStream( DMA2, DMA2_Stream2_BASE, 0x10 ),
+      DMAStream( DMA2, DMA2_Stream3_BASE, 0x16 ),
+      DMAStream( DMA2, DMA2_Stream4_BASE, 0x20 ),
+      DMAStream( DMA2, DMA2_Stream5_BASE, 0x26 ),
+      DMAStream( DMA2, DMA2_Stream6_BASE, 0x30 ),
+      DMAStream( DMA2, DMA2_Stream7_BASE, 0x36 )
    };
 
 //  - - - - - - - - - - - - - - -  //
