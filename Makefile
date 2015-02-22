@@ -25,11 +25,14 @@ clean: $(SUB_CLN)
 $(SUB_CLN): %.clean:
 	@$(MAKE) -C $* TOPDIR=$(TOPDIR) ARCH=$(ARCH) clean
 
+doc:
+	doxygen $(TOPDIR)/rules/Doxyfile
+
 tags:
 	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
 
-.PHONY: all check clean tags $(SUB_ALL)
+.PHONY: all check clean doc tags $(SUB_ALL)
 
 include ./rules/common.mk
 
