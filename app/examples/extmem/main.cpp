@@ -32,28 +32,28 @@ void thread1( Thread *self )
       /* RDID */
 
       PA7.off();
-      SPI3.xfer( rdid, dst, 4, false );
+      SPI3.xfer( rdid, dst, 4 );
       PA7.on();
       hexdump( dst, 4 );
 
       /* REMS */
 
       PA7.off();
-      SPI3.xfer( rems, dst, 6, false );
+      SPI3.xfer( rems, dst, 6 );
       PA7.on();
       hexdump( dst, 6 );
 
       /* RDSR-1 */
 
       PA7.off();
-      SPI3.xfer( rsr1, dst, 2, false );
+      SPI3.xfer( rsr1, dst, 2 );
       PA7.on();
       hexdump( dst, 2 );
 
       /* RDSR-2 */
 
       PA7.off();
-      SPI3.xfer( rsr2, dst, 2, false );
+      SPI3.xfer( rsr2, dst, 2 );
       PA7.on();
       hexdump( dst, 2 );
 
@@ -69,12 +69,14 @@ int main( void )
    GPIOA.enable();
    PA7.out();
 
+/*
    GPIOD.enable();
    PD12.out();
    PD13.out();
    PD14.out();
    PD15.out();
    PD13.on();
+*/
 
    createThread( "Thread 1", thread1 );
    run();

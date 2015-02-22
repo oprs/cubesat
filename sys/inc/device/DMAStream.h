@@ -1,27 +1,38 @@
 
-#ifndef _QB50_SYS_DEVICE_DMA_CHANNEL_H
-#define _QB50_SYS_DEVICE_DMA_CHANNEL_H
+#ifndef _QB50_SYS_DEVICE_DMA_STREAM_H
+#define _QB50_SYS_DEVICE_DMA_STREAM_H
 
-#include "FreeRTOS.h"
+#include "Device.h"
 
-#include "stm32f4xx_dma.h"
-#include "CoreDevice.h"
+#include <stdint.h>
 
 
 namespace qb50 {
 
-   class DMAChannel : public CoreDevice
+   class DMA;
+
+   class DMAStream : public Device
    {
       public:
 
-         DMAChannel( Bus& bus, const uint32_t periph, const uint32_t iobase );
-         ~DMAChannel();
+         DMAStream( DMA& dma, const uint32_t iobase );
+         ~DMAStream();
 
-         void reset   ( void );
-         void enable  ( void );
-         void disable ( void );
+         DMAStream& reset    ( void );
+         DMAStream& enable   ( void );
+         DMAStream& disable  ( void );
+
+         //void baseAddr ( void     *addr );
+         //void dataSize ( unsigned  mds  );
+
+         // DMA_InitTypeDef
+         // DMA_DeInit
+         // DMA_Init
 
          void isr( void );
+
+         DMA&           dma;
+         const uint32_t iobase;
    };
 
 } /* qb50 */
@@ -48,6 +59,6 @@ extern "C" {
 }
 
 
-#endif /*_QB50_SYS_DEVICE_DMA_CHANNEL_H*/
+#endif /*_QB50_SYS_DEVICE_DMA_STREAM_H*/
 
 /*EoF*/

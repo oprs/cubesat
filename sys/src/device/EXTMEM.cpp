@@ -26,15 +26,21 @@ EXTMEM::~EXTMEM()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-void EXTMEM::reset( void )
-{ ; }
+EXTMEM& EXTMEM::reset( void )
+{
+   return *this;
+}
 
 
-void EXTMEM::enable( void )
-{ ; }
+EXTMEM& EXTMEM::enable( void )
+{
+   return *this;
+}
 
 
-void EXTMEM::disable( void )
-{ ; }
+EXTMEM& EXTMEM::disable( void )
+{
+   return *this;
+}
 
 /*EoF*/

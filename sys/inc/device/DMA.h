@@ -2,36 +2,29 @@
 #ifndef _QB50_SYS_DEVICE_DMA_H
 #define _QB50_SYS_DEVICE_DMA_H
 
-#include "FreeRTOS.h"
-
-#include "stm32f4xx_dma.h"
-#include "CoreDevice.h"
-#include "DMAChannel.h"
+#include "DMAStream.h"
+#include "BusDevice.h"
 
 
 namespace qb50 {
 
-   class DMA : public CoreDevice
+   class DMA : public BusDevice
    {
       public:
 
-         DMA( Bus& bus, const uint32_t periph, const uint32_t iobase, DMAChannel *chan );
+         DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, DMAStream *streams );
          ~DMA();
 
-         void reset   ( void );
-         void enable  ( void );
-         void disable ( void );
+         DMA& reset   ( void );
+         DMA& enable  ( void );
+         DMA& disable ( void );
+
+         void resetStream( DMAStream *stream );
 
          void isr( void );
 
-         DMAChannel *chan;
+         DMAStream *streams;
    };
-
-   /* CMSIS keeps polluting the whole namespace with
-      hundreds of macros, we need to clear those off. */
-
-   #undef DMA1
-   #undef DMA2
 
    extern qb50::DMA DMA1;
    extern qb50::DMA DMA2;

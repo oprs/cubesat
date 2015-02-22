@@ -26,7 +26,7 @@ $(SUB_CLN): %.clean:
 	@$(MAKE) -C $* TOPDIR=$(TOPDIR) ARCH=$(ARCH) clean
 
 tags:
-	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print | xargs ctags
+	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
 
 .PHONY: all check clean tags $(SUB_ALL)

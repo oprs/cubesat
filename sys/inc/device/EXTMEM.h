@@ -2,7 +2,6 @@
 #ifndef _QB50_SYS_DEVICE_EXTMEM_H
 #define _QB50_SYS_DEVICE_EXTMEM_H
 
-#include "FreeRTOS.h"
 #include "Device.h"
 
 
@@ -15,9 +14,9 @@ namespace qb50 {
          EXTMEM( unsigned id );
          ~EXTMEM();
 
-         void reset   ( void );
-         void enable  ( void );
-         void disable ( void );
+         EXTMEM& reset   ( void );
+         EXTMEM& enable  ( void );
+         EXTMEM& disable ( void );
 
       private:
 

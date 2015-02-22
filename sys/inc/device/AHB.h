@@ -2,8 +2,8 @@
 #ifndef _QB50_SYS_BUS_AHB_H
 #define _QB50_SYS_BUS_AHB_H
 
-#include "peripherals/stm32f4xx_rcc.h"
 #include "Bus.h"
+#include "BusDevice.h"
 
 
 namespace qb50 {
@@ -12,13 +12,15 @@ namespace qb50 {
    {
       public:
 
-         AHB( unsigned AHBn );
+         AHB( uint32_t AHBn );
          ~AHB();
 
-         void enable  ( CoreDevice *dev );
-         void disable ( CoreDevice *dev );
+         void enable  ( BusDevice *dev );
+         void disable ( BusDevice *dev );
 
-         unsigned AHBn;
+      private:
+
+         uint32_t _AHBn;
    };
 
    extern qb50::AHB AHB1;

@@ -1,6 +1,7 @@
 
 #include "device/SPI.h"
-#include "device/GPIO.h"
+
+#include <stm32f4xx.h>
 
 using namespace qb50;
 
@@ -10,13 +11,17 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 SPI::SPI( Bus&           bus,
-          const uint32_t periph,
           const uint32_t iobase,
-          DMAChannel&    ch1,
-          DMAChannel&    ch2 )
-   : CoreDevice( bus, periph, iobase ),
-     _ch1( ch1 ),
-     _ch2( ch2 )
+          const uint32_t periph,
+          SPIStream&     stMISO,
+          SPIStream&     stMOSI,
+          GPIOPin&       clkPin,
+          GPIOPin::Alt   alt )
+   : BusDevice( bus, iobase, periph ),
+     _stMISO( stMISO ),
+     _stMOSI( stMOSI ),
+     _clkPin( clkPin ),
+     _alt( alt )
 {
    _lock    = xSemaphoreCreateMutex();
    _isrRXNE = xSemaphoreCreateBinary();
@@ -37,82 +42,104 @@ SPI::~SPI()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-void SPI::reset( void )
-{ ; }
+/*
+   See the STM32F4 Reference Manual,
+   sec 28.5.1 "SPI control register 1" (pp. 904-906)
 
+   SPI CR1:
 
-void SPI::enable( void )
+    0000001100111100 = 0x033c
+    ||||||||||\_/|||
+    |||||||||| | ||+- SPI_CR1_CPHA     - Clock phase
+    |||||||||| | |+-- SPI_CR1_CPOL     - Clock polarity
+    |||||||||| | +--- SPI_CR1_MSTR     - Master selection
+    |||||||||| +----- SPI_CR1_BR       - Baud rate control
+    |||||||||+------- SPI_CR1_SPE      - SPI enable
+    ||||||||+-------- SPI_CR1_LSBFIRST - Frame format
+    |||||||+--------- SPI_CR1_SSI      - Internal slave select
+    ||||||+---------- SPI_CR1_SSM      - Software slave mgmt.
+    |||||+----------- SPI_CR1_RXONLY   - Receive only
+    ||||+------------ SPI_CR1_DFF      - Data frame format
+    |||+------------- SPI_CR1_CRCNEXT  - CRC transfer next
+    ||+-------------- SPI_CR1_CRCEN    - CRC enable
+    |+--------------- SPI_CR1_BIDIOE   - Output enable in bidirectional mode
+    +---------------- SPI_CR1_BIDIMODE - Bidirectional mode enable
+ */
+
+SPI& SPI::reset( void )
 {
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+
    bus.enable( this );
 
-   setupGPIO();
-   setupNVIC();
+   SPIx->CR1 = SPI_CR1_MSTR  /* device is master         */
+             | 0x0007 << 3   /* baud rate control = 111b */
+             | SPI_CR1_SSI   /* internal slave select    */
+             | SPI_CR1_SSM   /* software slave mgmt.     */
+             ;
 
-   SPI_I2S_DeInit(( SPI_TypeDef* )iobase );
-   SPI_StructInit( &SPIis );
+   bus.disable( this );
 
-   SPIis.SPI_Mode              = SPI_Mode_Master;
-   SPIis.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
-   SPIis.SPI_CPOL              = SPI_CPOL_Low;
-   SPIis.SPI_CPHA              = SPI_CPHA_1Edge;
-   SPIis.SPI_DataSize          = SPI_DataSize_8b;
-   SPIis.SPI_NSS               = SPI_NSS_Soft;
-   SPIis.SPI_FirstBit          = SPI_FirstBit_MSB;
-   SPIis.SPI_CRCPolynomial     = 7;
- //SPIis.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
-   SPIis.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
-
-   switch( periph ) {
-
-      case RCC_APB2Periph_SPI1:
-         GPIOA.enable();
-         GPIO_Init(( GPIO_TypeDef* )GPIOA_BASE, &GPIOis );
-
-         PA5.alt( GPIO_AF_SPI1 );
-         PA6.alt( GPIO_AF_SPI1 );
-         PA7.alt( GPIO_AF_SPI1 );
-
-         break;
-
-      case RCC_APB1Periph_SPI2:
-         GPIOB.enable();
-         GPIO_Init(( GPIO_TypeDef* )GPIOB_BASE, &GPIOis );
-
-         PB13.alt( GPIO_AF_SPI2 );
-         PB14.alt( GPIO_AF_SPI2 );
-         PB15.alt( GPIO_AF_SPI2 );
-
-         break;
-
-      case RCC_APB1Periph_SPI3:
-         GPIOB.enable();
-         GPIO_Init(( GPIO_TypeDef* )GPIOB_BASE, &GPIOis );
-
-         PB3.alt( GPIO_AF_SPI3 );
-         PB4.alt( GPIO_AF_SPI3 );
-         PB5.alt( GPIO_AF_SPI3 );
-
-         break;
-
-      default:
-         throw( 42 );  /* XXX */
-   }
-
-   SPI_Init(( SPI_TypeDef* )iobase, &SPIis );
-
-   // SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_TXE, ENABLE );
-   // SPI_ITConfig(( SPI_TypeDef* )iobase, SPI_IT_RXNE, ENABLE );
-   // NVIC_Init( &NVICis );
-
-   SPI_Cmd(( SPI_TypeDef* )iobase, ENABLE );
+   return *this;
 }
 
 
-void SPI::disable( void )
-{ bus.disable( this ); }
+SPI& SPI::enable( void )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+
+   _stMISO.pin.enable()
+              .pullUp()
+              .alt( _alt );
+
+   _stMOSI.pin.enable()
+              .pullUp()
+              .alt( _alt );
+
+   _clkPin.enable()
+          .alt( _alt );
+
+   bus.enable( this );
+   SPIx->CR1 |= SPI_CR1_SPE;
+
+   return *this;
+}
 
 
-size_t SPI::xfer( const void *src, void *dst, size_t len, bool useDMA )
+SPI& SPI::disable( void )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+
+   SPIx->CR1 &= ~SPI_CR1_SPE;
+   bus.disable( this );
+
+   _clkPin.disable();
+   _stMOSI.disable();
+   _stMISO.disable();
+
+   return *this;
+}
+
+
+SPI& SPI::master( void )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   SPIx->CR1 |= SPI_CR1_MSTR;
+
+   return *this;
+}
+
+
+SPI& SPI::slave( void )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   SPIx->CR1 &= ~SPI_CR1_MSTR;
+
+   return *this;
+}
+
+
+size_t SPI::xfer( const void *src, void *dst, size_t len )
 {
    size_t n;
 
@@ -125,14 +152,14 @@ size_t SPI::xfer( const void *src, void *dst, size_t len, bool useDMA )
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
    for( n = 0 ; n < len ; ++n ) {
-      while(( SPIx->SR & SPI_I2S_FLAG_TXE ) == RESET );
+      while(( SPIx->SR & SPI_SR_TXE ) == RESET );
       if( src == NULL ) {
          SPIx->DR = 0xffff;
       } else {
          SPIx->DR = ((uint8_t*)src)[ n ];
       }
 
-      while(( SPIx->SR & SPI_I2S_FLAG_RXNE ) == RESET );
+      while(( SPIx->SR & SPI_SR_RXNE ) == RESET );
       if( dst != NULL ) {
          ((uint8_t*)dst)[ n ] = SPIx->DR;
       }
@@ -150,36 +177,7 @@ size_t SPI::xfer( const void *src, void *dst, size_t len, bool useDMA )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void SPI::setupGPIO( void )
-{
-   GPIOis.GPIO_Mode  = GPIO_Mode_AF;
-   GPIOis.GPIO_Speed = GPIO_Speed_50MHz;
-   GPIOis.GPIO_OType = GPIO_OType_PP;
-   GPIOis.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-
-   switch( periph ) {
-
-      case RCC_APB2Periph_SPI1:
-
-         GPIOis.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
-         break;
-
-      case RCC_APB1Periph_SPI2:
-
-         GPIOis.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-         break;
-
-      case RCC_APB1Periph_SPI3:
-
-         GPIOis.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
-         break;
-
-      default:
-         ;
-   }
-}
-
-
+/*
 void SPI::setupNVIC( void )
 {
    NVICis.NVIC_IRQChannelPreemptionPriority = 0x0f;
@@ -207,6 +205,7 @@ void SPI::setupNVIC( void )
          ;
    }
 }
+*/
 
 
 //  - - - - - - - - - - - -  //
@@ -236,18 +235,19 @@ void SPI::isr( void )
 #endif
 }
 
+/* trampolines */
+
+#undef SPI1
+#undef SPI2
+#undef SPI3
 
 void SPI1_IRQHandler( void )
 { qb50::SPI1.isr(); }
-
-
-/* trampolines */
 
 void SPI2_IRQHandler( void )
 { qb50::SPI2.isr(); }
 
 void SPI3_IRQHandler( void )
 { qb50::SPI3.isr(); }
-
 
 /*EoF*/

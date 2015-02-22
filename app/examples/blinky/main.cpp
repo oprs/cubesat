@@ -35,7 +35,6 @@ void thread3( Thread *self )
 {
    char x[16];
 
-   UART6.enable();
    for( ;; ) {
       UART6.read( x, 1 );
       PC12.toggle();
@@ -45,6 +44,8 @@ void thread3( Thread *self )
 
 int main( void )
 {
+   UART6.enable();
+
    GPIOC.enable();
    PC9.in();
    PC10.out();

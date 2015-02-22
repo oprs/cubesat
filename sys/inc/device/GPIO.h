@@ -2,35 +2,26 @@
 #ifndef _QB50_SYS_GPIO_H
 #define _QB50_SYS_GPIO_H
 
-#include "stm32f4xx_gpio.h"
-#include "CoreDevice.h"
+#include "BusDevice.h"
 #include "GPIOPin.h"
+#include "Bus.h"
 
 
 namespace qb50 {
 
-   class GPIO : public CoreDevice
+   class GPIO : public BusDevice
    {
       public:
 
-         GPIO( Bus& bus, const uint32_t periph, const uint32_t iobase, GPIOPin *pin );
+         GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, GPIOPin *pin );
          ~GPIO();
 
-         void reset    ( void );
-         void enable   ( void );
-         void disable  ( void );
+         GPIO& reset   ( void );
+         GPIO& enable  ( void );
+         GPIO& disable ( void );
 
          GPIOPin *pin;
    };
-
-   /* CMSIS keeps polluting the whole namespace with
-      hundreds of macros, we need to clear those off. */
-
-   #undef GPIOA
-   #undef GPIOB
-   #undef GPIOC
-   #undef GPIOD
-   #undef GPIOE
 
    extern qb50::GPIO GPIOA;
    extern qb50::GPIO GPIOB;

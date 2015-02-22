@@ -1,6 +1,6 @@
 
-#include "CoreDevice.h"
 #include "device/AHB.h"
+#include <stm32f4xx.h>
 
 using namespace qb50;
 
@@ -9,7 +9,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-AHB::AHB( unsigned AHBn ) : AHBn( AHBn )
+AHB::AHB( uint32_t AHBn ) : _AHBn( AHBn )
 { ; }
 
 
@@ -21,13 +21,13 @@ AHB::~AHB()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void AHB::enable( CoreDevice *dev )
+void AHB::enable( BusDevice *dev )
 {
-   switch( AHBn ) {
+   switch( _AHBn ) {
 
-      case 0: RCC_AHB1PeriphClockCmd( dev->periph, ENABLE ); break;
-      case 1: RCC_AHB2PeriphClockCmd( dev->periph, ENABLE ); break;
-      case 2: RCC_AHB3PeriphClockCmd( dev->periph, ENABLE ); break;
+      case 1: RCC->AHB1ENR |= dev->periph; break;
+      case 2: RCC->AHB2ENR |= dev->periph; break;
+      case 3: RCC->AHB3ENR |= dev->periph; break;
 
       default:
          throw 42; /* XXX */
@@ -35,13 +35,13 @@ void AHB::enable( CoreDevice *dev )
 }
 
 
-void AHB::disable( CoreDevice *dev )
+void AHB::disable( BusDevice *dev )
 {
-   switch( AHBn ) {
+   switch( _AHBn ) {
 
-      case 0: RCC_AHB1PeriphClockCmd( dev->periph, DISABLE ); break;
-      case 1: RCC_AHB2PeriphClockCmd( dev->periph, DISABLE ); break;
-      case 2: RCC_AHB3PeriphClockCmd( dev->periph, DISABLE ); break;
+      case 1: RCC->AHB1ENR &= ~dev->periph; break;
+      case 2: RCC->AHB2ENR &= ~dev->periph; break;
+      case 3: RCC->AHB3ENR &= ~dev->periph; break;
 
       default:
          throw 42; /* XXX */

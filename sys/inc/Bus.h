@@ -7,8 +7,7 @@
 
 namespace qb50 {
 
-   /* forward declaration */
-   class CoreDevice;
+   class BusDevice;
 
    class Bus
    {
@@ -16,8 +15,8 @@ namespace qb50 {
          Bus() { ; }
          virtual ~Bus() { ; }
 
-         virtual void enable  ( CoreDevice *dev ) = 0;
-         virtual void disable ( CoreDevice *dev ) = 0;
+         virtual void enable  ( BusDevice *dev ) = 0;
+         virtual void disable ( BusDevice *dev ) = 0;
    };
 
 } /* qb50 */

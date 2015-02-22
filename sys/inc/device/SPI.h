@@ -2,55 +2,54 @@
 #ifndef _QB50_SYS_DEVICE_SPI_H
 #define _QB50_SYS_DEVICE_SPI_H
 
-#include "FreeRTOS.h"
-#include "semphr.h"
+#include <FreeRTOS.h>
+#include <semphr.h>
 
-#include "stm32f4xx_spi.h"
-#include "CoreDevice.h"
-#include "DMAChannel.h"
+#include "BusDevice.h"
+#include "GPIOPin.h"
+#include "SPIStream.h"
 
 
 namespace qb50 {
 
-   class SPI : public CoreDevice
+   class SPI : public BusDevice
    {
       public:
 
-         SPI( Bus& bus, const uint32_t periph, const uint32_t iobase, DMAChannel& ch1, DMAChannel& ch2 );
+         SPI( Bus&           bus,
+              const uint32_t iobase,
+              const uint32_t periph,
+              SPIStream&     stMISO,
+              SPIStream&     stMOSI,
+              GPIOPin&       clkPin,
+              GPIOPin::Alt   alt
+         );
+
          ~SPI();
 
-         void reset   ( void );
-         void enable  ( void );
-         void disable ( void );
+         SPI& reset   ( void );
+         SPI& enable  ( void );
+         SPI& disable ( void );
+
+         SPI& master  ( void );
+         SPI& slave   ( void );
+
+         /* synchronous transfer */
+         size_t xfer  ( const void *src, void *dst, size_t len );
 
          void isr( void );
 
-         /* synchronous transfer */
-         size_t xfer  ( const void *src, void *dst, size_t len, bool useDMA = false );
-
       private:
-
-         void setupGPIO ( void );
-         void setupNVIC ( void );
 
          xSemaphoreHandle _lock;    /**< global lock on the device */
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
          xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
 
-         GPIO_InitTypeDef GPIOis;
-         NVIC_InitTypeDef NVICis;
-         SPI_InitTypeDef  SPIis;
-
-         DMAChannel&      _ch1;
-         DMAChannel&      _ch2;
+         SPIStream&      _stMISO;
+         SPIStream&      _stMOSI;
+         GPIOPin&        _clkPin;
+         GPIOPin::Alt    _alt;
    };
-
-   /* CMSIS keeps polluting the whole namespace with
-      hundreds of macros, we need to clear those off. */
-
-   #undef SPI1
-   #undef SPI2
-   #undef SPI3
 
    extern qb50::SPI SPI1;
    extern qb50::SPI SPI2;

@@ -1,6 +1,6 @@
 
-#include "CoreDevice.h"
 #include "device/APB.h"
+#include <stm32f4xx.h>
 
 using namespace qb50;
 
@@ -9,7 +9,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-APB::APB( unsigned APBn ) : APBn( APBn )
+APB::APB( uint32_t APBn ) : _APBn( APBn )
 { ; }
 
 
@@ -21,12 +21,12 @@ APB::~APB()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void APB::enable( CoreDevice *dev )
+void APB::enable( BusDevice *dev )
 {
-   switch( APBn ) {
+   switch( _APBn ) {
 
-      case 0: RCC_APB1PeriphClockCmd( dev->periph, ENABLE ); break;
-      case 1: RCC_APB2PeriphClockCmd( dev->periph, ENABLE ); break;
+      case 1: RCC->APB1ENR |= dev->periph; break;
+      case 2: RCC->APB2ENR |= dev->periph; break;
 
       default:
          throw 42; /* XXX */
@@ -34,12 +34,12 @@ void APB::enable( CoreDevice *dev )
 }
 
 
-void APB::disable( CoreDevice *dev )
+void APB::disable( BusDevice *dev )
 {
-   switch( APBn ) {
+   switch( _APBn ) {
 
-      case 0: RCC_APB1PeriphClockCmd( dev->periph, DISABLE ); break;
-      case 1: RCC_APB2PeriphClockCmd( dev->periph, DISABLE ); break;
+      case 1: RCC->APB1ENR &= ~dev->periph; break;
+      case 2: RCC->APB2ENR &= ~dev->periph; break;
 
       default:
          throw 42; /* XXX */

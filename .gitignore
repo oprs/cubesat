@@ -11,3 +11,6 @@ tags
 *.o
 *.elf
 *.hex
+# doc
+doc/html
+doc/latex

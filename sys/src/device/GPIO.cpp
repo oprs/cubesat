@@ -1,5 +1,4 @@
 
-#include "stm32f4xx_rcc.h"
 #include "device/GPIO.h"
 
 using namespace qb50;
@@ -9,8 +8,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-GPIO::GPIO( Bus& bus, const uint32_t periph, const uint32_t iobase, GPIOPin *pin )
-   : CoreDevice( bus, periph, iobase ), pin( pin )
+GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, GPIOPin *pin )
+   : BusDevice( bus, iobase, periph ), pin( pin )
 {
    reset();
 }
@@ -24,16 +23,23 @@ GPIO::~GPIO()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void GPIO::reset( void )
-{ ; }
+GPIO& GPIO::reset( void )
+{
+   return *this;
+}
 
 
-void GPIO::enable( void )
-{ bus.enable( this ); }
+GPIO& GPIO::enable( void )
+{
+   bus.enable( this );
+   return *this;
+}
 
 
-void GPIO::disable( void )
-{ bus.disable( this ); }
-
+GPIO& GPIO::disable( void )
+{
+   bus.disable( this );
+   return *this;
+}
 
 /*EoF*/

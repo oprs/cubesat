@@ -85,16 +85,10 @@ void hexdump( const void *addr, unsigned len )
          }
       }
 
-      /* the last line may not end on a 16-byte boundary.
-         in that case, complement the HEX part with spaces so that
-         we don't retain HEX formatted data from the previous line */
+      /* complement with spaces */
 
-      while(( i % 16 )) {
+      while( hoff < 60 )
          buf[ hoff++ ] = ' ';
-         buf[ hoff++ ] = ' ';
-         buf[ hoff++ ] = ' ';
-         ++i;
-      }
 
       /* add CR+LF and send everything over to TX_DEBUG */
 

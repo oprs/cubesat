@@ -1,6 +1,28 @@
 
 #include "system/qb50.h"
 
+#include <stm32f4xx.h>
+#include <stm32f4xx_rcc.h>
+#include <stm32f4xx_gpio.h>
+
+/* CMSIS is polluting the whole namespace with these macros... */
+
+#undef DMA1
+#undef DMA2
+
+#undef SPI1
+#undef SPI2
+#undef SPI3
+
+#undef GPIOA
+#undef GPIOB
+#undef GPIOC
+#undef GPIOD
+#undef GPIOE
+
+#undef UART4
+#undef UART5
+
 
 namespace qb50 {
 
@@ -9,47 +31,47 @@ namespace qb50 {
 //  - - - - - - - - - -  //
 
    /*       id */
-   AHB AHB1( 0 );
-   AHB AHB2( 1 );
-   AHB AHB3( 2 );
+   AHB AHB1( 1 );
+   AHB AHB2( 2 );
+   AHB AHB3( 3 );
 
    /*       id */
-   APB APB1( 0 );
-   APB APB2( 1 );
+   APB APB1( 1 );
+   APB APB2( 2 );
 
 //  - - - - - - - - - - - -  //
 //  D M A   C H A N N E L S  //
 //  - - - - - - - - - - - -  //
 
-   static DMAChannel DMA1_Channels[ 8 ] = {
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream0_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream1_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream2_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream3_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream4_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream5_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream6_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA1, DMA1_Stream7_BASE )
+   static DMAStream DMA1_Streams[ 8 ] = {
+      DMAStream( DMA1, DMA1_Stream0_BASE ),
+      DMAStream( DMA1, DMA1_Stream1_BASE ),
+      DMAStream( DMA1, DMA1_Stream2_BASE ),
+      DMAStream( DMA1, DMA1_Stream3_BASE ),
+      DMAStream( DMA1, DMA1_Stream4_BASE ),
+      DMAStream( DMA1, DMA1_Stream5_BASE ),
+      DMAStream( DMA1, DMA1_Stream6_BASE ),
+      DMAStream( DMA1, DMA1_Stream7_BASE )
    };
 
-   static DMAChannel DMA2_Channels[ 8 ] = {
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream0_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream1_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream2_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream3_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream4_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream5_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream6_BASE ),
-      DMAChannel( AHB1, RCC_AHB1Periph_DMA2, DMA2_Stream7_BASE )
+   static DMAStream DMA2_Streams[ 8 ] = {
+      DMAStream( DMA2, DMA2_Stream0_BASE ),
+      DMAStream( DMA2, DMA2_Stream1_BASE ),
+      DMAStream( DMA2, DMA2_Stream2_BASE ),
+      DMAStream( DMA2, DMA2_Stream3_BASE ),
+      DMAStream( DMA2, DMA2_Stream4_BASE ),
+      DMAStream( DMA2, DMA2_Stream5_BASE ),
+      DMAStream( DMA2, DMA2_Stream6_BASE ),
+      DMAStream( DMA2, DMA2_Stream7_BASE )
    };
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   periph               iobase     channels */
-   DMA DMA1( AHB1, RCC_AHB1Periph_DMA1, DMA1_BASE, DMA1_Channels );
-   DMA DMA2( AHB1, RCC_AHB1Periph_DMA2, DMA2_BASE, DMA2_Channels );
+   /*        bus   iobase     periph               streams */
+   DMA DMA1( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA1, DMA1_Streams );
+   DMA DMA2( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA2, DMA2_Streams );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -112,122 +134,100 @@ namespace qb50 {
 
    /* aliases */
 
-   GPIOPin& PA0  = GPIOA_Pins[  0 ];
-   GPIOPin& PA1  = GPIOA_Pins[  1 ];
-   GPIOPin& PA2  = GPIOA_Pins[  2 ];
-   GPIOPin& PA3  = GPIOA_Pins[  3 ];
-   GPIOPin& PA4  = GPIOA_Pins[  4 ];
-   GPIOPin& PA5  = GPIOA_Pins[  5 ];
-   GPIOPin& PA6  = GPIOA_Pins[  6 ];
-   GPIOPin& PA7  = GPIOA_Pins[  7 ];
-   GPIOPin& PA8  = GPIOA_Pins[  8 ];
-   GPIOPin& PA9  = GPIOA_Pins[  9 ];
-   GPIOPin& PA10 = GPIOA_Pins[ 10 ];
-   GPIOPin& PA11 = GPIOA_Pins[ 11 ];
-   GPIOPin& PA12 = GPIOA_Pins[ 12 ];
-   GPIOPin& PA13 = GPIOA_Pins[ 13 ];
-   GPIOPin& PA14 = GPIOA_Pins[ 14 ];
-   GPIOPin& PA15 = GPIOA_Pins[ 15 ];
+   GPIOPin& PA0  = GPIOA_Pins[  0 ];  GPIOPin& PA1  = GPIOA_Pins[  1 ];
+   GPIOPin& PA2  = GPIOA_Pins[  2 ];  GPIOPin& PA3  = GPIOA_Pins[  3 ];
+   GPIOPin& PA4  = GPIOA_Pins[  4 ];  GPIOPin& PA5  = GPIOA_Pins[  5 ];
+   GPIOPin& PA6  = GPIOA_Pins[  6 ];  GPIOPin& PA7  = GPIOA_Pins[  7 ];
+   GPIOPin& PA8  = GPIOA_Pins[  8 ];  GPIOPin& PA9  = GPIOA_Pins[  9 ];
+   GPIOPin& PA10 = GPIOA_Pins[ 10 ];  GPIOPin& PA11 = GPIOA_Pins[ 11 ];
+   GPIOPin& PA12 = GPIOA_Pins[ 12 ];  GPIOPin& PA13 = GPIOA_Pins[ 13 ];
+   GPIOPin& PA14 = GPIOA_Pins[ 14 ];  GPIOPin& PA15 = GPIOA_Pins[ 15 ];
 
-   GPIOPin& PB0  = GPIOB_Pins[  0 ];
-   GPIOPin& PB1  = GPIOB_Pins[  1 ];
-   GPIOPin& PB2  = GPIOB_Pins[  2 ];
-   GPIOPin& PB3  = GPIOB_Pins[  3 ];
-   GPIOPin& PB4  = GPIOB_Pins[  4 ];
-   GPIOPin& PB5  = GPIOB_Pins[  5 ];
-   GPIOPin& PB6  = GPIOB_Pins[  6 ];
-   GPIOPin& PB7  = GPIOB_Pins[  7 ];
-   GPIOPin& PB8  = GPIOB_Pins[  8 ];
-   GPIOPin& PB9  = GPIOB_Pins[  9 ];
-   GPIOPin& PB10 = GPIOB_Pins[ 10 ];
-   GPIOPin& PB11 = GPIOB_Pins[ 11 ];
-   GPIOPin& PB12 = GPIOB_Pins[ 12 ];
-   GPIOPin& PB13 = GPIOB_Pins[ 13 ];
-   GPIOPin& PB14 = GPIOB_Pins[ 14 ];
-   GPIOPin& PB15 = GPIOB_Pins[ 15 ];
+   GPIOPin& PB0  = GPIOB_Pins[  0 ];  GPIOPin& PB1  = GPIOB_Pins[  1 ];
+   GPIOPin& PB2  = GPIOB_Pins[  2 ];  GPIOPin& PB3  = GPIOB_Pins[  3 ];
+   GPIOPin& PB4  = GPIOB_Pins[  4 ];  GPIOPin& PB5  = GPIOB_Pins[  5 ];
+   GPIOPin& PB6  = GPIOB_Pins[  6 ];  GPIOPin& PB7  = GPIOB_Pins[  7 ];
+   GPIOPin& PB8  = GPIOB_Pins[  8 ];  GPIOPin& PB9  = GPIOB_Pins[  9 ];
+   GPIOPin& PB10 = GPIOB_Pins[ 10 ];  GPIOPin& PB11 = GPIOB_Pins[ 11 ];
+   GPIOPin& PB12 = GPIOB_Pins[ 12 ];  GPIOPin& PB13 = GPIOB_Pins[ 13 ];
+   GPIOPin& PB14 = GPIOB_Pins[ 14 ];  GPIOPin& PB15 = GPIOB_Pins[ 15 ];
 
-   GPIOPin& PC0  = GPIOC_Pins[  0 ];
-   GPIOPin& PC1  = GPIOC_Pins[  1 ];
-   GPIOPin& PC2  = GPIOC_Pins[  2 ];
-   GPIOPin& PC3  = GPIOC_Pins[  3 ];
-   GPIOPin& PC4  = GPIOC_Pins[  4 ];
-   GPIOPin& PC5  = GPIOC_Pins[  5 ];
-   GPIOPin& PC6  = GPIOC_Pins[  6 ];
-   GPIOPin& PC7  = GPIOC_Pins[  7 ];
-   GPIOPin& PC8  = GPIOC_Pins[  8 ];
-   GPIOPin& PC9  = GPIOC_Pins[  9 ];
-   GPIOPin& PC10 = GPIOC_Pins[ 10 ];
-   GPIOPin& PC11 = GPIOC_Pins[ 11 ];
-   GPIOPin& PC12 = GPIOC_Pins[ 12 ];
-   GPIOPin& PC13 = GPIOC_Pins[ 13 ];
-   GPIOPin& PC14 = GPIOC_Pins[ 14 ];
-   GPIOPin& PC15 = GPIOC_Pins[ 15 ];
+   GPIOPin& PC0  = GPIOC_Pins[  0 ];  GPIOPin& PC1  = GPIOC_Pins[  1 ];
+   GPIOPin& PC2  = GPIOC_Pins[  2 ];  GPIOPin& PC3  = GPIOC_Pins[  3 ];
+   GPIOPin& PC4  = GPIOC_Pins[  4 ];  GPIOPin& PC5  = GPIOC_Pins[  5 ];
+   GPIOPin& PC6  = GPIOC_Pins[  6 ];  GPIOPin& PC7  = GPIOC_Pins[  7 ];
+   GPIOPin& PC8  = GPIOC_Pins[  8 ];  GPIOPin& PC9  = GPIOC_Pins[  9 ];
+   GPIOPin& PC10 = GPIOC_Pins[ 10 ];  GPIOPin& PC11 = GPIOC_Pins[ 11 ];
+   GPIOPin& PC12 = GPIOC_Pins[ 12 ];  GPIOPin& PC13 = GPIOC_Pins[ 13 ];
+   GPIOPin& PC14 = GPIOC_Pins[ 14 ];  GPIOPin& PC15 = GPIOC_Pins[ 15 ];
 
-   GPIOPin& PD0  = GPIOD_Pins[  0 ];
-   GPIOPin& PD1  = GPIOD_Pins[  1 ];
-   GPIOPin& PD2  = GPIOD_Pins[  2 ];
-   GPIOPin& PD3  = GPIOD_Pins[  3 ];
-   GPIOPin& PD4  = GPIOD_Pins[  4 ];
-   GPIOPin& PD5  = GPIOD_Pins[  5 ];
-   GPIOPin& PD6  = GPIOD_Pins[  6 ];
-   GPIOPin& PD7  = GPIOD_Pins[  7 ];
-   GPIOPin& PD8  = GPIOD_Pins[  8 ];
-   GPIOPin& PD9  = GPIOD_Pins[  9 ];
-   GPIOPin& PD10 = GPIOD_Pins[ 10 ];
-   GPIOPin& PD11 = GPIOD_Pins[ 11 ];
-   GPIOPin& PD12 = GPIOD_Pins[ 12 ];
-   GPIOPin& PD13 = GPIOD_Pins[ 13 ];
-   GPIOPin& PD14 = GPIOD_Pins[ 14 ];
-   GPIOPin& PD15 = GPIOD_Pins[ 15 ];
+   GPIOPin& PD0  = GPIOD_Pins[  0 ];  GPIOPin& PD1  = GPIOD_Pins[  1 ];
+   GPIOPin& PD2  = GPIOD_Pins[  2 ];  GPIOPin& PD3  = GPIOD_Pins[  3 ];
+   GPIOPin& PD4  = GPIOD_Pins[  4 ];  GPIOPin& PD5  = GPIOD_Pins[  5 ];
+   GPIOPin& PD6  = GPIOD_Pins[  6 ];  GPIOPin& PD7  = GPIOD_Pins[  7 ];
+   GPIOPin& PD8  = GPIOD_Pins[  8 ];  GPIOPin& PD9  = GPIOD_Pins[  9 ];
+   GPIOPin& PD10 = GPIOD_Pins[ 10 ];  GPIOPin& PD11 = GPIOD_Pins[ 11 ];
+   GPIOPin& PD12 = GPIOD_Pins[ 12 ];  GPIOPin& PD13 = GPIOD_Pins[ 13 ];
+   GPIOPin& PD14 = GPIOD_Pins[ 14 ];  GPIOPin& PD15 = GPIOD_Pins[ 15 ];
 
-   GPIOPin& PE0  = GPIOE_Pins[  0 ];
-   GPIOPin& PE1  = GPIOE_Pins[  1 ];
-   GPIOPin& PE2  = GPIOE_Pins[  2 ];
-   GPIOPin& PE3  = GPIOE_Pins[  3 ];
-   GPIOPin& PE4  = GPIOE_Pins[  4 ];
-   GPIOPin& PE5  = GPIOE_Pins[  5 ];
-   GPIOPin& PE6  = GPIOE_Pins[  6 ];
-   GPIOPin& PE7  = GPIOE_Pins[  7 ];
-   GPIOPin& PE8  = GPIOE_Pins[  8 ];
-   GPIOPin& PE9  = GPIOE_Pins[  9 ];
-   GPIOPin& PE10 = GPIOE_Pins[ 10 ];
-   GPIOPin& PE11 = GPIOE_Pins[ 11 ];
-   GPIOPin& PE12 = GPIOE_Pins[ 12 ];
-   GPIOPin& PE13 = GPIOE_Pins[ 13 ];
-   GPIOPin& PE14 = GPIOE_Pins[ 14 ];
-   GPIOPin& PE15 = GPIOE_Pins[ 15 ];
+   GPIOPin& PE0  = GPIOE_Pins[  0 ];  GPIOPin& PE1  = GPIOE_Pins[  1 ];
+   GPIOPin& PE2  = GPIOE_Pins[  2 ];  GPIOPin& PE3  = GPIOE_Pins[  3 ];
+   GPIOPin& PE4  = GPIOE_Pins[  4 ];  GPIOPin& PE5  = GPIOE_Pins[  5 ];
+   GPIOPin& PE6  = GPIOE_Pins[  6 ];  GPIOPin& PE7  = GPIOE_Pins[  7 ];
+   GPIOPin& PE8  = GPIOE_Pins[  8 ];  GPIOPin& PE9  = GPIOE_Pins[  9 ];
+   GPIOPin& PE10 = GPIOE_Pins[ 10 ];  GPIOPin& PE11 = GPIOE_Pins[ 11 ];
+   GPIOPin& PE12 = GPIOE_Pins[ 12 ];  GPIOPin& PE13 = GPIOE_Pins[ 13 ];
+   GPIOPin& PE14 = GPIOE_Pins[ 14 ];  GPIOPin& PE15 = GPIOE_Pins[ 15 ];
 
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   periph                iobase      pins */
-   GPIO GPIOA( AHB1, RCC_AHB1Periph_GPIOA, GPIOA_BASE, GPIOA_Pins );
-   GPIO GPIOB( AHB1, RCC_AHB1Periph_GPIOB, GPIOB_BASE, GPIOB_Pins );
-   GPIO GPIOC( AHB1, RCC_AHB1Periph_GPIOC, GPIOC_BASE, GPIOC_Pins );
-   GPIO GPIOD( AHB1, RCC_AHB1Periph_GPIOD, GPIOD_BASE, GPIOD_Pins );
-   GPIO GPIOE( AHB1, RCC_AHB1Periph_GPIOE, GPIOE_BASE, GPIOE_Pins );
+   /*          bus   iobase      periph                pins */
+   GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, GPIOA_Pins );
+   GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, GPIOB_Pins );
+   GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, GPIOC_Pins );
+   GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, GPIOD_Pins );
+   GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, GPIOE_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   periph                 iobase       rxPin txPin */
-   UART UART1( APB2, RCC_APB2Periph_USART1, USART1_BASE, PB7,  PB6  );
-   UART UART2( APB1, RCC_APB1Periph_USART2, USART2_BASE, PA3,  PA2  );
-   UART UART3( APB1, RCC_APB1Periph_USART3, USART3_BASE, PB11, PB10 );
-   UART UART4( APB1, RCC_APB1Periph_UART4,  UART4_BASE,  PA1,  PA0  );
- //UART UART5( APB1, RCC_APB1Periph_UART5,  UART5_BASE,  PD2,  PC12 );
-   UART UART6( APB2, RCC_APB2Periph_USART6, USART6_BASE, PC7,  PC6  );
+   /*          bus   iobase       periph                rxPin txPin  IRQ number   alt. function */
+   UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
+   UART UART2( APB1, USART2_BASE, RCC_APB1Periph_USART2, PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
+   UART UART3( APB1, USART3_BASE, RCC_APB1Periph_USART3, PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
+   UART UART4( APB1, UART4_BASE,  RCC_APB1Periph_UART4,  PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );
+   UART UART5( APB1, UART5_BASE,  RCC_APB1Periph_UART5,  PD2,  PC12, UART5_IRQn,  GPIOPin::UART5 );
+   UART UART6( APB2, USART6_BASE, RCC_APB2Periph_USART6, PC7,  PC6,  USART6_IRQn, GPIOPin::UART6 );
+
+//  - - - - - - - - - - -  //
+//  S P I   S T R E A M S  //
+//  - - - - - - - - - - -  //
+
+   /*
+    *  See the STM32F4 reference manual for DMA stream/channel mappings,
+    *  sec. 10.3.3 "Channel Selection", pp. 306-307
+    */
+
+   SPIStream SPI1_MISO( PA6,  DMA2.streams[ 0 ], 3 );
+   SPIStream SPI1_MOSI( PA7,  DMA2.streams[ 3 ], 3 );
+
+   SPIStream SPI2_MISO( PB14, DMA1.streams[ 3 ], 0 );
+   SPIStream SPI2_MOSI( PB15, DMA1.streams[ 4 ], 0 );
+
+   SPIStream SPI3_MISO( PB4,  DMA1.streams[ 2 ], 0 );
+   SPIStream SPI3_MOSI( PB5,  DMA1.streams[ 5 ], 0 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   periph               iobase     MISO channel  MOSI channel */
-   SPI SPI1( APB2, RCC_APB2Periph_SPI1, SPI1_BASE, DMA2.chan[0], DMA2.chan[1] );
-   SPI SPI2( APB1, RCC_APB1Periph_SPI2, SPI2_BASE, DMA1.chan[0], DMA1.chan[1] );
-   SPI SPI3( APB1, RCC_APB1Periph_SPI3, SPI3_BASE, DMA1.chan[0], DMA1.chan[1] );
+   /*        bus   iobase     periph               rx stream  tx stream  clk   alt. function */
+   SPI SPI1( APB2, SPI1_BASE, RCC_APB2Periph_SPI1, SPI1_MISO, SPI1_MOSI, PA5,  GPIOPin::SPI1 );
+   SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
+   SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  E X T E R N A L   M E M O R Y  //
