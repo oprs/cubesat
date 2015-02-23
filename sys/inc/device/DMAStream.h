@@ -15,16 +15,69 @@ namespace qb50 {
    {
       public:
 
+         /**
+          * Construit un stream DMA
+          *
+          * @param dma    Référence sur l'instance du DMA parent
+          * @param iobase Adresse de base dans la mémoire des I/O pour ce stream
+          * @param shl    Offset du permier bit dans le Interrupt Status Register
+          *
+          * Les streams par défaut de l'ODB sont instanciés au démarrage
+          * dans `system/odb.cpp`.  Il est peu probable que la création de
+          * nouveaux streams par l'application soit nécessaire.
+          */
+
          DMAStream( DMA& dma, const uint32_t iobase, const uint32_t shl );
          ~DMAStream();
 
+         /**
+          * Réinitialise le stream DMA
+          *
+          * Le stream est réinitialisé dans sa configuration d'origine,
+          * toutes les interruptions associées sont désactivées.
+          *
+          * Configuration par défaut:
+          *  - Channel sélectionné: qb50::DMAStream::CH0
+          *  - Memory burst et peripheral burst en single transfer
+          *  - Mode double buffer désactivé
+          *  - Priorité: qb50::DMAStream::LOW
+          *  - Data size: qb50::DMAStream::BYTE
+          *  - Incrémentation automatique désactivée pour les adresses
+          *    mémoire et périphérique
+          *  - Buffer circulaire désactivé
+          *  - Direction du transfer: qb50::DMAStream::P2M
+          *  - Toutes les interruptions sont désactivées
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          DMAStream& reset   ( void );
+
+         /**
+          * Active le stream DMA
+          *
+          * Incrémente le compteur de référence sur le le DMA parent,
+          * puis active le stream.
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          DMAStream& enable  ( void );
+
+         /**
+          * Désactive le stream DMA
+          *
+          * Désactive le stream, puis décrémente le compteur de référence
+          * sur le DMA parent.
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          DMAStream& disable ( void );
 
          /* channel selection */
 
-         enum Chan {
+         enum Channel {
             CH0      = 0, /*!< channel 0 */
             CH1      = 1, /*!< channel 1 */
             CH2      = 2, /*!< channel 2 */
@@ -35,7 +88,20 @@ namespace qb50 {
             CH7      = 7  /*!< channel 7 */
          };
 
-         inline DMAStream& channel( Chan sel )
+         /* start/stop */
+
+         DMAStream& start   ( void );
+         DMAStream& stop    ( void );
+
+         /**
+          * Sélectionne le channel DMA utilisé par ce stream
+          *
+          * @param sel Channel à utiliser
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
+         inline DMAStream& channel( Channel sel )
          { return _updateCR( sel, 0x07, 25 ); }
 
          /* burst transfer configuration */
@@ -47,8 +113,24 @@ namespace qb50 {
             INCR16   = 3  /*!< incremental burst of 16 beats */
          };
 
+         /**
+          * Sélectionne le mode burst utilisé pour les transferts mémoire/mémoire
+          *
+          * @param sel Mode à utiliser
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          inline DMAStream& mBurst( Burst sel )
          { return _updateCR( sel, 0x03, 23 ); }
+
+         /**
+          * Sélectionne le mode burst utilisé pour les transferts mémoire/périphérique
+          *
+          * @param sel Mode à utiliser
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
          inline DMAStream& pBurst( Burst sel )
          { return _updateCR( sel, 0x03, 21 ); }
@@ -59,6 +141,14 @@ namespace qb50 {
             MEM0     = 0, /*!< target memory is memory 0 */
             MEM1     = 1  /*!< target memory is memory 1 */
          };
+
+         /**
+          * Sélectionne la zone mémoire cible pour le transfert
+          *
+          * @param sel Zone mémoire cible
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
          inline DMAStream& target( Target sel )
          { return _updateCR( sel, 0x01, 19 ); }
@@ -72,6 +162,14 @@ namespace qb50 {
             VERYHIGH = 3  /*!< very high priority */
          };
 
+         /**
+          * Sélectionne la priorité du transfert
+          *
+          * @param sel Priorité à utiliser
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          inline DMAStream& priority( Priority sel )
          { return _updateCR( sel, 0x03, 16 ); }
 
@@ -83,8 +181,26 @@ namespace qb50 {
             WORD     = 2  /*!< word (32-bit)  */
          };
 
+         /**
+          * Sélectionne la taille des objets à transférer
+          * pour les transferts mémoire/mémoire.
+          *
+          * @param sel Taille
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          inline DMAStream& mDataSize( DataSize sel )
          { return _updateCR( sel, 0x03, 13 ); }
+
+         /**
+          * Sélectionne la taille des objets à transférer
+          * pour les transferts mémoire/périphérique.
+          *
+          * @param sel Taille
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
          inline DMAStream& pDataSize( DataSize sel )
          { return _updateCR( sel, 0x03, 11 ); }
@@ -96,8 +212,24 @@ namespace qb50 {
             INCR     = 1  /*!< address pointer is incremented after each transfer */
          };
 
+         /**
+          * Sélectionne le mode d'incrémentation utilisé côté mémoire
+          *
+          * @param sel Mode d'incrémentation
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          inline DMAStream& mIncMode( IncMode sel )
          { return _updateCR( sel, 0x01, 10 ); }
+
+         /**
+          * Sélectionne le mode d'incrémentation utilisé côté périphérique
+          *
+          * @param sel Mode d'incrémentation
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
          inline DMAStream& pIncMode( IncMode sel )
          { return _updateCR( sel, 0x01, 9 ); }
@@ -108,6 +240,14 @@ namespace qb50 {
             NORMAL   = 0, /*!< circular mode disabled */
             CIRCULAR = 1  /*!< circular mode enabled  */
          };
+
+         /**
+          * Sélectionne le mode de transfert (normal ou circulaire)
+          *
+          * @param sel Mode
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
          inline DMAStream& mode( Mode sel )
          { return _updateCR( sel, 0x01, 8 ); }
@@ -120,18 +260,67 @@ namespace qb50 {
             M2M      = 2  /*!< memory to memory     */
          };
 
+         /**
+          * Sélectionne le type de transfert à effectuer:
+          *  - périphérique vers mémoire
+          *  - mémoire vers périphérique
+          *  - mémoire vers mémoire
+          *
+          * @param sel Mode
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
          inline DMAStream& direction( Direction sel )
          { return _updateCR( sel, 0x03, 6 ); }
 
-         /* data counter */
+         /**
+          * Initialise le compteur d'objets mémoire à copier
+          *
+          * @param cnt Nombre d'objets mémoire à copier
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
-         DMAStream& counter   ( uint16_t cnt );
+         DMAStream& counter( uint16_t cnt );
 
-         /* peripheral/memory addresses */
+         /**
+          * Initialise l'adresse du périphérique impliqué dans le transfert
+          *
+          * @param addr Adresse dans la mémoire des I/O
+          *
+          * @return Une self-reference sur cette instance.
+          */
 
-         DMAStream& pAddr     ( uint32_t addr );
-         DMAStream& m0Addr    ( uint32_t addr );
-         DMAStream& m1Addr    ( uint32_t addr );
+         DMAStream& pAddr( uint32_t addr );
+
+         /**
+          * Initialise l'adresse mémoire #0
+          *
+          * @param addr Adresse mémoire #0
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
+         DMAStream& m0Addr( uint32_t addr );
+
+         /**
+          * Initialise l'adresse mémoire #1
+          *
+          * @param addr Adresse mémoire #1
+          *
+          * @return Une self-reference sur cette instance.
+          */
+
+         DMAStream& m1Addr( uint32_t addr );
+
+         /**
+          * "Interrupt Service Routine": traitement des interruptions DMA
+          *
+          * Cette méthode est appelée depuis les "trampolines"
+          * `DMA_StreamX_IRQHandler()` (passerelles entre les fonctions
+          * C des ISR et les instances de classes C++ correspondantes).
+          */
 
          void isr( void );
 
@@ -145,27 +334,6 @@ namespace qb50 {
    };
 
 } /* qb50 */
-
-
-extern "C" {
-   void DMA1_Stream0_IRQHandler( void );
-   void DMA1_Stream1_IRQHandler( void );
-   void DMA1_Stream2_IRQHandler( void );
-   void DMA1_Stream3_IRQHandler( void );
-   void DMA1_Stream4_IRQHandler( void );
-   void DMA1_Stream5_IRQHandler( void );
-   void DMA1_Stream6_IRQHandler( void );
-   void DMA1_Stream7_IRQHandler( void );
-
-   void DMA2_Stream0_IRQHandler( void );
-   void DMA2_Stream1_IRQHandler( void );
-   void DMA2_Stream2_IRQHandler( void );
-   void DMA2_Stream3_IRQHandler( void );
-   void DMA2_Stream4_IRQHandler( void );
-   void DMA2_Stream5_IRQHandler( void );
-   void DMA2_Stream6_IRQHandler( void );
-   void DMA2_Stream7_IRQHandler( void );
-}
 
 
 #endif /*_QB50_SYS_DEVICE_DMA_STREAM_H*/

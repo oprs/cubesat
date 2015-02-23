@@ -8,8 +8,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-EXTMEM::EXTMEM( unsigned id )
-   : id( id )
+EXTMEM::EXTMEM( uint32_t id, SPI& spi, GPIOPin& csPin )
+   : _id( id ), _spi( spi ), _csPin( csPin )
 {
    reset();
 }
@@ -34,12 +34,16 @@ EXTMEM& EXTMEM::reset( void )
 
 EXTMEM& EXTMEM::enable( void )
 {
+   _csPin.enable();
+
    return *this;
 }
 
 
 EXTMEM& EXTMEM::disable( void )
 {
+   _csPin.disable();
+
    return *this;
 }
 

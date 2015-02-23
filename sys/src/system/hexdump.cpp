@@ -6,6 +6,10 @@
 namespace qb50 {
 
 
+void print( const char *x, unsigned len )
+{ UART6.write( x, len ); }
+
+
 /*
  *  max: 78 chars per line (76 formatted + 1 CR + 1 LF)
  *

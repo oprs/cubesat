@@ -57,7 +57,7 @@ void thread1( Thread *self )
       PA7.on();
       hexdump( dst, 2 );
 
-      delay( 3000 );
+      delay( 1000 );
    }
 }
 

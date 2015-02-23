@@ -20,16 +20,11 @@ DMAStream::DMAStream( DMA& dma,
    : _dma( dma ),
      _iobase( iobase ),
      _shl( shl )
-{
-   reset();
-}
+{ ; }
 
 
 DMAStream::~DMAStream()
-{
-   reset();
-   disable();
-}
+{ disable(); }
 
 
 //  - - - - - - - - - - - - - -  //
@@ -42,22 +37,24 @@ DMAStream& DMAStream::reset( void )
    DMA_TypeDef        *DMAx  = (DMA_TypeDef*)_dma.iobase;
 
    //_dma.enable();
+QB50DBG( "DMAStream::reset()\r\n" );
 
    /* reset the stream */
 
+   STRMx->CR  &= ~DMA_SxCR_EN;
    STRMx->CR   = 0x00000000;
    STRMx->NDTR = 0x00000000;
    STRMx->PAR  = 0x00000000;
    STRMx->M0AR = 0x00000000;
    STRMx->M1AR = 0x00000000;
-   STRMx->FCR  = 0x00000001;
+   STRMx->FCR  = 0x00000021;
 
    /* clear interrupt flags */
 
    if( _shl & 0x20 ) {
-      DMAx->HIFCR |= ( 0x3f << ( _shl & 0x1f ));
+      DMAx->HIFCR |= ( 0x3d << ( _shl & 0x1f ));
    } else {
-      DMAx->LIFCR |= ( 0x3f <<   _shl         );
+      DMAx->LIFCR |= ( 0x3d <<   _shl         );
    }
 
    //_dma.disable();
@@ -68,10 +65,9 @@ DMAStream& DMAStream::reset( void )
 
 DMAStream& DMAStream::enable( void )
 {
+QB50DBG( "DMAStream::enable()\r\n" );
    _dma.enable(); /* _dma.refcount */
-
-   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
-   STRMx->CR |= DMA_SxCR_EN;
+   reset();
 
    return *this;
 }
@@ -79,10 +75,25 @@ DMAStream& DMAStream::enable( void )
 
 DMAStream& DMAStream::disable( void )
 {
+QB50DBG( "DMAStream::disable()\r\n" );
+   _dma.disable(); /* _dma.refcount */
+   return *this;
+}
+
+
+DMAStream& DMAStream::start( void )
+{
+   DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+   STRMx->CR |= DMA_SxCR_EN;
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::stop( void )
+{
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    STRMx->CR &= ~DMA_SxCR_EN;
-
-   _dma.disable(); /* _dma.refcount */
 
    return *this;
 }
@@ -148,57 +159,5 @@ DMAStream& DMAStream::_updateCR( uint32_t val, uint32_t mask, int shift )
 
 void DMAStream::isr( void )
 { ; }
-
-
-/* trampolines */
-
-void DMA1_Stream0_IRQHandler( void )
-{ qb50::DMA1.streams[0].isr(); }
-
-void DMA1_Stream1_IRQHandler( void )
-{ qb50::DMA1.streams[1].isr(); }
-
-void DMA1_Stream2_IRQHandler( void )
-{ qb50::DMA1.streams[2].isr(); }
-
-void DMA1_Stream3_IRQHandler( void )
-{ qb50::DMA1.streams[3].isr(); }
-
-void DMA1_Stream4_IRQHandler( void )
-{ qb50::DMA1.streams[4].isr(); }
-
-void DMA1_Stream5_IRQHandler( void )
-{ qb50::DMA1.streams[5].isr(); }
-
-void DMA1_Stream6_IRQHandler( void )
-{ qb50::DMA1.streams[6].isr(); }
-
-void DMA1_Stream7_IRQHandler( void )
-{ qb50::DMA1.streams[7].isr(); }
-
-void DMA2_Stream0_IRQHandler( void )
-{ qb50::DMA2.streams[0].isr(); }
-
-void DMA2_Stream1_IRQHandler( void )
-{ qb50::DMA2.streams[1].isr(); }
-
-void DMA2_Stream2_IRQHandler( void )
-{ qb50::DMA2.streams[2].isr(); }
-
-void DMA2_Stream3_IRQHandler( void )
-{ qb50::DMA2.streams[3].isr(); }
-
-void DMA2_Stream4_IRQHandler( void )
-{ qb50::DMA2.streams[4].isr(); }
-
-void DMA2_Stream5_IRQHandler( void )
-{ qb50::DMA2.streams[5].isr(); }
-
-void DMA2_Stream6_IRQHandler( void )
-{ qb50::DMA2.streams[6].isr(); }
-
-void DMA2_Stream7_IRQHandler( void )
-{ qb50::DMA2.streams[7].isr(); }
-
 
 /*EoF*/

@@ -26,14 +26,11 @@ SPI::SPI( Bus&           bus,
    _lock    = xSemaphoreCreateMutex();
    _isrRXNE = xSemaphoreCreateBinary();
    _isrTXE  = xSemaphoreCreateBinary();
-
-   reset();
 }
 
 
 SPI::~SPI()
 {
-   reset();
    disable();
 }
 
@@ -70,10 +67,12 @@ SPI& SPI::reset( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
+QB50DBG( "SPI::reset()\r\n" );
+
    bus.enable( this );
 
    SPIx->CR1 = SPI_CR1_MSTR  /* device is master         */
-             | 0x0007 << 3   /* baud rate control = 111b */
+             | 0x0001 << 3   /* baud rate control = 111b */
              | SPI_CR1_SSI   /* internal slave select    */
              | SPI_CR1_SSM   /* software slave mgmt.     */
              ;
@@ -88,6 +87,13 @@ SPI& SPI::enable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
+QB50DBG( "SPI::enable()\r\n" );
+
+   reset();
+
+   _clkPin.enable()
+          .alt( _alt );
+
    _stMISO.pin.enable()
               .pullUp()
               .alt( _alt );
@@ -96,8 +102,10 @@ SPI& SPI::enable( void )
               .pullUp()
               .alt( _alt );
 
-   _clkPin.enable()
-          .alt( _alt );
+QB50DBG( "SPI::enable() - _stMISO\r\n" );
+   _stMISO.ds.enable();
+QB50DBG( "SPI::enable() - _stMOSI\r\n" );
+   _stMOSI.ds.enable();
 
    bus.enable( this );
    SPIx->CR1 |= SPI_CR1_SPE;
@@ -110,16 +118,21 @@ SPI& SPI::disable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
+QB50DBG( "SPI::disable()\r\n" );
+
    SPIx->CR1 &= ~SPI_CR1_SPE;
    bus.disable( this );
 
-   _clkPin.reset()
-          .disable();
+   _stMOSI.ds.disable();
+   _stMISO.ds.disable();
 
    _stMOSI.reset()
           .disable();
 
    _stMISO.reset()
+          .disable();
+
+   _clkPin.reset()
           .disable();
 
    return *this;
@@ -144,6 +157,40 @@ SPI& SPI::slave( void )
 }
 
 
+size_t SPI::xfer( const void *src, void *dst, size_t len )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+
+   _stMISO.ds.pAddr     ( (uint32_t)&( SPIx->DR ))
+             .m0Addr    ( (uint32_t)     dst     )
+             .counter   ( (uint32_t)     len     )
+             .pIncMode  ( DMAStream::FIXED       )
+             .mIncMode  ( DMAStream::INCR        )
+             .direction ( DMAStream::P2M         );
+
+   _stMOSI.ds.pAddr     ( (uint32_t)&( SPIx->DR ))
+             .m0Addr    ( (uint32_t)     src     )
+             .counter   ( (uint32_t)     len     )
+             .pIncMode  ( DMAStream::FIXED       )
+             .mIncMode  ( DMAStream::INCR        )
+             .direction ( DMAStream::M2P         );
+
+   SPIx->CR2 |= ( SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN );
+
+   _stMISO.ds.start();
+   _stMOSI.ds.start();
+
+   for( int n = 0 ; n < 100000 ; ++n )
+      ;
+
+   _stMOSI.ds.stop();
+   _stMISO.ds.stop();
+
+   return 0;
+}
+
+
+#if 0
 size_t SPI::xfer( const void *src, void *dst, size_t len )
 {
    size_t n;
@@ -176,7 +223,7 @@ size_t SPI::xfer( const void *src, void *dst, size_t len )
 
    return n;
 }
-
+#endif
 
 //  - - - - - - - - - - - - - - -  //
 //  P R I V A T E   M E T H O D S  //

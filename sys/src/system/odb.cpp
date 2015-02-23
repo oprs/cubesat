@@ -23,6 +23,8 @@
 #undef UART4
 #undef UART5
 
+// Microscope
+// Sentinel 1B
 
 namespace qb50 {
 
@@ -211,14 +213,14 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPIStream SPI1_MISO( PA6,  DMA2.streams[ 0 ], 3 );
-   SPIStream SPI1_MOSI( PA7,  DMA2.streams[ 3 ], 3 );
+   SPIStream SPI1_MISO( PA6,  DMA2.streams[ 0 ], DMAStream::CH3 );
+   SPIStream SPI1_MOSI( PA7,  DMA2.streams[ 3 ], DMAStream::CH3 );
 
-   SPIStream SPI2_MISO( PB14, DMA1.streams[ 3 ], 0 );
-   SPIStream SPI2_MOSI( PB15, DMA1.streams[ 4 ], 0 );
+   SPIStream SPI2_MISO( PB14, DMA1.streams[ 3 ], DMAStream::CH0 );
+   SPIStream SPI2_MOSI( PB15, DMA1.streams[ 4 ], DMAStream::CH0 );
 
-   SPIStream SPI3_MISO( PB4,  DMA1.streams[ 2 ], 0 );
-   SPIStream SPI3_MOSI( PB5,  DMA1.streams[ 5 ], 0 );
+   SPIStream SPI3_MISO( PB4,  DMA1.streams[ 2 ], DMAStream::CH0 );
+   SPIStream SPI3_MOSI( PB5,  DMA1.streams[ 5 ], DMAStream::CH0 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
@@ -233,9 +235,9 @@ namespace qb50 {
 //  E X T E R N A L   M E M O R Y  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*             id */
-   EXTMEM EXTMEM1( 0 );
-   EXTMEM EXTMEM2( 1 );
+   /*             id  SPI  csPin */
+   EXTMEM softMem( 0, SPI3, PA0 );  /* mémoire soft    */
+   EXTMEM dataMem( 1, SPI3, PA7 );  /* mémoire données */
 
 } /* qb50 */
 

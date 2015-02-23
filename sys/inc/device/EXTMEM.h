@@ -2,7 +2,8 @@
 #ifndef _QB50_SYS_DEVICE_EXTMEM_H
 #define _QB50_SYS_DEVICE_EXTMEM_H
 
-#include "Device.h"
+#include "device/SPI.h"
+#include "device/GPIOPin.h"
 
 
 namespace qb50 {
@@ -11,7 +12,7 @@ namespace qb50 {
    {
       public:
 
-         EXTMEM( unsigned id );
+         EXTMEM( uint32_t id, SPI& spi, GPIOPin& csPin );
          ~EXTMEM();
 
          EXTMEM& reset   ( void );
@@ -20,7 +21,9 @@ namespace qb50 {
 
       private:
 
-         unsigned id;
+         uint32_t _id;
+         SPI&     _spi;
+         GPIOPin& _csPin;
    };
 
    extern qb50::EXTMEM EXTMEM1;

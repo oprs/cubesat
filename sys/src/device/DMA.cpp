@@ -17,18 +17,13 @@ DMA::DMA( Bus& bus,
           const uint32_t iobase,
           const uint32_t periph,
           DMAStream *streams )
-   : BusDevice( bus, periph, iobase ),
+   : BusDevice( bus, iobase, periph ),
      streams( streams )
-{
-   reset();
-}
+{ ; }
 
 
 DMA::~DMA()
-{
-   reset();
-   disable();
-}
+{ disable(); }
 
 
 //  - - - - - - - - - - - - - -  //
@@ -37,45 +32,79 @@ DMA::~DMA()
 
 DMA& DMA::reset( void )
 {
+   QB50DBG( "DMA::reset()\r\n" );
    return *this;
 }
 
 
 DMA& DMA::enable( void )
 {
+   QB50DBG( "DMA::enable()\r\n" );
    bus.enable( this );
+   reset();
+
    return *this;
 }
 
 
 DMA& DMA::disable( void )
 {
+   QB50DBG( "DMA::disable()\r\n" );
    bus.disable( this );
    return *this;
 }
 
 
-#define DMAStream0_4_IFCR    0x3d
-#define DMAStream1_5_IFCR  ( 0x3d <<  6 )
-#define DMAStream2_6_IFCR  ( 0x3d << 16 )
-#define DMAStream3_7_IFCR  ( 0x3d << 22 )
+//  - - - - - - - - - - -  //
+//  T R A M P O L I N E S  //
+//  - - - - - - - - - - -  //
 
+void DMA1_Stream0_IRQHandler( void )
+{ qb50::DMA1.streams[0].isr(); }
 
-//  - - - - - - - - - - - -  //
-//  I S R   H A N D L E R S  //
-//  - - - - - - - - - - - -  //
+void DMA1_Stream1_IRQHandler( void )
+{ qb50::DMA1.streams[1].isr(); }
 
-void DMA::isr( void )
-{ ; }
+void DMA1_Stream2_IRQHandler( void )
+{ qb50::DMA1.streams[2].isr(); }
 
+void DMA1_Stream3_IRQHandler( void )
+{ qb50::DMA1.streams[3].isr(); }
 
-/* trampolines */
+void DMA1_Stream4_IRQHandler( void )
+{ qb50::DMA1.streams[4].isr(); }
 
-void DMA1_IRQHandler( void )
-{ qb50::DMA1.isr(); }
+void DMA1_Stream5_IRQHandler( void )
+{ qb50::DMA1.streams[5].isr(); }
 
-void DMA2_IRQHandler( void )
-{ qb50::DMA2.isr(); }
+void DMA1_Stream6_IRQHandler( void )
+{ qb50::DMA1.streams[6].isr(); }
 
+void DMA1_Stream7_IRQHandler( void )
+{ qb50::DMA1.streams[7].isr(); }
+
+void DMA2_Stream0_IRQHandler( void )
+{ qb50::DMA2.streams[0].isr(); }
+
+void DMA2_Stream1_IRQHandler( void )
+{ qb50::DMA2.streams[1].isr(); }
+
+void DMA2_Stream2_IRQHandler( void )
+{ qb50::DMA2.streams[2].isr(); }
+
+void DMA2_Stream3_IRQHandler( void )
+{ qb50::DMA2.streams[3].isr(); }
+
+void DMA2_Stream4_IRQHandler( void )
+{ qb50::DMA2.streams[4].isr(); }
+
+void DMA2_Stream5_IRQHandler( void )
+{ qb50::DMA2.streams[5].isr(); }
+
+void DMA2_Stream6_IRQHandler( void )
+{ qb50::DMA2.streams[6].isr(); }
+
+void DMA2_Stream7_IRQHandler( void )
+{ qb50::DMA2.streams[7].isr(); }
 
 /*EoF*/

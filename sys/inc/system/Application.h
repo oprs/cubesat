@@ -12,8 +12,11 @@ namespace qb50 {
    extern void    run( void );
    extern void    delay( unsigned ms );
    extern void    hexdump( const void *addr, unsigned len );
+   extern void    print( const char *x, unsigned len );
 
 } /* qb50 */
+
+#define QB50DBG( msg ) print( msg, sizeof( msg ))
 
 
 #endif /*_QB50_SYSTEM_APPLICATION_H*/
