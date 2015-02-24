@@ -2,9 +2,7 @@
 #ifndef _QB50_SYSTEM_DEVICE_H
 #define _QB50_SYSTEM_DEVICE_H
 
-#ifdef DEBUG
- #include "system/Application.h"
-#endif
+#include "system/Application.h"
 
 namespace qb50 {
 

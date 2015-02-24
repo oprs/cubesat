@@ -16,7 +16,11 @@ namespace qb50 {
 
 } /* qb50 */
 
-#define QB50DBG( msg ) print( msg, sizeof( msg ))
+#ifdef DEBUG
+ #define QB50DBG( msg ) print( msg, sizeof( msg ))
+#else
+ #define QB50DBG( msg )
+#endif
 
 
 #endif /*_QB50_SYSTEM_APPLICATION_H*/
