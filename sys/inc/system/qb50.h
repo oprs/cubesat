@@ -5,11 +5,13 @@
 
 #include "device/AHB.h"
 #include "device/APB.h"
+#include "device/NVIC.h"
 #include "device/DMA.h"
 #include "device/SPI.h"
 #include "device/GPIO.h"
 #include "device/UART.h"
-#include "device/EXTMEM.h"
+#include "device/A25Lxxx.h"
+#include "device/MAX111x.h"
 
 #include "system/Application.h"
 

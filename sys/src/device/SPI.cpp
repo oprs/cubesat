@@ -1,5 +1,6 @@
 
 #include "device/SPI.h"
+#include "device/UART.h"
 
 #include <stm32f4xx.h>
 
@@ -39,42 +40,18 @@ SPI::~SPI()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-/*
-   See the STM32F4 Reference Manual,
-   sec 28.5.1 "SPI control register 1" (pp. 904-906)
-
-   SPI CR1:
-
-    0000001100111100 = 0x033c
-    ||||||||||\_/|||
-    |||||||||| | ||+- SPI_CR1_CPHA     - Clock phase
-    |||||||||| | |+-- SPI_CR1_CPOL     - Clock polarity
-    |||||||||| | +--- SPI_CR1_MSTR     - Master selection
-    |||||||||| +----- SPI_CR1_BR       - Baud rate control
-    |||||||||+------- SPI_CR1_SPE      - SPI enable
-    ||||||||+-------- SPI_CR1_LSBFIRST - Frame format
-    |||||||+--------- SPI_CR1_SSI      - Internal slave select
-    ||||||+---------- SPI_CR1_SSM      - Software slave mgmt.
-    |||||+----------- SPI_CR1_RXONLY   - Receive only
-    ||||+------------ SPI_CR1_DFF      - Data frame format
-    |||+------------- SPI_CR1_CRCNEXT  - CRC transfer next
-    ||+-------------- SPI_CR1_CRCEN    - CRC enable
-    |+--------------- SPI_CR1_BIDIOE   - Output enable in bidirectional mode
-    +---------------- SPI_CR1_BIDIMODE - Bidirectional mode enable
- */
-
 SPI& SPI::reset( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-QB50DBG( "SPI::reset()\r\n" );
+   QB50DBG( "SPI::reset()\r\n" );
 
    bus.enable( this );
 
-   SPIx->CR1 = SPI_CR1_MSTR  /* device is master         */
-             | 0x0001 << 3   /* baud rate control = 111b */
-             | SPI_CR1_SSI   /* internal slave select    */
-             | SPI_CR1_SSM   /* software slave mgmt.     */
+   SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
+             | 0x0000 << 3   /* baud rate control     */
+             | SPI_CR1_SSI   /* internal slave select */
+             | SPI_CR1_SSM   /* software slave mgmt.  */
              ;
 
    bus.disable( this );
@@ -87,7 +64,7 @@ SPI& SPI::enable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-QB50DBG( "SPI::enable()\r\n" );
+   QB50DBG( "SPI::enable()\r\n" );
 
    reset();
 
@@ -102,10 +79,8 @@ QB50DBG( "SPI::enable()\r\n" );
               .pullUp()
               .alt( _alt );
 
-QB50DBG( "SPI::enable() - _stMISO\r\n" );
-   _stMISO.ds.enable();
-QB50DBG( "SPI::enable() - _stMOSI\r\n" );
-   _stMOSI.ds.enable();
+   _stMISO.dmaStream.enable();
+   _stMOSI.dmaStream.enable();
 
    bus.enable( this );
    SPIx->CR1 |= SPI_CR1_SPE;
@@ -118,13 +93,13 @@ SPI& SPI::disable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-QB50DBG( "SPI::disable()\r\n" );
+   QB50DBG( "SPI::disable()\r\n" );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
    bus.disable( this );
 
-   _stMOSI.ds.disable();
-   _stMISO.ds.disable();
+   _stMOSI.dmaStream.disable();
+   _stMISO.dmaStream.disable();
 
    _stMOSI.reset()
           .disable();
@@ -161,103 +136,42 @@ size_t SPI::xfer( const void *src, void *dst, size_t len )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-   _stMISO.ds.pAddr     ( (uint32_t)&( SPIx->DR ))
-             .m0Addr    ( (uint32_t)     dst     )
-             .counter   ( (uint32_t)     len     )
-             .pIncMode  ( DMAStream::FIXED       )
-             .mIncMode  ( DMAStream::INCR        )
-             .direction ( DMAStream::P2M         );
+   _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     dst     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::P2M         );
 
-   _stMOSI.ds.pAddr     ( (uint32_t)&( SPIx->DR ))
-             .m0Addr    ( (uint32_t)     src     )
-             .counter   ( (uint32_t)     len     )
-             .pIncMode  ( DMAStream::FIXED       )
-             .mIncMode  ( DMAStream::INCR        )
-             .direction ( DMAStream::M2P         );
+   _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     src     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::M2P         );
 
    SPIx->CR2 |= ( SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN );
 
-   _stMISO.ds.start();
-   _stMOSI.ds.start();
+   /* enable transmission for both RX and TX streams */
 
-   for( int n = 0 ; n < 100000 ; ++n )
-      ;
+   _stMISO.dmaStream.start();
+   _stMOSI.dmaStream.start();
 
-   _stMOSI.ds.stop();
-   _stMISO.ds.stop();
+   /*
+    * block until the transmission is complete,
+    * FreeRTOS will let other threads run in the meantime.
+    */
+
+   _stMOSI.dmaStream.wait();
+   _stMISO.dmaStream.wait();
+
+   /* we're done: disable both streams and return */
+
+   _stMOSI.dmaStream.stop();
+   _stMISO.dmaStream.stop();
 
    return 0;
 }
-
-
-#if 0
-size_t SPI::xfer( const void *src, void *dst, size_t len )
-{
-   size_t n;
-
-   // acquire the lock
-
-   xSemaphoreTake( _lock, portMAX_DELAY );
-
-   // perform the write
-
-   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-
-   for( n = 0 ; n < len ; ++n ) {
-      while(( SPIx->SR & SPI_SR_TXE ) == RESET );
-      if( src == NULL ) {
-         SPIx->DR = 0xffff;
-      } else {
-         SPIx->DR = ((uint8_t*)src)[ n ];
-      }
-
-      while(( SPIx->SR & SPI_SR_RXNE ) == RESET );
-      if( dst != NULL ) {
-         ((uint8_t*)dst)[ n ] = SPIx->DR;
-      }
-   }
-
-   // release the lock
-
-   xSemaphoreGive( _lock );
-
-   return n;
-}
-#endif
-
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-/*
-void SPI::setupNVIC( void )
-{
-   NVICis.NVIC_IRQChannelPreemptionPriority = 0x0f;
-   NVICis.NVIC_IRQChannelSubPriority        = 0x00;
-   NVICis.NVIC_IRQChannelCmd                = ENABLE;
-
-   switch( periph ) {
-
-      case RCC_APB2Periph_SPI1:
-
-         NVICis.NVIC_IRQChannel = SPI1_IRQn;
-         break;
-
-      case RCC_APB1Periph_SPI2:
-
-         NVICis.NVIC_IRQChannel = SPI2_IRQn;
-         break;
-
-      case RCC_APB1Periph_SPI3:
-
-         NVICis.NVIC_IRQChannel = SPI3_IRQn;
-         break;
-
-      default:
-         ;
-   }
-}
-*/
 
 
 //  - - - - - - - - - - - -  //
@@ -265,29 +179,12 @@ void SPI::setupNVIC( void )
 //  - - - - - - - - - - - -  //
 
 void SPI::isr( void )
-{
-#if 0
-   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-   portBASE_TYPE hpTask  = pdFALSE;
-   uint16_t SR = SPIx->SR;
+{ ; }
 
-   if( SR & SPI_FLAG_RXNE ) {
-      SPIx->SR &= ~SPI_FLAG_RXNE;
-      xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
-   }
 
-   if( SR & SPI_FLAG_TXE ) {
-      SPIx->SR &= ~SPI_FLAG_TXE;
-      xSemaphoreGiveFromISR( _isrTXE, &hpTask );
-      SPIx->CR1 &= ~SPI_FLAG_TXE;
-   }
-
-   if( hpTask == pdTRUE )
-      portEND_SWITCHING_ISR( hpTask );
-#endif
-}
-
-/* trampolines */
+//  - - - - - - - - - - -  //
+//  T R A M P O L I N E S  //
+//  - - - - - - - - - - -  //
 
 #undef SPI1
 #undef SPI2

@@ -1,5 +1,5 @@
 
-#include "device/EXTMEM.h"
+#include "device/A25Lxxx.h"
 
 using namespace qb50;
 
@@ -8,14 +8,14 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-EXTMEM::EXTMEM( uint32_t id, SPI& spi, GPIOPin& csPin )
+A25Lxxx::A25Lxxx( uint32_t id, SPI& spi, GPIOPin& csPin )
    : _id( id ), _spi( spi ), _csPin( csPin )
 {
    reset();
 }
 
 
-EXTMEM::~EXTMEM()
+A25Lxxx::~A25Lxxx()
 {
    reset();
    disable();
@@ -26,13 +26,13 @@ EXTMEM::~EXTMEM()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-EXTMEM& EXTMEM::reset( void )
+A25Lxxx& A25Lxxx::reset( void )
 {
    return *this;
 }
 
 
-EXTMEM& EXTMEM::enable( void )
+A25Lxxx& A25Lxxx::enable( void )
 {
    _csPin.enable();
 
@@ -40,7 +40,7 @@ EXTMEM& EXTMEM::enable( void )
 }
 
 
-EXTMEM& EXTMEM::disable( void )
+A25Lxxx& A25Lxxx::disable( void )
 {
    _csPin.disable();
 

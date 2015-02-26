@@ -2,7 +2,6 @@
 #include "device/UART.h"
 
 #include <stm32f4xx.h>
-#include <misc.h>
 
 using namespace qb50;
 
@@ -47,75 +46,6 @@ UART::~UART()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-/*
-   See the STM32F4 Reference Manual,
-   sec 30.6 "USART registers" (pp. 996-1002)
-
-   USART_BRR:
-
-    0000000000000000
-    \__________/\__/
-          |       |
-          |       +-- DIV_Mantissa
-          +---------- DIV_Fraction
-
-   USART CR1:
-
-    0000000000001100 = 0x000c
-    ||||||||||||||||
-    |||||||||||||||+- SBK    - Send break
-    ||||||||||||||+-- RWU    - Receiver wakeup
-    |||||||||||||+--- RE     - Receiver enable
-    ||||||||||||+---- TE     - Transmitter enable
-    |||||||||||+----- IDLEIE - IDLE interrupt enable
-    ||||||||||+------ RXNEIE - RXNE interrupt enable
-    |||||||||+------- TCIE   - Transmission complete interrupt enable
-    ||||||||+-------- TXEIE  - TXE interrupt enable
-    |||||||+--------- PEIE   - PE interrupt enable
-    ||||||+---------- PS     - Parity selection
-    |||||+----------- PCE    - Parity control enable
-    ||||+------------ WAKE   - Wakeup method
-    |||+------------- M      - Word length
-    ||+-------------- UE     - USART enable
-    |+--------------- xxx    - (reserved)
-    +---------------- OVER8  - Oversampling mode
-
-   USART CR2:
-
-    0000000000000000
-    ||\|||||||||\__/
-    || |||||||||  +-- ADD    - Address of the USART node
-    || ||||||||+----- xxx    - (reserved)
-    || |||||||+------ LBDL   - LIN break detection length
-    || ||||||+------- LBDIE  - LIN break detection interrupt enable
-    || |||||+-------- xxx    - (reserved)
-    || ||||+--------- LBCL   - Last bit clock pulse
-    || |||+---------- CPHA   - Clock phase
-    || ||+----------- CPOL   - Clock polarity
-    || |+------------ CLKEN  - Clock enable
-    || +------------- STOP   - Stop bits
-    |+--------------- LINEN  - LIN mode enable
-    +---------------- xxx    - (reserved)
-
-   USART CR3:
-
-    0000000000000000
-    \__/||||||||||||
-      | |||||||||||+- EIE    - Error interrupt enable
-      | ||||||||||+-- IREN   - IrDA mode enable
-      | |||||||||+--- IRLP   - IrDA low-power
-      | ||||||||+---- HDSEL  - Half-duplex selection
-      | |||||||+----- NACK   - Smartcard NACK enable
-      | ||||||+------ SCEN   - Smartcard mode enable
-      | |||||+------- DMAR   - DMA enable receiver
-      | ||||+-------- DMAT   - DMA enable transmitter
-      | |||+--------- RTSE   - RTS enable
-      | ||+---------- CTSE   - CTS enable
-      | |+----------- CTSIE  - CTS interrupt enable
-      | +------------ ONEBIT - One sample bit method enable
-      +-------------- xxx    - (reserved)
- */
-
 UART& UART::reset( void )
 {
    USART_TypeDef *UARTx = (USART_TypeDef*)iobase;
@@ -138,7 +68,6 @@ UART& UART::reset( void )
 UART& UART::enable( void )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-   NVIC_InitTypeDef NVICis;
 
    _rxPin.enable()
          .pullUp()
@@ -150,16 +79,9 @@ UART& UART::enable( void )
 
    bus.enable( this );
 
-   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-
-   NVICis.NVIC_IRQChannel                   = _IRQn;
-   NVICis.NVIC_IRQChannelPreemptionPriority = 0x0f;
-   NVICis.NVIC_IRQChannelSubPriority        = 0x00;
-   NVICis.NVIC_IRQChannelCmd                = ENABLE;
-   NVIC_Init( &NVICis );
-
  //USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE );
+   IRQ.enable( _IRQn );
 
    return *this;
 }
@@ -169,6 +91,7 @@ UART& UART::disable( void )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
+   IRQ.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    bus.disable( this );
 

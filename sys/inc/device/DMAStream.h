@@ -2,6 +2,9 @@
 #ifndef _QB50_SYS_DEVICE_DMA_STREAM_H
 #define _QB50_SYS_DEVICE_DMA_STREAM_H
 
+#include <FreeRTOS.h>
+#include <semphr.h>
+
 #include "Device.h"
 
 #include <stdint.h>
@@ -27,7 +30,7 @@ namespace qb50 {
           * nouveaux streams par l'application soit nécessaire.
           */
 
-         DMAStream( DMA& dma, const uint32_t iobase, const uint32_t shl );
+         DMAStream( DMA& dma, const uint32_t iobase, const uint32_t IRQn, const uint32_t shl );
          ~DMAStream();
 
          /**
@@ -92,6 +95,7 @@ namespace qb50 {
 
          DMAStream& start   ( void );
          DMAStream& stop    ( void );
+         DMAStream& wait    ( void );
 
          /**
           * Sélectionne le channel DMA utilisé par ce stream
@@ -327,9 +331,13 @@ namespace qb50 {
       private:
 
          DMAStream& _updateCR ( uint32_t val, uint32_t mask, int shift );
+         DMAStream& _clearIFR ( uint32_t flags );
+
+         xSemaphoreHandle _isrTxIE;  /**< ISR semaphore bound to TCIE and TEIE */
 
          DMA&           _dma;
          const uint32_t _iobase;
+         const uint32_t _IRQn;
          const uint32_t _shl;
    };
 

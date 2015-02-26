@@ -3,7 +3,6 @@
 
 #include <stm32f4xx.h>
 #include <stm32f4xx_rcc.h>
-#include <stm32f4xx_gpio.h>
 
 /* CMSIS is polluting the whole namespace with these macros... */
 
@@ -23,8 +22,8 @@
 #undef UART4
 #undef UART5
 
-// Microscope
-// Sentinel 1B
+#undef NVIC
+
 
 namespace qb50 {
 
@@ -41,30 +40,36 @@ namespace qb50 {
    APB APB1( 1 );
    APB APB2( 2 );
 
+//  - - - - - - - - - - - - - - - - - - - -  //
+//  I N T E R R U P T   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - - - - - - - -  //
+
+   NVIC IRQ;
+
 //  - - - - - - - - - - - -  //
 //  D M A   C H A N N E L S  //
 //  - - - - - - - - - - - -  //
 
    static DMAStream DMA1_Streams[ 8 ] = {
-      DMAStream( DMA1, DMA1_Stream0_BASE, 0x00 ),
-      DMAStream( DMA1, DMA1_Stream1_BASE, 0x06 ),
-      DMAStream( DMA1, DMA1_Stream2_BASE, 0x10 ),
-      DMAStream( DMA1, DMA1_Stream3_BASE, 0x16 ),
-      DMAStream( DMA1, DMA1_Stream4_BASE, 0x20 ),
-      DMAStream( DMA1, DMA1_Stream5_BASE, 0x26 ),
-      DMAStream( DMA1, DMA1_Stream6_BASE, 0x30 ),
-      DMAStream( DMA1, DMA1_Stream7_BASE, 0x36 )
+      DMAStream( DMA1, DMA1_Stream0_BASE, DMA1_Stream0_IRQn, 0x00 ),
+      DMAStream( DMA1, DMA1_Stream1_BASE, DMA1_Stream1_IRQn, 0x06 ),
+      DMAStream( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, 0x10 ),
+      DMAStream( DMA1, DMA1_Stream3_BASE, DMA1_Stream3_IRQn, 0x16 ),
+      DMAStream( DMA1, DMA1_Stream4_BASE, DMA1_Stream4_IRQn, 0x20 ),
+      DMAStream( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, 0x26 ),
+      DMAStream( DMA1, DMA1_Stream6_BASE, DMA1_Stream6_IRQn, 0x30 ),
+      DMAStream( DMA1, DMA1_Stream7_BASE, DMA1_Stream7_IRQn, 0x36 )
    };
 
    static DMAStream DMA2_Streams[ 8 ] = {
-      DMAStream( DMA2, DMA2_Stream0_BASE, 0x00 ),
-      DMAStream( DMA2, DMA2_Stream1_BASE, 0x06 ),
-      DMAStream( DMA2, DMA2_Stream2_BASE, 0x10 ),
-      DMAStream( DMA2, DMA2_Stream3_BASE, 0x16 ),
-      DMAStream( DMA2, DMA2_Stream4_BASE, 0x20 ),
-      DMAStream( DMA2, DMA2_Stream5_BASE, 0x26 ),
-      DMAStream( DMA2, DMA2_Stream6_BASE, 0x30 ),
-      DMAStream( DMA2, DMA2_Stream7_BASE, 0x36 )
+      DMAStream( DMA2, DMA2_Stream0_BASE, DMA2_Stream0_IRQn, 0x00 ),
+      DMAStream( DMA2, DMA2_Stream1_BASE, DMA2_Stream1_IRQn, 0x06 ),
+      DMAStream( DMA2, DMA2_Stream2_BASE, DMA2_Stream2_IRQn, 0x10 ),
+      DMAStream( DMA2, DMA2_Stream3_BASE, DMA2_Stream3_IRQn, 0x16 ),
+      DMAStream( DMA2, DMA2_Stream4_BASE, DMA2_Stream4_IRQn, 0x20 ),
+      DMAStream( DMA2, DMA2_Stream5_BASE, DMA2_Stream5_IRQn, 0x26 ),
+      DMAStream( DMA2, DMA2_Stream6_BASE, DMA2_Stream6_IRQn, 0x30 ),
+      DMAStream( DMA2, DMA2_Stream7_BASE, DMA2_Stream7_IRQn, 0x36 )
    };
 
 //  - - - - - - - - - - - - - - -  //
@@ -231,13 +236,20 @@ namespace qb50 {
    SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
    SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
 
-//  - - - - - - - - - - - - - - -  //
-//  E X T E R N A L   M E M O R Y  //
-//  - - - - - - - - - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  O N B O A R D   M E M O R Y  //
+//  - - - - - - - - - - - - - -  //
 
    /*             id  SPI  csPin */
-   EXTMEM softMem( 0, SPI3, PA0 );  /* mémoire soft    */
-   EXTMEM dataMem( 1, SPI3, PA7 );  /* mémoire données */
+   A25Lxxx softMem( 0, SPI3, PA0 );  /* mémoire soft    */
+   A25Lxxx dataMem( 1, SPI3, PA7 );  /* mémoire données */
+
+//  - - - - - - - - - - -  //
+//  O N B O A R D   A D C  //
+//  - - - - - - - - - - -  //
+
+   /*              SPI  csPin */
+   MAX111x maxADC( SPI3, PA6 );
 
 } /* qb50 */
 

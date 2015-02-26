@@ -7,6 +7,7 @@
 
 #include "BusDevice.h"
 #include "GPIOPin.h"
+#include "NVIC.h"
 
 
 namespace qb50 {

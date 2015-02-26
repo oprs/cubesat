@@ -8,10 +8,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPIStream::SPIStream( GPIOPin&          pin,
-                      DMAStream&         ds,
-                      DMAStream::Channel dc )
-   : pin( pin ), ds( ds ), dc( dc )
+SPIStream::SPIStream( GPIOPin&           pin,
+                      DMAStream&         dmaStream,
+                      DMAStream::Channel dmaChannel )
+   : pin( pin ),
+     dmaStream( dmaStream ),
+     dmaChannel( dmaChannel )
 { ; }
 
 
@@ -26,7 +28,7 @@ SPIStream::~SPIStream()
 SPIStream& SPIStream::reset( void )
 {
    QB50DBG( "SPIStream::reset()\r\n" );
-   ds.reset();
+   dmaStream.reset();
    pin.reset();
 
    return *this;
@@ -36,7 +38,8 @@ SPIStream& SPIStream::reset( void )
 SPIStream& SPIStream::enable( void )
 {
    QB50DBG( "SPIStream::enable()\r\n" );
-   ds.enable().channel( dc );
+   dmaStream.enable()
+            .channel( dmaChannel );
    pin.enable();
 
    return *this;
@@ -46,7 +49,7 @@ SPIStream& SPIStream::enable( void )
 SPIStream& SPIStream::disable( void )
 {
    QB50DBG( "SPIStream::disable()\r\n" );
-   ds.disable();
+   dmaStream.disable();
    pin.disable();
 
    return *this;

@@ -16,11 +16,15 @@ using namespace qb50;
 
 DMAStream::DMAStream( DMA& dma,
                       const uint32_t iobase,
+                      const uint32_t IRQn,
                       const uint32_t shl )
    : _dma( dma ),
      _iobase( iobase ),
+     _IRQn( IRQn ),
      _shl( shl )
-{ ; }
+{
+   _isrTxIE = xSemaphoreCreateBinary();
+}
 
 
 DMAStream::~DMAStream()
@@ -34,10 +38,8 @@ DMAStream::~DMAStream()
 DMAStream& DMAStream::reset( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
-   DMA_TypeDef        *DMAx  = (DMA_TypeDef*)_dma.iobase;
 
-   //_dma.enable();
-QB50DBG( "DMAStream::reset()\r\n" );
+   QB50DBG( "DMAStream::reset()\r\n" );
 
    /* reset the stream */
 
@@ -51,13 +53,7 @@ QB50DBG( "DMAStream::reset()\r\n" );
 
    /* clear interrupt flags */
 
-   if( _shl & 0x20 ) {
-      DMAx->HIFCR |= ( 0x3d << ( _shl & 0x1f ));
-   } else {
-      DMAx->LIFCR |= ( 0x3d <<   _shl         );
-   }
-
-   //_dma.disable();
+   _clearIFR( 0x3d );
 
    return *this;
 }
@@ -65,7 +61,9 @@ QB50DBG( "DMAStream::reset()\r\n" );
 
 DMAStream& DMAStream::enable( void )
 {
-QB50DBG( "DMAStream::enable()\r\n" );
+   QB50DBG( "DMAStream::enable()\r\n" );
+
+   IRQ.enable( _IRQn );
    _dma.enable(); /* _dma.refcount */
    reset();
 
@@ -75,8 +73,11 @@ QB50DBG( "DMAStream::enable()\r\n" );
 
 DMAStream& DMAStream::disable( void )
 {
-QB50DBG( "DMAStream::disable()\r\n" );
+   QB50DBG( "DMAStream::disable()\r\n" );
+
    _dma.disable(); /* _dma.refcount */
+   IRQ.disable( _IRQn );
+
    return *this;
 }
 
@@ -84,6 +85,12 @@ QB50DBG( "DMAStream::disable()\r\n" );
 DMAStream& DMAStream::start( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+
+   /* clear interrupt flags */
+
+   _clearIFR( 0x3d );
+
+   STRMx->CR |= ( DMA_SxCR_TCIE | DMA_SxCR_TEIE );
    STRMx->CR |= DMA_SxCR_EN;
 
    return *this;
@@ -93,7 +100,17 @@ DMAStream& DMAStream::start( void )
 DMAStream& DMAStream::stop( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
+
    STRMx->CR &= ~DMA_SxCR_EN;
+   STRMx->CR &= ~( DMA_SxCR_TCIE | DMA_SxCR_TEIE );
+
+   return *this;
+}
+
+
+DMAStream& DMAStream::wait( void )
+{
+   xSemaphoreTake( _isrTxIE, portMAX_DELAY );
 
    return *this;
 }
@@ -153,11 +170,50 @@ DMAStream& DMAStream::_updateCR( uint32_t val, uint32_t mask, int shift )
 }
 
 
+DMAStream& DMAStream::_clearIFR( uint32_t flags )
+{
+   DMA_TypeDef *DMAx = (DMA_TypeDef*)_dma.iobase;
+
+   if( _shl & 0x20 ) {
+      DMAx->HIFCR = ( flags << ( _shl & 0x1f ));
+   } else {
+      DMAx->LIFCR = ( flags <<   _shl         );
+   }
+
+   return *this;
+}
+
+
 //  - - - - - - - - - - - -  //
 //  I S R   H A N D L E R S  //
 //  - - - - - - - - - - - -  //
 
 void DMAStream::isr( void )
-{ ; }
+{
+   DMA_TypeDef  *DMAx   = (DMA_TypeDef*)_dma.iobase;
+   portBASE_TYPE hpTask = pdFALSE;
+   uint32_t      SR;
+
+   if( _shl & 0x20 ) {
+      SR = ( DMAx->HISR >> ( _shl & 0x1f )) & 0x3d;
+   } else {
+      SR = ( DMAx->LISR >>   _shl         ) & 0x3d;
+   }
+
+   if( SR & 0x08 /*TEIF*/ ) {
+      /* transfer error */
+      _clearIFR( 0x08 );
+   }
+
+   if( SR & 0x20 /*TCIF*/) {
+      /* transfer complete */
+      _clearIFR( 0x20 );
+   }
+
+   xSemaphoreGiveFromISR( _isrTxIE, &hpTask );
+
+   if( hpTask == pdTRUE )
+      portEND_SWITCHING_ISR( hpTask );
+}
 
 /*EoF*/

@@ -6,10 +6,10 @@ using namespace qb50;
 /*
  * LEDS:
  *
- * 12: green
- * 13: orange
- * 14: red
- * 15: blue
+ * 12: green   PD12
+ * 13: orange  PD13
+ * 14: red     PD14
+ * 15: blue    PD15
  */
 
 void thread1( Thread *self )
@@ -23,11 +23,11 @@ void thread1( Thread *self )
 
    SPI3.enable();
    delay( 50 );
-   UART6.write( "enabling chip\r\n", 15 );
 
    for( ;; ) {
       PD12.toggle();
       PC10.toggle();
+      UART6.write( "---\r\n", 5 );
 
       /* RDID */
 
@@ -69,15 +69,17 @@ int main( void )
    GPIOA.enable();
    PA7.out();
 
-/*
+   GPIOC.enable();
+   PC10.out();
+
    GPIOD.enable();
    PD12.out();
    PD13.out();
    PD14.out();
    PD15.out();
    PD13.on();
-*/
 
+PD14.on();
    createThread( "Thread 1", thread1 );
    run();
 
