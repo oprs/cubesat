@@ -15,7 +15,6 @@ namespace qb50 {
          DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, DMAStream *streams );
          ~DMA();
 
-         DMA& reset   ( void );
          DMA& enable  ( void );
          DMA& disable ( void );
 

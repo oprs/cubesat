@@ -30,18 +30,10 @@ DMA::~DMA()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-DMA& DMA::reset( void )
-{
-   QB50DBG( "DMA::reset()\r\n" );
-   return *this;
-}
-
-
 DMA& DMA::enable( void )
 {
    QB50DBG( "DMA::enable()\r\n" );
    bus.enable( this );
-   reset();
 
    return *this;
 }
@@ -51,6 +43,7 @@ DMA& DMA::disable( void )
 {
    QB50DBG( "DMA::disable()\r\n" );
    bus.disable( this );
+
    return *this;
 }
 

@@ -35,11 +35,14 @@ DMAStream::~DMAStream()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-DMAStream& DMAStream::reset( void )
+DMAStream& DMAStream::enable( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
-   QB50DBG( "DMAStream::reset()\r\n" );
+   QB50DBG( "DMAStream::enable()\r\n" );
+
+   IRQ.enable( _IRQn );
+   _dma.enable(); /* _dma.refcount */
 
    /* reset the stream */
 
@@ -54,18 +57,6 @@ DMAStream& DMAStream::reset( void )
    /* clear interrupt flags */
 
    _clearIFR( 0x3d );
-
-   return *this;
-}
-
-
-DMAStream& DMAStream::enable( void )
-{
-   QB50DBG( "DMAStream::enable()\r\n" );
-
-   IRQ.enable( _IRQn );
-   _dma.enable(); /* _dma.refcount */
-   reset();
 
    return *this;
 }

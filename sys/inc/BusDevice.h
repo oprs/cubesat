@@ -20,7 +20,6 @@ namespace qb50 {
          const uint32_t iobase;
          const uint32_t periph;
 
-         virtual BusDevice& reset   ( void ) = 0;
          virtual BusDevice& enable  ( void ) = 0;
          virtual BusDevice& disable ( void ) = 0;
    };

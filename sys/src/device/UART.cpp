@@ -27,14 +27,11 @@ UART::UART( Bus& bus,
    _wrLock  = xSemaphoreCreateMutex();
    _isrRXNE = xSemaphoreCreateBinary();
    _isrTXE  = xSemaphoreCreateBinary();
-
-   reset();
 }
 
 
 UART::~UART()
 {
-   reset();
    disable();
 
    vSemaphoreDelete( _wrLock );
@@ -45,25 +42,6 @@ UART::~UART()
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
-
-UART& UART::reset( void )
-{
-   USART_TypeDef *UARTx = (USART_TypeDef*)iobase;
-
-   bus.enable( this );
-
-   UARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
-   UARTx->CR2 = 0;
-   UARTx->CR3 = 0;
-
-   baudRate( 115200 );
-   //baudRate( 9600 );
-
-   bus.disable( this );
-
-   return *this;
-}
-
 
 UART& UART::enable( void )
 {
@@ -78,6 +56,13 @@ UART& UART::enable( void )
          .alt( _alt );
 
    bus.enable( this );
+
+   USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
+   USARTx->CR2 = 0;
+   USARTx->CR3 = 0;
+
+   baudRate( 115200 );
+   //baudRate( 9600 );
 
  //USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE );
@@ -95,11 +80,8 @@ UART& UART::disable( void )
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    bus.disable( this );
 
-   _txPin.reset()
-         .disable();
-
-   _rxPin.reset()
-         .disable();
+   _txPin.disable();
+   _rxPin.disable();
 
    return *this;
 }

@@ -13,7 +13,6 @@ namespace qb50 {
          Device() {}
          virtual ~Device() {}
 
-         virtual Device& reset   ( void ) = 0;
          virtual Device& enable  ( void ) = 0;
          virtual Device& disable ( void ) = 0;
    };

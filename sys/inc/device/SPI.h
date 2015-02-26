@@ -27,7 +27,6 @@ namespace qb50 {
 
          ~SPI();
 
-         SPI& reset   ( void );
          SPI& enable  ( void );
          SPI& disable ( void );
 
@@ -35,11 +34,16 @@ namespace qb50 {
          SPI& slave   ( void );
 
          /* synchronous transfer */
-         size_t xfer  ( const void *src, void *dst, size_t len );
 
-         void isr( void );
+         SPI& xfer    ( const void *src, void *dst, size_t len );
+         SPI& write   ( const void *src, size_t len );
+         SPI& read    ( void *dst, size_t len );
+
+         void isr     ( void );
 
       private:
+
+         SPI& _xfer   ( void );
 
          xSemaphoreHandle _lock;    /**< global lock on the device */
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */

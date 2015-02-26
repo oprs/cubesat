@@ -27,7 +27,6 @@ namespace qb50 {
 
          ~UART();
 
-         UART& reset    ( void );
          UART& enable   ( void );
          UART& disable  ( void );
 

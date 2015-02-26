@@ -16,7 +16,6 @@ namespace qb50 {
          GPIOPin( GPIO& gpio, const unsigned id, const uint16_t mask );
          ~GPIOPin();
 
-         GPIOPin& reset  ( void );
          GPIOPin& enable ( void );
          GPIOPin& disable( void );
 

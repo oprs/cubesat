@@ -14,19 +14,20 @@ namespace qb50 {
 
       public:
 
-         SPIStream( GPIOPin&           pin,
-                    DMAStream&         dmaStream,
-                    DMAStream::Channel dmaChannel );
+         SPIStream( DMAStream&         dmaStream,
+                    DMAStream::Channel dmaChannel,
+                    GPIOPin&           pin,
+                    GPIOPin::Alt       alt );
 
          ~SPIStream();
 
-         SPIStream& reset   ( void );
          SPIStream& enable  ( void );
          SPIStream& disable ( void );
 
-         GPIOPin&             pin;         /* GPIO pin      */
-         DMAStream&           dmaStream;   /* DMA stream    */
-         DMAStream::Channel   dmaChannel;  /* DMA channel   */
+         DMAStream&           dmaStream;
+         DMAStream::Channel   dmaChannel;
+         GPIOPin&             _pin;
+         GPIOPin::Alt         _alt;
    };
 
 } /* qb50 */

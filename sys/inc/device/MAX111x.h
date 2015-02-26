@@ -15,7 +15,6 @@ namespace qb50 {
          MAX111x( SPI& spi, GPIOPin& csPin );
          ~MAX111x();
 
-         MAX111x& reset   ( void );
          MAX111x& enable  ( void );
          MAX111x& disable ( void );
 

@@ -16,7 +16,6 @@ namespace qb50 {
          GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, GPIOPin *pin );
          ~GPIO();
 
-         GPIO& reset   ( void );
          GPIO& enable  ( void );
          GPIO& disable ( void );
 

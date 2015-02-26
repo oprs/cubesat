@@ -34,29 +34,6 @@ namespace qb50 {
          ~DMAStream();
 
          /**
-          * Réinitialise le stream DMA
-          *
-          * Le stream est réinitialisé dans sa configuration d'origine,
-          * toutes les interruptions associées sont désactivées.
-          *
-          * Configuration par défaut:
-          *  - Channel sélectionné: qb50::DMAStream::CH0
-          *  - Memory burst et peripheral burst en single transfer
-          *  - Mode double buffer désactivé
-          *  - Priorité: qb50::DMAStream::LOW
-          *  - Data size: qb50::DMAStream::BYTE
-          *  - Incrémentation automatique désactivée pour les adresses
-          *    mémoire et périphérique
-          *  - Buffer circulaire désactivé
-          *  - Direction du transfer: qb50::DMAStream::P2M
-          *  - Toutes les interruptions sont désactivées
-          *
-          * @return Une self-reference sur cette instance.
-          */
-
-         DMAStream& reset   ( void );
-
-         /**
           * Active le stream DMA
           *
           * Incrémente le compteur de référence sur le le DMA parent,
@@ -78,7 +55,7 @@ namespace qb50 {
 
          DMAStream& disable ( void );
 
-         /* channel selection */
+      /* channel selection */
 
          enum Channel {
             CH0      = 0, /*!< channel 0 */
@@ -91,7 +68,7 @@ namespace qb50 {
             CH7      = 7  /*!< channel 7 */
          };
 
-         /* start/stop */
+      /* start/stop */
 
          DMAStream& start   ( void );
          DMAStream& stop    ( void );
@@ -108,7 +85,7 @@ namespace qb50 {
          inline DMAStream& channel( Channel sel )
          { return _updateCR( sel, 0x07, 25 ); }
 
-         /* burst transfer configuration */
+      /* burst transfer configuration */
 
          enum Burst {
             SINGLE   = 0, /*!< single transfer               */
@@ -139,7 +116,7 @@ namespace qb50 {
          inline DMAStream& pBurst( Burst sel )
          { return _updateCR( sel, 0x03, 21 ); }
 
-         /* current target */
+      /* current target */
 
          enum Target {
             MEM0     = 0, /*!< target memory is memory 0 */
@@ -157,7 +134,7 @@ namespace qb50 {
          inline DMAStream& target( Target sel )
          { return _updateCR( sel, 0x01, 19 ); }
 
-         /* priority level */
+      /* priority level */
 
          enum Priority {
             LOW      = 0, /*!< low priority       */
@@ -177,7 +154,7 @@ namespace qb50 {
          inline DMAStream& priority( Priority sel )
          { return _updateCR( sel, 0x03, 16 ); }
 
-         /* memory/peripheral data size */
+      /* memory/peripheral data size */
 
          enum DataSize {
             BYTE     = 0, /*!< byte (8-bit)   */
@@ -209,7 +186,7 @@ namespace qb50 {
          inline DMAStream& pDataSize( DataSize sel )
          { return _updateCR( sel, 0x03, 11 ); }
 
-         /* address increment mode */
+      /* address increment mode */
 
          enum IncMode {
             FIXED    = 0, /*!< address pointer is fixed */
@@ -238,7 +215,7 @@ namespace qb50 {
          inline DMAStream& pIncMode( IncMode sel )
          { return _updateCR( sel, 0x01, 9 ); }
 
-         /* normal/circular mode */
+      /* normal/circular mode */
 
          enum Mode {
             NORMAL   = 0, /*!< circular mode disabled */
@@ -256,7 +233,7 @@ namespace qb50 {
          inline DMAStream& mode( Mode sel )
          { return _updateCR( sel, 0x01, 8 ); }
 
-         /* transfer direction */
+      /* transfer direction */
 
          enum Direction {
             P2M      = 0, /*!< peripheral to memory */

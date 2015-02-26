@@ -10,24 +10,16 @@ using namespace qb50;
 
 GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, GPIOPin *pin )
    : BusDevice( bus, iobase, periph ), pin( pin )
-{
-   reset();
-}
+{ ; }
 
 
 GPIO::~GPIO()
-{ reset(); }
+{ disable(); }
 
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
-
-GPIO& GPIO::reset( void )
-{
-   return *this;
-}
-
 
 GPIO& GPIO::enable( void )
 {

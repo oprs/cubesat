@@ -13,34 +13,16 @@ using namespace qb50;
 
 GPIOPin::GPIOPin( GPIO& gpio, const unsigned id, const uint16_t mask )
    : _gpio( gpio ), _id( id ), _mask( mask )
-{
-   reset();
-}
+{ ; }
 
 
 GPIOPin::~GPIOPin()
-{ reset(); }
+{ disable(); }
 
 
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
-
-GPIOPin& GPIOPin::reset( void )
-{
-/*
-   _gpio.enable();
-
-   mode   (    INPUT );
-   oSpeed (     SLOW );
-   oType  ( PUSHPULL );
-   PuPd   (   NOPULL );
-
-   _gpio.disable();
-*/
-   return *this;
-}
-
 
 GPIOPin& GPIOPin::enable( void )
 {
@@ -51,7 +33,7 @@ GPIOPin& GPIOPin::enable( void )
 
 GPIOPin& GPIOPin::disable( void )
 {
-   _gpio.disable();
+   //_gpio.disable();
    return *this;
 }
 

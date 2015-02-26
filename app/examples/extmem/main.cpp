@@ -14,51 +14,38 @@ using namespace qb50;
 
 void thread1( Thread *self )
 {
-   uint8_t rdid[ 4 ] = { 0x9f, 0xff, 0xff, 0xff };
-   uint8_t rems[ 6 ] = { 0x90, 0xff, 0xff, 0x00, 0xff, 0xff };
-   uint8_t rsr1[ 2 ] = { 0x05, 0xff };
-   uint8_t rsr2[ 2 ] = { 0x35, 0xff };
+   A25Lxxx::RDIDResp rdid;
+   A25Lxxx::REMSResp rems;
+   A25Lxxx::RDSRResp rdsr;
 
-   uint8_t dst[ 8 ];
+   uint8_t *buf = new uint8_t[1024];
 
-   SPI3.enable();
-   delay( 50 );
+   dataMem.enable();
 
    for( ;; ) {
       PD12.toggle();
-      PC10.toggle();
+      //PC10.toggle();
       UART6.write( "---\r\n", 5 );
 
-      /* RDID */
+      dataMem.RDID( &rdid );
+      hexdump( &rdid, sizeof( rdid ));
 
-      PA7.off();
-      SPI3.xfer( rdid, dst, 4 );
-      PA7.on();
-      hexdump( dst, 4 );
+      dataMem.REMS( &rems );
+      hexdump( &rems, sizeof( rems ));
 
-      /* REMS */
+      dataMem.RDSR1( &rdsr );
+      hexdump( &rdsr, sizeof( rdsr ));
 
-      PA7.off();
-      SPI3.xfer( rems, dst, 6 );
-      PA7.on();
-      hexdump( dst, 6 );
+      dataMem.RDSR2( &rdsr );
+      hexdump( &rdsr, sizeof( rdsr ));
 
-      /* RDSR-1 */
-
-      PA7.off();
-      SPI3.xfer( rsr1, dst, 2 );
-      PA7.on();
-      hexdump( dst, 2 );
-
-      /* RDSR-2 */
-
-      PA7.off();
-      SPI3.xfer( rsr2, dst, 2 );
-      PA7.on();
-      hexdump( dst, 2 );
+      dataMem.READ( 0, buf, 256 );
+      hexdump( buf, 256 );
 
       delay( 1000 );
    }
+
+   delete[] buf;
 }
 
 
@@ -67,16 +54,17 @@ int main( void )
    UART6.enable();
 
    GPIOA.enable();
-   PA7.out();
+   //PA7.out();
 
-   GPIOC.enable();
-   PC10.out();
+   //GPIOC.enable();
+   //PC10.out();
 
    GPIOD.enable();
    PD12.out();
    PD13.out();
    PD14.out();
    PD15.out();
+
    PD13.on();
 
 PD14.on();

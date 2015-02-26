@@ -218,14 +218,14 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPIStream SPI1_MISO( PA6,  DMA2.streams[ 0 ], DMAStream::CH3 );
-   SPIStream SPI1_MOSI( PA7,  DMA2.streams[ 3 ], DMAStream::CH3 );
+   SPIStream SPI1_MISO( DMA2.streams[ 0 ], DMAStream::CH3, PA6,  GPIOPin::SPI1 );
+   SPIStream SPI1_MOSI( DMA2.streams[ 3 ], DMAStream::CH3, PA7,  GPIOPin::SPI1 );
 
-   SPIStream SPI2_MISO( PB14, DMA1.streams[ 3 ], DMAStream::CH0 );
-   SPIStream SPI2_MOSI( PB15, DMA1.streams[ 4 ], DMAStream::CH0 );
+   SPIStream SPI2_MISO( DMA1.streams[ 3 ], DMAStream::CH0, PB14, GPIOPin::SPI2 );
+   SPIStream SPI2_MOSI( DMA1.streams[ 4 ], DMAStream::CH0, PB15, GPIOPin::SPI2 );
 
-   SPIStream SPI3_MISO( PB4,  DMA1.streams[ 2 ], DMAStream::CH0 );
-   SPIStream SPI3_MOSI( PB5,  DMA1.streams[ 5 ], DMAStream::CH0 );
+   SPIStream SPI3_MISO( DMA1.streams[ 2 ], DMAStream::CH0, PB4,  GPIOPin::SPI3 );
+   SPIStream SPI3_MOSI( DMA1.streams[ 5 ], DMAStream::CH0, PB5,  GPIOPin::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
@@ -240,9 +240,9 @@ namespace qb50 {
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
 
-   /*             id  SPI  csPin */
-   A25Lxxx softMem( 0, SPI3, PA0 );  /* mémoire soft    */
-   A25Lxxx dataMem( 1, SPI3, PA7 );  /* mémoire données */
+   /*               SPI  csPin */
+   A25Lxxx softMem( SPI3, PA0 );  /* mémoire soft    */
+   A25Lxxx dataMem( SPI3, PA7 );  /* mémoire données */
 
 //  - - - - - - - - - - -  //
 //  O N B O A R D   A D C  //
