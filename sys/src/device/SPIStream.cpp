@@ -20,7 +20,7 @@ SPIStream::SPIStream( DMAStream&         dmaStream,
 
 
 SPIStream::~SPIStream()
-{ ; }
+{ disable(); }
 
 
 //  - - - - - - -  //

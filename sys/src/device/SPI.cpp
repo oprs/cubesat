@@ -31,9 +31,7 @@ SPI::SPI( Bus&           bus,
 
 
 SPI::~SPI()
-{
-   disable();
-}
+{ disable(); }
 
 
 //  - - - - - - - - - - - - - -  //

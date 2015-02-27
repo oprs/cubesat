@@ -30,7 +30,7 @@ GPIO& GPIO::enable( void )
 
 GPIO& GPIO::disable( void )
 {
-   bus.disable( this );
+   //bus.disable( this );
    return *this;
 }
 

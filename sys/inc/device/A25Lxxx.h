@@ -56,6 +56,22 @@ namespace qb50 {
 
          A25Lxxx& READ( uint32_t addr, void *x, uint32_t len );
 
+         /* write enable */
+
+         A25Lxxx& WREN( void );
+
+         /* sector erase */
+
+         A25Lxxx& SE( uint32_t addr );
+
+         /* block erase */
+
+         A25Lxxx& BE( uint32_t addr );
+
+         /* page program */
+
+         A25Lxxx& PP( uint32_t addr, void *x, uint32_t len );
+
       private:
 
          uint32_t _id;
