@@ -50,19 +50,18 @@ SPI& SPI::enable( void )
           .pullDn()
           .alt( _alt );
 
+   _stMISO.enable();
+   _stMOSI.enable();
+
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
    SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
-             | 0x000 << 3    /* baud rate control     */
+             | 0x4 << 3      /* baud rate control     */
              | SPI_CR1_SSI   /* internal slave select */
              | SPI_CR1_SSM   /* software slave mgmt.  */
              ;
 
    SPIx->CR2 |= ( SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN );
-
-   _stMISO.enable();
-   _stMOSI.enable();
-
    SPIx->CR1 |= SPI_CR1_SPE;
 
    return *this;
@@ -171,6 +170,33 @@ SPI& SPI::read( void *dst, size_t len )
                     .direction (DMAStream::M2P         );
 
    return _xfer();
+}
+
+/* polling methods */
+
+SPI& SPI::pollXfer( const void *src, void *dst, size_t len )
+{
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   uint8_t rx;
+
+   for( size_t i = 0 ; i < len ; ++i ) {
+      while( !( SPIx->SR & SPI_SR_TXE ));
+
+      if( src == NULL ) {
+         SPIx->DR = 0xff;
+      } else {
+         SPIx->DR = ((uint8_t*)src)[ i ];
+      }
+
+      while( !( SPIx->SR & SPI_SR_RXNE ));
+
+      rx = SPIx->DR & 0xff;
+      if( dst != NULL ) {
+         ((uint8_t*)dst)[ i ] = rx;
+      }
+   }
+
+   return *this;
 }
 
 

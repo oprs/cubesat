@@ -3,7 +3,6 @@
 
 using namespace qb50;
 
-
 /*
  * 64 blocks
  * 64 blocks * 16 sectors/block = 1024 sectors
@@ -11,6 +10,17 @@ using namespace qb50;
  * 64 blocks * 16 secrots/block * 16 pages/sector * 256 bytes/page = 4194304 bytes
  */
 
+/* typical Sector Erase Cycle Time (ms) */
+#define tSE 40
+
+/* typical Block Erase Cycle Time (ms) */
+#define tBE 500
+
+/* typical Chip Erase Cycle Time (ms) */
+#define tCE 32000
+
+/* typical Page Program Cycle Time (ms) */
+#define tPP 2
 
 /* SPI commands */
 
@@ -62,7 +72,7 @@ A25Lxxx& A25Lxxx::disable( void )
 A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
 {
    _csPin.off();
-   _spi.xfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
+   _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
    _csPin.on();
 
    return *this;
@@ -72,7 +82,7 @@ A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
 A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
 {
    _csPin.off();
-   _spi.xfer( REMSCmd, rems, sizeof( REMSCmd ));
+   _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
    _csPin.on();
 
    return *this;
@@ -82,7 +92,7 @@ A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
 A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
 {
    _csPin.off();
-   _spi.xfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
+   _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
    _csPin.on();
 
    return *this;
@@ -92,7 +102,7 @@ A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
 A25Lxxx& A25Lxxx::RDSR2( RDSRResp *rdsr )
 {
    _csPin.off();
-   _spi.xfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
+   _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
    _csPin.on();
 
    return *this;
@@ -109,7 +119,7 @@ A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
    READCmd[ 3 ] =   addr         & 0xff;
 
    _csPin.off();
-   _spi.write( READCmd, sizeof( READCmd ));
+   _spi.pollXfer( READCmd, NULL, sizeof( READCmd ));
    _spi.read( x, len );
    _csPin.on();
 
@@ -120,7 +130,7 @@ A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
 A25Lxxx& A25Lxxx::WREN( void )
 {
    _csPin.off();
-   _spi.write( WRENCmd, sizeof( WRENCmd ));
+   _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
    _csPin.on();
 
    return *this;
@@ -137,8 +147,10 @@ A25Lxxx& A25Lxxx::SE( uint32_t addr )
    SECmd[ 3 ] =   addr         & 0x00;
 
    _csPin.off();
-   _spi.write( SECmd, sizeof( SECmd ));
+   _spi.pollXfer( SECmd, NULL, sizeof( SECmd ));
    _csPin.on();
+
+   _WIPWait( tSE );
 
    return *this;
 }
@@ -154,8 +166,10 @@ A25Lxxx& A25Lxxx::BE( uint32_t addr )
    BECmd[ 3 ] =   addr         & 0x00;
 
    _csPin.off();
-   _spi.write( BECmd, sizeof( BECmd ));
+   _spi.pollXfer( BECmd, NULL, sizeof( BECmd ));
    _csPin.on();
+
+   _WIPWait( tBE );
 
    return *this;
 }
@@ -171,8 +185,41 @@ A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
    PPCmd[ 3 ] =   addr         & 0xff;
 
    _csPin.off();
-   _spi.write( PPCmd, sizeof( PPCmd ));
+   _spi.pollXfer( PPCmd, NULL, sizeof( PPCmd ));
    _spi.write( x, len );
+   _csPin.on();
+
+   _WIPWait( tPP );
+
+   return *this;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
+{
+   RDSRResp rdsr;
+   uint8_t rx;
+   uint8_t tx = 0xff;
+
+   if( ms > 0 ) {
+      delay( ms );
+      ms >>= 3;
+   }
+
+   _csPin.off();
+   _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
+
+   if( rdsr.sr & 0x01 ) {
+      do {
+         if( ms > 0 ) delay( ms );
+         _spi.pollXfer( &tx, &rx, 1 );
+      } while( rx & 0x01 );
+   }
+
    _csPin.on();
 
    return *this;

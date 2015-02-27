@@ -39,6 +39,8 @@ namespace qb50 {
          SPI& write   ( const void *src, size_t len );
          SPI& read    ( void *dst, size_t len );
 
+         SPI& pollXfer( const void *src, void *dst, size_t len );
+
          void isr     ( void );
 
       private:
