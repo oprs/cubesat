@@ -76,7 +76,6 @@ namespace qb50 {
 
          A25Lxxx& _WIPWait( unsigned ms = 10 );
 
-         uint32_t _id;
          SPI&     _spi;
          GPIOPin& _csPin;
    };

@@ -63,7 +63,7 @@ namespace qb50 {
             CH2      = 2, /*!< channel 2 */
             CH3      = 3, /*!< channel 3 */
             CH4      = 4, /*!< channel 4 */
-            CH5      = 2, /*!< channel 5 */
+            CH5      = 5, /*!< channel 5 */
             CH6      = 6, /*!< channel 6 */
             CH7      = 7  /*!< channel 7 */
          };

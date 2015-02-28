@@ -56,7 +56,7 @@ SPI& SPI::enable( void )
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
    SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
-             | 0x4 << 3      /* baud rate control     */
+             | 0x5 << 3      /* baud rate control     */
              | SPI_CR1_SSI   /* internal slave select */
              | SPI_CR1_SSM   /* software slave mgmt.  */
              ;

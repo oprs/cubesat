@@ -23,7 +23,9 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::enable( void )
 {
-   _csPin.enable();
+   _csPin.enable()
+         .pullUp()
+         .out();
 
    return *this;
 }
@@ -32,6 +34,22 @@ MAX111x& MAX111x::enable( void )
 MAX111x& MAX111x::disable( void )
 {
    _csPin.disable();
+
+   return *this;
+}
+
+
+MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
+{
+   uint8_t ConvCmd[ 3 ];
+
+   ConvCmd[ 0 ] = 0x8f | (( sel & 0x07 ) << 4 ) ;
+   ConvCmd[ 1 ] = 0xff;
+   ConvCmd[ 2 ] = 0xff;
+
+   _csPin.off();
+   _spi.pollXfer( ConvCmd, resp, sizeof( ConvCmd ));
+   _csPin.on();
 
    return *this;
 }
