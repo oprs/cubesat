@@ -1,5 +1,5 @@
 
-TOPDIR ?= ../../..
+SATDIR ?= $(TOPDIR)/sat
 ARCH   ?= stm32f4
 
 OBJFILES = \
@@ -10,8 +10,8 @@ TARGETS = main.hex main.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
 
-LDFLAGS += -T$(TOPDIR)/rules/arch-$(ARCH).ld
-LDFLAGS += -L$(TOPDIR)/sys/ -lsystem
+LDFLAGS += -T$(SATDIR)/rules/arch-$(ARCH).ld
+LDFLAGS += -L$(SATDIR)/sys/ -lsystem
 LDFLAGS += --specs=nosys.specs
 
 
@@ -30,5 +30,5 @@ clean:
 
 .PHONY: $(TARGETS) default clean
 
-include $(TOPDIR)/rules/common.mk
+include $(SATDIR)/rules/common.mk
 

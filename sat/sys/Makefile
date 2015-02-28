@@ -33,5 +33,5 @@ default: $(ARCHIVE)
 clean:
 	$(RM) $(ARCHIVE) $(OBJFILES)
 
-include $(TOPDIR)/rules/common.mk
+include $(SATDIR)/rules/common.mk
 

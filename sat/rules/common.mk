@@ -5,7 +5,7 @@ fallback:
 	$(error "no target found in Makefile")
 
 
-include $(TOPDIR)/rules/arch-$(ARCH).mk
+include $(SATDIR)/rules/arch-$(ARCH).mk
 
 RM     := rm -f
 CHECK  := cppcheck --enable=all
@@ -24,12 +24,12 @@ ifndef VERBOSE
  QUIET := @
 endif
 
-RTOS_CFLAGS  = -I$(TOPDIR)/sys/FreeRTOS/include
-RTOS_CFLAGS += -I$(TOPDIR)/sys/FreeRTOS/portable/$(ARCH)
+RTOS_CFLAGS  = -I$(SATDIR)/sys/FreeRTOS/include
+RTOS_CFLAGS += -I$(SATDIR)/sys/FreeRTOS/portable/$(ARCH)
 
 APP_CFLAGS   = $(ARCH_CFLAGS) $(RTOS_CFLAGS)
-APP_CFLAGS  += -I$(TOPDIR)/sys/inc
-APP_CFLAGS  += -I$(TOPDIR)/sys/inc/system
+APP_CFLAGS  += -I$(SATDIR)/sys/inc
+APP_CFLAGS  += -I$(SATDIR)/sys/inc/system
 
 $(SUBDIRS):
 	@$(MAKE) -C $@ TOPDIR=$(TOPDIR) ARCH=$(ARCH)

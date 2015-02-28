@@ -1,4 +1,6 @@
 
+SATDIR ?= $(TOPDIR)/sat
+
 # this file is included by rules/common.mk when ARCH is set to stm32f4
 
 AR  := arm-none-eabi-ar rcs
@@ -13,7 +15,7 @@ MCUFLAGS += -mthumb -mcpu=cortex-m4 -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-
 #CFLAGS += -DSTM32F4XX -DUSE_STDPERIPH_DRIVER -DUSE_FULL_ASSERT
 CFLAGS += -DSTM32F4XX -DUSE_STDPERIPH_DRIVER
 
-ARCH_CFLAGS  = -I$(TOPDIR)/sys/$(ARCH)/inc
-ARCH_CFLAGS += -I$(TOPDIR)/sys/$(ARCH)/inc/core
-ARCH_CFLAGS += -I$(TOPDIR)/sys/$(ARCH)/inc/peripherals
+ARCH_CFLAGS  = -I$(SATDIR)/sys/$(ARCH)/inc
+ARCH_CFLAGS += -I$(SATDIR)/sys/$(ARCH)/inc/core
+ARCH_CFLAGS += -I$(SATDIR)/sys/$(ARCH)/inc/peripherals
 
