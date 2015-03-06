@@ -11,7 +11,7 @@ RM     := rm -f
 CHECK  := cppcheck --enable=all
 #CHECK  := cppcheck --force --enable=warning,style
 
-CFLAGS += -Wall
+CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)
 
 ifdef DEBUG

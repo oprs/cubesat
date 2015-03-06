@@ -48,6 +48,8 @@ void NVIC::enable( uint32_t IRQn, Priority sel )
 
 
 void NVIC::disable( uint32_t IRQn )
-{ ; }
+{
+   (void)IRQn; /* XXX */
+}
 
 /*EoF*/

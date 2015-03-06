@@ -29,7 +29,12 @@
  { for( ;; ); }
 
  void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
- { for( ;; ); }
+ {
+    (void)pxTask;
+    (void)pcTaskName;
+
+    for( ;; );
+ }
 #endif /*DEBUG*/
 
 

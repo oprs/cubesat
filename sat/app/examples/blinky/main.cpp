@@ -14,6 +14,8 @@ using namespace qb50;
 
 void thread1( Thread *self )
 {
+   (void)self;
+
    for( ;; ) {
       PD12.toggle();
       PC10.toggle();
@@ -23,6 +25,8 @@ void thread1( Thread *self )
 
 void thread2( Thread *self )
 {
+   (void)self;
+
    for( ;; ) {
       PD15.toggle();
       UART6.write( "-\r\n", 3 );
@@ -33,6 +37,8 @@ void thread2( Thread *self )
 
 void thread3( Thread *self )
 {
+   (void)self;
+
    char x[16];
 
    for( ;; ) {

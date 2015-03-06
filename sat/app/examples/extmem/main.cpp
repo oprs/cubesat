@@ -26,6 +26,8 @@ using namespace qb50;
 
 void thread1( Thread *self )
 {
+   (void)self;
+
    A25Lxxx::RDIDResp rdid;
    A25Lxxx::REMSResp rems;
    A25Lxxx::RDSRResp rdsr;
@@ -33,6 +35,7 @@ void thread1( Thread *self )
 
    uint8_t *buf = new uint8_t[1024];
 
+#if 0
    uint8_t rom[ 64 ] = {
       0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -43,6 +46,7 @@ void thread1( Thread *self )
       0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
       0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
    };
+#endif
 
    dataMem.enable();
    softMem.enable();
@@ -123,7 +127,7 @@ void thread1( Thread *self )
       maxADC.conv( MAX111x::CH7, &conv );
       hexdump( &conv, sizeof( conv ));
 
-      delay( 5000 );
+      delay( 500 );
    }
 
    delete[] buf;
