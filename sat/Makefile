@@ -28,11 +28,8 @@ $(SUB_CLN): %.clean:
 doc:
 	doxygen $(SATDIR)/rules/Doxyfile
 
-tags:
-	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
-
-.PHONY: all check clean doc tags $(SUB_ALL)
+.PHONY: all check clean doc $(SUB_ALL)
 
 include $(SATDIR)/rules/common.mk
 

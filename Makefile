@@ -16,6 +16,9 @@ check:
 clean:
 	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) clean
 
+tags:
+	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
-.PHONY: sat doc check clean
+
+.PHONY: sat doc check clean tags
 
