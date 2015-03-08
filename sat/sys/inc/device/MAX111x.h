@@ -24,6 +24,7 @@ namespace qb50 {
             uint8_t rb1;
             uint8_t rb2;
             uint8_t rb3;
+            uint8_t rb4;
          } __attribute__(( packed ));
 
          /* channel selection */

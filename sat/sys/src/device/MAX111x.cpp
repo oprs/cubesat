@@ -41,11 +41,12 @@ MAX111x& MAX111x::disable( void )
 
 MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
 {
-   uint8_t ConvCmd[ 3 ];
+   uint8_t ConvCmd[ 4 ];
 
-   ConvCmd[ 0 ] = 0x8f | (( sel & 0x07 ) << 4 ) ;
-   ConvCmd[ 1 ] = 0xff;
-   ConvCmd[ 2 ] = 0xff;
+   ConvCmd[ 0 ] = 0x00;
+   ConvCmd[ 1 ] = 0x8f | (( sel & 0x07 ) << 4 ) ;
+   ConvCmd[ 2 ] = 0x00;
+   ConvCmd[ 3 ] = 0x00;
 
    _csPin.off();
    _spi.pollXfer( ConvCmd, resp, sizeof( ConvCmd ));
