@@ -24,14 +24,15 @@ SPI::SPI( Bus&           bus,
      _clkPin( clkPin ),
      _alt( alt )
 {
-   _lock    = xSemaphoreCreateMutex();
-   _isrRXNE = xSemaphoreCreateBinary();
-   _isrTXE  = xSemaphoreCreateBinary();
+   _lock = xSemaphoreCreateMutex();
 }
 
 
 SPI::~SPI()
-{ disable(); }
+{
+   disable();
+   vSemaphoreDelete( _lock );
+}
 
 
 //  - - - - - - - - - - - - - -  //

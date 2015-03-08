@@ -50,9 +50,7 @@ namespace qb50 {
 
          SPI& _xfer   ( void );
 
-         xSemaphoreHandle _lock;    /**< global lock on the device */
-         xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
-         xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
+         xSemaphoreHandle _lock;  /**< bus lock */
 
          SPIStream&      _stMISO;
          SPIStream&      _stMOSI;
