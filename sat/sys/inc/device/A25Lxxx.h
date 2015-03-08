@@ -2,13 +2,12 @@
 #ifndef _QB50_SYS_DEVICE_A25LXXX_H
 #define _QB50_SYS_DEVICE_A25LXXX_H
 
-#include "device/SPI.h"
-#include "device/GPIOPin.h"
+#include "device/SPIDevice.h"
 
 
 namespace qb50 {
 
-   class A25Lxxx : public Device
+   class A25Lxxx : public SPIDevice
    {
       public:
 
@@ -75,9 +74,6 @@ namespace qb50 {
       private:
 
          A25Lxxx& _WIPWait( unsigned ms = 10 );
-
-         SPI&     _spi;
-         GPIOPin& _csPin;
    };
 
    extern qb50::A25Lxxx softMem;

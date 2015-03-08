@@ -9,7 +9,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 MAX111x::MAX111x( SPI& spi, GPIOPin& csPin )
-   : _spi( spi ), _csPin( csPin )
+   : SPIDevice( spi, csPin, SPIDevice::ActiveLow )
 { ; }
 
 
@@ -23,20 +23,13 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::enable( void )
 {
-   _csPin.enable()
-         .pullUp()
-         .out();
-
+   _spi.enable();
    return *this;
 }
 
 
 MAX111x& MAX111x::disable( void )
-{
-   _csPin.disable();
-
-   return *this;
-}
+{ return *this; }
 
 
 MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
@@ -48,9 +41,9 @@ MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
    ConvCmd[ 2 ] = 0x00;
    ConvCmd[ 3 ] = 0x00;
 
-   _csPin.off();
+   select();
    _spi.pollXfer( ConvCmd, resp, sizeof( ConvCmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }

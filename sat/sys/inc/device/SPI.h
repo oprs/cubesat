@@ -30,6 +30,9 @@ namespace qb50 {
          SPI& enable  ( void );
          SPI& disable ( void );
 
+         SPI& grab    ( void );
+         SPI& release ( void );
+
          SPI& master  ( void );
          SPI& slave   ( void );
 

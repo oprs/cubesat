@@ -87,6 +87,20 @@ SPI& SPI::disable( void )
 }
 
 
+SPI& SPI::grab( void )
+{
+   xSemaphoreTake( _lock, portMAX_DELAY );
+   return *this;
+}
+
+
+SPI& SPI::release( void )
+{
+   xSemaphoreGive( _lock );
+   return *this;
+}
+
+
 SPI& SPI::master( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;

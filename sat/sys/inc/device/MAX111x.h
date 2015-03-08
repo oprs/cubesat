@@ -2,13 +2,12 @@
 #ifndef _QB50_SYS_DEVICE_MAX111X_H
 #define _QB50_SYS_DEVICE_MAX111X_H
 
-#include "device/SPI.h"
-#include "device/GPIOPin.h"
+#include "device/SPIDevice.h"
 
 
 namespace qb50 {
 
-   class MAX111x : public Device
+   class MAX111x : public SPIDevice
    {
       public:
 
@@ -41,11 +40,6 @@ namespace qb50 {
          };
 
          MAX111x& conv( Channel sel, ConvResp *resp );
-
-      private:
-
-         SPI&     _spi;
-         GPIOPin& _csPin;
    };
 
    extern qb50::MAX111x maxADC;

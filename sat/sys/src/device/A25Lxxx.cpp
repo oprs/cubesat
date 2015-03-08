@@ -36,12 +36,12 @@ static const uint8_t WRENCmd[]  = { 0x06 };
 //  - - - - - - - - -  //
 
 A25Lxxx::A25Lxxx( SPI& spi, GPIOPin& csPin )
-   : _spi( spi ), _csPin( csPin )
+   : SPIDevice( spi, csPin, SPIDevice::ActiveLow )
 { ; }
 
 
 A25Lxxx::~A25Lxxx()
-{ disable(); }
+{ deselect(); }
 
 
 //  - - - - - - - - - - - - - -  //
@@ -50,30 +50,20 @@ A25Lxxx::~A25Lxxx()
 
 A25Lxxx& A25Lxxx::enable( void )
 {
-   _csPin.enable()
-         .pullUp()
-         .out();
-
    _spi.enable();
-
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::disable( void )
-{
-   _csPin.disable();
-   //_spi.disable();
-
-   return *this;
-}
+{ return *this; }
 
 
 A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
 {
-   _csPin.off();
+   select();
    _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -81,9 +71,9 @@ A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
 
 A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
 {
-   _csPin.off();
+   select();
    _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -91,9 +81,9 @@ A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
 
 A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
 {
-   _csPin.off();
+   select();
    _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -101,9 +91,9 @@ A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
 
 A25Lxxx& A25Lxxx::RDSR2( RDSRResp *rdsr )
 {
-   _csPin.off();
+   select();
    _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -118,10 +108,10 @@ A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
    READCmd[ 2 ] = ( addr >>  8 ) & 0xff;
    READCmd[ 3 ] =   addr         & 0xff;
 
-   _csPin.off();
+   select();
    _spi.pollXfer( READCmd, NULL, sizeof( READCmd ));
    _spi.read( x, len );
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -129,9 +119,9 @@ A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
 
 A25Lxxx& A25Lxxx::WREN( void )
 {
-   _csPin.off();
+   select();
    _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
-   _csPin.on();
+   deselect();
 
    return *this;
 }
@@ -146,11 +136,10 @@ A25Lxxx& A25Lxxx::SE( uint32_t addr )
    SECmd[ 2 ] = ( addr >>  8 ) & 0xf0;
    SECmd[ 3 ] =   addr         & 0x00;
 
-   _csPin.off();
+   select();
    _spi.pollXfer( SECmd, NULL, sizeof( SECmd ));
-   _csPin.on();
-
    _WIPWait( tSE );
+   deselect();
 
    return *this;
 }
@@ -165,11 +154,10 @@ A25Lxxx& A25Lxxx::BE( uint32_t addr )
    BECmd[ 2 ] = ( addr >>  8 ) & 0x00;
    BECmd[ 3 ] =   addr         & 0x00;
 
-   _csPin.off();
+   select();
    _spi.pollXfer( BECmd, NULL, sizeof( BECmd ));
-   _csPin.on();
-
    _WIPWait( tBE );
+   deselect();
 
    return *this;
 }
@@ -184,12 +172,11 @@ A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
    PPCmd[ 2 ] = ( addr >>  8 ) & 0xff;
    PPCmd[ 3 ] =   addr         & 0xff;
 
-   _csPin.off();
+   select();
    _spi.pollXfer( PPCmd, NULL, sizeof( PPCmd ));
    _spi.write( x, len );
-   _csPin.on();
-
    _WIPWait( tPP );
+   deselect();
 
    return *this;
 }
@@ -210,7 +197,6 @@ A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
       ms >>= 3;
    }
 
-   _csPin.off();
    _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
 
    if( rdsr.sr & 0x01 ) {
@@ -219,8 +205,6 @@ A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
          _spi.pollXfer( &tx, &rx, 1 );
       } while( rx & 0x01 );
    }
-
-   _csPin.on();
 
    return *this;
 }

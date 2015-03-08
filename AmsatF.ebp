@@ -131,6 +131,7 @@
 		<Unit filename="sat\sys\inc\device\MAX111x.h" />
 		<Unit filename="sat\sys\inc\device\NVIC.h" />
 		<Unit filename="sat\sys\inc\device\SPI.h" />
+		<Unit filename="sat\sys\inc\device\SPIDevice.h" />
 		<Unit filename="sat\sys\inc\device\SPIStream.h" />
 		<Unit filename="sat\sys\inc\device\UART.h" />
 		<Unit filename="sat\sys\inc\system\Application.h" />
@@ -164,6 +165,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPI.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\SPIDevice.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPIStream.cpp">
