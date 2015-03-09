@@ -30,12 +30,12 @@ namespace qb50 {
 
          enum Channel {
             CH0 = 0, /*!< channel 0 */
-            CH1 = 1, /*!< channel 1 */
-            CH2 = 2, /*!< channel 2 */
-            CH3 = 3, /*!< channel 3 */
-            CH4 = 4, /*!< channel 4 */
-            CH5 = 5, /*!< channel 5 */
-            CH6 = 6, /*!< channel 6 */
+            CH1 = 4, /*!< channel 1 */
+            CH2 = 1, /*!< channel 2 */
+            CH3 = 5, /*!< channel 3 */
+            CH4 = 2, /*!< channel 4 */
+            CH5 = 6, /*!< channel 5 */
+            CH6 = 3, /*!< channel 6 */
             CH7 = 7  /*!< channel 7 */
          };
 
