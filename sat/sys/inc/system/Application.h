@@ -12,14 +12,14 @@ namespace qb50 {
    extern void    run( void );
    extern void    delay( unsigned ms );
    extern void    hexdump( const void *addr, unsigned len );
-   extern void    print( const char *x, unsigned len );
+   //extern void    print( const char *x, unsigned len );
 
 } /* qb50 */
 
 #ifdef DEBUG
- #define QB50DBG( msg ) print( msg, sizeof( msg ))
+ #define QB50DBG1( msg ) print( msg, sizeof( msg ))
 #else
- #define QB50DBG( msg )
+ #define QB50DBG1( msg )
 #endif
 
 

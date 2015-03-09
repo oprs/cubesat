@@ -32,18 +32,14 @@ DMA::~DMA()
 
 DMA& DMA::enable( void )
 {
-   QB50DBG( "DMA::enable()\r\n" );
    bus.enable( this );
-
    return *this;
 }
 
 
 DMA& DMA::disable( void )
 {
-   QB50DBG( "DMA::disable()\r\n" );
    bus.disable( this );
-
    return *this;
 }
 

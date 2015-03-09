@@ -39,8 +39,6 @@ DMAStream& DMAStream::enable( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
-   QB50DBG( "DMAStream::enable()\r\n" );
-
    IRQ.enable( _IRQn );
    _dma.enable(); /* _dma.refcount */
 
@@ -64,8 +62,6 @@ DMAStream& DMAStream::enable( void )
 
 DMAStream& DMAStream::disable( void )
 {
-   QB50DBG( "DMAStream::disable()\r\n" );
-
    _dma.disable(); /* _dma.refcount */
    IRQ.disable( _IRQn );
 

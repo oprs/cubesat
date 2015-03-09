@@ -29,8 +29,6 @@ SPIStream::~SPIStream()
 
 SPIStream& SPIStream::enable( void )
 {
-   QB50DBG( "SPIStream::enable()\r\n" );
-
    _pin.enable()
        .pullUp()
        .alt( _alt );
@@ -44,8 +42,6 @@ SPIStream& SPIStream::enable( void )
 
 SPIStream& SPIStream::disable( void )
 {
-   QB50DBG( "SPIStream::disable()\r\n" );
-
    dmaStream.disable();
    _pin.disable();
 

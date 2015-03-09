@@ -1,14 +1,11 @@
 
+#include <unistd.h>
+#include <stdint.h>
+
 #include "system/Application.h"
-#include "device/UART.h"
 
 
 namespace qb50 {
-
-
-void print( const char *x, unsigned len )
-{ UART6.write( x, len ); }
-
 
 /*
  *  max: 78 chars per line (76 formatted + 1 CR + 1 LF)
@@ -99,7 +96,7 @@ void hexdump( const void *addr, unsigned len )
       buf[ aoff++ ] = '\r';
       buf[ aoff++ ] = '\n';
 
-      UART6.write( buf, aoff );
+      (void)write( 1, buf, aoff );
 
       /* start over with the next line (or exit when done) */
    }

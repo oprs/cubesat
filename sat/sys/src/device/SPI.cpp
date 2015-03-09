@@ -43,8 +43,6 @@ SPI& SPI::enable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-   QB50DBG( "SPI::enable()\r\n" );
-
    bus.enable( this );
 
    _clkPin.enable()
@@ -72,8 +70,6 @@ SPI& SPI::enable( void )
 SPI& SPI::disable( void )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-
-   QB50DBG( "SPI::disable()\r\n" );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
