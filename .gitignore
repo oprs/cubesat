@@ -5,15 +5,24 @@ tags
 *.cogui
 *.comarker
 # local code::blocks files
+*.elay
 *.layout
 *.depend
 # vi backup files
 *.swp
+*.bak
 # object files
 *.a
 *.o
+*.bin
 *.elf
 *.hex
 # doc
 doc/html
 doc/latex
+*.doc
+*.xls
+*.ppt
+*.docx
+*.xlsx
+*.pptx
