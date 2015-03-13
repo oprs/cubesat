@@ -11,6 +11,7 @@
 			<Target title="ODB">
 				<Option output="build\ODB.elf" />
 				<Option object_output="build" />
+				<Option external_deps="build\system.a;" />
 				<Option type="0" />
 				<Option create_hex="1" />
 				<Option compiler="armgcc" />
@@ -18,14 +19,22 @@
 				<Compiler>
 					<Add option="-g3" />
 					<Add option="-DDEBUG" />
+					<Add directory="sat\sys\inc" />
+					<Add directory="sat\sys\FreeRTOS\include" />
+					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
+					<Add directory="sat\sys\stm32f4\inc" />
+					<Add directory="sat\sys\stm32f4\inc\core" />
+					<Add directory="sat\sys\stm32f4\inc\peripherals" />
 				</Compiler>
 				<Linker>
 					<Add option="-Wl,--gc-sections" />
+					<Add library="build\system.a" />
 				</Linker>
 			</Target>
 			<Target title="ADCS">
 				<Option output="build\ADCS.elf" />
 				<Option object_output="build" />
+				<Option external_deps="build\system.a;" />
 				<Option type="0" />
 				<Option create_hex="1" />
 				<Option compiler="armgcc" />
@@ -33,10 +42,28 @@
 				<Compiler>
 					<Add option="-g3" />
 					<Add option="-DDEBUG" />
+					<Add directory="sat\sys\inc" />
+					<Add directory="sat\sys\FreeRTOS\include" />
+					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
+					<Add directory="sat\sys\stm32f4\inc" />
+					<Add directory="sat\sys\stm32f4\inc\core" />
+					<Add directory="sat\sys\stm32f4\inc\peripherals" />
 				</Compiler>
 				<Linker>
 					<Add option="-Wl,--gc-sections" />
+					<Add library="build\system.a" />
 				</Linker>
+			</Target>
+			<Target title="system">
+				<Option output="build\system.a" />
+				<Option object_output="build" />
+				<Option type="1" />
+				<Option compiler="armgcc" />
+				<Option projectDeviceOptionsRelation="0" />
+				<Compiler>
+					<Add option="-g3" />
+					<Add option="-DDEBUG" />
+				</Compiler>
 			</Target>
 		</Build>
 		<Device>
@@ -70,6 +97,10 @@
 			<Add option="-mthumb-interwork" />
 			<Add option="--specs=nosys.specs" />
 		</Linker>
+		<Unit filename="sat\ADCS\adcs.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ADCS" />
+		</Unit>
 		<Unit filename="sat\ADCS\main.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ADCS" />
@@ -102,251 +133,453 @@
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
-		<Unit filename="sat\inc\stm32f4xx.h" />
-		<Unit filename="sat\inc\stm32f4xx_conf.h" />
-		<Unit filename="sat\inc\system_stm32f4xx.h" />
-		<Unit filename="sat\stm32f405rg_flash.ld" />
-		<Unit filename="sat\stm32f405rg_sram.ld" />
+		<Unit filename="sat\ODB\odb.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\inc\stm32f4xx.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\inc\stm32f4xx_conf.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\inc\system_stm32f4xx.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\stm32f405rg_flash.ld">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\stm32f405rg_sram.ld">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\croutine.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\event_groups.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\FreeRTOS\include\FreeRTOS.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\FreeRTOSConfig.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\StackMacros.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\croutine.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\deprecated_definitions.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\event_groups.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\list.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\mpu_wrappers.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\portable.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\projdefs.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\queue.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\semphr.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\task.h" />
-		<Unit filename="sat\sys\FreeRTOS\include\timers.h" />
+		<Unit filename="sat\sys\FreeRTOS\include\FreeRTOS.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\FreeRTOSConfig.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\StackMacros.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\croutine.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\deprecated_definitions.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\event_groups.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\list.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\mpu_wrappers.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\portable.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\projdefs.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\queue.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\semphr.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\task.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\FreeRTOS\include\timers.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\list.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\portable\MemMang\heap_3.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\portable\stm32f4\port.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\FreeRTOS\portable\stm32f4\portmacro.h" />
+		<Unit filename="sat\sys\FreeRTOS\portable\stm32f4\portmacro.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\queue.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\tasks.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\FreeRTOS\timers.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\inc\Bus.h" />
-		<Unit filename="sat\sys\inc\CoreDevice.h" />
-		<Unit filename="sat\sys\inc\Device.h" />
-		<Unit filename="sat\sys\inc\device\A25Lxxx.h" />
-		<Unit filename="sat\sys\inc\device\AHB.h" />
-		<Unit filename="sat\sys\inc\device\APB.h" />
-		<Unit filename="sat\sys\inc\device\DMA.h" />
-		<Unit filename="sat\sys\inc\device\DMAStream.h" />
-		<Unit filename="sat\sys\inc\device\GPIO.h" />
-		<Unit filename="sat\sys\inc\device\GPIOPin.h" />
-		<Unit filename="sat\sys\inc\device\MAX111x.h" />
-		<Unit filename="sat\sys\inc\device\NVIC.h" />
-		<Unit filename="sat\sys\inc\device\SPI.h" />
-		<Unit filename="sat\sys\inc\device\SPIDevice.h" />
-		<Unit filename="sat\sys\inc\device\SPIStream.h" />
-		<Unit filename="sat\sys\inc\device\UART.h" />
-		<Unit filename="sat\sys\inc\system\Application.h" />
-		<Unit filename="sat\sys\inc\system\Thread.h" />
-		<Unit filename="sat\sys\inc\system\qb50.h" />
+		<Unit filename="sat\sys\inc\Bus.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\CoreDevice.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\Device.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\A25Lxxx.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\AHB.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\APB.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\DMA.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\DMAStream.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\GPIO.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\GPIOPin.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\MAX111x.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\NVIC.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\SPI.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\SPIDevice.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\SPIStream.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\UART.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\Application.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\Thread.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\qb50.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\src\device\A25Lxxx.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\AHB.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\APB.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\DMA.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\DMAStream.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\GPIO.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\GPIOPin.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\MAX111x.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\NVIC.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPI.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPIDevice.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPIStream.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\UART.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\system\Application.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\system\Thread.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\system\hexdump.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\src\system\odb.cpp">
-			<Option compilerVar="CC" />
+		<Unit filename="sat\sys\stm32f4\inc\core\core_cm4.h">
+			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\core\core_cm4.h" />
-		<Unit filename="sat\sys\stm32f4\inc\core\core_cm4_simd.h" />
-		<Unit filename="sat\sys\stm32f4\inc\core\core_cmFunc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\core\core_cmInstr.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\misc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_adc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_can.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_crc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_cryp.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dac.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dbgmcu.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dcmi.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dma.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_exti.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_flash.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_fsmc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_gpio.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_hash.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_i2c.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_iwdg.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_pwr.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rcc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rng.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rtc.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_sdio.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_spi.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_syscfg.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_tim.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_usart.h" />
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_wwdg.h" />
-		<Unit filename="sat\sys\stm32f4\inc\stm32f4xx.h" />
-		<Unit filename="sat\sys\stm32f4\inc\stm32f4xx_conf.h" />
-		<Unit filename="sat\sys\stm32f4\inc\system_stm32f4xx.h" />
+		<Unit filename="sat\sys\stm32f4\inc\core\core_cm4_simd.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\core\core_cmFunc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\core\core_cmInstr.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\misc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_adc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_can.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_crc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_cryp.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dac.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dbgmcu.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dcmi.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dma.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_exti.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_flash.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_fsmc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_gpio.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_hash.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_i2c.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_iwdg.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_pwr.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rcc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rng.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rtc.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_sdio.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_spi.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_syscfg.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_tim.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_usart.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_wwdg.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\stm32f4xx.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\stm32f4xx_conf.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\stm32f4\inc\system_stm32f4xx.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\misc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_adc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_can.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_crc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_aes.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_des.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_tdes.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dac.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dbgmcu.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dcmi.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dma.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_exti.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_flash.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_fsmc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_gpio.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash_md5.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash_sha1.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_i2c.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_iwdg.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_pwr.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_rcc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_rng.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_rtc.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_sdio.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_spi.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_syscfg.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_tim.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_usart.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_wwdg.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\startup_stm32f4xx.s">
 			<Option compilerVar="ASM" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\system_stm32f4xx.c">
 			<Option compilerVar="CC" />
+			<Option target="system" />
 		</Unit>
 		<Extensions>
 			<DoxyBlocks>

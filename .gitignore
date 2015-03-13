@@ -1,9 +1,12 @@
 tags
+*.old
+*.orig
 # local CoIDE files
 *.cogui
 *.comarker
 # local code::blocks files
 *.layout
+*.depend
 # vi backup files
 *.swp
 # object files
