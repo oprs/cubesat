@@ -8,22 +8,22 @@
 
 namespace qb50 {
 
-   class APB : public Bus
-   {
-      public:
+	class APB : public Bus
+	{
+		public:
 
-         APB( uint32_t APBn );
-         ~APB();
+			APB( uint32_t APBn );
+			~APB();
 
-         APB&     enable  ( BusDevice *dev );
-         APB&     disable ( BusDevice *dev );
-         uint32_t freq    ( void );
+			APB&     enable  ( BusDevice *dev );
+			APB&     disable ( BusDevice *dev );
+			uint32_t freq    ( void );
 
-         uint32_t _APBn;
-   };
+			uint32_t _APBn;
+	};
 
-   extern qb50::APB APB1;
-   extern qb50::APB APB2;
+	extern qb50::APB APB1;
+	extern qb50::APB APB2;
 
 } /* qb50 */
 

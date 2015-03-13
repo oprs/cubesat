@@ -32,76 +32,76 @@ static const char asc[ 256 + 1 ] = "................................"  \
 
 void hexdump( const void *addr, unsigned len )
 {
-   /* allocate enough space to hold a full line of data;
-      go easy on the stack and use dynamic allocation */
+	/* allocate enough space to hold a full line of data;
+	   go easy on the stack and use dynamic allocation */
 
-   char *buf = new char[ 78 ];
+	char *buf = new char[ 78 ];
 
-   const uint8_t *x = (const uint8_t*)addr;
-   uint8_t b;
+	const uint8_t *x = (const uint8_t*)addr;
+	uint8_t b;
 
-   for( unsigned i = 0 ; i < len ; ) {
+	for( unsigned i = 0 ; i < len ; ) {
 
-      /* format the 32-bit address */
+		/* format the 32-bit address */
 
-      buf[ 0 ] = hex[ ( (uint32_t)x >> 28 ) & 0x0f ];
-      buf[ 1 ] = hex[ ( (uint32_t)x >> 24 ) & 0x0f ];
-      buf[ 2 ] = hex[ ( (uint32_t)x >> 20 ) & 0x0f ];
-      buf[ 3 ] = hex[ ( (uint32_t)x >> 16 ) & 0x0f ];
-      buf[ 4 ] = hex[ ( (uint32_t)x >> 12 ) & 0x0f ];
-      buf[ 5 ] = hex[ ( (uint32_t)x >>  8 ) & 0x0f ];
-      buf[ 6 ] = hex[ ( (uint32_t)x >>  4 ) & 0x0f ];
-      buf[ 7 ] = hex[   (uint32_t)x         & 0x0f ];
+		buf[ 0 ] = hex[ ( (uint32_t)x >> 28 ) & 0x0f ];
+		buf[ 1 ] = hex[ ( (uint32_t)x >> 24 ) & 0x0f ];
+		buf[ 2 ] = hex[ ( (uint32_t)x >> 20 ) & 0x0f ];
+		buf[ 3 ] = hex[ ( (uint32_t)x >> 16 ) & 0x0f ];
+		buf[ 4 ] = hex[ ( (uint32_t)x >> 12 ) & 0x0f ];
+		buf[ 5 ] = hex[ ( (uint32_t)x >>  8 ) & 0x0f ];
+		buf[ 6 ] = hex[ ( (uint32_t)x >>  4 ) & 0x0f ];
+		buf[ 7 ] = hex[   (uint32_t)x         & 0x0f ];
 
-      /* couple of spaces */
+		/* couple of spaces */
 
-      buf[ 8 ] = ' ';
-      buf[ 9 ] = ' ';
+		buf[ 8 ] = ' ';
+		buf[ 9 ] = ' ';
 
-      /* format the data (both HEX and ASCII views) */
+		/* format the data (both HEX and ASCII views) */
 
-      int hoff = 10;  /* offset moving over the HEX part */
-      int aoff = 60;  /* offset moving over the ASCII part */
+		int hoff = 10;  /* offset moving over the HEX part */
+		int aoff = 60;  /* offset moving over the ASCII part */
 
-      while( i < len ) {
-         b = *(x++);  /* load b and move on to the next byte */
+		while( i < len ) {
+			b = *(x++);  /* load b and move on to the next byte */
 
-         /* format b as HEX (2 nibbles + 1 space) */
+			/* format b as HEX (2 nibbles + 1 space) */
 
-         buf[ hoff++ ] = hex[ ( b >> 4 ) & 0x0f ];
-         buf[ hoff++ ] = hex[   b        & 0x0f ];
-         buf[ hoff++ ] = ' ';
+			buf[ hoff++ ] = hex[ ( b >> 4 ) & 0x0f ];
+			buf[ hoff++ ] = hex[   b        & 0x0f ];
+			buf[ hoff++ ] = ' ';
 
-         /* format b as ASCII (1 char) */
+			/* format b as ASCII (1 char) */
 
-         buf[ aoff++ ] = asc[ b ];
+			buf[ aoff++ ] = asc[ b ];
 
-         ++i;
+			++i;
 
-         if(( i % 8 ) == 0 ) {
-            /* add an extra space every 8 bytes of data for better readability */
-            buf[ hoff++ ] = ' ';
-            /* exit the inner loop after 16 bytes of data (= one line) */
-            if(( i % 16 ) == 0 ) break;
-         }
-      }
+			if(( i % 8 ) == 0 ) {
+			/* add an extra space every 8 bytes of data for better readability */
+				buf[ hoff++ ] = ' ';
+			/* exit the inner loop after 16 bytes of data (= one line) */
+				if(( i % 16 ) == 0 ) break;
+			}
+		}
 
-      /* complement with spaces */
+		/* complement with spaces */
 
-      while( hoff < 60 )
-         buf[ hoff++ ] = ' ';
+		while( hoff < 60 )
+			buf[ hoff++ ] = ' ';
 
-      /* add CR+LF and send everything over to TX_DEBUG */
+		/* add CR+LF and send everything over to TX_DEBUG */
 
-      buf[ aoff++ ] = '\r';
-      buf[ aoff++ ] = '\n';
+		buf[ aoff++ ] = '\r';
+		buf[ aoff++ ] = '\n';
 
-      (void)write( 1, buf, aoff );
+		(void)write( 1, buf, aoff );
 
-      /* start over with the next line (or exit when done) */
-   }
+		/* start over with the next line (or exit when done) */
+	}
 
-   delete[] buf;
+	delete[] buf;
 }
 
 

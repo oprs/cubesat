@@ -8,30 +8,30 @@
 
 namespace qb50 {
 
-   class SPIDevice : public Device
-   {
-      public:
+	class SPIDevice : public Device
+	{
+		public:
 
-         enum SelectMode {
-            ActiveLow  = 0,
-            ActiveHigh = 1
-         };
+			enum SelectMode {
+				ActiveLow  = 0,
+				ActiveHigh = 1
+			};
 
-         SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode );
-         ~SPIDevice();
+			SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode );
+			~SPIDevice();
 
-         virtual SPIDevice& enable  ( void ) = 0;
-         virtual SPIDevice& disable ( void ) = 0;
+			virtual SPIDevice& enable  ( void ) = 0;
+			virtual SPIDevice& disable ( void ) = 0;
 
-         SPIDevice& select   ( void );
-         SPIDevice& deselect ( void );
+			SPIDevice& select   ( void );
+			SPIDevice& deselect ( void );
 
-      protected:
+		protected:
 
-         SPI&       _spi;
-         GPIOPin&   _csPin;
-         SelectMode _csMode;
-   };
+			SPI&       _spi;
+			GPIOPin&   _csPin;
+			SelectMode _csMode;
+	};
 
 } /* qb50 */
 

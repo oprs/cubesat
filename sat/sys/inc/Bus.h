@@ -7,18 +7,18 @@
 
 namespace qb50 {
 
-   class BusDevice;
+	class BusDevice;
 
-   class Bus
-   {
-      public:
-         Bus() { ; }
-         virtual ~Bus() { ; }
+	class Bus
+	{
+		public:
+			Bus() { ; }
+			virtual ~Bus() { ; }
 
-         virtual Bus&     enable  ( BusDevice *dev ) = 0;
-         virtual Bus&     disable ( BusDevice *dev ) = 0;
-         virtual uint32_t freq    ( void )           = 0;
-   };
+			virtual Bus&     enable  ( BusDevice *dev ) = 0;
+			virtual Bus&     disable ( BusDevice *dev ) = 0;
+			virtual uint32_t freq    ( void )           = 0;
+	};
 
 } /* qb50 */
 

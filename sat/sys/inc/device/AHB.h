@@ -8,25 +8,25 @@
 
 namespace qb50 {
 
-   class AHB : public Bus
-   {
-      public:
+	class AHB : public Bus
+	{
+		public:
 
-         AHB( uint32_t AHBn );
-         ~AHB();
+			AHB( uint32_t AHBn );
+			~AHB();
 
-         AHB&     enable  ( BusDevice *dev );
-         AHB&     disable ( BusDevice *dev );
-         uint32_t freq    ( void );
+			AHB&     enable  ( BusDevice *dev );
+			AHB&     disable ( BusDevice *dev );
+			uint32_t freq    ( void );
 
-      private:
+		private:
 
-         uint32_t _AHBn;
-   };
+			uint32_t _AHBn;
+	};
 
-   extern qb50::AHB AHB1;
-   extern qb50::AHB AHB2;
-   extern qb50::AHB AHB3;
+	extern qb50::AHB AHB1;
+	extern qb50::AHB AHB2;
+	extern qb50::AHB AHB3;
 
 } /* qb50 */
 

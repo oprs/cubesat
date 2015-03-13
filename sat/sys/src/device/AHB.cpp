@@ -24,39 +24,39 @@ AHB::~AHB()
 
 AHB& AHB::enable( BusDevice *dev )
 {
-   switch( _AHBn ) {
+	switch( _AHBn ) {
 
-      case 1: RCC->AHB1ENR |= dev->periph; break;
-      case 2: RCC->AHB2ENR |= dev->periph; break;
-      case 3: RCC->AHB3ENR |= dev->periph; break;
+		case 1: RCC->AHB1ENR |= dev->periph; break;
+		case 2: RCC->AHB2ENR |= dev->periph; break;
+		case 3: RCC->AHB3ENR |= dev->periph; break;
 
-      default:
-         throw 42; /* XXX */
-   }
+		default:
+			throw 42; /* XXX */
+	}
 
-   return *this;
+	return *this;
 }
 
 
 AHB& AHB::disable( BusDevice *dev )
 {
-   switch( _AHBn ) {
+	switch( _AHBn ) {
 
-      case 1: RCC->AHB1ENR &= ~dev->periph; break;
-      case 2: RCC->AHB2ENR &= ~dev->periph; break;
-      case 3: RCC->AHB3ENR &= ~dev->periph; break;
+		case 1: RCC->AHB1ENR &= ~dev->periph; break;
+		case 2: RCC->AHB2ENR &= ~dev->periph; break;
+		case 3: RCC->AHB3ENR &= ~dev->periph; break;
 
-      default:
-         throw 42; /* XXX */
-   }
+		default:
+			throw 42; /* XXX */
+	}
 
-   return *this;
+	return *this;
 }
 
 
 uint32_t AHB::freq( void )
 {
-   return 0; /* XXX */
+	return 0; /* XXX */
 }
 
 /*EoF*/

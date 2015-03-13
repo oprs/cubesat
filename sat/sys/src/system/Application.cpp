@@ -30,10 +30,10 @@
 
  void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
  {
-    (void)pxTask;
-    (void)pcTaskName;
+ 	(void)pxTask;
+ 	(void)pcTaskName;
 
-    for( ;; );
+ 	for( ;; );
  }
 #endif /*DEBUG*/
 
@@ -43,33 +43,33 @@ namespace qb50 {
 
 static void trampoline( void *x )
 {
-   Thread *thread = (Thread*)x;
-   thread->worker( thread );
+	Thread *thread = (Thread*)x;
+	thread->worker( thread );
 }
 
 
 Thread *createThread( const char *name, ThreadWorker worker )
 {
-   Thread *thread = new Thread( name, worker );
-   registerThread( thread );
+	Thread *thread = new Thread( name, worker );
+	registerThread( thread );
 
-   return thread;
+	return thread;
 }
 
 
 void registerThread( Thread *thread )
 {
-   int rv = xTaskCreate(
-      trampoline,
-      thread->name,
-      thread->stackDepth,
-      thread,
-      thread->priority,
-      &thread->handle
-   );
+	int rv = xTaskCreate(
+		trampoline,
+		thread->name,
+		thread->stackDepth,
+		thread,
+		thread->priority,
+		&thread->handle
+	);
 
-   if( rv != pdTRUE )
-      { throw 42; /* XXX */ }
+	if( rv != pdTRUE )
+		{ throw 42; /* XXX */ }
 }
 
 
@@ -79,10 +79,10 @@ void run( void )
 
 void delay( unsigned ms )
 {
-   if( ms > portMAX_DELAY )
-      ms = portMAX_DELAY;
+	if( ms > portMAX_DELAY )
+		ms = portMAX_DELAY;
 
-   vTaskDelay( (const TickType_t)ms / portTICK_RATE_MS );
+	vTaskDelay( (const TickType_t)ms / portTICK_RATE_MS );
 }
 
 

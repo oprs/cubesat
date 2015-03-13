@@ -6,16 +6,16 @@
 
 namespace qb50 {
 
-   class Device
-   {
-      public:
+	class Device
+	{
+		public:
 
-         Device() {}
-         virtual ~Device() {}
+			Device() {}
+			virtual ~Device() {}
 
-         virtual Device& enable  ( void ) = 0;
-         virtual Device& disable ( void ) = 0;
-   };
+			virtual Device& enable  ( void ) = 0;
+			virtual Device& disable ( void ) = 0;
+	};
 
 } /* qb50 */
 

@@ -9,7 +9,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, GPIOPin *pin )
-   : BusDevice( bus, iobase, periph ), pin( pin )
+	: BusDevice( bus, iobase, periph ), pin( pin )
 { ; }
 
 
@@ -23,15 +23,15 @@ GPIO::~GPIO()
 
 GPIO& GPIO::enable( void )
 {
-   bus.enable( this );
-   return *this;
+	bus.enable( this );
+	return *this;
 }
 
 
 GPIO& GPIO::disable( void )
 {
-   //bus.disable( this );
-   return *this;
+	//bus.disable( this );
+	return *this;
 }
 
 /*EoF*/

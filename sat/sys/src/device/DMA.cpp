@@ -17,8 +17,8 @@ DMA::DMA( Bus& bus,
           const uint32_t iobase,
           const uint32_t periph,
           DMAStream *streams )
-   : BusDevice( bus, iobase, periph ),
-     streams( streams )
+	: BusDevice( bus, iobase, periph ),
+	  streams( streams )
 { ; }
 
 
@@ -32,15 +32,15 @@ DMA::~DMA()
 
 DMA& DMA::enable( void )
 {
-   bus.enable( this );
-   return *this;
+	bus.enable( this );
+	return *this;
 }
 
 
 DMA& DMA::disable( void )
 {
-   bus.disable( this );
-   return *this;
+	bus.disable( this );
+	return *this;
 }
 
 

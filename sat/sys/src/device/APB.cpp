@@ -25,51 +25,51 @@ APB::~APB()
 
 APB& APB::enable( BusDevice *dev )
 {
-   switch( _APBn ) {
+	switch( _APBn ) {
 
-      case 1: RCC->APB1ENR |= dev->periph; break;
-      case 2: RCC->APB2ENR |= dev->periph; break;
+		case 1: RCC->APB1ENR |= dev->periph; break;
+		case 2: RCC->APB2ENR |= dev->periph; break;
 
-      default:
-         throw 42; /* XXX */
-   }
+		default:
+			throw 42; /* XXX */
+	}
 
-   return *this;
+	return *this;
 }
 
 
 APB& APB::disable( BusDevice *dev )
 {
-   switch( _APBn ) {
+	switch( _APBn ) {
 
-      case 1: RCC->APB1ENR &= ~dev->periph; break;
-      case 2: RCC->APB2ENR &= ~dev->periph; break;
+		case 1: RCC->APB1ENR &= ~dev->periph; break;
+		case 2: RCC->APB2ENR &= ~dev->periph; break;
 
-      default:
-         throw 42; /* XXX */
-   }
+		default:
+			throw 42; /* XXX */
+	}
 
-   return *this;
+	return *this;
 }
 
 
 uint32_t APB::freq( void )
 {
-   RCC_ClocksTypeDef clocks;
-   RCC_GetClocksFreq( &clocks );
+	RCC_ClocksTypeDef clocks;
+	RCC_GetClocksFreq( &clocks );
 
-   uint32_t rv = 0;
+	uint32_t rv = 0;
 
-   switch( _APBn ) {
+	switch( _APBn ) {
 
-      case 1: rv = clocks.PCLK1_Frequency; break;
-      case 2: rv = clocks.PCLK2_Frequency; break;
+		case 1: rv = clocks.PCLK1_Frequency; break;
+		case 2: rv = clocks.PCLK2_Frequency; break;
 
-      default:
-         throw 42; /* XXX */
-   }
+		default:
+			throw 42; /* XXX */
+	}
 
-   return rv;
+	return rv;
 }
 
 /*EoF*/

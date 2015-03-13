@@ -8,27 +8,27 @@
 
 namespace qb50 {
 
-   class SPIStream : Device
-   {
-      friend class SPI;
+	class SPIStream : Device
+	{
+		friend class SPI;
 
-      public:
+		public:
 
-         SPIStream( DMAStream&         dmaStream,
-                    DMAStream::Channel dmaChannel,
-                    GPIOPin&           pin,
-                    GPIOPin::Alt       alt );
+			SPIStream( DMAStream&         dmaStream,
+			           DMAStream::Channel dmaChannel,
+			           GPIOPin&           pin,
+			           GPIOPin::Alt       alt );
 
-         ~SPIStream();
+			~SPIStream();
 
-         SPIStream& enable  ( void );
-         SPIStream& disable ( void );
+			SPIStream& enable  ( void );
+			SPIStream& disable ( void );
 
-         DMAStream&           dmaStream;
-         DMAStream::Channel   dmaChannel;
-         GPIOPin&             _pin;
-         GPIOPin::Alt         _alt;
-   };
+			DMAStream&           dmaStream;
+			DMAStream::Channel   dmaChannel;
+			GPIOPin&             _pin;
+			GPIOPin::Alt         _alt;
+	};
 
 } /* qb50 */
 

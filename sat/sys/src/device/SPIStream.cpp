@@ -9,13 +9,13 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 SPIStream::SPIStream( DMAStream&         dmaStream,
-                      DMAStream::Channel dmaChannel,
-                      GPIOPin&           pin,
-                      GPIOPin::Alt       alt )
-   : dmaStream( dmaStream ),
-     dmaChannel( dmaChannel ),
-     _pin( pin ),
-     _alt( alt )
+	                   DMAStream::Channel dmaChannel,
+	                   GPIOPin&           pin,
+	                   GPIOPin::Alt       alt )
+	: dmaStream( dmaStream ),
+	  dmaChannel( dmaChannel ),
+	  _pin( pin ),
+	  _alt( alt )
 { ; }
 
 
@@ -29,23 +29,23 @@ SPIStream::~SPIStream()
 
 SPIStream& SPIStream::enable( void )
 {
-   _pin.enable()
-       .pullUp()
-       .alt( _alt );
+	_pin.enable()
+	    .pullUp()
+	    .alt( _alt );
 
-   dmaStream.enable()
-            .channel( dmaChannel );
+	dmaStream.enable()
+	         .channel( dmaChannel );
 
-   return *this;
+	return *this;
 }
 
 
 SPIStream& SPIStream::disable( void )
 {
-   dmaStream.disable();
-   _pin.disable();
+	dmaStream.disable();
+	_pin.disable();
 
-   return *this;
+	return *this;
 }
 
 /*EoF*/

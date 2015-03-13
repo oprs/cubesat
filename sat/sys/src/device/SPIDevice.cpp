@@ -10,21 +10,21 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 SPIDevice::SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode )
-   : _spi( spi ), _csPin( csPin ), _csMode( csMode )
+	: _spi( spi ), _csPin( csPin ), _csMode( csMode )
 {
-   _csPin.enable();
+	_csPin.enable();
 
-   if( _csMode == ActiveLow ) {
-      _csPin.on();
-   } else {
-      _csPin.off();
-   }
+	if( _csMode == ActiveLow ) {
+	   _csPin.on();
+	} else {
+	   _csPin.off();
+	}
 }
 
 
 SPIDevice::~SPIDevice()
 {
-   _csPin.disable();
+	_csPin.disable();
 }
 
 
@@ -34,29 +34,29 @@ SPIDevice::~SPIDevice()
 
 SPIDevice& SPIDevice::select( void )
 {
-   _spi.grab();
+	_spi.grab();
 
-   if( _csMode == ActiveLow ) {
-      _csPin.off();
-   } else {
-      _csPin.on();
-   }
+	if( _csMode == ActiveLow ) {
+	   _csPin.off();
+	} else {
+	   _csPin.on();
+	}
 
-   return *this;
+	return *this;
 }
 
 
 SPIDevice& SPIDevice::deselect( void )
 {
-   if( _csMode == ActiveLow ) {
-      _csPin.on();
-   } else {
-      _csPin.off();
-   }
+	if( _csMode == ActiveLow ) {
+	   _csPin.on();
+	} else {
+	   _csPin.off();
+	}
 
-   _spi.release();
+	_spi.release();
 
-   return *this;
+	return *this;
 }
 
 

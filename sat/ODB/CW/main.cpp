@@ -7,12 +7,12 @@ using namespace qb50;
 
 void CWThread( Thread *self )
 {
-   (void)self; /* prevent gcc from complaining about self being unused */
+	(void)self; /* prevent gcc from complaining about self being unused */
 
-   for( ;; ) {
-      delay( 3000 );
-      (void)printf( "--------[ Morse/CW ]--------\r\n" );
-   }
+	for( ;; ) {
+		delay( 3000 );
+		(void)printf( "--------[ Morse/CW ]--------\r\n" );
+	}
 }
 
 /*EoF*/
