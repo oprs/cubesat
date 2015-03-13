@@ -2,18 +2,24 @@
 ARCH   ?= stm32f4
 SATDIR ?= $(TOPDIR)/sat
 
-SUB_SYS = $(SATDIR)/sys
-SUB_ODB = $(SATDIR)/ODB
+SUB_SYS  = $(SATDIR)/sys
+SUB_ODB  = $(SATDIR)/ODB
+SUB_ADCS = $(SATDIR)/ADCS
+
 SUB_APP = \
  $(SATDIR)/app/examples/blinky \
  $(SATDIR)/app/examples/extmem
 
-SUB_ALL = $(SUB_SYS) $(SUB_ODB) $(SUB_APP)
+SUB_ALL = $(SUB_SYS) $(SUB_ODB) $(SUB_ADCS) $(SUB_APP)
 SUB_CLN = $(addsuffix .clean,$(SUB_ALL))
 
-all: $(SUB_ODB)
+all: $(SUB_ODB) $(SUB_ADCS)
 
 $(SUB_ODB): $(SUB_SYS)
+
+$(SUB_ADCS): $(SUB_SYS)
+
+$(SUB_APP): $(SUB_SYS)
 
 $(SUB_APP): $(SUB_SYS)
 

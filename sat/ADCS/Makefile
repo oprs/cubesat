@@ -8,22 +8,22 @@ OBJFILES = \
    $(patsubst %c,%o,$(wildcard ./*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./*.cpp))
 
-TARGETS = ODB.hex ODB.elf
+TARGETS = ADCS.hex ADCS.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
 CFLAGS += -fdata-sections -ffunction-sections
 
 LDFLAGS += -T$(SATDIR)/rules/arch-$(ARCH).ld
 LDFLAGS += -Wl,-gc-sections
-#LDFLAGS += -Wl,-Map=ODB.map
+#LDFLAGS += -Wl,-Map=ADCS.map
 LDFLAGS += -specs=nosys.specs
 LDFLAGS += -L$(SATDIR)/sys/ -lsystem
 
-ODB.hex: ODB.elf
+ADCS.hex: ADCS.elf
 	@echo " [HEX] $@"
 	$(QUIET) $(CP) -O ihex $< $@
 
-ODB.elf: $(OBJFILES)
+ADCS.elf: $(OBJFILES)
 	@echo " [ELF] $@"
 	$(QUIET) $(CXX) $(MCUFLAGS) -o $@ $^ $(LDFLAGS)
 

@@ -21,9 +21,9 @@ void thread1( Thread *self )
 
 int main( void )
 {
-   /* enable UART6 (debug) */
+   /* enable UART2 (debug) */
 
-   UART6.enable();
+   UART2.enable();
 
    /* create worker threads */
 
@@ -32,6 +32,7 @@ int main( void )
    run();
 
    /* never reached */
+
    for( ;; );
 }
 
