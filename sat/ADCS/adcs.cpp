@@ -202,7 +202,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - -  //
 
 	/*          bus   iobase       periph                rxPin txPin  IRQ number   alt. function */
-	UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
+	UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, PA10, PA9,  USART1_IRQn, GPIOPin::UART1 );
 	UART UART2( APB1, USART2_BASE, RCC_APB1Periph_USART2, PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
 	UART UART3( APB1, USART3_BASE, RCC_APB1Periph_USART3, PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
 	UART UART4( APB1, UART4_BASE,  RCC_APB1Periph_UART4,  PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );

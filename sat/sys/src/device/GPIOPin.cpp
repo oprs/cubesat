@@ -71,8 +71,8 @@ GPIOPin& GPIOPin::mode( Mode mode )
 	register uint32_t tmp32;
 
 	tmp32  = GPIOx->MODER;
-	tmp32 &= ~( GPIO_MODER_MODER0 << ( _id * 2 ));
-	tmp32 |=  ( mode              << ( _id * 2 ));
+	tmp32 &= ~( 0x03 << ( _id * 2 ));
+	tmp32 |=  ( mode << ( _id * 2 ));
 
 	GPIOx->MODER = tmp32;
 
@@ -85,12 +85,13 @@ GPIOPin& GPIOPin::alt( Alt alt )
 	GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
 	register uint32_t tmp32;
 
+	mode( ALTERNATE );
+
 	tmp32  = GPIOx->AFR[ _id >> 3 ];
-	tmp32 &= ~( 0x07 << ( _id * 4 ));
-	tmp32 |=  ( alt  << ( _id * 4 ));
+	tmp32 &= ~( 0x0f << (( _id & 0x03 ) * 4 ));
+	tmp32 |=  ( alt  << (( _id & 0x03 ) * 4 ));
 
 	GPIOx->AFR[ _id >> 3 ] = tmp32;
-	mode( ALTERNATE );
 
 	return *this;
 }
@@ -102,8 +103,8 @@ GPIOPin& GPIOPin::oSpeed( OSpeed speed )
 	register uint32_t tmp32;
 
 	tmp32  = GPIOx->OSPEEDR;
-	tmp32 &= ~( GPIO_OSPEEDER_OSPEEDR0 << ( _id * 2 ));
-	tmp32 |=  ( speed                  << ( _id * 2 ));
+	tmp32 &= ~( 0x03  << ( _id * 2 ));
+	tmp32 |=  ( speed << ( _id * 2 ));
 
 	GPIOx->OSPEEDR = tmp32;
 
@@ -117,8 +118,8 @@ GPIOPin& GPIOPin::oType( OType type )
 	register uint32_t tmp32;
 
 	tmp32  = GPIOx->OTYPER;
-	tmp32 &= ~( GPIO_OTYPER_OT_0 << _id );
-	tmp32 |=  ( type             << _id );
+	tmp32 &= ~( 0x01 << _id );
+	tmp32 |=  ( type << _id );
 
 	GPIOx->OTYPER = tmp32;
 
