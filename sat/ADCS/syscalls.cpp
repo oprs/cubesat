@@ -121,7 +121,7 @@ ssize_t _write( int fd, const void *x, size_t len )
    (void)fd;
 
    return
-      qb50::UART2.write( x, len );
+      qb50::UART1.write( x, len );
 }
 
 /*EoF*/
