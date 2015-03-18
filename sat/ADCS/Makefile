@@ -6,11 +6,14 @@ OBJFILES = \
    $(patsubst %c,%o,$(wildcard ./*/*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./*/*.cpp)) \
    $(patsubst %c,%o,$(wildcard ./*.c)) \
-   $(patsubst %cpp,%o,$(wildcard ./*.cpp))
+   $(patsubst %cpp,%o,$(wildcard ./*.cpp)) \
+   $(patsubst %c,%o,$(wildcard ./lib/armadillo/src/*.c)) \
+   $(patsubst %cpp,%o,$(wildcard ./lib/armadillo/src/*.cpp))
 
 TARGETS = ADCS.hex ADCS.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
+CFLAGS += -I./lib/armadillo/include
 CFLAGS += -fdata-sections -ffunction-sections
 
 LDFLAGS += -T$(SATDIR)/rules/arch-$(ARCH).ld
