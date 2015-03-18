@@ -13,10 +13,12 @@ tags
 *.bak
 # object files
 *.a
+*.d
 *.o
 *.bin
 *.elf
 *.hex
+*.map
 # doc
 doc/html
 doc/latex
