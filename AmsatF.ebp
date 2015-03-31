@@ -19,6 +19,7 @@
 				<Compiler>
 					<Add option="-g3" />
 					<Add option="-DDEBUG" />
+					<Add option="-std=c++11" />
 					<Add directory="sat\sys\inc" />
 					<Add directory="sat\sys\FreeRTOS\include" />
 					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
@@ -42,6 +43,7 @@
 				<Compiler>
 					<Add option="-g3" />
 					<Add option="-DDEBUG" />
+					<Add option="-std=c++11" />
 					<Add directory="sat\sys\inc" />
 					<Add directory="sat\sys\FreeRTOS\include" />
 					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
@@ -136,6 +138,33 @@
 		<Unit filename="sat\ODB\odb.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\commun\ADCSCLASS.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\commun\ADCSCLASS.h">
+			<Option target="ODB" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\commun\Control_attitude.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\commun\Control_attitude.h">
+			<Option target="ODB" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\commun\STRUCTURE.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\commun\STRUCTURE.h">
+			<Option target="ODB" />
+			<Option target="ADCS" />
 		</Unit>
 		<Unit filename="sat\inc\stm32f4xx.h">
 			<Option target="system" />
