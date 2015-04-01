@@ -7,11 +7,12 @@
 
 namespace qb50 {
 
-	extern Thread *createThread( const char *name, ThreadWorker worker );
-	extern void    registerThread( Thread *t );
-	extern void    run( void );
-	extern void    delay( unsigned ms );
-	extern void    hexdump( const void *addr, unsigned len );
+	extern Thread  *createThread( const char *name, ThreadWorker worker );
+	extern void     registerThread( Thread *t );
+	extern void     run( void );
+	extern void     delay( unsigned ms );
+	extern unsigned ticks( void );
+	extern void     hexdump( const void *addr, unsigned len );
 
 } /* qb50 */
 

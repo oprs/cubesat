@@ -82,7 +82,14 @@ void delay( unsigned ms )
 	if( ms > portMAX_DELAY )
 		ms = portMAX_DELAY;
 
-	vTaskDelay( (const TickType_t)ms / portTICK_RATE_MS );
+	::vTaskDelay( (const TickType_t)ms / portTICK_RATE_MS );
+}
+
+
+unsigned ticks( void )
+{
+   unsigned t = (unsigned)::xTaskGetTickCount();
+   return(( t * 1000 ) / portTICK_RATE_MS );
 }
 
 
