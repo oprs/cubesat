@@ -89,7 +89,7 @@ void delay( unsigned ms )
 unsigned ticks( void )
 {
    unsigned t = (unsigned)::xTaskGetTickCount();
-   return(( t * 1000 ) / portTICK_RATE_MS );
+   return( t / portTICK_RATE_MS );
 }
 
 
