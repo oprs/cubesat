@@ -2,13 +2,20 @@
 #include "system/qb50.h"
 #include <stdio.h>
 
+#include "../../../ODB/AX25/AX25.cpp"
+#include "../../../ODB/AX25/AX25_test.cpp"
+
+
 using namespace qb50;
 
 
-extern void ADCSThread  ( Thread *self );
-extern void CWThread    ( Thread *self );
-extern void FiPEXThread ( Thread *self );
-extern void GPSThread   ( Thread *self );
+extern void ADCSThread              ( Thread *self );
+extern void CWThread                ( Thread *self );
+extern void FiPEXThread             ( Thread *self );
+extern void GPSThread               ( Thread *self );
+
+/** Test for AX25 **/
+extern void AX25_PacketExampleThread   ( Thread *self );
 
 
 /*
@@ -34,6 +41,8 @@ extern void GPSThread   ( Thread *self );
 
 void thread1( Thread *self )
 {
+
+
 	(void)self;
 
 	A25Lxxx::RDIDResp rdid;
@@ -147,6 +156,8 @@ void thread1( Thread *self )
 	}
 
 	delete[] buf;
+
+
 }
 
 
@@ -161,6 +172,123 @@ void TestThread( Thread *self )
 	}
 }
 
+/**
+ *  Lighting garland of LED
+ *
+ *  @author     Jérôme Skoda    <jerome.skoda@hotmail.fr>
+ *  @version    1.0             (22/04/2015)
+ */
+#define _LED_GARLAND_
+#ifdef _LED_GARLAND_
+void LED_GARLAND_0( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(100);
+        PA1.toggle();
+        delay(1100);
+	}
+}
+void LED_GARLAND_1( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(200);
+        PB1.toggle();
+        delay(1000);
+	}
+}
+void LED_GARLAND_2( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(300);
+        PB0.toggle();
+        delay(900);
+	}
+}
+void LED_GARLAND_3( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(400);
+        PC5.toggle();
+        delay(800);
+	}
+}
+void LED_GARLAND_4( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(500);
+        PC10.toggle();
+        delay(700);
+	}
+}
+void LED_GARLAND_5( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(600);
+        PC13.toggle();
+        delay(600);
+	}
+}
+void LED_GARLAND_6( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(700);
+        PB14.toggle();
+        delay(500);
+	}
+}
+void LED_GARLAND_7( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(800);
+        PA15.toggle();
+        delay(400);
+	}
+}
+void LED_GARLAND_8( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(900);
+        PC3.toggle();
+        delay(300);
+	}
+}
+void LED_GARLAND_9( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(1000);
+        PB12.toggle();
+        delay(200);
+	}
+}
+void LED_GARLAND_10( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(1100);
+        PB15.toggle();
+        delay(100);
+	}
+}
+void LED_GARLAND_11( Thread *self )
+{
+	while(1) {
+        (void)self;
+        delay(1200);
+        PB13.toggle();
+        delay(0);
+	}
+}
+#endif /* _LED_GARLAND_ */
 
 int main( void )
 {
@@ -170,15 +298,28 @@ int main( void )
 
 	/* create worker threads */
 
-	(void)createThread( "ADCSThread",  ADCSThread  );
-	(void)createThread( "CWThread",    CWThread    );
-	(void)createThread( "FiPEXThread", FiPEXThread );
-	(void)createThread( "GPSThread",   GPSThread   );
+	(void)createThread( "ADCSThread",               ADCSThread              );
+	(void)createThread( "CWThread",                 CWThread                );
+	(void)createThread( "FiPEXThread",              FiPEXThread             );
+	(void)createThread( "GPSThread",                GPSThread               );
+
+	/* create test threads */
+	(void)createThread( "AX25_PacketExampleThread", AX25_PacketExampleThread);
+
 
 	LED1.enable().out().off();
 	LED2.enable().out().off();
 	LED3.enable().out().off();
 	LED4.enable().out().off();
+	PC13.enable().out().off();
+	PC3.enable().out().off();
+	PB12.enable().out().off();
+	PB13.enable().out().off();
+	PB14.enable().out().off();
+	PC10.enable().out().off();
+	PA15.enable().out().off();
+	PB15.enable().out().off();
+
 
 	/* Antenne */
 	//PA15.enable().out().off();
@@ -186,10 +327,26 @@ int main( void )
 	createThread( "Thread 1", thread1 );
 	createThread( "test", TestThread );
 
+    // Lighting garland of LED
+    #ifdef _LED_GARLAND_
+        createThread( "LED_GARLAND_0",   LED_GARLAND_0 );
+        createThread( "LED_GARLAND_1",   LED_GARLAND_1 );
+        createThread( "LED_GARLAND_2",   LED_GARLAND_2 );
+        createThread( "LED_GARLAND_3",   LED_GARLAND_3 );
+        createThread( "LED_GARLAND_4",   LED_GARLAND_4 );
+        createThread( "LED_GARLAND_5",   LED_GARLAND_5 );
+        createThread( "LED_GARLAND_6",   LED_GARLAND_6 );
+        createThread( "LED_GARLAND_7",   LED_GARLAND_7 );
+        createThread( "LED_GARLAND_8",   LED_GARLAND_8 );
+        createThread( "LED_GARLAND_9",   LED_GARLAND_9 );
+        createThread( "LED_GARLAND_10",   LED_GARLAND_10 );
+        createThread( "LED_GARLAND_11",   LED_GARLAND_11 );
+    #endif /* _LED_GARLAND_ */
+
 	run();
 
-	LED3.on();
 	for( ;; );
 }
+
 
 /*EoF*/
