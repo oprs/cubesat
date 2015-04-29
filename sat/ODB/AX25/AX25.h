@@ -3,9 +3,10 @@
  *  27/04/2015
  */
 
-#ifndef _AX25_H_
+#ifndef _QB50_AX25_H_
+#define _QB50_AX25_H_
 
-#define _AX25_H_
+#include "qb50.h"
 
 namespace qb50
 {
@@ -134,13 +135,17 @@ namespace qb50
             /**
              *  Methods
              */
+            size_t writePacket(uint8_t  *dst, uint8_t *src, size_t src_len );
+
+        private:
+
             size_t writeHeader(uint8_t* dst);
             size_t writeInformation(uint8_t  *dst, uint8_t *src, size_t src_len );
-            size_t writePacket(uint8_t  *dst, uint8_t *src, size_t src_len);
+
     };
 
-}; /* namespace: qb50 */
+} /* namespace: qb50 */
 
-#endif /* _AX25_H_ */
+#endif /* _QB50_AX25_H_ */
 
 /*EoF*/

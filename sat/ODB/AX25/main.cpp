@@ -3,8 +3,8 @@
  *  28/04/2015
  */
 
+#include "AX25.h"
 #include <stdio.h>
-#include "system/qb50.h"
 
 using namespace qb50;
 

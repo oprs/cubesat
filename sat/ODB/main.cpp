@@ -1,10 +1,8 @@
 
 #include "system/qb50.h"
+#include "AX25/AX25.h"
+
 #include <stdio.h>
-
-#include "../../../ODB/AX25/AX25.cpp"
-#include "../../../ODB/AX25/AX25_test.cpp"
-
 
 using namespace qb50;
 
