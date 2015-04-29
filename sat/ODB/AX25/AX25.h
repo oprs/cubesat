@@ -6,7 +6,7 @@
 #ifndef _QB50_AX25_H_
 #define _QB50_AX25_H_
 
-#include "qb50.h"
+#include "system/qb50.h"
 
 namespace qb50
 {
