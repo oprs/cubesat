@@ -3,16 +3,18 @@
  *  27/04/2015
  */
 
+
 #include "CRC16_CCITT.h"
 
+
 using namespace qb50;
+
 
 /**
  * crc16tab
  *
  * From: http://www.menie.org/georges/embedded/crc16.html
  */
-
 static const uint16_t crc16tab[256]=
 {
     0x0000,0x1021,0x2042,0x3063,0x4084,0x50a5,0x60c6,0x70e7,
@@ -49,6 +51,7 @@ static const uint16_t crc16tab[256]=
     0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
 };
 
+
 /**
  * crc16_ccitt
  *
@@ -67,5 +70,6 @@ uint16_t qb50::crc16_ccitt( const uint8_t *buf, size_t len )
     }
     return crc;
 }
+
 
 /*EoF*/

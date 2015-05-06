@@ -3,13 +3,18 @@
  *  27/04/2015
  */
 
+
 #ifndef _QB50_AX25_H_
 #define _QB50_AX25_H_
 
+
 #include "system/qb50.h"
+#include "bitStuffing.h"
+
 
 namespace qb50
 {
+
 
     /**
      *  AX25_PID_Mode
@@ -86,6 +91,7 @@ namespace qb50
         UI  = 0x03,
     };
 
+
     /**
      *  AX25AddressField
      *
@@ -106,12 +112,13 @@ namespace qb50
         uint8_t CCR;
     };
 
+
     /**
      *  PacketAX25
      *
      *  source/destination/control/PID define header content of AX.25 protocol
      *  writeHeader/writeInformation make element Packet AX.25
-     *  writePacket make complete Packet AX.25
+     *  writeContent make complete Packet AX.25
      *
      *  Description of methods is in "AX25.cpp" file
      *
@@ -120,6 +127,8 @@ namespace qb50
      */
     class PacketAX25
     {
+
+
         public:
             /**
              *  Headers parameters
@@ -127,25 +136,30 @@ namespace qb50
              // Define address
             AX25AddressField source;
             AX25AddressField destination;
-            // Define control of packet (look AX25_control_Mode)
-            uint8_t controle;
-            // Define PID of packet (look AX25_PID_Mode)
-            uint8_t PID;
+
+            uint8_t controle;   // Define control of packet (look AX25_control_Mode)
+            uint8_t PID;        // Define PID of packet (look AX25_PID_Mode)
+
 
             /**
              *  Methods
              */
-            size_t writePacket(uint8_t  *dst, uint8_t *src, size_t src_len );
+            size_t writeContent(uint8_t *dst, const uint8_t *src, size_t src_len);
+            void   writePacket (uint8_t *dst, sizeBitStuffing_t *dst_len, const uint8_t *src, size_t src_len);
+
 
         private:
+            size_t writeHeader(uint8_t *dst);
+            size_t writeInformation(uint8_t *dst, const uint8_t *src, size_t src_len);
 
-            size_t writeHeader(uint8_t* dst);
-            size_t writeInformation(uint8_t  *dst, uint8_t *src, size_t src_len );
 
     };
 
+
 } /* namespace: qb50 */
 
+
 #endif /* _QB50_AX25_H_ */
+
 
 /*EoF*/
