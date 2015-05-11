@@ -236,6 +236,16 @@ namespace qb50 {
 	SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
 	SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
 
+//  - - - - - - - - - - - - - - -  //
+//  A D C   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - -  //
+
+	/*        bus   iobase     periph               pin    Mode */
+	ADC ADC1( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	//ADC ADC2
+	//ADC ADC3
+
+
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
