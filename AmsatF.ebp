@@ -133,6 +133,13 @@
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
+		<Unit filename="sat\ODB\Telecommande\Telecommande.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\Telecommande\Telecommande.h">
+			<Option target="ODB" />
+		</Unit>
 		<Unit filename="sat\ODB\odb.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
