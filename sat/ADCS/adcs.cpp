@@ -23,6 +23,7 @@
 #undef UART5
 
 #undef NVIC
+#undef ADC1
 
 
 namespace qb50 {

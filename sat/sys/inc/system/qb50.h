@@ -16,6 +16,7 @@
 #include "device/AX25Out.h"
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"
+#include "device/ADC.h"
 
 #include "system/Application.h"
 #include "system/UserLock.h"

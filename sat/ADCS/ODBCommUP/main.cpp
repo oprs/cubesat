@@ -5,11 +5,11 @@ using namespace qb50;
 
 void ODBCommUpThread( Thread *self)
 {
-    void(self);
+    (void)self;
 
     for(;;){
             delay( 2000 );
-            (void)printf(" ------- ODB Communication (UP)  Thread -------\r\n")
+            (void)printf(" ------- ODB Communication (UP)  Thread -------\r\n");
     }
 }
 
