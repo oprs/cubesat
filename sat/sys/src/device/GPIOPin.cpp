@@ -88,8 +88,8 @@ GPIOPin& GPIOPin::alt( Alt alt )
 	mode( ALTERNATE );
 
 	tmp32  = GPIOx->AFR[ _id >> 3 ];
-	tmp32 &= ~( 0x0f << (( _id & 0x03 ) * 4 ));
-	tmp32 |=  ( alt  << (( _id & 0x03 ) * 4 ));
+	tmp32 &= ~( 0x0f << (( _id & 0x07 ) * 4 ));
+	tmp32 |=  ( alt  << (( _id & 0x07 ) * 4 ));
 
 	GPIOx->AFR[ _id >> 3 ] = tmp32;
 
