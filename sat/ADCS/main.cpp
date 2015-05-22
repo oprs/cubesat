@@ -29,17 +29,19 @@ void testthread1( Thread *self )  //Test Thread
 
 void testThread2( Thread *self) //Thread to test ADC functionality
 {
+
+
 }
 
 int main( void )
 {
    /* enable UART2 (debug) */
 
-   UART2.enable();
+   UART1.enable();
 
    /* create worker threads */
 
-   createThread( "Thread 1", thread1 );
+   createThread( "Thread 1", testthread1 );
 
    run();
 

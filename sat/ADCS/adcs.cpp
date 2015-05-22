@@ -242,7 +242,16 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - -  //
 
 	/*        bus   iobase     periph               pin    Mode */
-	ADC ADC1( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	ADC SUN1( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	ADC SUN2( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC1,   GPIOPin::ANALOG);
+	ADC SUN3( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC5,   GPIOPin::ANALOG);
+	ADC SUN4( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PB0,   GPIOPin::ANALOG);
+	ADC SUN5( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PB1,   GPIOPin::ANALOG);
+	//For the 4 other sun sensors to be added
+	//ADC SUN6( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	//ADC SUN7( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	//ADC SUN8( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	//ADC SUN9( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
 	//ADC ADC2
 	//ADC ADC3
 
