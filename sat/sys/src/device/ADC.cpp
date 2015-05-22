@@ -6,10 +6,12 @@ ADC::ADC(Bus& bus,
 			const uint32_t iobase,
 			const uint32_t periph,
 			GPIOPin& pin,
-			GPIOPin::Mode mode)
+			GPIOPin::Mode mode,
+			GPIOPin::Channel channel)
 		:BusDevice( bus, iobase, periph),_pin( pin ),_mode ( mode)
 		{
 		    _numConversions = 5;
+		    _channel  = channel;
 		}
 
 ADC::~ADC()
@@ -62,11 +64,11 @@ ADC& ADC::disable( void )
 	return *this;
 }
 //Rather than modifying individual registers we just use the code written for the ADC using the stm32f4 peripheral library
-uint16_t ADC::getValue_adc(Channel channel)
+uint16_t ADC::getValue_adc()
 {
 	uint16_t adc_val = 0;
 	ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-	ADC_RegularChannelConfig(ADCx, channel, 1, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADCx, _channel, 1, ADC_SampleTime_15Cycles);
 	ADC_SoftwareStartConv(ADCx);
 
 	while (ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET){;}

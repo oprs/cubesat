@@ -126,7 +126,6 @@
 		</Linker>
 		<Unit filename="sat\ADCS\AttitudeControl\main.cpp">
 			<Option compilerVar="CC" />
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="sat\ADCS\AttitudeDetermination\main.cpp">
 			<Option compilerVar="CC" />

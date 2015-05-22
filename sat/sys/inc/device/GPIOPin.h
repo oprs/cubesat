@@ -4,7 +4,6 @@
 
 #include "GPIO.h"
 
-
 namespace qb50 {
 
 	class GPIOPin
@@ -121,6 +120,31 @@ namespace qb50 {
 			GPIOPin& noPull ( void ) { return PuPd( NOPULL ); }
 			GPIOPin& pullUp ( void ) { return PuPd( PULLUP ); }
 			GPIOPin& pullDn ( void ) { return PuPd( PULLDN ); }
+
+            /* Channel Definitions for ADC */
+
+            enum Channel {
+			CH0 = 0x00,
+			CH1 = 0x01,
+			CH2 = 0x02,
+			CH3 = 0x03,
+			CH4 = 0x04,
+			CH5 = 0x05,
+			CH6 = 0x06,
+			CH7 = 0x07,
+			CH8 = 0x08,   PB0 = CH8,
+			CH9 = 0x09,   PB1 = CH9,
+			CH10 = 0x0A, PC0 = CH10,
+			CH11 = 0x0B, PC1 = CH11,
+			CH12 = 0x0C,
+			CH13 = 0x0D,
+			CH14 = 0x0E,
+			CH15 = 0x0F, PC5 = CH15,
+			CH16 = 0x10,
+			CH17 = 0x11,
+			CH18 = 0x12,
+		};
+
 
 		private:
 

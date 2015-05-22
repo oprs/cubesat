@@ -5,11 +5,11 @@ using namespace qb50;
 
 void AttitudeControlThread( Thread *self)
 {
-    void(self);
+    (void)self;
 
     for(;;){
             delay( 2000 );
-            (void)printf(" ------- Attitude Control Thread -------\r\n")
+            (void)printf(" ------- Attitude Control Thread -------\r\n");
     }
 }
 

@@ -5,7 +5,6 @@
 #include "BusDevice.h"
 #include "Bus.h"
 
-
 namespace qb50 {
 
 	class GPIOPin;
