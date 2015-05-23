@@ -610,7 +610,7 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\ADC.h">
-			<Option target="&lt;{~None~}&gt;" />
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\AHB.h">
 			<Option target="system" />
@@ -652,6 +652,10 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\SPIStream.h">
+			<Option compilerVar="CPP" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\TIMERSTM.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\UART.h">
@@ -733,6 +737,10 @@
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPIStream.cpp">
 			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\TIMERSTM.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ADCS" />
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\UART.cpp">

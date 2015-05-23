@@ -23,7 +23,9 @@
 #undef UART5
 
 #undef NVIC
-#undef ADC1
+#undef ADC
+
+#undef TIM
 
 
 namespace qb50 {
@@ -252,9 +254,13 @@ namespace qb50 {
 	//ADC SUN7( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
 	//ADC SUN8( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
 	//ADC SUN9( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
-	//ADC ADC2
-	//ADC ADC3
 
+//  - - - - - - - - - - - - - - -  //
+//  T I M   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - -  //
+    /*        bus   iobase     periph               pin    Mode */
+//    TIMER TIMER1( APB2, TIM1_BASE, RCC_APB2Periph_TIM1, PB13,  GPIOPin::AF1);
+//    TIMER TIMER2( APB1, TIM2_BASE, RCC_APB1Periph_TIM2, PB11,  GPIOPin::AF1);
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
