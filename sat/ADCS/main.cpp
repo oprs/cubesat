@@ -20,6 +20,7 @@ void testThread1( Thread *self )  //Test Thread
    (void)self;
 
    for( ;; ) {
+      (void)printf(" ------- Hello Test  Thread -------\r\n");
       (void)printf( "hello: %p - %d\r\n", self, cnt );
       ++cnt;
       delay( 500 );
@@ -38,18 +39,19 @@ void testThread2( Thread *self) //Thread to test ADC functionality
     SUN5.enable();
 
     for( ;; ){
+            (void)printf(" ------- ADC Test Thread -------\r\n");
             uint16_t temp = 0;
             (void)printf( "[DATA ADC]\r\n" );
             temp = SUN1.getValue_adc();
-            (void)printf( "SUN Sensor 1: %u \n", temp);
+            (void)printf( "SUN Sensor 1: %u\r \n", temp);
             temp = SUN2.getValue_adc();
-            (void)printf( "SUN Sensor 2: %u \n", temp);
+            (void)printf( "SUN Sensor 2: %u\r\n", temp);
             temp = SUN3.getValue_adc();
-            (void)printf( "SUN Sensor 3: %u \n", temp);
+            (void)printf( "SUN Sensor 3: %u\r\n", temp);
             temp = SUN4.getValue_adc();
-            (void)printf( "SUN Sensor 4: %u \n", temp);
+            (void)printf( "SUN Sensor 4: %u\r\n", temp);
             temp = SUN5.getValue_adc();
-            (void)printf( "SUN Sensor 5: %u \n", temp);
+            (void)printf( "SUN Sensor 5: %u\r\n", temp);
 
             delay(500);
     }
@@ -64,11 +66,12 @@ int main( void )
 
    /* create worker threads */
 
-   createThread( "Thread 1", testThread1 );
-   createThread( "ODB Comm Up Thread", ODBCommUpThread);
-   createThread( "ODB Comm Down Thread", ODBCommDownThread);
-   createThread( "Attitude Determination Thread", AttitudeDeterThread);
-   createThread( "Attitude Control Thread", AttitudeControlThread);
+   //createThread( "Thread 1", testThread1 );
+   createThread( "ADC Test Thread", testThread2);
+   //createThread( "ODB Comm Up Thread", ODBCommUpThread);
+   //createThread( "ODB Comm Down Thread", ODBCommDownThread);
+   //createThread( "Attitude Determination Thread", AttitudeDeterThread);
+   //createThread( "Attitude Control Thread", AttitudeControlThread);
 
    //createThread( "ADC Thread", testThread2);
 

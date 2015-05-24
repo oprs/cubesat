@@ -50,6 +50,7 @@ ADC& ADC::enable( void )
     tmpreg |= (uint32_t)(_numConversions-1) << 20;
 
     ADCx->SQR1 = tmpreg;
+    ADC_Cmd(ADCx, ENABLE);
 	return *this;
 }
 
@@ -70,6 +71,7 @@ uint16_t ADC::getValue_adc()
 	ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 	ADC_RegularChannelConfig(ADCx, _channel, 1, ADC_SampleTime_15Cycles);
 	ADC_SoftwareStartConv(ADCx);
+	//(void)ADC_ClearFlag(ADCx, ADC_FLAG_EOC);
 
 	while (ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET){;}
 	adc_val = ADC_GetConversionValue(ADCx);
