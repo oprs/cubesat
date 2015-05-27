@@ -15,6 +15,9 @@ namespace qb50 {
 			Thread( const char *name, ThreadWorker worker );
 			~Thread();
 
+			void suspend ( void );
+			void resume  ( void );
+
 			const char   *name;
 			ThreadWorker  worker;
 			void         *handle;

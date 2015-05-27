@@ -1,4 +1,6 @@
 
+#include <FreeRTOS.h>
+#include <task.h>
 #include <stddef.h>
 
 #include "system/Thread.h"
@@ -25,6 +27,17 @@ Thread::~Thread()
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
+
+void Thread::suspend( void )
+{
+	vTaskSuspend( (TaskHandle_t)handle );
+}
+
+
+void Thread::resume( void )
+{
+	vTaskResume( (TaskHandle_t)handle );
+}
 
 
 /*EoF*/

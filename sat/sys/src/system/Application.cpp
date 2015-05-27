@@ -45,6 +45,7 @@ static void trampoline( void *x )
 {
 	Thread *thread = (Thread*)x;
 	thread->worker( thread );
+	vTaskDelete( NULL );
 }
 
 
