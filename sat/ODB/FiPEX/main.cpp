@@ -7,7 +7,7 @@
 
 using namespace qb50;
 
-void FipexThread( Thread *self )
+void FiPEXThread( Thread *self )
 {
 	(void)self;
 
