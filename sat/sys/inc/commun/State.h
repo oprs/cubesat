@@ -37,12 +37,17 @@ namespace qb50 {
 
     };
 
+    struct test_adc{
+        uint16_t adc_temp[5];
+    };
+
     struct State{
         struct mag_field MAG;
         struct sun_vector SUN;
         struct position POS;
         struct pwm_values PWM;
         struct quaternion QUA;
+        struct test_adc TADC;
     };
 
     extern qb50::State Current_state;

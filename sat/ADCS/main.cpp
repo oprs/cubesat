@@ -42,15 +42,30 @@ void testThread2( Thread *self) //Thread to test ADC functionality
             (void)printf(" ------- ADC Test Thread -------\r\n");
             uint16_t temp = 0;
             (void)printf( "[DATA ADC]\r\n" );
+
             temp = SUN1.getValue_adc();
+            Current_state.TADC.adc_temp[0] = temp;
+
             (void)printf( "SUN Sensor 1: %u\r \n", temp);
+
             temp = SUN2.getValue_adc();
+            Current_state.TADC.adc_temp[0] = temp;
+
             (void)printf( "SUN Sensor 2: %u\r\n", temp);
+
             temp = SUN3.getValue_adc();
+            Current_state.TADC.adc_temp[0] = temp;
+
             (void)printf( "SUN Sensor 3: %u\r\n", temp);
+
             temp = SUN4.getValue_adc();
+            Current_state.TADC.adc_temp[0] = temp;
+
             (void)printf( "SUN Sensor 4: %u\r\n", temp);
+
             temp = SUN5.getValue_adc();
+            Current_state.TADC.adc_temp[0] = temp;
+
             (void)printf( "SUN Sensor 5: %u\r\n", temp);
 
             delay(500);
