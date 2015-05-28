@@ -279,6 +279,15 @@ namespace qb50 {
 	MAX111x maxADC( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
 	//MAX111x maxADC( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
 
+
+//  - - - - - - - - - - -  //
+//        S T A T E        //
+//  - - - - - - - - - - -  //
+
+    Sat_state Current_state;
+
+
+
 } /* qb50 */
 
 /*EoF*/

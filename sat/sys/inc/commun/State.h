@@ -34,23 +34,22 @@ namespace qb50 {
 
     struct quaternion{
         double Q[7];
-
     };
 
     struct test_adc{
         uint16_t adc_temp[5];
     };
 
-    struct State{
-        struct mag_field MAG;
-        struct sun_vector SUN;
+    typedef struct {
+        struct mag_field MAGFIE;
+        struct sun_vector SUNVEC;
         struct position POS;
         struct pwm_values PWM;
-        struct quaternion QUA;
+        struct quaternion QUAT;
         struct test_adc TADC;
-    };
+    } Sat_state;
 
-    extern qb50::State Current_state;
+    extern qb50::Sat_state Current_state;
 }
 
 
