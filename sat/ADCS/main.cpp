@@ -85,8 +85,8 @@ int main( void )
    createThread( "ADC Test Thread", testThread2);
    //createThread( "ODB Comm Up Thread", ODBCommUpThread);
    //createThread( "ODB Comm Down Thread", ODBCommDownThread);
-   //createThread( "Attitude Determination Thread", AttitudeDeterThread);
-   //createThread( "Attitude Control Thread", AttitudeControlThread);
+   createThread( "Attitude Determination Thread", AttitudeDeterThread);
+   createThread( "Attitude Control Thread", AttitudeControlThread);
 
    //createThread( "ADC Thread", testThread2);
 
