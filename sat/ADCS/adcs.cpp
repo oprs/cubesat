@@ -286,7 +286,7 @@ namespace qb50 {
 
     Sat_state Current_state;
 
-
+    Sat_raw Current_raw;
 
 } /* qb50 */
 

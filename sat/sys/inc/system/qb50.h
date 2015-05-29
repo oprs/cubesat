@@ -18,6 +18,7 @@
 #include "device/FIFO.hpp"
 #include "device/ADC.h"
 #include "commun/State.h"
+#include "commun/Raw.h"
 #include "system/Application.h"
 #include "system/UserLock.h"
 

@@ -79,12 +79,30 @@ int main( void )
 
    UART1.enable();
 
+    //Initialize the state to some standard values
+    //For testing purposes only
+
+    //Mag_field calculated
+    Current_state.MAGFIE.B_x = 0;
+    Current_state.MAGFIE.B_y = 0;
+    Current_state.MAGFIE.B_z = 0;
+
+    //Position calculated
+    Current_state.POS.pos_x = 10;
+    Current_state.POS.pos_y = -20;
+    Current_state.POS.pos_z = 15;
+
+    //Sun Vector calculated
+    Current_state.SUNVEC.s_x = -0.5;
+    Current_state.SUNVEC.s_y = 0.6;
+    Current_state.SUNVEC.s_z = -0.7;
+
    /* create worker threads */
 
    //createThread( "Thread 1", testThread1 );
    createThread( "ADC Test Thread", testThread2);
-   //createThread( "ODB Comm Up Thread", ODBCommUpThread);
-   //createThread( "ODB Comm Down Thread", ODBCommDownThread);
+   createThread( "ODB Comm Up Thread", ODBCommUpThread);
+   createThread( "ODB Comm Down Thread", ODBCommDownThread);
    createThread( "Attitude Determination Thread", AttitudeDeterThread);
    createThread( "Attitude Control Thread", AttitudeControlThread);
 

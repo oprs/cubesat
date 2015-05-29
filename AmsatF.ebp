@@ -606,6 +606,7 @@
 		<Unit filename="sat\sys\inc\Device.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\commun\Raw.h" />
 		<Unit filename="sat\sys\inc\commun\State.h" />
 		<Unit filename="sat\sys\inc\device\A25Lxxx.h">
 			<Option target="system" />

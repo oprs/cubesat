@@ -18,6 +18,10 @@ void AttitudeDeterThread( Thread *self)
             Current_state.PWM.y_dir = 1;
             Current_state.PWM.duty_cycle_z = 30;
             Current_state.PWM.z_dir = 1;
+
+            Current_state.POS.pos_x += 0.2;
+            Current_state.POS.pos_y +=  -0.3;
+            Current_state.POS.pos_z -= 0.2;
     }
 }
 
