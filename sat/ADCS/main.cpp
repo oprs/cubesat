@@ -74,6 +74,11 @@ void testThread1( Thread *self )  //Test Thread
 
 }
 */
+
+//Principal Thread for ADCS
+void Main_Thread( Thread *self){
+
+}
 int main( void )
 {
    /* enable UART1 (debug) */
