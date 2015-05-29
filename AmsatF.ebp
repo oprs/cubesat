@@ -136,6 +136,9 @@
 		<Unit filename="sat\ADCS\ODBCommUP\main.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="sat\ADCS\TestThreads\main.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="sat\ADCS\adcs.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ADCS" />

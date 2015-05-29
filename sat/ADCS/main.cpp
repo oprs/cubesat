@@ -12,6 +12,7 @@ extern void AttitudeControlThread           ( Thread *self );  //Thread for Atti
 extern void AttitudeDeterThread             ( Thread *self );  //Thread for Attitude Determination
 extern void ODBCommUpThread                 ( Thread *self );  //Thread for Communication with ODB (Sending Data)
 extern void ODBCommDownThread               ( Thread *self );  //Thread for Communication with ODB (Receiving Data)
+extern void TestThreads                     ( Thread *self );  //Thread for testing purposes only
 
 void testThread1( Thread *self )  //Test Thread
 {
@@ -28,7 +29,7 @@ void testThread1( Thread *self )  //Test Thread
 }
 
 
-void testThread2( Thread *self) //Thread to test ADC functionality
+/*void testThread2( Thread *self) //Thread to test ADC functionality
 {
     (void)self;
     //Enable the GPIO Pins for ADC Functionality
@@ -72,7 +73,7 @@ void testThread2( Thread *self) //Thread to test ADC functionality
     }
 
 }
-
+*/
 int main( void )
 {
    /* enable UART1 (debug) */
@@ -100,7 +101,7 @@ int main( void )
    /* create worker threads */
 
    //createThread( "Thread 1", testThread1 );
-   createThread( "ADC Test Thread", testThread2);
+   createThread( "ADC Test Thread", TestThreads);
    createThread( "ODB Comm Up Thread", ODBCommUpThread);
    createThread( "ODB Comm Down Thread", ODBCommDownThread);
    createThread( "Attitude Determination Thread", AttitudeDeterThread);
