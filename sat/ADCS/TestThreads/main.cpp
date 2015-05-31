@@ -41,7 +41,7 @@ void testThreadADC(){
 
             (void)printf( "SUN Sensor 5: %u\r\n", temp);
 
-            delay(500);
+            delay(2000);
     }
 
 }

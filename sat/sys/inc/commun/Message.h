@@ -7,7 +7,7 @@ namespace qb50{
     enum Commands_ODB{
         PING = 'P',
         MODE_ATT_DET = 'D',
-        MODE_ATT_CON = 'C1', //A Confirmer
+        MODE_ATT_CON = 'C', //A Confirmer
         ASK_ATT = 'Q',
         ASK_MAG_RAW = 'M',
         ASK_GYR_RAW = 'G',

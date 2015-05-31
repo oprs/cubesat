@@ -28,56 +28,43 @@ void testThread1( Thread *self )  //Test Thread
    }
 }
 
-
-/*void testThread2( Thread *self) //Thread to test ADC functionality
-{
-    (void)self;
-    //Enable the GPIO Pins for ADC Functionality
-    SUN1.enable();
-    SUN2.enable();
-    SUN3.enable();
-    SUN4.enable();
-    SUN5.enable();
-
-    for( ;; ){
-            (void)printf(" ------- ADC Test Thread -------\r\n");
-            uint16_t temp = 0;
-            (void)printf( "[DATA ADC]\r\n" );
-
-            temp = SUN1.getValue_adc();
-            Current_state.TADC.adc_temp[0] = SUN1.getValue_adc();
-
-            (void)printf( "SUN Sensor 1: %u\r \n", temp);
-
-            temp = SUN2.getValue_adc();
-            Current_state.TADC.adc_temp[1] = SUN2.getValue_adc();
-
-            (void)printf( "SUN Sensor 2: %u\r\n", temp);
-
-            temp = SUN3.getValue_adc();
-            Current_state.TADC.adc_temp[2] = SUN3.getValue_adc();
-
-            (void)printf( "SUN Sensor 3: %u\r\n", temp);
-
-            temp = SUN4.getValue_adc();
-            Current_state.TADC.adc_temp[3] = SUN4.getValue_adc();
-
-            (void)printf( "SUN Sensor 4: %u\r\n", temp);
-
-            temp = SUN5.getValue_adc();
-            Current_state.TADC.adc_temp[4] = SUN5.getValue_adc();
-
-            (void)printf( "SUN Sensor 5: %u\r\n", temp);
-
-            delay(500);
-    }
-
-}
-*/
-
 //Principal Thread for ADCS
 void Main_Thread( Thread *self){
 
+    (void)self;
+
+    for(;;){
+            delay( 2000 );
+            (void)printf(" ------- Main Thread -------\r\n");
+            switch (Current_state.LCR)
+            {
+                case PING:
+                    (void)printf(" ------- ODB is pinging us -------\r\n");
+                    break;
+                case MODE_ATT_DET:
+                    (void)printf(" ------- Attitude determination mode on -------\r\n");
+                    break;
+                case MODE_ATT_CON:
+                    (void)printf(" ------- Attitude Control Mode on -------\r\n");
+                    break;
+                case ASK_ATT:
+                    (void)printf(" ------- ODB asks for attitude -------\r\n");
+                    break;
+                case ASK_MAG_RAW:
+                    (void)printf(" ------- ODB asks for raw mag data -------\r\n");
+                    break;
+                case ASK_SUN_RAW:
+                    (void)printf(" ------- ODB asks for sun data -------\r\n");
+                    for (int i = 0; i < 5; i++)
+                        (void)printf( "SUN Sensor 1: %u\r \n", Current_state.TADC.adc_temp[i]);
+                    break;
+                case STOP:
+                    (void)printf(" ------- ODB asks to stop ADCS -------\r\n");
+                    break;
+                default:
+                    (void)printf(" ------- ODB hasn't told us anything :( -------\r\n");
+            }
+    }
 }
 int main( void )
 {
@@ -107,12 +94,11 @@ int main( void )
 
    //createThread( "Thread 1", testThread1 );
    createThread( "ADC Test Thread", TestThreads);
-   createThread( "ODB Comm Up Thread", ODBCommUpThread);
+   //createThread( "ODB Comm Up Thread", ODBCommUpThread);
    createThread( "ODB Comm Down Thread", ODBCommDownThread);
-   createThread( "Attitude Determination Thread", AttitudeDeterThread);
-   createThread( "Attitude Control Thread", AttitudeControlThread);
-
-   //createThread( "ADC Thread", testThread2);
+   //createThread( "Attitude Determination Thread", AttitudeDeterThread);
+   //createThread( "Attitude Control Thread", AttitudeControlThread);
+   createThread( "Main Thread", Main_Thread);
 
    run();
 

@@ -1,6 +1,8 @@
 #ifndef _QB50_COMMUN_STATE_H
 #define _QB50_COMMUN_STATE_H
 
+#include "Message.h"
+
 namespace qb50 {
 
     struct mag_field{
@@ -47,6 +49,7 @@ namespace qb50 {
         struct pwm_values PWM;
         struct quaternion QUAT;
         struct test_adc TADC;
+        enum Commands_ODB LCR;
     } Sat_state;
 
     extern qb50::Sat_state Current_state;
