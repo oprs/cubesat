@@ -42,6 +42,22 @@ namespace qb50 {
         uint16_t adc_temp[5];
     };
 
+    struct moment_mag{
+        double mu_x;
+        double mu_y;
+        double mu_z;
+    };
+
+    struct heure{
+        uint16_t hours;
+        uint16_t minutes;
+        uint16_t seconds;
+
+        uint16_t day;
+        uint16_t month;
+        uint16_t year;
+    };
+
     typedef struct {
         struct mag_field MAGFIE;
         struct sun_vector SUNVEC;
@@ -49,6 +65,7 @@ namespace qb50 {
         struct pwm_values PWM;
         struct quaternion QUAT;
         struct test_adc TADC;
+        struct moment_mag MOMAG;
         enum Commands_ODB LCR;
     } Sat_state;
 
