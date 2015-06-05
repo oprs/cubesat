@@ -78,6 +78,7 @@
 			<Add option="-mthumb" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
+			<Add option="-g3" />
 			<Add option="-DARM_MATH_CM4" />
 			<Add option="-D__FPU_USED" />
 			<Add option="-DSTM32F405RG" />
@@ -312,10 +313,19 @@
 		<Unit filename="sat\sys\inc\device\APB.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\device\AX25Out.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\device\DMA.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\DMAStream.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\EXTI.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\FIFO.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\GPIO.h">
@@ -325,6 +335,9 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\MAX111x.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\NRZI.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\NVIC.h">
@@ -363,11 +376,23 @@
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\src\device\AX25Out.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\src\device\DMA.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\DMAStream.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\EXTI.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\FIFO.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
@@ -380,6 +405,10 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\MAX111x.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\NRZI.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>

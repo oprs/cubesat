@@ -23,6 +23,9 @@
 #undef UART5
 
 #undef NVIC
+#undef EXTI
+
+
 
 
 namespace qb50 {
@@ -45,6 +48,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - - - - - -  //
 
 	NVIC IRQ;
+    EXTI EXTI1;
 
 //  - - - - - - - - - - - -  //
 //  D M A   C H A N N E L S  //
@@ -254,6 +258,7 @@ namespace qb50 {
 	MAX111x maxADC( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
 	//MAX111x maxADC( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
 
+    AX25Out ax25( PC9, PC8 );
 } /* qb50 */
 
 /*EoF*/

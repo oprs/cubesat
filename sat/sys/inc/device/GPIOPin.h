@@ -32,6 +32,8 @@ namespace qb50 {
 				ANALOG       = 0x03
 			};
 
+			unsigned id( void ) const { return _id; }
+
 			GPIOPin& mode   ( Mode mode );
 
 			GPIOPin& in     ( void ) { return mode( INPUT  ); }
