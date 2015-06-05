@@ -44,12 +44,20 @@ void NVIC::enable( uint32_t IRQn, Priority sel )
 
 	NVICx->IP[ IRQn ] = sel << 4;
 	NVICx->ISER[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
+	//clear( IRQn );
 }
 
 
 void NVIC::disable( uint32_t IRQn )
 {
 	(void)IRQn; /* XXX */
+}
+
+
+void NVIC::clear( uint32_t IRQn )
+{
+	NVIC_Type *NVICx = (NVIC_Type*)NVIC_BASE;
+	NVICx->ICPR[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
 }
 
 /*EoF*/

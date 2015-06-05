@@ -22,6 +22,7 @@ namespace qb50 {
 			};
 
 			void enable  ( uint32_t IRQn, Priority sel = IPR15 );
+			void clear   ( uint32_t IRQn );
 			void disable ( uint32_t IRQn );
 	};
 
