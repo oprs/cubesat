@@ -21,8 +21,6 @@ $(SUB_ADCS): $(SUB_SYS)
 
 $(SUB_APP): $(SUB_SYS)
 
-$(SUB_APP): $(SUB_SYS)
-
 $(SUB_ALL):
 	@$(MAKE) -C $@ SATDIR=$(SATDIR) ARCH=$(ARCH)
 

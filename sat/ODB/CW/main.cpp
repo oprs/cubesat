@@ -12,7 +12,7 @@ void CWThread( Thread *self )
 
 	for( ;; ) {
 		delay( 3000 );
-		(void)cpprintf( "--------[ Morse/CW ]--------\r\n" );
+		(void)printf( "--------[ Morse/CW ]--------\r\n" );
 	}
 }
 

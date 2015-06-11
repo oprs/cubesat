@@ -1,6 +1,9 @@
 #include "system/qb50.h"
-#include "XTRUITES/textualInterface.h"
 #include "AX25/AX25.h"
+
+#ifdef XTRUITES
+#include "XTRUITES/textualInterface.h"
+#endif
 
 
 using namespace std;
@@ -148,6 +151,7 @@ void AX25NIMAThread(Thread *self )
 }
 
 
+#ifdef XTRUITES
 void XTRUITESThread(Thread *self )
 {
     (void)self;
@@ -164,6 +168,7 @@ void XTRUITESThread(Thread *self )
         delay(100);
     }
 }
+#endif
 
 
 int main( void )
@@ -182,9 +187,11 @@ int main( void )
 
     //ax25.enable();
 
-	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
 	(void)createThread("Thread 1", thread1 );
-    (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
+#ifdef XTRUITES
+	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
+#endif
+   (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
 
 	run();
 

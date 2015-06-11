@@ -8,6 +8,14 @@ OBJFILES = \
    $(patsubst %c,%o,$(wildcard ./*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./*.cpp))
 
+ifdef XTRUITES
+OBJFILES += \
+   $(patsubst %cpp,%o,$(wildcard ./XTRUITES/*/*/*/*.cpp)) \
+   $(patsubst %cpp,%o,$(wildcard ./XTRUITES/*/*/*.cpp))
+else
+OBJFILES := $(filter-out $(patsubst %cpp,%o,$(wildcard ./XTRUITES/*.cpp)), $(OBJFILES))
+endif
+
 TARGETS = ODB.hex ODB.elf
 
 CFLAGS += -I. $(APP_CFLAGS)

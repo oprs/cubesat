@@ -1,4 +1,8 @@
+
+#ifdef XTRUITES
 #include "../XTRUITES/textualInterface.h"
+#endif
+
 #include "system/qb50.h"
 #include <stdio.h>
 
@@ -12,7 +16,7 @@ void thread1( Thread *self )
    (void)self;
 
    for( ;; ) {
-      (void)cpprintf( "hello: %p - %d\r\n", self, cnt );
+      (void)printf( "hello: %p - %d\r\n", self, cnt );
       ++cnt;
       delay( 500 );
    }
