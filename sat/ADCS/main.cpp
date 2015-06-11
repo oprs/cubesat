@@ -1,4 +1,4 @@
-
+#include "../XTRUITES/textualInterface.h"
 #include "system/qb50.h"
 #include <stdio.h>
 
@@ -12,7 +12,7 @@ void thread1( Thread *self )
    (void)self;
 
    for( ;; ) {
-      (void)printf( "hello: %p - %d\r\n", self, cnt );
+      (void)cpprintf( "hello: %p - %d\r\n", self, cnt );
       ++cnt;
       delay( 500 );
    }

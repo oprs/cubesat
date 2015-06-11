@@ -71,7 +71,6 @@ void AX25_PacketExampleThread( Thread *self )
     (void)self;
     (void)packetSend_len;
 
-
     while(1);
 }
 

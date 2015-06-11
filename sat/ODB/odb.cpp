@@ -253,10 +253,10 @@ namespace qb50 {
 //  - - - - - - - - - - -  //
 
 	/*              SPI  csPin */
-	//MAX111x maxADC( SPI3, PA4 ); /* CS1 - ADC carte energie */
-	//MAX111x maxADC( SPI3, PA5 ); /* CS2 - ADC carte energie */
-	MAX111x maxADC( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
-	//MAX111x maxADC( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
+	MAX111x ADC_Power_1( SPI3, PA4 ); /* CS1 - ADC carte energie */
+	MAX111x ADC_Power_2( SPI3, PA5 ); /* CS2 - ADC carte energie */
+	MAX111x ADC_ODB    ( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
+	MAX111x ADC_FiPEX  ( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
 
     AX25Out ax25( PC9, PC8 );
 } /* qb50 */

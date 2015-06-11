@@ -164,14 +164,78 @@
 			<Option target="ODB" />
 		</Unit>
 		<Unit filename="sat\ODB\GPS\main.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
 		<Unit filename="sat\ODB\Telecommande\Telecommande.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
 		<Unit filename="sat\ODB\Telecommande\Telecommande.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\conditionalPrinter.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\conditionalPrinter.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\control\listTextBlock.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\control\listTextBlock.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\control\textBlock.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\control\textBlock.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\escapeSequences.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\escapeSequences.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\page.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\page.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\ADCS_test\ADC_TestPage.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\ADCS_test\ADC_TestPage.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\colorPalette.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\colorPalette.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\homePage.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\pageDirectory\homePage.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\textualInterface.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\XTRUITES\textualInterface.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\main.cpp">
+			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
 		<Unit filename="sat\ODB\XTRUITES\conditionalPrinter.cpp">

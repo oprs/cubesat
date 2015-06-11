@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include "system/qb50.h"
+#include "../XTRUITES/textualInterface.h"
 
 using namespace qb50;
 
@@ -11,7 +12,7 @@ void CWThread( Thread *self )
 
 	for( ;; ) {
 		delay( 3000 );
-		(void)printf( "--------[ Morse/CW ]--------\r\n" );
+		(void)cpprintf( "--------[ Morse/CW ]--------\r\n" );
 	}
 }
 

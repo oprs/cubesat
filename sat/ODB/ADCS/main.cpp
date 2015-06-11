@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include "system/qb50.h"
+#include "../XTRUITES/textualInterface.h"
 
 using namespace qb50;
 
@@ -11,7 +12,7 @@ void ADCSThread( Thread *self )
 
 	for( ;; ) {
 		delay( 2000 );
-		(void)printf( "--------[ ADCS ]--------\r\n" );
+		(void)cpprintf( "--------[ ADCS ]--------\r\n" );
 	}
 }
 
