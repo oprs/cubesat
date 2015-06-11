@@ -11,19 +11,15 @@ using namespace qb50;
 
 EXTI::EXTI()
 {
-    int i(0);
-
-    for( i = 0; i < 16; i++ )
-    {
+    for( int i = 0; i < 16; i++ )
         _extiLock[i] = xSemaphoreCreateMutex();
-
-    }
 }
 
 
 EXTI::~EXTI()
 {
-    vSemaphoreDelete(_extiLock[16]);
+    for( int i = 0; i < 16; i++ )
+        vSemaphoreDelete( _extiLock[i] );
 }
 
 
@@ -36,7 +32,6 @@ void EXTI::trigged(GPIOPin& Pin)
     Pin.enable().in().noPull();
 
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN; //Enable clock SYSCFG
-
 
     /* Set Pin C9 as EXTI9 with SYSCFG module */
     tmp32  = SYSCFG->EXTICR[2];
@@ -52,12 +47,12 @@ void EXTI::trigged(GPIOPin& Pin)
     x->PR    |= exti_mask;
 
     /* NVIC IRQ channel configuration*/
-    IRQ.enable( EXTI0_IRQn );
-    IRQ.enable( EXTI1_IRQn );
-    IRQ.enable( EXTI2_IRQn );
-    IRQ.enable( EXTI3_IRQn );
-    IRQ.enable( EXTI4_IRQn );
-    IRQ.enable( EXTI9_5_IRQn );
+    IRQ.enable( EXTI0_IRQn     );
+    IRQ.enable( EXTI1_IRQn     );
+    IRQ.enable( EXTI2_IRQn     );
+    IRQ.enable( EXTI3_IRQn     );
+    IRQ.enable( EXTI4_IRQn     );
+    IRQ.enable( EXTI9_5_IRQn   );
     IRQ.enable( EXTI15_10_IRQn );
 
 
@@ -70,7 +65,7 @@ void EXTI::trigged(GPIOPin& Pin)
 
 void EXTI::isr( int i )
 {
-    portBASE_TYPE higherPriorityTask  = pdFALSE;
+    portBASE_TYPE higherPriorityTask = pdFALSE;
 
     //PC8.toggle();
     xSemaphoreGiveFromISR( _extiLock[i], &higherPriorityTask );
@@ -141,8 +136,6 @@ void EXTI4_IRQHandler(void)
 void EXTI9_5_IRQHandler(void)
 {
     EXTI_TypeDef *x = (EXTI_TypeDef*)EXTI_BASE;
-
-    //PB0.toggle(); //LED2
 
     if ( x->PR & (EXTI_PR_PR5) )
     {
