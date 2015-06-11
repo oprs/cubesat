@@ -152,6 +152,8 @@ void XTRUITESThread(Thread *self )
 {
     (void)self;
 
+    UART3.enable();
+
     uint8_t keyPress;
     XTRUITES *interface= new XTRUITES();
 
@@ -167,12 +169,12 @@ void XTRUITESThread(Thread *self )
 int main( void )
 {
 
-	UART3.enable();
 
-	LED1.enable().out().off();
-	LED2.enable().out().on();
-	LED3.enable().out().off();
-	LED4.enable().out().off();
+
+	//LED1.enable().out().off();
+	//LED2.enable().out().on();
+	//LED3.enable().out().off();
+	//LED4.enable().out().off();
 
     //EXTI1.trigged( PC9 );
 	/* Antenne */
