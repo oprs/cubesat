@@ -142,7 +142,7 @@ void AX25NIMAThread(Thread *self )
 		(void)printf( "hello: %p - %d\r\n", self, cnt );
 		++cnt;
 
-		ax25.sendPacket(tmp8, 8);
+		//ax25.sendPacket(tmp8, 8);
 		delay( 100 );
 	}
 }
@@ -178,7 +178,7 @@ int main( void )
 	/* Antenne */
 	//PA15.enable().out().off();
 
-    ax25.enable();
+    //ax25.enable();
 
 	(void)createThread("Thread 1", thread1 );
 	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );

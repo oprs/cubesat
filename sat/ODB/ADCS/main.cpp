@@ -12,7 +12,7 @@ void ADCSThread( Thread *self )
 
 	for( ;; ) {
 		delay( 2000 );
-		(void)cpprintf( "--------[ ADCS ]--------\r\n" );
+		(void)printf( "--------[ ADCS ]--------\r\n" );
 	}
 }
 
