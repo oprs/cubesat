@@ -42,7 +42,10 @@ namespace qb50 {
 			MAX111x& conv( Channel sel, ConvResp *resp );
 	};
 
-	extern qb50::MAX111x maxADC;
+	extern qb50::MAX111x ADC_Power_1;
+	extern qb50::MAX111x ADC_Power_2;
+	extern qb50::MAX111x ADC_ODB;
+	extern qb50::MAX111x ADC_FiPEX;
 
 } /* qb50 */
 

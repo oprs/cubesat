@@ -1,7 +1,9 @@
-
 #include "system/qb50.h"
-#include <stdio.h>
+#include "XTRUITES/textualInterface.h"
+#include "AX25/AX25.h"
 
+
+using namespace std;
 using namespace qb50;
 
 
@@ -34,6 +36,7 @@ extern void GPSThread   ( Thread *self );
 
 void thread1( Thread *self )
 {
+
 	(void)self;
 
 	A25Lxxx::RDIDResp rdid;
@@ -67,7 +70,6 @@ void thread1( Thread *self )
 
 	dataMem.enable();
 	softMem.enable();
-	maxADC.enable();
 
 #if 0
 	(void)printf( "Sector Erase...\r\n" );
@@ -108,6 +110,7 @@ void thread1( Thread *self )
 		softMem.RDID( &rdid );
 		hexdump( &rdid, sizeof( rdid ));
 
+
 		softMem.REMS( &rems );
 		hexdump( &rems, sizeof( rems ));
 
@@ -120,31 +123,6 @@ void thread1( Thread *self )
 		softMem.READ( 0, buf, 64 );
 		hexdump( buf, 64 );
 
-		(void)printf( "[ADC]\r\n" );
-
-		maxADC.conv( MAX111x::CH0, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH1, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH2, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH3, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH4, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH5, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH6, &conv );
-		hexdump( &conv, sizeof( conv ));
-
-		maxADC.conv( MAX111x::CH7, &conv );
-		hexdump( &conv, sizeof( conv ));
 
 		LED2.on();
 		delay( 500 );
@@ -154,8 +132,9 @@ void thread1( Thread *self )
 }
 
 
-void TestThread( Thread *self )
+void AX25NIMAThread(Thread *self )
 {
+
 	int cnt = 0;
     uint8_t tmp8[8] = {0xAA, 0xFF, 0x01, 0xCB, 0xFF, 0x23, 0xE9, 0x44};
 
@@ -169,23 +148,27 @@ void TestThread( Thread *self )
 }
 
 
+void XTRUITESThread(Thread *self )
+{
+    (void)self;
 
+    uint8_t keyPress;
+    XTRUITES *interface= new XTRUITES();
+
+    while(1)
+    {
+        UART3.read(&keyPress, 1);
+        interface->readKey(keyPress);
+        delay(100);
+    }
+}
 
 
 int main( void )
 {
-	/* enable UART6 (debug) */
 
-	UART6.enable();
+	UART3.enable();
 
-	/* create worker threads */
-
-/*
-	(void)createThread( "ADCSThread",  ADCSThread  );
-	(void)createThread( "CWThread",    CWThread    );
-	(void)createThread( "FiPEXThread", FiPEXThread );
-	(void)createThread( "GPSThread",   GPSThread   );
-*/
 	LED1.enable().out().off();
 	LED2.enable().out().on();
 	LED3.enable().out().off();
@@ -197,15 +180,12 @@ int main( void )
 
     ax25.enable();
 
-    //PC8.enable().off();
-
-//	createThread( "Thread 1", thread1 );
-	createThread( "test", TestThread );
-	//createThread( "essai", essaiThread);
+	(void)createThread("Thread 1", thread1 );
+	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
+    (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
 
 	run();
 
-	LED3.enable().out().on();
 	for( ;; );
 }
 

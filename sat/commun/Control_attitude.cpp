@@ -10,7 +10,7 @@ adcs adcs1;
 	message msg;
 	signed int T;
 	int p;
-	unsigned int clock_t;
+	unsigned int clk_0;
 	signed int pos[3];
 
 
@@ -25,7 +25,7 @@ do{
 adcs1.setADCSOn();                                                                                                                                      //1.	Mise de l’ADCS sous tension.
 adcs1.InitADCS();
 
-clock_t =ticks();
+clk_0 =ticks();
 do{
 
 adcs1.writeADCSMessage(adcs1.M_PING);
@@ -38,7 +38,7 @@ if (adcs1.PING.p==1) break;
 }
 
 
-while((ticks()-clock_t)<=1000);
+while((ticks()-clk_0)<=1000);
 
 
 if (adcs1.PING.p==0)
@@ -63,11 +63,11 @@ adcs1.writeADCSMessage(adcs1.M_GPS);
 adcs1.writeADCSMessage(adcs1.M_control_attitude);	                               	                               //4.	activation du mode détumbling.
 
 do{
-clock_t=ticks();
+clk_0=ticks();
 adcs1.writeADCSMessage(adcs1.M_MES);                                                                         //5.	activation du mode de mesure.
 
 mesure() ;                                                                                                                                  //6.	reception des parametres d'attitude.
-delay(period-ticks()+clock_t);
+delay(period-ticks()+clk_0);
 
 
 
