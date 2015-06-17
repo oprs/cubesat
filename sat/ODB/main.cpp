@@ -182,8 +182,8 @@ int main( void )
 
     //ax25.enable();
 
-	(void)createThread("Thread 1", thread1 );
 	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
+	(void)createThread("Thread 1", thread1 );
     (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
 
 	run();

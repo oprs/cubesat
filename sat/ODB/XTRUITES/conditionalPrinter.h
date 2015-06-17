@@ -1,6 +1,9 @@
 /**
- *  conditionalPrinter.h
- *  20/05/2015
+ *  @file       conditionalPrinter.h
+ *  @brief      Ecriture conditionnelle (En-tête)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.2
+ *  @date       20/05/2015
  */
 
 
@@ -15,15 +18,10 @@ namespace qb50
 {
 
 
-    /**
-     *  Conditional printf, enable printf if XTRUITE is currently disable
-     */
+    /// @brief  Conditional printf, écrit si XTRUITE n'est pas actif
     extern  int     cpprintf    (const char *format , ...);
 
-
-    /**
-     *  Conditional hexdump, enable hexdump if XTRUITE is currently disable
-     */
+    /// @brief  Conditional hexdump, écrit si XTRUITE n'est pas actif
     extern  void    cphexdump   (const void *addr   , unsigned len);
 
 

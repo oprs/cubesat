@@ -1,6 +1,9 @@
 /**
- *  page.cpp
- *  13/05/2015
+ *  @file       page.cpp
+ *  @brief      Model de page pour XTRUITES (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.3
+ *  @date       13/05/2015 - 12/06/2015
  */
 
 

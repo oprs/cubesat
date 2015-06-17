@@ -1,8 +1,10 @@
 /**
- *  homePage.cpp
- *  28/05/2015
+ *  @file       homePage.cpp
+ *  @brief      Page d'accueil (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.2
+ *  @date       28/05/2015
  */
-
 #include "homePage.h"
 #include <functional>
 
@@ -32,7 +34,7 @@ void XTRUITEShomePage::load(void)
              .addItem(new XTRUITESListTextBlockItem("Color Palette",        new XTRUITESInputHandler('b',   [&](){ (&getInterface())->loadPage(new XTRUITEScolorPalette ( getInterface() )); } )        , 1     ))
              .addItem(new XTRUITESListTextBlockItem("Refresh",              new XTRUITESInputHandler('c',   [&](){ (&getInterface())->loadPage(new XTRUITEShomePage     ( getInterface() )); } )        , 1     ));
 
-    menuList->populateInterface(&getInterface());
+    menuList->display();
 }
 
 void XTRUITEShomePage::unload(void)

@@ -1,8 +1,10 @@
 /**
- *  conditionalPrinter.h
- *  19/05/2015
+ *  @file       conditionalPrinter.cpp
+ *  @brief      Ecriture conditionnelle (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.2
+ *  @date       20/05/2015
  */
-
 
 #include "conditionalPrinter.h"
 
@@ -16,9 +18,6 @@ namespace qb50
 {
 
 
-    /**
-     *  Conditional printf, enable printf if XTRUITE is currently disable
-     */
     int cpprintf(const char *format, ...)
     {
         if (XTRUITES::enable)
@@ -55,9 +54,7 @@ namespace qb50
                                        "................................";
 
 
-    /**
-     *  Conditional hexdump, enable hexdump if XTRUITE is currently disable
-     */
+
     void cphexdump( const void *addr, unsigned len )
     {
         if (XTRUITES::enable)

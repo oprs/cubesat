@@ -1,12 +1,9 @@
-/*!
- * @file ADC_TestPage.cpp
- * @brief Page de test dédié aux ADC
- * @author Jérôme skoda <jerome.skoda@hotmail.fr>
- * @version 0.3
- * @date 28 mai 2015
- *
- * Page de test pour afficher toutes les valeurs des canaux ADC (MAX111x).
- *
+/**
+ * @file    ADC_TestPage.cpp
+ * @brief   Page de test pour afficher toutes les valeurs des canaux ADC (MAX111x) (Source).
+ * @author  Jérôme skoda <jerome.skoda@hotmail.fr>
+ * @version 1.4
+ * @date    28/05/2015 - 12/06/2015
  */
 
 
@@ -20,15 +17,6 @@ using namespace std;
 uint8_t XTRUITESADC_TestPage::currentADC_read=2;
 
 
-/*!
- *  @brief Constructeur
- *
- *  Constructeur de la classe fieldADC
- *
- *  @param[in] nameVal          Nom associé au canal.
- *  @param[in] converterVal     Fonction de conversion.
- *  @param[in] unitVal          Unité du canal.
- */
 fieldADC::fieldADC(std::string nameVal, std::function<float(uint16_t)> converterVal, std::string unitVal)
 {
     name= nameVal;
@@ -37,16 +25,6 @@ fieldADC::fieldADC(std::string nameVal, std::function<float(uint16_t)> converter
 }
 
 
-/*!
- *  @brief Ajout d'un morceau
- *
- *  Methode qui permet d'ajouter un morceau a liste de
- *  lecture
- *
- *  @param strSong : le morceau a ajouter
- *  @return true si morceau deja present dans la liste,
- *  false sinon
- */
 std::string fieldADC::convertValue(uint16_t value)
 {
     stringstream ss;

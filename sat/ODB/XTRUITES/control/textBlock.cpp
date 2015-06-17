@@ -1,6 +1,9 @@
 /**
- *  textBlock.cpp
- *  11/05/2015
+ *  @file       textBlock.cpp
+ *  @brief      Contrôle textBlock (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.6
+ *  @date       11/05/2015 - 12/06/2015
  */
 
 

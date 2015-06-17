@@ -1,12 +1,18 @@
 /**
- *  listTextBlock.cpp
- *  20/05/2015
+ *  @file       listTextBlock.cpp
+ *  @brief      Contrôle XTRUITES: listTextBlock (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.5
+ *  @date       20/05/2015
  */
 
- #include "listTextBlock.h"
+
+#include "listTextBlock.h"
+
 
 using namespace qb50;
 using namespace std;
+
 
 XTRUITESListTextBlockItem::XTRUITESListTextBlockItem(std::string labelVal, XTRUITESInputHandler* inputHandlerVal, uint8_t rowSpanVal)
 {
@@ -127,7 +133,7 @@ XTRUITESListTextBlock& XTRUITESListTextBlock::addItem(XTRUITESListTextBlockItem*
 }
 
 
-XTRUITESListTextBlock& XTRUITESListTextBlock::populateInterface(XTRUITES* interface)
+XTRUITESListTextBlock& XTRUITESListTextBlock::display()
 {
     uint8_t itemNumber= 0;
     uint8_t itemlocationX = locationX;
@@ -147,7 +153,7 @@ XTRUITESListTextBlock& XTRUITESListTextBlock::populateInterface(XTRUITES* interf
             .setWidth(2).setHeight( item->rowSpan*heightItem)
             .setText(text)
             .setBackground(background)
-            .setForeground(41).display();
+            .setForeground(XTRUITES_LIST_TEXTBLOCK_KEY_FOREGROUND).display();
 
         XTRUITESTextBlock *textLabel = new XTRUITESTextBlock();
         textLabel->setLocationX(itemlocationX+2)

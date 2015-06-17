@@ -1,6 +1,9 @@
 /**
- *  textualInterface.h
- *  11/05/2015
+ *  @file       textualInterface.h
+ *  @brief      Gestion comportemental de l'interface (En-tête)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.9
+ *  @date       11/05/2015 - 12/06/2015
  */
 
 
@@ -20,6 +23,7 @@
 
 #include "conditionalPrinter.h" // Disable/Enable printf and hexdump
 #include "escapeSequences.h"    // ANSI Escape Sequence lib
+#include "inputHandler.h"
 
 // Controls
 #include "control/textBlock.h"
@@ -36,38 +40,17 @@ namespace qb50
 {
 
 
-    class XTRUITESTextBlock;
-
     /**
-     *  @author     Jérôme Skoda    <jerome.skoda@hotmail.fr>
-     *  @version    1.2             (29/05/2015 - 02/06/2015)
-     */
-    class XTRUITESInputHandler
-    {
-
-
-        public:
-
-            uint8_t                 key;
-
-            XTRUITESInputHandler(uint8_t keyVal, std::function<void ()> _handlerVal);
-
-            XTRUITESInputHandler&   setKey(uint8_t keyVal);
-            uint8_t                 getKey();
-            XTRUITESInputHandler&   setHandler(std::function<void ()> _handlerVal);
-            XTRUITESInputHandler&   launch();
-
-        private:
-
-            std::function<void()>   _handler;
-
-
-    };
-
-
-    /**
-     *  @author     Jérôme Skoda    <jerome.skoda@hotmail.fr>
-     *  @version    1.8             (11/05/2015 - 02/06/2015)
+     *  @class      XTRUITES
+     *  @brief      Gestion du comportement de l'interface utilisateur textuel
+     *  @details    La class XTRUITES permet la gestion du comportement de l'interface utilisateur textuel
+     *              Ce qui comprend:
+     *              <ul>
+     *                  <li>L'affichage du cadre de l'interface ainsi que la localisation</li>
+     *                  <li>La gestion des évenements (caractére reçu)</li>
+     *                  <li>Le chargement et déchargement de page</li>
+     *                  <li>Les actions communes à toutes les pages comme par exemple: XTRUITES::refresh() et XTRUITES::quit()</li>
+     *              </ul>
      */
     class XTRUITES
     {
@@ -75,26 +58,64 @@ namespace qb50
 
         public:
 
+            /// @brief  Page courrante
             XTRUITESPage*                       page;
+
+            /**
+             *  @brief      Etat de l'Interface
+             *  @details    <ul>
+             *                   <li>True: activé</li>
+             *                   <li>False: désactivé</li>
+             *              </ul>
+             *              Remarque: enable est utilisé dans conditionalPrinter.cpp
+             */
             static bool                         enable;
 
-
+            /// @brief  Constructeur: initialise XTRUITES et charge la XTRUITEShomePage
             XTRUITES(void);
+
+            /// @brief  Destructeur: décharge la XTRUITES::page, réinialise le terminal et désactive XTRUITES
             ~XTRUITES(void);
 
+            ///  @brief  Effectue une réécriture du cadre et recharge la XTRUITES::page
+            ///  @return Reference XTRUITES courrante
+            XTRUITES& refresh();
 
-            XTRUITES&   refresh();
-            XTRUITES&   quit();
-            XTRUITES&   initialize();
+            /// @brief  Décharge la XTRUITES::page, réinialise le terminal et désactive XTRUITES
+            /// @return Reference XTRUITES courrante
+            XTRUITES& quit();
 
+            /// @brief  initialise XTRUITES et charge la XTRUITEShomePage
+            /// @return Reference XTRUITES courrante
+            XTRUITES& initialize();
 
-            XTRUITES&   displayDefaultLayout();
-            XTRUITES&   displayLocation();
-            XTRUITES&   clearContent();
+            /// @brief  Initialise le terminal et affiche le cadre
+            /// @return Reference XTRUITES courrante
+            XTRUITES& displayDefaultLayout();
 
+            /// @brief  Affiche la location (Nom de XTRUITES::page)
+            /// @return Reference XTRUITES courrante
+            XTRUITES& displayLocation();
 
-            XTRUITES&   loadPage(XTRUITESPage *newPage);
-            bool        readKey(uint8_t key);
+            /// @brief  Supprime tout le contenu à l'interrieur du cadre
+            /// @remark Pour supprimer des caractére parasite sur le cadre utilisez: XTRUITES::displayDefaultLayout()
+            /// @return Reference XTRUITES courrante
+            XTRUITES& clearContent();
+
+            /**
+             *  @brief      Quitte la page courrante et charge la nouvelle page
+             *  @param[in]  newPage: Nouvelle page
+             *  @return     Reference XTRUITES courrante
+             */
+            XTRUITES& loadPage(XTRUITESPage *newPage);
+
+            /**
+             *  @brief      Appelle les actions correspondantes aux touches reçus
+             *  @remark     En premier les actions de XTRUITES::page puis les actions communes (comme XTRUITES::refresh() et XTRUITES::quit() )
+             *  @param[in]  key: Touche pressé
+             *  @return     Nombre d'action appellé
+             */
+            uint8_t readKey(uint8_t key);
 
 
     };

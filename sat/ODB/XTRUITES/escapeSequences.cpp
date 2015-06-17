@@ -1,8 +1,10 @@
 /**
- *  escapeSequences.cpp
- *  11/05/2015
+ *  @file       escapeSequences.cpp
+ *  @brief      ANSI escape codes (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.3
+ *  @date       11/05/2015 - 15/05/2015
  */
-
 
 #include "escapeSequences.h"
 
@@ -89,9 +91,6 @@ void escapeSequences::scrollScreen(uint8_t startRow, uint8_t endRow)
 }
 
 
-/**
- *  Write using printf.
- */
 // Disable macro definitions of conditional printf
 #undef printf
     int escapeSequences::write(const char *format , ...)

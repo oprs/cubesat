@@ -1,9 +1,14 @@
 /**
- *  colorPalette.cpp
- *  28/05/2015
+ * @file    colorPalette.cpp
+ * @brief   Page affichant une palette de 256 couleurs (Source).
+ * @author  Jérôme skoda <jerome.skoda@hotmail.fr>
+ * @version 1.4
+ * @date    28/05/2015 - 12/06/2015
  */
 
+
 #include "colorPalette.h"
+
 
 using namespace qb50;
 using namespace std;

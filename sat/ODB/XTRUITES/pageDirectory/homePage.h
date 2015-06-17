@@ -1,8 +1,10 @@
 /**
- *  homePage.h
- *  28/25/2015
+ *  @file       homePage.h
+ *  @brief      Page d'accueil (En-tête)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.2
+ *  @date       28/05/2015
  */
-
 
 #ifndef _QB50_XTRUITES_HOME_PAGE_H_
 #define _QB50_XTRUITES_HOME_PAGE_H_
@@ -13,8 +15,14 @@
 
 namespace qb50
 {
-class XTRUITESListTextBlock;
 
+
+    class XTRUITESListTextBlock;
+
+    /**
+     *  @class      XTRUITEShomePage
+     *  @brief      Page d'accueil
+     */
     class XTRUITEShomePage : public XTRUITESPage
     {
 

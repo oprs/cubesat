@@ -1,6 +1,9 @@
 /**
- *  textualInterface.cpp
- *  11/05/2015
+ *  @file       textualInterface.cpp
+ *  @brief      Gestion comportemental de l'interface (Source)
+ *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
+ *  @version    1.9
+ *  @date       11/05/2015 - 12/06/2015
  */
 
 
@@ -12,36 +15,6 @@ using namespace std;
 
 
 bool XTRUITES::enable= false;
-
-XTRUITESInputHandler::XTRUITESInputHandler(uint8_t keyVal, std::function<void ()> _handlerVal)
-{
-    key= keyVal;
-    _handler= _handlerVal;
-}
-
-XTRUITESInputHandler&   XTRUITESInputHandler::setHandler(std::function<void ()> _handlerVal)
-{
-    _handler= _handlerVal;
-    return *this;
-}
-
-XTRUITESInputHandler&   XTRUITESInputHandler::setKey(uint8_t keyVal)
-{
-    key= keyVal;
-    return *this;
-}
-
-uint8_t XTRUITESInputHandler::getKey()
-{
-    return key;
-}
-
-XTRUITESInputHandler& XTRUITESInputHandler::launch()
-{
-    _handler();
-    return *this;
-}
-
 
 
 XTRUITES::XTRUITES(void)
@@ -64,9 +37,7 @@ XTRUITES&  XTRUITES::displayDefaultLayout()
     escapeSequences::clearScreen();
     escapeSequences::scrollScreen(1, 24);
 
-    /**
-     * Write window layout
-     */
+    // Write window layout
     escapeSequences::moveCursor(0,0);
     escapeSequences::write("╔══════╡"                                                                            );
     escapeSequences::reversesColors();
@@ -144,11 +115,7 @@ XTRUITES&  XTRUITES::displayLocation()
 }
 
 
-
-
-
-
-XTRUITES&  XTRUITES::refresh()
+XTRUITES& XTRUITES::refresh()
 {
     page->unload();
     displayDefaultLayout();
@@ -158,7 +125,7 @@ XTRUITES&  XTRUITES::refresh()
 }
 
 
-XTRUITES&  XTRUITES::clearContent()
+XTRUITES& XTRUITES::clearContent()
 {
     escapeSequences::moveCursor(0, 1);
 
@@ -174,7 +141,8 @@ XTRUITES&  XTRUITES::clearContent()
     return *this;
 }
 
-XTRUITES&  XTRUITES::quit()
+
+XTRUITES& XTRUITES::quit()
 {
     page->unload();
     clearContent();
@@ -192,7 +160,7 @@ XTRUITES&  XTRUITES::quit()
 }
 
 
-XTRUITES&  XTRUITES::initialize()
+XTRUITES& XTRUITES::initialize()
 {
     XTRUITES::enable= true;
 
@@ -207,6 +175,7 @@ XTRUITES&  XTRUITES::initialize()
     return *this;
 }
 
+
 XTRUITES& XTRUITES::loadPage(XTRUITESPage *newPage)
 {
     page->unload();
@@ -219,24 +188,22 @@ XTRUITES& XTRUITES::loadPage(XTRUITESPage *newPage)
 }
 
 
-
-
-bool XTRUITES::readKey(uint8_t key)
+uint8_t XTRUITES::readKey(uint8_t key)
 {
-    bool actionLaunched= false;
+    uint8_t actionLaunched= 0;
 
     if(!XTRUITES::enable)
     {
         if(key == 0x14) // ^T
         {
             initialize();
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
     else
     {
-        actionLaunched |= page->keypress(key);
+        actionLaunched += page->keypress(key);
     }
 
     // Default actions
@@ -244,36 +211,37 @@ bool XTRUITES::readKey(uint8_t key)
     {
         case 0x11: // ^Q: Quit
             quit();
-            actionLaunched= true;
+            actionLaunched++;
         break;
 
         case 0x12: // ^R: Refresh
             refresh();
-            actionLaunched= true;
+            actionLaunched++;
         break;
 
         case 0x08: // ^H: Home
             initialize();
-            actionLaunched= true;
+            actionLaunched++;
         break;
     }
-/*
-    #if XTRUITES_DEBUG_ENABLED
-        escapeSequences::setBackground(XTRUITES_DEFAULT_BACKGROUND);
-        escapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND);
-        escapeSequences::moveCursor(66, 21);
-        escapeSequences::write("┬");
-        escapeSequences::moveCursor(66, 22);
-        escapeSequences::write("│");
-        escapeSequences::moveCursor(66, 23);
-        escapeSequences::write("╧");
-        escapeSequences::moveCursor(67, 22);
-        escapeSequences::write("LastKey=0x%02X", key);
-        escapeSequences::moveCursorHome();
-        escapeSequences::write("\n");
-    #endif*/
+
+//    #if XTRUITES_DEBUG_ENABLED
+//        escapeSequences::setBackground(XTRUITES_DEFAULT_BACKGROUND);
+//        escapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND);
+//        escapeSequences::moveCursor(66, 21);
+//        escapeSequences::write("┬");
+//        escapeSequences::moveCursor(66, 22);
+//        escapeSequences::write("│");
+//        escapeSequences::moveCursor(66, 23);
+//        escapeSequences::write("╧");
+//        escapeSequences::moveCursor(67, 22);
+//        escapeSequences::write("LastKey=0x%02X", key);
+//        escapeSequences::moveCursorHome();
+//        escapeSequences::write("\n");
+//    #endif
 
     return actionLaunched;
 }
+
 
 /*EoF*/
