@@ -2,12 +2,10 @@
 #ifndef _QB50_SYS_GPIO_PIN_H
 #define _QB50_SYS_GPIO_PIN_H
 
-#include <stdint.h>
+#include "GPIO.h"
 
 
 namespace qb50 {
-
-	class GPIO;
 
 	class GPIOPin
 	{
@@ -32,7 +30,8 @@ namespace qb50 {
 				ANALOG       = 0x03
 			};
 
-			unsigned id( void ) const { return _id; }
+			unsigned     id ( void ) const { return _id; }
+			unsigned portId ( void ) const { return _gpio.id(); }
 
 			GPIOPin& mode   ( Mode mode );
 

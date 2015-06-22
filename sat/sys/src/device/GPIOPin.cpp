@@ -1,6 +1,5 @@
 
 #include "device/GPIOPin.h"
-#include "device/GPIO.h"
 
 #include <stm32f4xx.h>
 

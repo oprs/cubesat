@@ -191,11 +191,11 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - -  //
 
 	/*          bus   iobase      periph                pins */
-	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, GPIOA_Pins );
-	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, GPIOB_Pins );
-	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, GPIOC_Pins );
-	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, GPIOD_Pins );
-	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, GPIOE_Pins );
+	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, 0, GPIOA_Pins );
+	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, 1, GPIOB_Pins );
+	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, 2, GPIOC_Pins );
+	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, 3, GPIOD_Pins );
+	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, 4, GPIOE_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //

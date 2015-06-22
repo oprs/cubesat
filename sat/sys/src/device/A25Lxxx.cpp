@@ -7,7 +7,7 @@ using namespace qb50;
  * 64 blocks
  * 64 blocks * 16 sectors/block = 1024 sectors
  * 64 blocks * 16 sectors/block * 16 pages/sector = 16384 pages
- * 64 blocks * 16 secrots/block * 16 pages/sector * 256 bytes/page = 4194304 bytes
+ * 64 blocks * 16 sectors/block * 16 pages/sector * 256 bytes/page = 4194304 bytes
  */
 
 /* typical Sector Erase Cycle Time (ms) */

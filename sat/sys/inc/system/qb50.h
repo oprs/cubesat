@@ -15,7 +15,7 @@
 #include "device/MAX111x.h"
 #include "device/AX25Out.h"
 #include "device/NRZI.h"
-#include "device/FIFO.h"
+#include "device/FIFO.hpp"
 
 #include "system/Application.h"
 

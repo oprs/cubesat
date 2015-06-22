@@ -1,17 +1,17 @@
-#ifndef NRZI_H_INCLUDED
-#define NRZI_H_INCLUDED
+
+#ifndef _QB50_SYS_NRZI_H
+#define _QB50_SYS_NRZI_H
 
 #include <FreeRTOS.h>
 
 
-
-
 namespace qb50 {
 
+/*
     enum Sample {
         LOW = 0, HIGH = 1
     };
-
+*/
 
     class NRZI
     {
@@ -19,15 +19,16 @@ namespace qb50 {
 
             NRZI();
             ~NRZI();
-            Sample push( Sample current);
+
+            bool push( bool current );
 
         private:
 
-            Sample _backValue;
+            bool _backValue;
     };
 
 }
 
+#endif /*_QB50_SYS_NRZI_H*/
 
-
-#endif /* NRZI_H_INCLUDED */
+/*EoF*/

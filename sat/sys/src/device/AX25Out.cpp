@@ -4,15 +4,14 @@
 #include "device/NRZI.h"
 
 
-
 using namespace qb50;
 using namespace std;
 
 
-AX25Out::AX25Out(GPIOPin& clkPin, GPIOPin& txPin): _clkPin(clkPin), _txPin(txPin)
+AX25Out::AX25Out( FIFO<bool>& fifo )
+	: _fifo(fifo)
 {
     _sendLock = xSemaphoreCreateMutex();
-
 }
 
 
@@ -26,7 +25,9 @@ AX25Out::~AX25Out()
 
 AX25Out& AX25Out::enable( void )
 {
+#if 0
     _txPin.enable().out().off();  // _txPin is in Output mode
+#endif
     return *this;
 }
 
@@ -41,97 +42,82 @@ AX25Out& AX25Out::disable( void )
 
 void AX25Out::sendFlag()
 {
-    NRZI nrzi;
-
+/*
     register uint8_t octetFlag = 0x7E;
     Sample bit;
 
     for ( int k = 0; k < 8; k++ )
             {
-                EXTI1.trigged( _clkPin );
                 bit = nrzi.push( octetFlag & 0x01 ? HIGH : LOW );
-                //if( octetFlag & 0x01 ) bit = nrzi.push(HIGH); else _txPin.off();
-                _fifo.push(bit);
+                if( !_fifo.isFull() ) {
+                  _fifo.push( bit );
+                }
                 octetFlag >>= 1;
             }
+*/
+   _fifo.push( 0 )
+        .push( 1 )
+        .push( 1 )
+        .push( 1 )
+        .push( 1 )
+        .push( 1 )
+        .push( 1 )
+        .push( 0 )
+   ;
 }
-
 
 
 //  - - - - - - - - - - - - - - - - - //
 //  D A T A   F R A M E   P A C K E T //
 //  - - - - - - - - - - - - - - - - - //
 
-void AX25Out::sendPacket( uint8_t *x, unsigned len )
+void AX25Out::sendPacket( const uint8_t *x, unsigned len )
 {
     unsigned i = 0, j = 0;
     int bit_compteur = 0;
 
     NRZI nrzi;
-    Sample bit;
 
     xSemaphoreTake( _sendLock, portMAX_DELAY );
 
-    PC10.on();
-
     hexdump( x, len );
 
-    (void)printf("[FLAGS1: ");
-
     // 25 flags denoting the beginning of the frame
-    for ( j = 0; j < 25; j++ )
-    {
+    for( j = 0; j < 25; j++ )
         sendFlag();
-    }
-
-    (void)printf("] ");
 
     // Beginning of the frame
-    for ( i = 0; i < len; i++ )
+    for( i = 0; i < len; i++ )
     {
         uint8_t val = x[i];
 
         for ( int k = 0 ; k < 8 ; ++k )
         {
-            EXTI1.trigged( _clkPin );
-
-            if ( val & 0x01 ) // Testing bit by bit
+            if( val & 0x01 ) // Testing bit by bit
             {
                 bit_compteur++;
 
-                if ( bit_compteur == 6 )
+                if( bit_compteur == 5 )
                 {
                     bit_compteur = 0;
-                    EXTI1.trigged( _clkPin );
-                    //_txPin.off();
-                    bit = nrzi.push(LOW);
-                    _fifo.push(bit);
+                    if( !_fifo.isFull() )
+                      _fifo.push( 0 );
                 }
-                //_txPin.on();
-                bit = nrzi.push(HIGH);
-                _fifo.push(bit);
+                if( !_fifo.isFull() )
+                  _fifo.push( 1 );
             }
             else
             {
                 bit_compteur = 0;
-                //_txPin.off();
-                bit = nrzi.push(LOW);
-                _fifo.push(bit);
+                if( !_fifo.isFull() )
+                  _fifo.push( 0 );
             }
 
             val = val >> 1;
         }
-
-        (void)printf(" ");
     }
 
-    (void)printf("[FLAGS2: ");
-
     sendFlag(); // Flag denoting the end of the frame
-
-    (void)printf("]\n");
-
-    PC10.off();
 
     xSemaphoreGive( _sendLock );
 

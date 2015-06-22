@@ -5,19 +5,16 @@ using namespace qb50;
 
 
 NRZI::NRZI()
-{
-    _backValue = LOW;
-}
+{ _backValue = 0; }
 
 
 NRZI::~NRZI()
+{ ; }
+
+
+bool NRZI::push(bool current)
 {
-
-}
-
-
-Sample NRZI::push(Sample current)
-{
-   _backValue = (Sample)(_backValue ^ current);
+   _backValue = !(_backValue ^ current);
    return _backValue;
 }
+

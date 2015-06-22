@@ -48,7 +48,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - - - - - -  //
 
 	NVIC IRQ;
-    EXTI EXTI1;
+	EXTI EXTI1;
 
 //  - - - - - - - - - - - -  //
 //  D M A   C H A N N E L S  //
@@ -194,12 +194,12 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-	/*          bus   iobase      periph                pins */
-	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, GPIOA_Pins );
-	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, GPIOB_Pins );
-	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, GPIOC_Pins );
-	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, GPIOD_Pins );
-	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, GPIOE_Pins );
+	/*          bus   iobase      periph               id  pins */
+	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, 0, GPIOA_Pins );
+	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, 1, GPIOB_Pins );
+	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, 2, GPIOC_Pins );
+	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, 3, GPIOD_Pins );
+	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, 4, GPIOE_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
@@ -252,13 +252,17 @@ namespace qb50 {
 //  O N B O A R D   A D C  //
 //  - - - - - - - - - - -  //
 
-	/*              SPI  csPin */
+	/*                   SPI  csPin */
 	MAX111x ADC_Power_1( SPI3, PA4 ); /* CS1 - ADC carte energie */
 	MAX111x ADC_Power_2( SPI3, PA5 ); /* CS2 - ADC carte energie */
 	MAX111x ADC_ODB    ( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
 	MAX111x ADC_FiPEX  ( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
 
-    AX25Out ax25( PC9, PC8 );
+//  - - - - -  //
+//  A X . 2 5  //
+//  - - - - -  //
+
+	//AX25Out ax25( PC9, PC8 );
 } /* qb50 */
 
 /*EoF*/
