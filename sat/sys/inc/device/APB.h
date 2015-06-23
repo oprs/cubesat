@@ -12,7 +12,7 @@ namespace qb50 {
 	{
 		public:
 
-			APB( uint32_t APBn );
+			APB( uint32_t APBn, const char *name );
 			~APB();
 
 			APB&     enable  ( BusDevice *dev );

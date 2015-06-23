@@ -1,6 +1,7 @@
 
 #include "device/DMA.h"
 
+#include <iostream>
 #include <stm32f4xx.h>
 
 #undef DMA1
@@ -16,8 +17,9 @@ using namespace qb50;
 DMA::DMA( Bus& bus,
           const uint32_t iobase,
           const uint32_t periph,
+          const char *name,
           DMAStream *streams )
-	: BusDevice( bus, iobase, periph ),
+	: BusDevice( bus, iobase, periph, name ),
 	  streams( streams )
 { ; }
 
@@ -32,7 +34,13 @@ DMA::~DMA()
 
 DMA& DMA::enable( void )
 {
+	if( _incRef() > 0 )
+		return *this;
+
 	bus.enable( this );
+
+	std::cout << _name << ": System DMA controller at " << bus.name() << "\r\n";
+
 	return *this;
 }
 

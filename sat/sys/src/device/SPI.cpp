@@ -2,6 +2,7 @@
 #include "device/SPI.h"
 #include "device/UART.h"
 
+#include <iostream>
 #include <stm32f4xx.h>
 
 using namespace qb50;
@@ -14,11 +15,12 @@ using namespace qb50;
 SPI::SPI( Bus&           bus,
           const uint32_t iobase,
           const uint32_t periph,
+          const char    *name,
           SPIStream&     stMISO,
           SPIStream&     stMOSI,
           GPIOPin&       clkPin,
           GPIOPin::Alt   alt )
-	: BusDevice( bus, iobase, periph ),
+	: BusDevice( bus, iobase, periph, name ),
 	  _stMISO( stMISO ),
 	  _stMOSI( stMOSI ),
 	  _clkPin( clkPin ),
@@ -43,7 +45,16 @@ SPI& SPI::enable( void )
 {
 	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
+	if( _incRef() > 0 )
+		return *this;
+
 	bus.enable( this );
+
+	std::cout << _name << ": System SPI controller at " << bus.name()
+	          << ", clk: " << _clkPin.name()
+	          << ", miso: " << _stMISO._pin.name()
+	          << ", mosi: " << _stMOSI._pin.name()
+	          << "\r\n";
 
 	_clkPin.enable()
 	       .pullDn()

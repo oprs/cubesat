@@ -10,11 +10,28 @@ namespace qb50 {
 	{
 		public:
 
-			Device() {}
-			virtual ~Device() {}
+			Device() : _refCount( 0 )
+			{ ; }
+
+			virtual ~Device()
+			{ ; }
 
 			virtual Device& enable  ( void ) = 0;
 			virtual Device& disable ( void ) = 0;
+
+		protected:
+
+			unsigned _refCount;
+
+			inline unsigned _incRef( void )
+			{ return _refCount++; }
+
+			inline unsigned _decRef( void )
+			{
+				if( _refCount > 0 ) _refCount--;
+				return _refCount;
+			}
+
 	};
 
 } /* qb50 */

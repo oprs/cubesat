@@ -12,12 +12,22 @@ namespace qb50 {
 	class Bus
 	{
 		public:
-			Bus() { ; }
-			virtual ~Bus() { ; }
+			Bus( const char *name ) : _name( name )
+			{ ; }
+
+			virtual ~Bus()
+			{ ; }
+
+			const char *name ( void ) const { return _name; }
 
 			virtual Bus&     enable  ( BusDevice *dev ) = 0;
 			virtual Bus&     disable ( BusDevice *dev ) = 0;
 			virtual uint32_t freq    ( void )           = 0;
+
+		protected:
+
+			const char *_name;
+
 	};
 
 } /* qb50 */

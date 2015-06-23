@@ -12,7 +12,7 @@ namespace qb50 {
 	{
 		public:
 
-			AHB( uint32_t AHBn );
+			AHB( uint32_t AHBn, const char *name );
 			~AHB();
 
 			AHB&     enable  ( BusDevice *dev );

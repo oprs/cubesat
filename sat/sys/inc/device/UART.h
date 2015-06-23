@@ -8,6 +8,7 @@
 #include "BusDevice.h"
 #include "GPIOPin.h"
 #include "NVIC.h"
+#include "FIFO.hpp"
 
 
 namespace qb50 {
@@ -19,6 +20,7 @@ namespace qb50 {
 			UART( Bus& bus,
 			      const uint32_t iobase,
 			      const uint32_t periph,
+					const char    *name,
 			      GPIOPin&       rxPin,
 			      GPIOPin&       txPin,
 			      const uint32_t IRQn,
@@ -42,9 +44,9 @@ namespace qb50 {
 		private:
 
 			xSemaphoreHandle _rdLock;  /**< global lock on the read end  */
-			xSemaphoreHandle _wrLock;  /**< global lock on the write end */
 			xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
-			xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
+
+			FIFO<uint8_t>  _fo;
 
 			GPIOPin&       _rxPin;
 			GPIOPin&       _txPin;

@@ -12,9 +12,15 @@ namespace qb50 {
 	{
 		public:
 
-			BusDevice( Bus& bus, const uint32_t iobase, const uint32_t periph )
-				: bus( bus ), iobase( iobase ), periph( periph ) {}
-			virtual ~BusDevice() {}
+			BusDevice( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name )
+				: bus( bus ), iobase( iobase ), periph( periph ), _name( name )
+			{ ; }
+
+			virtual ~BusDevice()
+			{ ; }
+
+			const char *name ( void ) const
+			{ return _name; }
 
 			Bus&           bus;
 			const uint32_t iobase;
@@ -22,6 +28,11 @@ namespace qb50 {
 
 			virtual BusDevice& enable  ( void ) = 0;
 			virtual BusDevice& disable ( void ) = 0;
+
+		protected:
+
+			const char *_name;
+
 	};
 
 } /* qb50 */

@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include "device/GPIO.h"
 
 using namespace qb50;
@@ -8,8 +10,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, GPIOPin *pins )
-	: BusDevice( bus, iobase, periph ), _id( id ), _pins( pins )
+GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins )
+	: BusDevice( bus, iobase, periph, name ), _id( id ), _pins( pins )
 { ; }
 
 
@@ -23,7 +25,13 @@ GPIO::~GPIO()
 
 GPIO& GPIO::enable( void )
 {
+	if( _incRef() > 0 )
+		return *this;
+
 	bus.enable( this );
+
+	std::cout << _name << ": System GPIO controller at " << bus.name() << "\r\n";
+
 	return *this;
 }
 

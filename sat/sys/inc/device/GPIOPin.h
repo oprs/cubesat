@@ -11,7 +11,7 @@ namespace qb50 {
 	{
 		public:
 
-			GPIOPin( GPIO& gpio, const unsigned id, const uint16_t mask );
+			GPIOPin( GPIO& gpio, const unsigned id, const char *name, const uint16_t mask );
 			~GPIOPin();
 
 			GPIOPin& enable ( void );
@@ -30,8 +30,9 @@ namespace qb50 {
 				ANALOG       = 0x03
 			};
 
-			unsigned     id ( void ) const { return _id; }
-			unsigned portId ( void ) const { return _gpio.id(); }
+			unsigned      id ( void ) const { return _id; }
+			const char* name ( void ) const { return _name; }
+			unsigned  portId ( void ) const { return _gpio.id(); }
 
 			GPIOPin& mode   ( Mode mode );
 
@@ -124,6 +125,7 @@ namespace qb50 {
 
 			GPIO&           _gpio;
 			const unsigned  _id;
+			const char     *_name;
 			const uint16_t  _mask;
 	};
 

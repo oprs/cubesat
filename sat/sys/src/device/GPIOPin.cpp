@@ -10,8 +10,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-GPIOPin::GPIOPin( GPIO& gpio, const unsigned id, const uint16_t mask )
-	: _gpio( gpio ), _id( id ), _mask( mask )
+GPIOPin::GPIOPin( GPIO& gpio, const unsigned id, const char* name, const uint16_t mask )
+	: _gpio( gpio ), _id( id ), _name( name ), _mask( mask )
 { ; }
 
 

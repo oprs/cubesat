@@ -14,13 +14,13 @@ namespace qb50 {
 	{
 		public:
 
-			GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, GPIOPin *pins );
+			GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins );
 			~GPIO();
 
 			GPIO& enable  ( void );
 			GPIO& disable ( void );
 
-			unsigned id( void ) const { return _id; }
+			unsigned id ( void ) const { return _id;   }
 
 		private:
 

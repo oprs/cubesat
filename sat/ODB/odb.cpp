@@ -27,21 +27,20 @@
 #undef EXTI
 
 
-
 namespace qb50 {
 
 //  - - - - - - - - - -  //
 //  C O R E   B U S E S  //
 //  - - - - - - - - - -  //
 
-	/*       id */
-	AHB AHB1( 1 );
-	AHB AHB2( 2 );
-	AHB AHB3( 3 );
+	/*       id  name */
+	AHB AHB1( 1, "AHB1" );
+	AHB AHB2( 2, "AHB2" );
+	AHB AHB3( 3, "AHB3" );
 
-	/*       id */
-	APB APB1( 1 );
-	APB APB2( 2 );
+	/*       id  name */
+	APB APB1( 1, "APB1" );
+	APB APB2( 2, "APB2" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
@@ -80,67 +79,67 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-	/*        bus   iobase     periph               streams */
-	DMA DMA1( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA1, DMA1_Streams );
-	DMA DMA2( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA2, DMA2_Streams );
+	/*        bus   iobase     periph               name    streams */
+	DMA DMA1( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA1, "DMA1", DMA1_Streams );
+	DMA DMA2( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA2, "DMA2", DMA2_Streams );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
 //  - - - - - - - - -  //
 
 	static GPIOPin GPIOA_Pins[ 16 ] = {
-		GPIOPin( GPIOA,  0, 0x0001 ),  GPIOPin( GPIOA,  1, 0x0002 ),
-		GPIOPin( GPIOA,  2, 0x0004 ),  GPIOPin( GPIOA,  3, 0x0008 ),
-		GPIOPin( GPIOA,  4, 0x0010 ),  GPIOPin( GPIOA,  5, 0x0020 ),
-		GPIOPin( GPIOA,  6, 0x0040 ),  GPIOPin( GPIOA,  7, 0x0080 ),
-		GPIOPin( GPIOA,  8, 0x0100 ),  GPIOPin( GPIOA,  9, 0x0200 ),
-		GPIOPin( GPIOA, 10, 0x0400 ),  GPIOPin( GPIOA, 11, 0x0800 ),
-		GPIOPin( GPIOA, 12, 0x1000 ),  GPIOPin( GPIOA, 13, 0x2000 ),
-		GPIOPin( GPIOA, 14, 0x4000 ),  GPIOPin( GPIOA, 15, 0x8000 )
+		GPIOPin( GPIOA,  0, "PA0/CS6", 0x0001 ),  GPIOPin( GPIOA,  1, "PA1/P4",  0x0002 ),
+		GPIOPin( GPIOA,  2, "PA2",     0x0004 ),  GPIOPin( GPIOA,  3, "PA3",     0x0008 ),
+		GPIOPin( GPIOA,  4, "PA4/CS1", 0x0010 ),  GPIOPin( GPIOA,  5, "PA5/CS2", 0x0020 ),
+		GPIOPin( GPIOA,  6, "PA6/CS3", 0x0040 ),  GPIOPin( GPIOA,  7, "PA7/CS4", 0x0080 ),
+		GPIOPin( GPIOA,  8, "PA8",     0x0100 ),  GPIOPin( GPIOA,  9, "PA9",     0x0200 ),
+		GPIOPin( GPIOA, 10, "PA10",    0x0400 ),  GPIOPin( GPIOA, 11, "PA11",    0x0800 ),
+		GPIOPin( GPIOA, 12, "PA12",    0x1000 ),  GPIOPin( GPIOA, 13, "PA13",    0x2000 ),
+		GPIOPin( GPIOA, 14, "PA14",    0x4000 ),  GPIOPin( GPIOA, 15, "PA15",    0x8000 )
 	};
 
 	static GPIOPin GPIOB_Pins[ 16 ] = {
-		GPIOPin( GPIOB,  0, 0x0001 ),  GPIOPin( GPIOB,  1, 0x0002 ),
-		GPIOPin( GPIOB,  2, 0x0004 ),  GPIOPin( GPIOB,  3, 0x0008 ),
-		GPIOPin( GPIOB,  4, 0x0010 ),  GPIOPin( GPIOB,  5, 0x0020 ),
-		GPIOPin( GPIOB,  6, 0x0040 ),  GPIOPin( GPIOB,  7, 0x0080 ),
-		GPIOPin( GPIOB,  8, 0x0100 ),  GPIOPin( GPIOB,  9, 0x0200 ),
-		GPIOPin( GPIOB, 10, 0x0400 ),  GPIOPin( GPIOB, 11, 0x0800 ),
-		GPIOPin( GPIOB, 12, 0x1000 ),  GPIOPin( GPIOB, 13, 0x2000 ),
-		GPIOPin( GPIOB, 14, 0x4000 ),  GPIOPin( GPIOB, 15, 0x8000 )
+		GPIOPin( GPIOB,  0, "PB0/P2",  0x0001 ),  GPIOPin( GPIOB,  1, "PB1/P3",  0x0002 ),
+		GPIOPin( GPIOB,  2, "PB2",     0x0004 ),  GPIOPin( GPIOB,  3, "PB3",     0x0008 ),
+		GPIOPin( GPIOB,  4, "PB4",     0x0010 ),  GPIOPin( GPIOB,  5, "PB5",     0x0020 ),
+		GPIOPin( GPIOB,  6, "PB6",     0x0040 ),  GPIOPin( GPIOB,  7, "PB7",     0x0080 ),
+		GPIOPin( GPIOB,  8, "PB8",     0x0100 ),  GPIOPin( GPIOB,  9, "PB9",     0x0200 ),
+		GPIOPin( GPIOB, 10, "PB10",    0x0400 ),  GPIOPin( GPIOB, 11, "PB11",    0x0800 ),
+		GPIOPin( GPIOB, 12, "PB12",    0x1000 ),  GPIOPin( GPIOB, 13, "PB13",    0x2000 ),
+		GPIOPin( GPIOB, 14, "PB14",    0x4000 ),  GPIOPin( GPIOB, 15, "PB15",    0x8000 )
 	};
 
 	static GPIOPin GPIOC_Pins[ 16 ] = {
-		GPIOPin( GPIOC,  0, 0x0001 ),  GPIOPin( GPIOC,  1, 0x0002 ),
-		GPIOPin( GPIOC,  2, 0x0004 ),  GPIOPin( GPIOC,  3, 0x0008 ),
-		GPIOPin( GPIOC,  4, 0x0010 ),  GPIOPin( GPIOC,  5, 0x0020 ),
-		GPIOPin( GPIOC,  6, 0x0040 ),  GPIOPin( GPIOC,  7, 0x0080 ),
-		GPIOPin( GPIOC,  8, 0x0100 ),  GPIOPin( GPIOC,  9, 0x0200 ),
-		GPIOPin( GPIOC, 10, 0x0400 ),  GPIOPin( GPIOC, 11, 0x0800 ),
-		GPIOPin( GPIOC, 12, 0x1000 ),  GPIOPin( GPIOC, 13, 0x2000 ),
-		GPIOPin( GPIOC, 14, 0x4000 ),  GPIOPin( GPIOC, 15, 0x8000 )
+		GPIOPin( GPIOC,  0, "PC0",     0x0001 ),  GPIOPin( GPIOC,  1, "PC1",     0x0002 ),
+		GPIOPin( GPIOC,  2, "PC2",     0x0004 ),  GPIOPin( GPIOC,  3, "PC3",     0x0008 ),
+		GPIOPin( GPIOC,  4, "PC4/CS5", 0x0010 ),  GPIOPin( GPIOC,  5, "PC5/P1",  0x0020 ),
+		GPIOPin( GPIOC,  6, "PC6",     0x0040 ),  GPIOPin( GPIOC,  7, "PC7",     0x0080 ),
+		GPIOPin( GPIOC,  8, "PC8",     0x0100 ),  GPIOPin( GPIOC,  9, "PC9",     0x0200 ),
+		GPIOPin( GPIOC, 10, "PC10",    0x0400 ),  GPIOPin( GPIOC, 11, "PC11",    0x0800 ),
+		GPIOPin( GPIOC, 12, "PC12",    0x1000 ),  GPIOPin( GPIOC, 13, "PC13",    0x2000 ),
+		GPIOPin( GPIOC, 14, "PC14",    0x4000 ),  GPIOPin( GPIOC, 15, "PC15",    0x8000 )
 	};
 
 	static GPIOPin GPIOD_Pins[ 16 ] = {
-		GPIOPin( GPIOD,  0, 0x0001 ),  GPIOPin( GPIOD,  1, 0x0002 ),
-		GPIOPin( GPIOD,  2, 0x0004 ),  GPIOPin( GPIOD,  3, 0x0008 ),
-		GPIOPin( GPIOD,  4, 0x0010 ),  GPIOPin( GPIOD,  5, 0x0020 ),
-		GPIOPin( GPIOD,  6, 0x0040 ),  GPIOPin( GPIOD,  7, 0x0080 ),
-		GPIOPin( GPIOD,  8, 0x0100 ),  GPIOPin( GPIOD,  9, 0x0200 ),
-		GPIOPin( GPIOD, 10, 0x0400 ),  GPIOPin( GPIOD, 11, 0x0800 ),
-		GPIOPin( GPIOD, 12, 0x1000 ),  GPIOPin( GPIOD, 13, 0x2000 ),
-		GPIOPin( GPIOD, 14, 0x4000 ),  GPIOPin( GPIOD, 15, 0x8000 )
+		GPIOPin( GPIOD,  0, "PD0",     0x0001 ),  GPIOPin( GPIOD,  1, "PD1",     0x0002 ),
+		GPIOPin( GPIOD,  2, "PD2",     0x0004 ),  GPIOPin( GPIOD,  3, "PD3",     0x0008 ),
+		GPIOPin( GPIOD,  4, "PD4",     0x0010 ),  GPIOPin( GPIOD,  5, "PD5",     0x0020 ),
+		GPIOPin( GPIOD,  6, "PD6",     0x0040 ),  GPIOPin( GPIOD,  7, "PD7",     0x0080 ),
+		GPIOPin( GPIOD,  8, "PD8",     0x0100 ),  GPIOPin( GPIOD,  9, "PD9",     0x0200 ),
+		GPIOPin( GPIOD, 10, "PD10",    0x0400 ),  GPIOPin( GPIOD, 11, "PD11",    0x0800 ),
+		GPIOPin( GPIOD, 12, "PD12",    0x1000 ),  GPIOPin( GPIOD, 13, "PD13",    0x2000 ),
+		GPIOPin( GPIOD, 14, "PD14",    0x4000 ),  GPIOPin( GPIOD, 15, "PD15",    0x8000 )
 	};
 
 	static GPIOPin GPIOE_Pins[ 16 ] = {
-		GPIOPin( GPIOE,  0, 0x0001 ),  GPIOPin( GPIOE,  1, 0x0002 ),
-		GPIOPin( GPIOE,  2, 0x0004 ),  GPIOPin( GPIOE,  3, 0x0008 ),
-		GPIOPin( GPIOE,  4, 0x0010 ),  GPIOPin( GPIOE,  5, 0x0020 ),
-		GPIOPin( GPIOE,  6, 0x0040 ),  GPIOPin( GPIOE,  7, 0x0080 ),
-		GPIOPin( GPIOE,  8, 0x0100 ),  GPIOPin( GPIOE,  9, 0x0200 ),
-		GPIOPin( GPIOE, 10, 0x0400 ),  GPIOPin( GPIOE, 11, 0x0800 ),
-		GPIOPin( GPIOE, 12, 0x1000 ),  GPIOPin( GPIOE, 13, 0x2000 ),
-		GPIOPin( GPIOE, 14, 0x4000 ),  GPIOPin( GPIOE, 15, 0x8000 )
+		GPIOPin( GPIOE,  0, "PE0",     0x0001 ),  GPIOPin( GPIOE,  1, "PE1",     0x0002 ),
+		GPIOPin( GPIOE,  2, "PE2",     0x0004 ),  GPIOPin( GPIOE,  3, "PE3",     0x0008 ),
+		GPIOPin( GPIOE,  4, "PE4",     0x0010 ),  GPIOPin( GPIOE,  5, "PE5",     0x0020 ),
+		GPIOPin( GPIOE,  6, "PE6",     0x0040 ),  GPIOPin( GPIOE,  7, "PE7",     0x0080 ),
+		GPIOPin( GPIOE,  8, "PE8",     0x0100 ),  GPIOPin( GPIOE,  9, "PE9",     0x0200 ),
+		GPIOPin( GPIOE, 10, "PE10",    0x0400 ),  GPIOPin( GPIOE, 11, "PE11",    0x0800 ),
+		GPIOPin( GPIOE, 12, "PE12",    0x1000 ),  GPIOPin( GPIOE, 13, "PE13",    0x2000 ),
+		GPIOPin( GPIOE, 14, "PE14",    0x4000 ),  GPIOPin( GPIOE, 15, "PE15",    0x8000 )
 	};
 
 	/* aliases */
@@ -194,24 +193,24 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-	/*          bus   iobase      periph               id  pins */
-	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, 0, GPIOA_Pins );
-	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, 1, GPIOB_Pins );
-	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, 2, GPIOC_Pins );
-	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, 3, GPIOD_Pins );
-	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, 4, GPIOE_Pins );
+	/*          bus   iobase      periph               id  name     pins */
+	GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
+	GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
+	GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
+	GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, 3, "GPIOD", GPIOD_Pins );
+	GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, 4, "GPIOE", GPIOE_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-	/*          bus   iobase       periph                rxPin txPin  IRQ number   alt. function */
-	UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
-	UART UART2( APB1, USART2_BASE, RCC_APB1Periph_USART2, PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
-	UART UART3( APB1, USART3_BASE, RCC_APB1Periph_USART3, PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
-	UART UART4( APB1, UART4_BASE,  RCC_APB1Periph_UART4,  PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );
-	UART UART5( APB1, UART5_BASE,  RCC_APB1Periph_UART5,  PD2,  PC12, UART5_IRQn,  GPIOPin::UART5 );
-	UART UART6( APB2, USART6_BASE, RCC_APB2Periph_USART6, PC7,  PC6,  USART6_IRQn, GPIOPin::UART6 );
+	/*          bus   iobase       periph                 name    rxPin txPin  IRQ number   alt. function */
+	UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
+	UART UART2( APB1, USART2_BASE, RCC_APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
+	UART UART3( APB1, USART3_BASE, RCC_APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
+	UART UART4( APB1, UART4_BASE,  RCC_APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );
+	UART UART5( APB1, UART5_BASE,  RCC_APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  GPIOPin::UART5 );
+	UART UART6( APB2, USART6_BASE, RCC_APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIOPin::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -235,18 +234,18 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-	/*        bus   iobase     periph               rx stream  tx stream  clk   alt. function */
-	SPI SPI1( APB2, SPI1_BASE, RCC_APB2Periph_SPI1, SPI1_MISO, SPI1_MOSI, PA5,  GPIOPin::SPI1 );
-	SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
-	SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
+	/*        bus   iobase     periph               name    rx stream  tx stream  clk   alt. function */
+	SPI SPI1( APB2, SPI1_BASE, RCC_APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIOPin::SPI1 );
+	SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
+	SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
 
-	/*               SPI  csPin */
-	A25Lxxx softMem( SPI3, PA0 );  /* CS6 - mémoire soft    */
-	A25Lxxx dataMem( SPI3, PA7 );  /* CS4 - mémoire données */
+	/*               SPI   name     csPin */
+	A25Lxxx flash0( SPI3, "flash0", PA0 );  /* CS6 - "mémoire soft"    */
+	A25Lxxx flash1( SPI3, "flash1", PA7 );  /* CS4 - "mémoire données" */
 
 //  - - - - - - - - - - -  //
 //  O N B O A R D   A D C  //

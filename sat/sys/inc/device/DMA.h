@@ -12,7 +12,7 @@ namespace qb50 {
 	{
 		public:
 
-			DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, DMAStream *streams );
+			DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name, DMAStream *streams );
 			~DMA();
 
 			DMA& enable  ( void );

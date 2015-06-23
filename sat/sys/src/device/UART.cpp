@@ -1,6 +1,7 @@
 
 #include "device/UART.h"
 
+#include <iostream>
 #include <stm32f4xx.h>
 
 using namespace qb50;
@@ -13,20 +14,20 @@ using namespace qb50;
 UART::UART( Bus& bus,
 	         const uint32_t iobase,
 	         const uint32_t periph,
+	         const char    *name,
 	         GPIOPin&       rxPin,
 	         GPIOPin&       txPin,
 	         const uint32_t IRQn,
 	         GPIOPin::Alt   alt )
-	: BusDevice( bus, iobase, periph ),
-	  _rxPin( rxPin ),
-	  _txPin( txPin ),
-	  _IRQn( IRQn ),
-	  _alt( alt )
+	: BusDevice( bus, iobase, periph, name ),
+	  _fo    ( FIFO<uint8_t>(1024) ),
+	  _rxPin ( rxPin ),
+	  _txPin ( txPin ),
+	  _IRQn  ( IRQn  ),
+	  _alt   ( alt   )
 {
 	_rdLock  = xSemaphoreCreateMutex();
-	_wrLock  = xSemaphoreCreateMutex();
 	_isrRXNE = xSemaphoreCreateBinary();
-	_isrTXE  = xSemaphoreCreateBinary();
 }
 
 
@@ -34,7 +35,6 @@ UART::~UART()
 {
 	disable();
 
-	vSemaphoreDelete( _wrLock );
 	vSemaphoreDelete( _rdLock );
 }
 
@@ -47,6 +47,16 @@ UART& UART::enable( void )
 {
 	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
+	if( _incRef() > 0 )
+		return *this;
+
+	bus.enable( this );
+
+	std::cout << _name << ": System UART controller at " << bus.name()
+	          << ", rx: " << _rxPin.name()
+	          << ", tx: " << _txPin.name()
+	          << "\r\n";
+
 	_rxPin.enable()
 	      .pullUp()
 	      .alt( _alt );
@@ -55,8 +65,6 @@ UART& UART::enable( void )
 	      .pullUp()
 	      .alt( _alt );
 
-	bus.enable( this );
-
 	USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
 	USARTx->CR2 = 0;
 	USARTx->CR3 = 0;
@@ -64,8 +72,7 @@ UART& UART::enable( void )
 	baudRate( 115200 );
 	//baudRate( 9600 );
 
-// USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-	USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE );
+	USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
 	IRQ.enable( _IRQn );
 
 	return *this;
@@ -110,15 +117,44 @@ size_t UART::write( const void *x, size_t len )
 	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 	size_t n;
 
-	xSemaphoreTake( _wrLock, portMAX_DELAY );
+	/*
+	 * write() might be called early, ie. before the UART is enabled
+	 * (boot process), in that case just feed the fifo and return
+	 */
 
-	for( n = 0 ; n < len ; ++n ) {
-		USARTx->CR1 |= USART_CR1_TXEIE;
-		xSemaphoreTake( _isrTXE, portMAX_DELAY );
-		USARTx->DR = ((uint8_t*)x)[ n ];
+	if( _refCount == 0 ) {
+		for( n = 0 ; n < len ; ++n ) {
+			if( _fo.isFull() ) break;
+			(void)_fo.push( ((uint8_t*)x)[ n ] );
+		}
+
+		return n;
 	}
 
-	xSemaphoreGive( _wrLock );
+	/*
+	 * otherwise (UART is enabled), make sure that TXE interrupts are
+	 * disabled so that we can safely fill up the fifo
+	 */
+
+	USARTx->CR1 &= ~USART_CR1_TXEIE;
+
+	/*
+	 * any data not fitting in is just discarded;  overruns should not
+	 * be a problem since we're not transmitting _that_ much data over
+	 * the UARTs (except perhaps debug output, but who cares)
+	 */
+
+	for( n = 0 ; n < len ; ++n ) {
+		if( _fo.isFull() ) break;
+		(void)_fo.push( ((uint8_t*)x)[ n ] );
+	}
+
+	/*
+	 * enable TXE interrupts again, and let the ISR pull from the fifo
+	 * at its own pace (= baud rate for this UART)
+	 */
+
+	USARTx->CR1 |= USART_CR1_TXEIE;
 
 	return n;
 }
@@ -141,6 +177,8 @@ UART& UART::baudRate( unsigned rate )
 
 	USARTx->BRR = (uint16_t)tmp32;
 
+	std::cout << _name << ": Baud rate set to " << rate << "\r\n";
+
 	return *this;
 }
 
@@ -159,9 +197,12 @@ void UART::isr( void )
 	}
 
 	if( USARTx->SR & USART_SR_TXE ) {
-		USARTx->SR &= ~USART_SR_TXE;
-		xSemaphoreGiveFromISR( _isrTXE, &hpTask );
-		USARTx->CR1 &= ~USART_SR_TXE;
+		if( _fo.isEmpty() ) {
+			USARTx->CR1 &= ~USART_CR1_TXEIE;
+			USARTx->SR  &= ~USART_SR_TXE;
+		} else {
+			USARTx->DR = _fo.pull();
+		}
 	}
 
 	if( hpTask == pdTRUE )

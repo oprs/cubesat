@@ -1,6 +1,8 @@
 
 #include "device/A25Lxxx.h"
 
+#include <stdio.h>
+
 using namespace qb50;
 
 /*
@@ -35,8 +37,9 @@ static const uint8_t WRENCmd[]  = { 0x06 };
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-A25Lxxx::A25Lxxx( SPI& spi, GPIOPin& csPin )
-	: SPIDevice( spi, csPin, SPIDevice::ActiveLow )
+A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin )
+	: SPIDevice( spi, csPin, SPIDevice::ActiveLow ),
+	  _name( name )
 { ; }
 
 
@@ -50,7 +53,29 @@ A25Lxxx::~A25Lxxx()
 
 A25Lxxx& A25Lxxx::enable( void )
 {
+	RDIDResp rdid;
+
 	_spi.enable();
+
+	(void)RDID( &rdid );
+
+	(void)printf( "%s: AMIC A25L", name() );
+
+	switch( rdid.memType ) {
+		case 0x30: (void)printf( "032"  ); break;
+		case 0x40: (void)printf( "Q32A" ); break;
+		default:   (void)printf( "xxx"  ); break;
+	}
+
+	(void)printf( " Serial Flash Memory (" );
+
+	switch( rdid.memCap ) {
+		case 0x16: (void)printf( "32Mbit"  ); break;
+		default:   (void)printf( "unknown" ); break;
+	}
+
+	(void)printf( ") at %s, cs: %s\r\n", _spi.name(), _csPin.name() );
+
 	return *this;
 }
 

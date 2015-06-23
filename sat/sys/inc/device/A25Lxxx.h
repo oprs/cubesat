@@ -11,11 +11,13 @@ namespace qb50 {
 	{
 		public:
 
-			A25Lxxx( SPI& spi, GPIOPin& csPin );
+			A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin );
 			~A25Lxxx();
 
 			A25Lxxx& enable  ( void );
 			A25Lxxx& disable ( void );
+
+			const char *name ( void ) const { return _name; }
 
 			/* read device id */
 
@@ -73,11 +75,13 @@ namespace qb50 {
 
 		private:
 
+			const char *_name;
+
 			A25Lxxx& _WIPWait( unsigned ms = 10 );
 	};
 
-	extern qb50::A25Lxxx softMem;
-	extern qb50::A25Lxxx dataMem;
+	extern qb50::A25Lxxx flash0;
+	extern qb50::A25Lxxx flash1;
 
 } /* qb50 */
 

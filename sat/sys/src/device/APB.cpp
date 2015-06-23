@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <stm32f4xx.h>
 #include <stm32f4xx_rcc.h>
 
@@ -11,7 +12,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-APB::APB( uint32_t APBn ) : _APBn( APBn )
+APB::APB( uint32_t APBn, const char *name ) : Bus( name ), _APBn( APBn )
 { ; }
 
 
@@ -34,6 +35,8 @@ APB& APB::enable( BusDevice *dev )
 			throw 42; /* XXX */
 	}
 
+	//std::cout << _name << ": " << dev->name() << " enabled\r\n";
+
 	return *this;
 }
 
@@ -48,6 +51,8 @@ APB& APB::disable( BusDevice *dev )
 		default:
 			throw 42; /* XXX */
 	}
+
+	//std::cout << _name << ": " << dev->name() << " disabled\r\n";
 
 	return *this;
 }

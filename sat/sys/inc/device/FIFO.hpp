@@ -11,7 +11,7 @@ class FIFO
 
 	public:
 
-		FIFO<T>( unsigned depth = 1024 ) : _m( depth - 1 )
+		FIFO<T>( unsigned depth ) : _m( depth - 1 )
 		{
 			if(( depth < 2 ) || ( depth & _m ))
 				throw( "depth must be a power of 2" ); /* XXX InvalidFIFODepthException */

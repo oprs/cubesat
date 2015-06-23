@@ -19,6 +19,7 @@ namespace qb50 {
 			SPI( Bus&           bus,
 				  const uint32_t iobase,
 				  const uint32_t periph,
+				  const char*    name,
 				  SPIStream&     stMISO,
 				  SPIStream&     stMOSI,
 				  GPIOPin&       clkPin,

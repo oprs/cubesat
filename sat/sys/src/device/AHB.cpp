@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <stm32f4xx.h>
 
 #include "device/AHB.h"
@@ -10,7 +11,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-AHB::AHB( uint32_t AHBn ) : _AHBn( AHBn )
+AHB::AHB( uint32_t AHBn, const char *name ) : Bus( name ), _AHBn( AHBn )
 { ; }
 
 
@@ -34,6 +35,8 @@ AHB& AHB::enable( BusDevice *dev )
 			throw 42; /* XXX */
 	}
 
+	//std::cout << _name << ": " << dev->name() << " enabled\r\n";
+
 	return *this;
 }
 
@@ -49,6 +52,8 @@ AHB& AHB::disable( BusDevice *dev )
 		default:
 			throw 42; /* XXX */
 	}
+
+	//std::cout << _name << ": " << dev->name() << " disabled\r\n";
 
 	return *this;
 }
