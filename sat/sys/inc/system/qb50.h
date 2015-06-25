@@ -18,6 +18,7 @@
 #include "device/FIFO.hpp"
 
 #include "system/Application.h"
+#include "system/UserLock.h"
 
 
 #endif /*_QB50_H*/
