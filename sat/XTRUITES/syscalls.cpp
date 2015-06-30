@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include "../XTRUITES/XTRUITES.h"
+
 #undef errno
 
 extern int errno;
@@ -123,8 +125,7 @@ ssize_t _write( int fd, const void *x, size_t len )
 {
 	(void)fd;
 
-	return
-		qb50::UART3.write( x, len );
+	return qb50::XTRUITES::OutputStreamUART3.getChannelByName("UART3_syscalls")->write( x, len );
 
 }
 

@@ -5,12 +5,68 @@
  *  @version    1.2
  *  @date       28/05/2015
  */
+
+
 #include "homePage.h"
-#include <functional>
 
-using namespace qb50;
+#include <string.h>
+#include "../Component/Component.h"
+#include "../Component/ComponentCollection.h"
+#include "../Component/Control/TextBlock.h"
+#include "../Component/Control/ListView.h"
+
+
 using namespace std;
+using namespace qb50::XTRUITES;
 
+homePage::homePage(PageRepertory* pageRepertoryVal) : Page(pageRepertoryVal)
+{
+    TextBlock* testtt= new TextBlock();
+    testtt->setText("Bonjour").setColor(12, 15).setRegion(12,12,12,12);
+
+    _componentCollection->add(component_collection_pair_t("test", testtt));
+
+    ListView* test2= new ListView();
+    test2->setRegion(1,1,1,1);
+
+    TextBlock* item1= new TextBlock();
+    item1->setText("Bonjour").setColor(12, 15).setRegion(0,0,10,1);
+    test2->addChildren(component_children_pair_t("tt", item1));
+
+    TextBlock* item2= new TextBlock();
+    item2->setText("Bonjour").setColor(12, 15).setRegion(0,0,10,1);
+    test2->addChildren(component_children_pair_t("ttt", item2));
+
+    TextBlock* item3= new TextBlock();
+    item3->setText("Bonjour").setColor(12, 15).setRegion(0,0,10,1);
+    test2->addChildren(component_children_pair_t("tt", item3));
+
+    _componentCollection->add(component_collection_pair_t("test3", test2));
+
+}
+
+/*
+void homePage::onLoad( void )
+{
+}
+
+void homePage::onUpdate( void )
+{
+}
+
+void homePage::onUnload( void )
+{
+}
+
+void homePage::onKeyPress( uint8_t key )
+{
+}
+
+*/
+
+
+
+/*
 // Write location
 XTRUITEShomePage::XTRUITEShomePage(XTRUITES& _XTRUITESInterfaceVal)
     : XTRUITESPage(_XTRUITESInterfaceVal, "Home") { }
@@ -46,3 +102,4 @@ uint8_t  XTRUITEShomePage::keypress(uint8_t key)
     menuList->keyPress(key);
     return 0 ;
 }
+*/

@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include "system/qb50.h"
-#include "../XTRUITES/textualInterface.h"
 
 using namespace qb50;
 

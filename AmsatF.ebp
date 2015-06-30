@@ -32,6 +32,30 @@
 					<Add library="build\system.a" />
 				</Linker>
 			</Target>
+			<Target title="XTRUITES">
+				<Option output="build\XTRUITES.elf" />
+				<Option object_output="build" />
+				<Option external_deps="build\system.a;" />
+				<Option type="0" />
+				<Option create_hex="1" />
+				<Option compiler="armgcc" />
+				<Option projectDeviceOptionsRelation="0" />
+				<Compiler>
+					<Add option="-g3" />
+					<Add option="-DDEBUG" />
+					<Add option="-std=c++11" />
+					<Add directory="sat\sys\inc" />
+					<Add directory="sat\sys\FreeRTOS\include" />
+					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
+					<Add directory="sat\sys\stm32f4\inc" />
+					<Add directory="sat\sys\stm32f4\inc\core" />
+					<Add directory="sat\sys\stm32f4\inc\peripherals" />
+				</Compiler>
+				<Linker>
+					<Add option="-Wl,--gc-sections" />
+					<Add library="build\system.a" />
+				</Linker>
+			</Target>
 			<Target title="ADCS">
 				<Option output="build\ADCS.elf" />
 				<Option object_output="build" />
@@ -174,76 +198,6 @@
 		<Unit filename="sat\ODB\Telecommande\Telecommande.h">
 			<Option target="ODB" />
 		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\conditionalPrinter.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\conditionalPrinter.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\control\listTextBlock.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\control\listTextBlock.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\control\textBlock.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\control\textBlock.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\escapeSequences.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\escapeSequences.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\inputHandler.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\inputHandler.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\page.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\page.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\ADCS_test\ADC_TestPage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\ADCS_test\ADC_TestPage.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\colorPalette.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\colorPalette.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\homePage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\pageDirectory\homePage.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\textualInterface.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\XTRUITES\textualInterface.h">
-			<Option target="ODB" />
-		</Unit>
 		<Unit filename="sat\ODB\main.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
@@ -255,6 +209,132 @@
 		<Unit filename="sat\ODB\syscalls.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Color.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Color.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Component.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Component.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\ComponentCollection.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\ComponentCollection.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\ListView.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\ListView.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\TextBlock.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\TextBlock.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Point.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Point.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Rectangle.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Rectangle.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Size.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Size.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Container.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Container.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\EscapeSequences.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\EscapeSequences.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\OutputStream.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\OutputStream.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\OutputStreamChannel.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\OutputStreamChannel.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\config.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\config.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Page.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Page.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\PageRepertory.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\PageRepertory.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\SystemPages.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\homePage.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\homePage.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\XTRUITES.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\main.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\xtruites.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
 		</Unit>
 		<Unit filename="sat\commun\ADCSCLASS.cpp">
 			<Option compilerVar="CC" />
@@ -282,15 +362,6 @@
 		<Unit filename="sat\commun\STRUCTURE.h">
 			<Option target="ODB" />
 			<Option target="ADCS" />
-		</Unit>
-		<Unit filename="sat\inc\stm32f4xx.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\inc\stm32f4xx_conf.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\inc\system_stm32f4xx.h">
-			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\stm32f405rg_flash.ld">
 			<Option target="system" />
@@ -378,9 +449,6 @@
 		<Unit filename="sat\sys\inc\Bus.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\inc\CoreDevice.h">
-			<Option target="system" />
-		</Unit>
 		<Unit filename="sat\sys\inc\Device.h">
 			<Option target="system" />
 		</Unit>
@@ -403,9 +471,6 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\EXTI.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\inc\device\FIFO.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\GPIO.h">
@@ -438,7 +503,13 @@
 		<Unit filename="sat\sys\inc\system\Application.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\system\Lock.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\system\Thread.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\UserLock.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\system\qb50.h">
@@ -469,10 +540,6 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\device\EXTI.cpp">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\src\device\FIFO.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
@@ -517,6 +584,10 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\system\Thread.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\system\UserLock.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>

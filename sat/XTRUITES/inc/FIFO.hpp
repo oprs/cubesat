@@ -94,4 +94,4 @@ class FIFO
 
 } /* qb50 */
 
-#endif /*_QB50_FIFO_HPP*/
+#endif /*_QB50_FIFO_HPP */
