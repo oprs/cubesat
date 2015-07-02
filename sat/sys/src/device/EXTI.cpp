@@ -43,6 +43,13 @@ void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
     /* set pin as input */
 
     pin.enable().in().noPull();
+/*
+    if( edge == FALLING ) {
+        pin.pullUp();
+    } else {
+        pin.pullDn();
+    }
+*/
 
     /* XXX enable clock for SYSCFG */
 

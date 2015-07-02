@@ -1,5 +1,6 @@
 #include "system/qb50.h"
 #include "AX25/AX25.h"
+#include "CTCSS/CTCSS.h"
 
 #ifdef XTRUITES
 #include "XTRUITES/textualInterface.h"
@@ -14,6 +15,7 @@ extern void ADCSThread  ( Thread *self );
 extern void CWThread    ( Thread *self );
 extern void FiPEXThread ( Thread *self );
 extern void GPSThread   ( Thread *self );
+extern void CTCSSThread ( Thread *self );
 
 
 /*
@@ -187,11 +189,17 @@ int main( void )
 
     //ax25.enable();
 
+    //ctcss( PB15, PB12 );
+    //ctcss.enable();
+
 	(void)createThread("Thread 1", thread1 );
+/*
 #ifdef XTRUITES
 	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
 #endif
    (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
+*/
+   (void)createThread("CTCSSThread", CTCSSThread );
 
 	run();
 

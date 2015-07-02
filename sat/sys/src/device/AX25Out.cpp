@@ -97,7 +97,7 @@ void AX25Out::sendPacket( const uint8_t *x, unsigned len )
             {
                 bit_compteur++;
 
-                if( bit_compteur == 5 )
+                if( bit_compteur == 6 )
                 {
                     bit_compteur = 0;
                     if( !_fifo.isFull() )

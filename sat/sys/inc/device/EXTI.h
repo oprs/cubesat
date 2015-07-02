@@ -44,7 +44,7 @@ namespace qb50 {
 
         private:
 
-            xSemaphoreHandle _extiLock[16];
+            //xSemaphoreHandle _extiLock[16];
             EXTIHandler* _extiHandler[16];
     };
 
@@ -52,8 +52,8 @@ namespace qb50 {
     {
         public:
 
-             EXTIHandler() { ; }
-            ~EXTIHandler() { ; }
+            EXTIHandler() { ; }
+            virtual ~EXTIHandler() { ; } //ajout de virtual
 
             virtual void handle( EXTI::EXTIn ) = 0;
     };

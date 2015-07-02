@@ -4,6 +4,7 @@
 #include <stm32f4xx.h>
 #include <stm32f4xx_rcc.h>
 
+
 /* CMSIS is polluting the whole namespace with these macros... */
 
 #undef DMA1
@@ -24,7 +25,6 @@
 
 #undef NVIC
 #undef EXTI
-
 
 
 
@@ -263,6 +263,8 @@ namespace qb50 {
 //  - - - - -  //
 
 	//AX25Out ax25( PC9, PC8 );
+
+
 } /* qb50 */
 
 /*EoF*/

@@ -165,6 +165,24 @@
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
+		<Unit filename="sat\ODB\CTCSS\CTCSS.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\CTCSS\CTCSS.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\CTCSS\DECTONEHandler.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\CTCSS\DECTONEHandler.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat\ODB\CTCSS\main.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ODB" />
+		</Unit>
 		<Unit filename="sat\ODB\CW\main.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
@@ -354,6 +372,7 @@
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
+		<Unit filename="sat\commun\Exception.h" />
 		<Unit filename="sat\commun\STRUCTURE.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
