@@ -1,2 +1,0 @@
-void SetCTCSSOn ();
-void SetCTCSSOff ();
