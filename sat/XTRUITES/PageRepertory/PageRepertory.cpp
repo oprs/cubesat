@@ -1,27 +1,32 @@
 /**
  *  @file       PageRepertory.cpp
- *  @brief      Model de page pour XTRUITES (Source)
+ *  @brief      Répertoire de page (Source)
  *  @author     Jérôme Skoda <jerome.skoda@hotmail.fr>
- *  @version    1.3
- *  @date       13/05/2015 - 12/06/2015
+ *  @version    2.1
+ *  @date       13/05/2015 - 24/07/2015
  */
 
-
-#include "PageRepertory.h"
 #include "Page.h"
-#include "SystemPages/SystemPages.h"
+#include "../Container.h"
 
+// Page
+#include "SystemPages/homePage.h"
+#include "SystemPages/quitPage.h"
+#include "Flash/FlashPage.h"
+#include "ADC/ADCPage.h"
+#include "Utilities/ColorPalette.h"
 
 using namespace qb50::XTRUITES;
 
-
-PageRepertory::PageRepertory(Container* containerVal)
+PageRepertory::PageRepertory()
 {
-    _container= containerVal;
-
     //  Ajoutez ici les pages
-    //                          Nom             Instance de la page
-    add(page_repertory_item_t(  "Home",         new homePage(this)                      ));
+    //      Nom                     Instance de la page
+    addPage("Home",                 new homePage()                  );
+    addPage("Quit",                 new quitPage()                  );
+    addPage("Test Flash",           new FlashPage()                 );
+    addPage("Test ADC",             new ADCPage()                   );
+    addPage("Palette de couleurs",  new colorPalettePage()          );
 }
 
 PageRepertory::~PageRepertory()
@@ -32,12 +37,15 @@ PageRepertory::~PageRepertory()
     }
 }
 
-PageRepertory& PageRepertory::add(page_repertory_item_t item)
+PageRepertory& PageRepertory::addPage(std::string name, Page* page)
 {
-    _repertory.insert(item);
-    item.second->
-         setName(item.first)
-        .setRepertory(this);
+    if ( _repertory.find(name) != _repertory.end() )
+    {
+        throw "XTRUITES::PageRepertory - Redundant name of page";
+    }
+
+    _repertory.insert(page_repertory_item_t(name, page));
+    page->setRepertory(this).setName(name);
     return *this;
 }
 
@@ -46,16 +54,16 @@ Page* PageRepertory::getPageByName(std::string namePage)
 	return _repertory[namePage];
 }
 
-PageRepertory& PageRepertory::setContainer(Container* containerVal)
+
+Container& PageRepertory::getContainer()
 {
-    _container= containerVal;
-    return *this;
+	return *_container;
 }
 
-Container* PageRepertory::getContainer()
+PageRepertory& PageRepertory::setContainer(Container* container)
 {
-	return _container;
+  _container= container;
+	return *this;
 }
-
 
 /*EoF*/

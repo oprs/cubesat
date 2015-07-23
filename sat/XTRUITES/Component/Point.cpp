@@ -9,12 +9,12 @@ Point::Point(unsigned char xVal, unsigned char yVal)
     y= yVal;
 }
 
-unsigned char Point::getX( void )
+unsigned char Point::getX( void ) const
 {
     return x;
 }
 
-unsigned char Point::getY( void )
+unsigned char Point::getY( void ) const
 {
     return y;
 }

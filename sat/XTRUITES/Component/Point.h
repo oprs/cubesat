@@ -10,6 +10,8 @@
 #ifndef _QB50_XTRUITES_POINT_H_
 #define _QB50_XTRUITES_POINT_H_
 
+#include "XTRUITES.h"
+
 namespace qb50
 {
 
@@ -21,14 +23,14 @@ namespace qb50
 
             public:
 
-                Point(unsigned char xVal, unsigned char yVal);
+                Point(unsigned char xVal=XTRUITES_DEFAULT_LOCATION_X, unsigned char yVal= XTRUITES_DEFAULT_LOCATION_Y);
 
                 unsigned char x;
                 unsigned char y;
 
-                unsigned char getX( void );
+                unsigned char getX( void ) const ;
 
-                unsigned char getY( void );
+                unsigned char getY( void ) const ;
         };
 
     } /* namespace: XTRUITES */

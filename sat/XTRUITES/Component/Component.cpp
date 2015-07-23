@@ -7,12 +7,14 @@
  */
 
 #include "Component.h"
+#include "ComponentCollection.h"
 
 using namespace std;
 using namespace qb50::XTRUITES;
 
 
 Component::Component()
+  : _region(), _color()
 {
 }
 
@@ -20,38 +22,25 @@ Component::~Component()
 {
 }
 
-Component& Component::setName(std::string nameVal)
+ComponentCollection& Component::getCollection()
 {
-    _name= nameVal;
-    return *this;
+  return *_componentCollection;
 }
 
-std::string Component::getName()
+Component& Component::setCollection(ComponentCollection* collection)
 {
-    return _name;
+  _componentCollection= collection;
+  return *this;
 }
-
-
-Component& Component::setCollection(ComponentCollection* componentCollectionVal)
-{
-    _componentCollection= componentCollectionVal;
-    return *this;
-}
-
-ComponentCollection* Component::getCollection()
-{
-    return _componentCollection;
-}
-
 Component& Component::setParent(Component* parentVal)
 {
     _parent= parentVal;
     return *this;
 }
 
-Component* Component::getParent( void )
+Component& Component::getParent( void )
 {
-    return _parent;
+    return *_parent;
 }
 
 bool Component::hasParent( void )
@@ -60,85 +49,116 @@ bool Component::hasParent( void )
 }
 
 
-Component& Component::addChildren(component_children_pair_t item)
+Component& Component::addChildren(Component* componentVal)
 {
-    if ( _childrenCollection.find(item.first) != _childrenCollection.end() )
-    {
-        throw "XTRUITES::Component -> Redundant name of children";
-    }
-
-    _childrenCollection.insert(item);
-    item.second->
-         setName(item.first)
-        .setParent(this);
-
+    _childrenCollection.push_back(componentVal);
+    componentVal->setParent(this);
+    componentVal->setCollection(_componentCollection);
     return *this;
 }
 
-Component& Component::addChildren(Component* childrenVal)
-{
-    if ( _childrenCollection.find(childrenVal->getName()) != _childrenCollection.end() )
-    {
-        throw "XTRUITES::Component -> Redundant name of children";
-    }
-
-    component_children_pair_t item(childrenVal->getName(), childrenVal);
-    _childrenCollection.insert(item);
-    item.second->setParent(this);
-
-    return *this;
-}
-
-
-Component* Component::getChildrenByName( std::string nameChildren )
-{
-    return _childrenCollection[nameChildren];
-}
 
 bool Component::hasChildren( void )
 {
     return !_childrenCollection.empty();
 }
 
-Rectangle* Component::getRegion()
+
+Rectangle& Component::getRegion( void )
 {
-    return region;
+    return _region;
 }
 
-Component& Component::setRegion(Rectangle* regionVal)
+Point& Component::getLocation( void )
 {
-    region= regionVal;
+    return _region.getLocation();
+}
+
+Color& Component::getColor( void )
+{
+    return _color;
+}
+
+Size& Component::getSize( void )
+{
+    return _region.getSize();
+}
+
+Component& Component::setSize( const Size& sizeVal)
+{
+  _region.setSize(sizeVal);
+  return *this;
+}
+
+void Component::onLoad( void )
+{
+  onLoadChildren();
+}
+void Component::onUpdate( void )
+{
+  onUpdateChildren();
+}
+void Component::onUnload( void )
+{
+  onUnloadChildren();
+}
+void Component::onKeyPress( uint8_t key )
+{
+  onKeyPressChildren(key);
+}
+
+Component& Component::setLocation( const Point& locationVal)
+{
+    _region.setLocation(locationVal);
     return *this;
 }
 
-Component& Component::setRegion( Point* locationVal, Size* sizeVal )
+Component& Component::setColor( const Color& colorVal)
 {
-    region= new Rectangle( locationVal, sizeVal);
+    _color= colorVal;
     return *this;
 }
 
-Component& Component::setRegion( unsigned char xVal, unsigned char yVal, unsigned char widthVal, unsigned char heightVal )
+Component& Component::setRegion( const Rectangle& regionVal)
 {
-    region= new Rectangle( xVal, yVal, widthVal, heightVal);
-    return *this;
+  _region= regionVal;
+  return *this;
+}
+void Component::onLoadChildren( void )
+{
+  for (auto & element : _childrenCollection)
+  {
+    element->onLoad();
+  }
 }
 
-Color* Component::getColor( void )
+void Component::onUpdateChildren( void )
 {
-    return color;
-}
-Component& Component::setColor( Color* colorVal )
-{
-    color= colorVal;
-    return *this;
-
-}
-Component& Component::setColor( unsigned char background, unsigned char foreground )
-{
-    color= new Color( background, foreground );
-    return *this;
+  for (auto & element : _childrenCollection)
+  {
+    element->onUpdate();
+  }
 }
 
+void Component::onUnloadChildren( void )
+{
+  for (auto & element : _childrenCollection)
+  {
+    element->onUnload();
+  }
+}
 
+void Component::onKeyPressChildren( uint8_t key )
+{
+  for (auto & element : _childrenCollection)
+  {
+    element->onKeyPress(key);
+  }
+}
+
+std::vector<Component*> Component::getChildrenCollection( void )
+{
+  return _childrenCollection;
+}
 
 /*EoF*/

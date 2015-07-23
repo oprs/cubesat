@@ -10,23 +10,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "XTRUITES.h"
 #include "EscapeSequences.h"
+#include "OutputStream/Config.h"
 #include "OutputStream/OutputStream.h"
 #include "OutputStream/OutputStreamChannel.h"
+#include "XTRUITES.h"
 
 
 using namespace qb50::XTRUITES;
 
 
 //Define static variable
-uint8_t EscapeSequences::currentBackground = XTRUITES_DEFAULT_BACKGROUND;
-uint8_t EscapeSequences::currentForeground = XTRUITES_DEFAULT_FOREGROUND;
-uint8_t EscapeSequences::xHome= 1;
-uint8_t EscapeSequences::yHome= 1;
+unsigned char EscapeSequences::currentBackground = XTRUITES_DEFAULT_COLOR_BACKGROUND;
+unsigned char EscapeSequences::currentForeground = XTRUITES_DEFAULT_COLOR_FOREGROUND;
+unsigned char EscapeSequences::xHome= 1;
+unsigned char EscapeSequences::yHome= 1;
 
-
-void EscapeSequences::setHomePosition(uint8_t x, uint8_t y)
+void EscapeSequences::setHomePosition(unsigned char x, unsigned char y)
 {
     EscapeSequences::xHome= x;
     EscapeSequences::yHome= y;
@@ -39,15 +39,15 @@ void EscapeSequences::moveCursorHome()
     EscapeSequences::write("\033[%d;%dH\n", EscapeSequences::yHome-1, EscapeSequences::xHome);
 }
 
-void EscapeSequences::moveCursor(Point* cursor)
-{
-    EscapeSequences::moveCursor(cursor->getX(), cursor->getY());
-}
-
-void EscapeSequences::moveCursor(uint8_t x, uint8_t y)
+void EscapeSequences::moveCursor(unsigned char x, unsigned char y)
 {
     EscapeSequences::write("\033[%d;%df", y+1, x+1);
 }
+void EscapeSequences::moveCursor(const Point& cursor)
+{
+    EscapeSequences::moveCursor(cursor.getX(), cursor.getY());
+}
+
 
 
 void EscapeSequences::clearScreen()
@@ -56,7 +56,7 @@ void EscapeSequences::clearScreen()
 }
 
 
-void EscapeSequences::setBackground(uint8_t color, bool force)
+void EscapeSequences::setBackground(unsigned char color, bool force)
 {
     if( (color != EscapeSequences::currentBackground) || force)
     {
@@ -66,7 +66,7 @@ void EscapeSequences::setBackground(uint8_t color, bool force)
 }
 
 
-void EscapeSequences::setForeground(uint8_t color, bool force)
+void EscapeSequences::setForeground(unsigned char color, bool force)
 {
     if( (color != EscapeSequences::currentForeground) || force)
     {
@@ -78,7 +78,7 @@ void EscapeSequences::setForeground(uint8_t color, bool force)
 
 void EscapeSequences::reversesColors()
 {
-    uint8_t background= EscapeSequences::currentBackground;
+    unsigned char background= EscapeSequences::currentBackground;
     EscapeSequences::setBackground(EscapeSequences::currentForeground);
     EscapeSequences::setForeground(background);
 }
@@ -96,7 +96,7 @@ void EscapeSequences::resetAttributes()
 }
 
 
-void EscapeSequences::scrollScreen(uint8_t startRow, uint8_t endRow)
+void EscapeSequences::scrollScreen(unsigned char startRow, unsigned char endRow)
 {
     EscapeSequences::write("\033[%d;%dr", startRow, endRow);
 }
@@ -117,7 +117,7 @@ int EscapeSequences::write(const char *format , ...)
     n= vsprintf (buffer,format, args);
     va_end(args);
 
-    OutputStreamUART3.getChannelByName("UART3_XTRUITES")->write( buffer, n);
+    EscapeSequences::outputStreamChannel.write( buffer, n);
 
     free(buffer);
     buffer = nullptr;
@@ -125,10 +125,9 @@ int EscapeSequences::write(const char *format , ...)
     return n;
 }
 
-void EscapeSequences::setColor(Color* color, bool force)
+void EscapeSequences::setColor(const Color& color, bool force)
 {
-    setBackground(color->background, force);
-    setForeground(color->foreground, force);
+    setBackground(color.background, force);
+    setForeground(color.foreground, force);
 }
-
 /*EoF*/

@@ -1,10 +1,16 @@
 
 #include "system/qb50.h"
 
-#include "../XTRUITES/XTRUITES.h"
-
 #include <stm32f4xx.h>
 #include <stm32f4xx_rcc.h>
+
+#include "OutputStream/OutputStream.h"
+#include "Container.h"
+#include "OutputStream/OutputStream.h"
+#include "OutputStream/OutputStreamChannel.h"
+#include "OutputStream/Config.h"
+#include "EscapeSequences.h"
+#include "FIFO_InputKey.hpp"
 
 /* CMSIS is polluting the whole namespace with these macros... */
 
@@ -261,20 +267,16 @@ namespace qb50 {
 	MAX111x ADC_FiPEX  ( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
 
 
-//  - - - - -  //
-//  A X . 2 5  //
-//  - - - - -  //
-
-
-
-
-    namespace XTRUITES
-    {
-        OutputStream OutputStreamUART3;
-        Container    XTRUITESContainer(   OutputStreamUART3.getChannelByName("UART3_XTRUITES")   );
-    }
-
+  namespace XTRUITES
+  {
+    OutputStream          OutputStreamUART3;
+    OutputStreamChannel&  EscapeSequences::outputStreamChannel = qb50::XTRUITES::OutputStreamUART3.getChannelByName( "UART3_XTRUITES"  );
+    FIFO_InputKey         inputkey(4);
+    Container             XTRUITESContainer(  EscapeSequences::outputStreamChannel, inputkey  );
+  }
 
 } /* qb50 */
+
+qb50::XTRUITES::OutputStreamChannel&  OutputStreamChannelSyscalls = qb50::XTRUITES::OutputStreamUART3.getChannelByName( "UART3_syscalls"  );
 
 /*EoF*/

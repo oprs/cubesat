@@ -9,8 +9,6 @@
 #ifndef _QB50_XTRUITES_OUTPUT_STREAM_H_
 #define _QB50_XTRUITES_OUTPUT_STREAM_H_
 
-
-#include "unistd.h"
 #include <string>
 #include <map>
 
@@ -29,7 +27,7 @@ namespace qb50
         {
             public:
                 OutputStream();
-                OutputStreamChannel* getChannelByName(std::string nameChannel);
+                OutputStreamChannel& getChannelByName(std::string nameChannel);
                 OutputStream& add(output_stream_channel_pair_t item);
 
                 OutputStream& on     ( void );

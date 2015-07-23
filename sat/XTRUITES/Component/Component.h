@@ -13,7 +13,9 @@
 #include "Rectangle.h"
 #include "Color.h"
 #include <string>
-#include <map>
+#include <vector>
+
+#include "ComponentCollection.h"
 
 namespace qb50
 {
@@ -24,9 +26,6 @@ namespace qb50
 
         class Component;
 
-        typedef std::map<std::string, Component*> component_children_map_t;
-        typedef std::pair<std::string, Component*> component_children_pair_t;
-
         class Component
         {
 
@@ -36,53 +35,51 @@ namespace qb50
 
                 virtual ~Component();
 
-                Component& setName(std::string nameVal);
-
-                Component& setCollection(ComponentCollection* componentCollectionVal);
-
-                /// @brief  Retourne le nom de la page
-                std::string getName( void );
-
                 /// @brief  Retourne le répertoire où ce trouve la page <br />
                 ///         Vous pouvez récuperer le XTRUITES::Container avec Page::getRepertory()->getContainer()
-                ComponentCollection* getCollection();
+                ComponentCollection&  getCollection();
+                Component& setCollection(ComponentCollection* collection);
 
-                virtual void onLoad( void )=0;
-                virtual void onUpdate( void )=0;
-                virtual void onUnload( void )=0;
-                virtual void onKeyPress( uint8_t key )=0;
+                virtual void onLoad( void );
+                virtual void onUpdate( void );
+                virtual void onUnload( void );
+                virtual void onKeyPress( uint8_t key );
 
-                Component& setParent(Component*);
-                Component* getParent( void );
+                void onLoadChildren( void );
+                void onUpdateChildren( void );
+                void onUnloadChildren( void );
+                void onKeyPressChildren( uint8_t key );
+
+
+                Component& setParent(Component* parentVal);
+                Component& getParent( void );
                 bool hasParent( void );
 
-                Component& addChildren(component_children_pair_t item);
-                Component& addChildren(Component* childrenVal);
+                Component& addChildren(Component* componentVal);
 
                 bool hasChildren( void );
-                Component* getChildrenByName( std::string nameChildren );
-
-                Rectangle* region= nullptr;
-
-                Rectangle* getRegion();
-                Component& setRegion( Rectangle* regionVal );
-                Component& setRegion( Point* locationVal, Size* sizeVal );
-                Component& setRegion( unsigned char xVal, unsigned char yVal, unsigned char widthVal, unsigned char heightVal );
-
-                Color* color= nullptr;
-
-                Color* getColor( void );
-                Component& setColor( Color* color );
-                Component& setColor( unsigned char background, unsigned char foreground );
 
 
-                ComponentCollection* _componentCollection= nullptr;
-                component_children_map_t _childrenCollection;
+                Rectangle&  getRegion( void );
+                Component&  setRegion( const Rectangle& regionVal);
+                Point&      getLocation( void );
+                Component&  setLocation( const Point& locationVal);
+                Color&      getColor( void );
+                Component&  setColor( const Color& colorVal);
+                Size&       getSize( void );
+                Component&  setSize( const Size& sizeVal);
+
+                std::vector<Component*> getChildrenCollection( void );
 
             private:
-                std::string _name= "";
-                Component* _parent= nullptr;
+                std::vector<Component*> _childrenCollection;
 
+                ComponentCollection* _componentCollection;
+
+                Rectangle _region;
+                Color _color;
+
+                Component* _parent= nullptr;
         };
 
     }

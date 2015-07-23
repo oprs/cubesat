@@ -7,47 +7,33 @@
  */
 
 
-#include "TextBlock.h"
-#include "Page.h"
 #include "ListView.h"
-#include "../../Container.h"
-#include "../../Component/ComponentCollection.h"
-#include "../../PageRepertory/PageRepertory.h"
-#include "../../XTRUITES.h"
-#include "../../EscapeSequences.h"
 #include "../../Component/Component.h"
-#include <string>
-#include <map>
 
 using namespace std;
 using namespace qb50::XTRUITES;
 
-
 void ListView::onLoad( void )
 {
-    unsigned char ylocation= getRegion()->getLocation()->getY();
+  unsigned char ylocation= getLocation().getY();
+  unsigned char xlocation= getLocation().getX();
+  unsigned char heightAvailable= getSize().getHeight();
 
-    for (component_children_map_t::iterator it = _childrenCollection.begin(); it != _childrenCollection.end(); ++it)
-    {
-        it->second->getRegion()->getLocation()->y= ylocation;
-        ylocation += it->second->getRegion()->getSize()->getHeight();
-        it->second->onLoad();
-    }
+  for (auto &child : getChildrenCollection())
+  {
+    child->getLocation().y= ylocation;
+    child->getLocation().x= xlocation;
+    child->getRegion()._size= Size(getSize().getWidth(), heightAvailable);
+
+    child->onLoad();
+
+    unsigned char childHeight= child->getSize().getHeight();
+
+    ylocation += childHeight;
+    heightAvailable -= childHeight;
+  }
 }
 
-void ListView::onUpdate( void )
-{
 
-}
-
-void ListView::onUnload( void )
-{
-
-}
-
-void ListView::onKeyPress( unsigned char key )
-{
-
-}
 
 /*EoF*/

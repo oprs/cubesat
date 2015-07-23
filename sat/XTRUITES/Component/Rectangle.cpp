@@ -12,24 +12,29 @@
 
 using namespace qb50::XTRUITES;
 
-Rectangle::Rectangle( Point* locationVal, Size* sizeVal )
+
+Rectangle::Rectangle( unsigned char xVal, unsigned char yVal, unsigned char widthVal, unsigned char heightVal )
+	: _location( xVal, yVal ), _size(widthVal, heightVal)
+{ ; }
+
+Point& Rectangle::getLocation( void )
 {
-    location= locationVal;
-    size= sizeVal;
+    return _location;
 }
 
-Rectangle::Rectangle( unsigned char xVal, unsigned char yVal, unsigned char widthVal, unsigned char heightVal)
+Size& Rectangle::getSize( void )
 {
-    location= new Point(xVal, yVal);
-    size= new Size(widthVal, heightVal);
+    return _size;
 }
 
-Point* Rectangle::getLocation( void )
+Rectangle& Rectangle::setLocation( const Point& locationVal)
 {
-    return location;
+    _location= locationVal;
+    return *this;
 }
 
-Size* Rectangle::getSize( void )
+Rectangle& Rectangle::setSize( const Size& sizeVal)
 {
-    return size;
+    _size= sizeVal;
+    return *this;
 }

@@ -14,47 +14,55 @@
 namespace qb50
 {
 
-    namespace XTRUITES
+  namespace XTRUITES
+  {
+    class TextBlock : public Component
     {
-        class TextBlock : public Component
+
+      public:
+
+        /// @brief  Text contenu
+        std::string text;
+
+        /**
+        *  @brief  Remplisage
+        *          true: Contenu complété par des espaces pour remplir entiérement l'espace disponible
+        *          false: Contenu text seulement
+        */
+
+        enum class Mode : unsigned char
         {
-
-            public:
-
-                /// @brief  Text contenu
-                std::string text;
-
-                /**
-                 *  @brief  Remplisage
-                 *          true: Contenu complété par des espaces pour remplir entiérement l'espace disponible
-                 *          false: Contenu text seulement
-                 */
-                bool        padding= true;
-
-                /**
-                 *  @brief      Setter text
-                 *  @param[in]  textVal: text
-                 *  @return     Reference XTRUITESTextBlock courrante
-                 */
-                TextBlock&  setText(std::string textVal);
-
-                /**
-                 *  @brief      Getter text
-                 *  @return     text
-                 */
-                std::string         getText();
-
-                void onLoad( void );
-                virtual void onUpdate( void );
-                virtual void onUnload( void );
-                virtual void onKeyPress( unsigned char key );
-
+          defaultMode=0,
+          paddingMode=1,
+          adaptiveSizeMode=2,
+          linePaddingAdaptiveHeightMode=3
         };
 
-        extern Point* writePadding(unsigned char beginX, unsigned char beginY, unsigned char endX, unsigned char endY, unsigned char offset, unsigned char maximum);
-        extern Point* writePadding(Point* beginP, Point* endP, unsigned char offset, unsigned char maximum);
+        Mode mode= Mode::defaultMode;
 
-    } /* namespace: XTRUITES */
+
+
+        /**
+        *  @brief      Setter text
+        *  @param[in]  textVal: text
+        *  @return     Reference XTRUITESTextBlock courrante
+        */
+        TextBlock&  setText(std::string textVal);
+
+        /**
+        *  @brief      Getter text
+        *  @return     text
+        */
+        std::string getText();
+
+        void onLoad( void );
+
+    };
+
+    extern Point writePadding(unsigned char beginX, unsigned char beginY, unsigned char endX, unsigned char endY, unsigned char offset, unsigned char maximum);
+    extern Point writePadding(Point beginP, Point endP, unsigned char offset, unsigned char maximum);
+
+  } /* namespace: XTRUITES */
 
 } /* namespace: qb50 */
 

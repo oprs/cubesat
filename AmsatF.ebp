@@ -256,6 +256,20 @@
 		<Unit filename="sat\XTRUITES\Component\Control\ListView.h">
 			<Option target="XTRUITES" />
 		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\NavigationLabel.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\NavigationLabel.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\NavigationMenu.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\Component\Control\NavigationMenu.h">
+			<Option target="XTRUITES" />
+		</Unit>
 		<Unit filename="sat\XTRUITES\Component\Control\TextBlock.cpp">
 			<Option compilerVar="CC" />
 			<Option target="XTRUITES" />
@@ -298,6 +312,13 @@
 		<Unit filename="sat\XTRUITES\EscapeSequences.h">
 			<Option target="XTRUITES" />
 		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\Config.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\OutputStream\Config.h">
+			<Option target="XTRUITES" />
+		</Unit>
 		<Unit filename="sat\XTRUITES\OutputStream\OutputStream.cpp">
 			<Option compilerVar="CC" />
 			<Option target="XTRUITES" />
@@ -312,11 +333,95 @@
 		<Unit filename="sat\XTRUITES\OutputStream\OutputStreamChannel.h">
 			<Option target="XTRUITES" />
 		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\config.cpp">
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\ADCPage.cpp">
 			<Option compilerVar="CC" />
 			<Option target="XTRUITES" />
 		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\config.h">
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\ADCPage.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCChannelWatch.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCChannelWatch.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCWatch.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCWatch.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\ConvFormula.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\ConvFormula.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChannel.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChannel.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChip.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChip.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Test_ADC_Config.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Test_ADC_Config.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashLabel.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashLabel.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashWatch.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashWatch.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\ItemSector.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\ItemSector.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelBlock.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelBlock.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelSector.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelSector.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\FlashPage.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Flash\FlashPage.h">
 			<Option target="XTRUITES" />
 		</Unit>
 		<Unit filename="sat\XTRUITES\PageRepertory\Page.cpp">
@@ -343,6 +448,24 @@
 		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\homePage.h">
 			<Option target="XTRUITES" />
 		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\quitPage.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\quitPage.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Utilities\ColorPalette.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\PageRepertory\Utilities\ColorPalette.h">
+			<Option target="XTRUITES" />
+		</Unit>
+		<Unit filename="sat\XTRUITES\XTRUITES.cpp">
+			<Option compilerVar="CC" />
+			<Option target="XTRUITES" />
+		</Unit>
 		<Unit filename="sat\XTRUITES\XTRUITES.h">
 			<Option target="XTRUITES" />
 		</Unit>
@@ -351,10 +474,6 @@
 			<Option target="XTRUITES" />
 		</Unit>
 		<Unit filename="sat\XTRUITES\syscalls.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\xtruites.cpp">
 			<Option compilerVar="CC" />
 			<Option target="XTRUITES" />
 		</Unit>
@@ -862,7 +981,7 @@
 			<code_completion />
 			<debugger>
 				<target_debugging_settings target="ADCS" active_interface="" />
-				<target_debugging_settings target="ODB" active_interface="ST-link">
+				<target_debugging_settings target="XTRUITES" active_interface="ST-link">
 					<debug_interface interface_id="ST-link" ip_address="localhost" ip_port="4242" path="${EMBLOCKS}\share\contrib" executable="STLinkGDB.exe" description="" dont_start_server="false" backoff_time="1000" options="0" reg_filter="0" active_family="STMicroelectronics">
 						<family_options family_id="STMicroelectronics">
 							<option opt_id="ID_JTAG_SWD" opt_value="swd" />
@@ -879,7 +998,7 @@
 						</family_options>
 					</debug_interface>
 				</target_debugging_settings>
-				<target_debugging_settings target="XTRUITES" active_interface="ST-link">
+				<target_debugging_settings target="ODB" active_interface="ST-link">
 					<debug_interface interface_id="ST-link" ip_address="localhost" ip_port="4242" path="${EMBLOCKS}\share\contrib" executable="STLinkGDB.exe" description="" dont_start_server="false" backoff_time="1000" options="0" reg_filter="0" active_family="STMicroelectronics">
 						<family_options family_id="STMicroelectronics">
 							<option opt_id="ID_JTAG_SWD" opt_value="swd" />

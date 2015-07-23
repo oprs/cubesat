@@ -10,6 +10,8 @@
 #ifndef _QB50_XTRUITES_COLOR_H_
 #define _QB50_XTRUITES_COLOR_H_
 
+#include "../../XTRUITES.h"
+
 namespace qb50
 {
 
@@ -25,7 +27,7 @@ namespace qb50
                 unsigned char foreground;
 
 
-                Color( unsigned char backgroundVal, unsigned char foregroundVal );
+                Color( unsigned char backgroundVal= XTRUITES_DEFAULT_COLOR_BACKGROUND, unsigned char foregroundVal= XTRUITES_DEFAULT_COLOR_FOREGROUND);
 
                 Color& invert( void );
         };

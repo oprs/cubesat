@@ -12,7 +12,6 @@
 
 #include <string>
 #include <map>
-#include <sys/types.h>
 
 namespace qb50
 {
@@ -35,10 +34,10 @@ namespace qb50
                 OutputStreamChannel& on     ( void );
                 OutputStreamChannel& off    ( void );
                 OutputStreamChannel& toggle ( void );
-                ssize_t write(const void *x, size_t len);
+                size_t write(const void *x, size_t len);
 
             private:
-                virtual ssize_t ch_write(const void * /* x */, size_t /* len */)=0;
+                virtual size_t ch_write(const void* /* x */, size_t /* len */);
                 std::string _name= "";
                 OutputStream* _outputStream;
 

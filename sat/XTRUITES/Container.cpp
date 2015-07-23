@@ -6,35 +6,39 @@
  *  @date       11/05/2015 - 12/06/2015
  */
 
-#include "XTRUITES.h"
 #include "Container.h"
+#include "XTRUITES.h"
 #include "EscapeSequences.h"
 #include "PageRepertory/Page.h"
 #include "PageRepertory/PageRepertory.h"
 #include "OutputStream/OutputStreamChannel.h"
 #include "OutputStream/OutputStream.h"
+#include "FIFO_inputKey.hpp"
+#include "OutputStream/OutputStreamChannel.h"
 
 using namespace qb50::XTRUITES;
 
-
-Container::Container(OutputStreamChannel* streamChannelVal) : _inputKey(4)
+Container::Container(OutputStreamChannel& streamChannel, FIFO_InputKey& inputKey)
+  : _streamChannel(streamChannel), _inputKey(inputKey)
 {
-    _state= initialize;
+  _pageRepertory= new PageRepertory();
+  _pageRepertory->setContainer(this);
 
-    _pageRepertory= new PageRepertory(this);
-
-    _currentPage= nullptr;
-    _nextPage= _pageRepertory->getPageByName("Home");
-
-    _streamChannel= streamChannelVal;
+  _state= initialize;
+  _currentPage= nullptr;
+  _nextPage= _pageRepertory->getPageByName("Home");
+}
+Container::~Container()
+{
+  delete _pageRepertory;
 }
 
-PageRepertory* Container::getRepertory( void )
+PageRepertory& Container::getRepertory( void )
 {
-    return _pageRepertory;
+    return *_pageRepertory;
 }
 
-state_t Container::getState()
+Container_state_t Container::getState()
 {
     return _state;
 }
@@ -124,60 +128,28 @@ void Container::transition()
 void Container::_initialize()
 {
     // Bloque tous les canaux du OutputStream et active uniquement le canal de XTRUITES
-    _streamChannel->getOutputStream()->off();
-    _streamChannel->on();
+    _streamChannel.getOutputStream()->off();
+    _streamChannel.on();
 
     // Définition des attribus
     EscapeSequences::resetAttributes();
-    EscapeSequences::setBackground(XTRUITES_DEFAULT_BACKGROUND, true);
-    EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND, true);
+    EscapeSequences::setBackground(XTRUITES_DEFAULT_COLOR_BACKGROUND, true);
+    EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND, true);
     EscapeSequences::clearScreen();
-    EscapeSequences::scrollScreen(1, XTRUITES_SCREEN_SIZE_HEIGHT);
+    EscapeSequences::scrollScreen(1, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT);
 
     // Ecriture du cadre
     EscapeSequences::moveCursor(0,0);
-    EscapeSequences::write("╔══════╡"                                                                            );
-    EscapeSequences::reversesColors();
-    EscapeSequences::write(        " XCubeSat Textual Rapid User Interface to Test Embedded Systems "            );
-    EscapeSequences::reversesColors();
-    EscapeSequences::write(                                                                        "╞══════╗\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                                                                              ║\r\n" \
-                           "║                      ▫ "                                                           );
-    EscapeSequences::setForeground(XTRUITES_KEY_FOREGROUND, true);
-    EscapeSequences::write(                         "^H"                                                         );
-    EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND, true);
-    EscapeSequences::write(                           " Home ▫ "                                                 );
-    EscapeSequences::setForeground(XTRUITES_KEY_FOREGROUND, true);
-    EscapeSequences::write(                                   "^R"                                               );
-    EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND, true);
-    EscapeSequences::write(                                     " Refresh ▫ "                                    );
-    EscapeSequences::setForeground(XTRUITES_KEY_FOREGROUND, true);
-    EscapeSequences::write(                                                "^Q"                                  );
-    EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND, true);
-    EscapeSequences::write(                                                  " Quit ▫                      ║\r\n" \
-                           "╟────────┬─────────────────────────────────────────────────────────────────────╢\r\n" \
-                           "║00:00:00│                                                                     ║\r\n" \
-                           "╚════════╧═════════════════════════════════════════════════════════════════════╝"    );
+    writeBoxing();
+    writeTitle(XTRUITES_TITLE_STR);
 
-    return;
+    EscapeSequences::moveCursor(2,XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
+    EscapeSequences::write("00:00:00");
+
+    writeSeparator(11);
+
+    writeSeparator(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-34);
+    writeShortcutKeys(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-32, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
 }
 
 void Container::_loadPage()
@@ -186,7 +158,6 @@ void Container::_loadPage()
     _inputKey.lock();
     _inputKey.flush();
     _inputKey.unlock();
-
 
     _currentPage= _nextPage;
     _nextPage= nullptr;
@@ -204,7 +175,6 @@ void Container::_updatePage()
 void Container::_unloadPage()
 {
     _currentPage->onUnload();
-
     clearContent();
 }
 
@@ -220,6 +190,7 @@ void Container::_readKey()
     {
         if(key == 0x14) // ^T
         {
+            _initialize();
             _nextPage= _pageRepertory->getPageByName("Home");
         }
         return; // Disable default actions
@@ -227,15 +198,12 @@ void Container::_readKey()
 
     // Display last key
     #if XTRUITES_DEBUG_ENABLED
-        EscapeSequences::setBackground(XTRUITES_DEFAULT_BACKGROUND);
-        EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND);
-        EscapeSequences::moveCursor(66, 21);
-        EscapeSequences::write("┬");
-        EscapeSequences::moveCursor(66, 22);
-        EscapeSequences::write("│");
-        EscapeSequences::moveCursor(66, 23);
-        EscapeSequences::write("╧");
-        EscapeSequences::moveCursor(67, 22);
+        EscapeSequences::setBackground(XTRUITES_DEFAULT_COLOR_BACKGROUND);
+        EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+
+        writeSeparator(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-34-12-3);
+
+        EscapeSequences::moveCursor(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-34-12-1, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
         EscapeSequences::write("LastKey=0x%02X", key);
         EscapeSequences::moveCursorHome();
         EscapeSequences::write("\n");
@@ -264,12 +232,21 @@ void Container::_readKey()
 
 void Container::displayLocation()
 {
-    EscapeSequences::setBackground(XTRUITES_DEFAULT_BACKGROUND);
+    unsigned char xlocation= 13;
+    unsigned char ylocation= XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2;
+
+    EscapeSequences::setBackground(XTRUITES_DEFAULT_COLOR_BACKGROUND);
 
     // clear location
-    EscapeSequences::moveCursor(10,22);
-    EscapeSequences::write("                                                        \r\n");
-    EscapeSequences::moveCursor(10,22);
+    EscapeSequences::moveCursor(xlocation + _currentPage->getName().length(), ylocation);
+
+    for(unsigned char row=0; row < 69-_currentPage->getName().length(); row++)
+    {
+    EscapeSequences::write(" ");
+
+    }
+
+    EscapeSequences::moveCursor(xlocation, ylocation);
 
     // write name
     EscapeSequences::setForeground(XTRUITES_LOCATION_FOREGROUND);
@@ -285,9 +262,9 @@ void Container::displayLocation()
         }
     }
 
-    EscapeSequences::setForeground(XTRUITES_DEFAULT_FOREGROUND);
-    EscapeSequences::write(" ■ ");
-    EscapeSequences::setHomePosition(_currentPage->getName().length()+14, 22);
+    EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+    EscapeSequences::write(" » ");
+    EscapeSequences::setHomePosition(_currentPage->getName().length()+ xlocation + 4, ylocation);
     EscapeSequences::moveCursorHome();
     EscapeSequences::write("\n");
 }
@@ -299,11 +276,11 @@ void Container::clearContent()
     EscapeSequences::moveCursor(0, 1);
 
     // Clear screen
-    for(uint8_t line=1; line < 20; line++)
+    for(uint8_t line=1; line < XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-3; line++)
     {
         EscapeSequences::erasesEntireCurrentLine();
         EscapeSequences::write("║");
-        EscapeSequences::moveCursor(79, line);
+        EscapeSequences::moveCursor(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-1, line);
         EscapeSequences::write("║\r\n");
     }
 }
@@ -322,24 +299,100 @@ void Container::pushKey(uint8_t key)
 }
 
 
-/*
-
-XTRUITES& XTRUITES::quit()
+void Container::setNextPage(Page* nextPageVal)
 {
-    page->unload();
-    clearContent();
-    EscapeSequences::resetAttributes();
-    EscapeSequences::clearScreen();
-    EscapeSequences::scrollScreen(0, 22);
-    EscapeSequences::moveCursor(60,23);
-    EscapeSequences::write("▫ ^T Open XTRUITE ▫");
-    EscapeSequences::moveCursor(0,0);
-    EscapeSequences::write("\r\n");
-
-    XTRUITES::enable= false;
-
-    return *this;
+    _nextPage= nextPageVal;
 }
-*/
+
+
+void Container::writeSeparator(unsigned char line)
+{
+    EscapeSequences::setBackground(XTRUITES_DEFAULT_COLOR_BACKGROUND);
+    EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+
+    EscapeSequences::moveCursor(line, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-3);
+    EscapeSequences::write("┬");
+    EscapeSequences::moveCursor(line-1, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
+    EscapeSequences::write(" │ ");
+    EscapeSequences::moveCursor(line, XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-1);
+    EscapeSequences::write("╧");
+}
+
+
+void Container::writeTitle(const char* title)
+{
+    EscapeSequences::moveCursor((XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-XTRUITES_TITLE_WIDTH)/2 -2, 0 );
+    EscapeSequences::write("╡");
+    EscapeSequences::reversesColors();
+    EscapeSequences::write(" ");
+    EscapeSequences::write("%s", title);
+    EscapeSequences::write(" ");
+    EscapeSequences::reversesColors();
+    EscapeSequences::write("╞");
+}
+
+
+void Container::writeBoxing()
+{
+    EscapeSequences::write("╔");
+    for(unsigned char line=1; line<XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-1; line++)
+    {
+        EscapeSequences::write("═");
+    }
+    EscapeSequences::write("╗");
+
+
+    for(unsigned char line=1; line<XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-3; line++)
+    {
+        EscapeSequences::moveCursor(0,line);
+        EscapeSequences::write("║");
+        EscapeSequences::moveCursor(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-1, line);
+        EscapeSequences::write("║");
+    }
+
+
+    EscapeSequences::moveCursor(0,XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-3);
+    EscapeSequences::write("╟");
+    for(unsigned char row=1; row<XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-1; row++)
+    {
+        EscapeSequences::write("─");
+    }
+    EscapeSequences::write("╢");
+
+    EscapeSequences::moveCursor(0,XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
+    EscapeSequences::write("║ ");
+    EscapeSequences::moveCursor(XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-2,XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-2);
+    EscapeSequences::write(" ║");
+
+    EscapeSequences::moveCursor(0,XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT-1);
+    EscapeSequences::write("╚");
+    for(unsigned char row=1; row<XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH-1; row++)
+    {
+        EscapeSequences::write("═");
+    }
+    EscapeSequences::write("╝");
+}
+
+void Container::writeShortcutKeys(unsigned char x, unsigned char y)
+{
+  EscapeSequences::moveCursor(x,y);
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_KEY_FOREGROUND);
+  EscapeSequences::write( "^H"                            );
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+  EscapeSequences::write(   " Home ▫ "                    );
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_KEY_FOREGROUND);
+  EscapeSequences::write(           "^R"                  );
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+  EscapeSequences::write(             " Refresh ▫ "       );
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_KEY_FOREGROUND);
+  EscapeSequences::write(                        "^Q"     );
+  EscapeSequences::setForeground(XTRUITES_DEFAULT_COLOR_FOREGROUND);
+  EscapeSequences::write(                          " Quit") ;
+}
+
+OutputStreamChannel& Container::getStreamChannel( void )
+{
+  return _streamChannel;
+}
 
 /*EoF*/

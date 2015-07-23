@@ -10,6 +10,8 @@
 #ifndef _QB50_XTRUITES_SIZE_H_
 #define _QB50_XTRUITES_SIZE_H_
 
+#include "XTRUITES.h"
+
 namespace qb50
 {
 
@@ -21,7 +23,7 @@ namespace qb50
 
             public:
 
-                Size(unsigned char widthVal, unsigned char heightVal);
+                Size(unsigned char widthVal= XTRUITES_DEFAULT_WIDTH, unsigned char heightVal = XTRUITES_DEFAULT_HEIGHT);
 
                 unsigned char width;
                 unsigned char height;

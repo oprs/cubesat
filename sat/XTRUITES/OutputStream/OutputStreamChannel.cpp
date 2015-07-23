@@ -61,11 +61,19 @@ OutputStream* OutputStreamChannel::getOutputStream( void )
 }
 
 
-ssize_t OutputStreamChannel::write(const void *x, size_t len)
+size_t OutputStreamChannel::write(const void *x, size_t len)
 {
     if(!enable)
     {
-        return size_t();
+        return 0;
     }
     return ch_write(x, len);
+}
+
+size_t OutputStreamChannel::ch_write(const void *x, size_t len)
+{
+  (void) x;
+  (void) len;
+
+  return 0;
 }

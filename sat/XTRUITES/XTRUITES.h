@@ -9,41 +9,50 @@
 #ifndef _QB50_XTRUITES_H_
 #define _QB50_XTRUITES_H_
 
-
 #include "Container.h"
 #include "OutputStream/OutputStream.h"
 #include "OutputStream/OutputStreamChannel.h"
 
-
+/// @brief  Titre affiché au centre en haut
+#define XTRUITES_TITLE_STR                        "XCubeSat Textual Rapid User Interface to Test Embedded Systems"
+/// @brief  Longueur du titre
+#define XTRUITES_TITLE_WIDTH                      62
 
 // color definition
-#define XTRUITES_KEY_FOREGROUND             41
-#define XTRUITES_DEFAULT_BACKGROUND         23
-#define XTRUITES_DEFAULT_FOREGROUND         253
+/// @brief  Fond par défaut
+#define XTRUITES_DEFAULT_COLOR_BACKGROUND         23
+/// @brief  Premier plan par défaut
+#define XTRUITES_DEFAULT_COLOR_FOREGROUND         253
 
-#define XTRUITES_LOCATION_FOREGROUND        214
+/// @brief  Fond des touche de raccourcis par défaut
+#define XTRUITES_DEFAULT_COLOR_KEY_BACKGROUND     23
+/// @brief  Premier plan des touche de raccourcis par défaut
+#define XTRUITES_DEFAULT_COLOR_KEY_FOREGROUND     41
 
-#define XTRUITES_LIST_TEXTBLOCK_KEY_FOREGROUND      41
-#define XTRUITES_LIST_TEXTBLOCK_DEFAULT_BACKGROUND  23
-#define XTRUITES_LIST_TEXTBLOCK_DEFAULT_FOREGROUND  253
+/// @brief  Premier plan de la localisation (nom de page en bas à gauche)
+#define XTRUITES_LOCATION_FOREGROUND              214
 
-// Power of 2
-#define XTRUITES_FIFO_DEPTH 8
+/// @brief  Position en x des XTRUITES::Component par défaut
+#define XTRUITES_DEFAULT_LOCATION_X               0
+/// @brief  Position en y des XTRUITES::Component par défaut
+#define XTRUITES_DEFAULT_LOCATION_Y               0
 
-// print last key pressed
-#define XTRUITES_DEBUG_ENABLED              true
-// windows size
-#define XTRUITES_SCREEN_SIZE_HEIGHT        24
+/// @brief  Longeur des XTRUITES::Component par défaut
+#define XTRUITES_DEFAULT_WIDTH                    40
+/// @brief  Hauteur des XTRUITES::Component par défaut
+#define XTRUITES_DEFAULT_HEIGHT                   2
 
+/// @brief  Taille du FIFO des touche reçus enregistré (multiple de 2)
+#define XTRUITES_FIFO_DEPTH                       8
 
+/// @brief  Affiche la derniére touche pressé
+#define XTRUITES_DEBUG_ENABLED                    true
 
-#define XTRUITES_DEFAULT_SCREEN_LIMIT_X     80
-#define XTRUITES_DEFAULT_SCREEN_LIMIT_Y     24
-// frame size (in window)
-#define  XTRUITES_FRAME_LIMIT_X_MIN         2
-#define  XTRUITES_FRAME_LIMIT_X_MAX         78
-#define  XTRUITES_FRAME_LIMIT_Y_MIN         2
-#define  XTRUITES_FRAME_LIMIT_Y_MAX         20
+/// @brief  Longueur de l'écran
+#define XTRUITES_SCREEN_TEXT_RESOLUTION_WIDTH     132
+/// @brief  Largeur de l'écran
+#define XTRUITES_SCREEN_TEXT_RESOLUTION_HEIGHT    43
+
 
 namespace qb50
 {
@@ -51,15 +60,15 @@ namespace qb50
     namespace XTRUITES
     {
 
-        extern qb50::XTRUITES::Container    XTRUITESContainer;
-        extern qb50::XTRUITES::OutputStream OutputStreamUART3;
+        extern Container            XTRUITESContainer;
+        extern OutputStream         OutputStreamUART3;
 
     } /* namespace: XTRUITES */
 
 } /* namespace: qb50 */
 
+extern qb50::XTRUITES::OutputStreamChannel& OutputStreamChannelSyscalls;
 
 #endif /* _QB50_XTRUITES_H_ */
-
 
 /*EoF*/

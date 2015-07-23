@@ -14,25 +14,24 @@
 namespace qb50
 {
 
-    namespace XTRUITES
+  namespace XTRUITES
+  {
+
+  class NavigationMenu;
+
+    class homePage : public Page
     {
 
-        class homePage : public Page
-        {
+      public:
+        void onLoad( void );
+        void unLoad( void );
 
-            public:
-                homePage(PageRepertory* pageRepertoryVal);
+        /// Component
+        NavigationMenu* menu= nullptr;
 
+    };
 
-
-                void onLoad( void );
-                void onUpdate( void );
-                void onUnload( void );
-                void onKeyPress( uint8_t key );
-
-        };
-
-    } /* namespace: XTRUITES */
+  } /* namespace: XTRUITES */
 
 } /* namespace: qb50 */
 

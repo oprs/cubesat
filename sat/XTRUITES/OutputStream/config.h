@@ -9,9 +9,7 @@
 #ifndef _QB50_XTRUITES_OUTPUT_STREAM_CONFIG_H_
 #define _QB50_XTRUITES_OUTPUT_STREAM_CONFIG_H_
 
-
 #include "OutputStream/OutputStreamChannel.h"
-#include <sys/types.h>
 
 namespace qb50
 {
@@ -22,13 +20,13 @@ namespace qb50
         class UART3_syscalls : public OutputStreamChannel
         {
             private:
-                ssize_t ch_write(const void *x, size_t len);
+                size_t ch_write(const void *x, size_t len);
         };
 
         class UART3_XTRUITES : public OutputStreamChannel
         {
             private:
-                ssize_t ch_write(const void *x, size_t len);
+                size_t ch_write(const void *x, size_t len);
         };
 
     }; /* namespace: XTRUITES */

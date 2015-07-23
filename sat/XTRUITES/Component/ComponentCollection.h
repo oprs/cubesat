@@ -11,40 +11,36 @@
 #define _QB50_XTRUITES_COMPONENT_COLLECTION_H_
 
 #include <string>
-#include <map>
+#include <vector>
 
 namespace qb50
 {
     namespace XTRUITES
     {
 
-
         class Component;
-
-        typedef std::map<std::string, Component*> component_collection_map_t;
-        typedef std::pair<std::string, Component*> component_collection_pair_t;
 
         class ComponentCollection
         {
 
             public:
                 ComponentCollection(Page* pageVal);
+
                 ~ComponentCollection();
 
-                Component* getComponentByName(std::string nameComponent);
-                ComponentCollection& add(component_collection_pair_t item);
+                ComponentCollection& addComponent(Component* component);
                 ComponentCollection& setPage(Page* pageVal);
-                Page* getPage();
-
+                Page& getPage();
 
                 void loadAllComponents( void );
                 void updateAllComponents( void );
                 void unloadAllComponents( void );
                 void keyPressAllComponents( unsigned char key );
 
+                ComponentCollection& eraseComponent(Component* component);
 
             private:
-                component_collection_map_t _collection;
+                std::vector<Component*> _collection;
                 Page* _page= nullptr;
 
         };

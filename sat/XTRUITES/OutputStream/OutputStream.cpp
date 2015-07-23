@@ -5,9 +5,9 @@
  *  @version    1.2
  *  @date       23/06/2015
  */
-#include "OutputStream/OutputStreamChannel.h"
-#include "config.h"
-#include "outputStream.h"
+#include "OutputStreamChannel.h"
+#include "Config.h"
+#include "OutputStream.h"
 
 using namespace std;
 using namespace qb50::XTRUITES;
@@ -17,7 +17,7 @@ OutputStream::OutputStream()
     //  Ajoutez ici les cannaux ici
     //                                  Nom                 Instance de canal
     add(output_stream_channel_pair_t(   "UART3_syscalls",   new UART3_syscalls()    ));
-    add(output_stream_channel_pair_t(   "UART3_XTRUITES",   new UART3_syscalls()    ));
+    add(output_stream_channel_pair_t(   "UART3_XTRUITES",   new UART3_XTRUITES()    ));
 }
 
 OutputStream& OutputStream::add(output_stream_channel_pair_t item)
@@ -29,9 +29,9 @@ OutputStream& OutputStream::add(output_stream_channel_pair_t item)
     return *this;
 }
 
-OutputStreamChannel* OutputStream::getChannelByName(std::string nameChannel)
+OutputStreamChannel& OutputStream::getChannelByName(std::string nameChannel)
 {
-	return _channels[nameChannel];
+	return *_channels[nameChannel];
 }
 
 

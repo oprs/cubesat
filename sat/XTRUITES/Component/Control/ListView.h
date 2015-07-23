@@ -14,21 +14,17 @@
 namespace qb50
 {
 
-    namespace XTRUITES
+  class TextBlock;
+
+  namespace XTRUITES
+  {
+    class ListView : public Component
     {
-        class ListView : public Component
-        {
+      public:
+        void onLoad( void );
+    };
 
-            public:
-
-                void onLoad( void );
-                void onUpdate( void );
-                void onUnload( void );
-                void onKeyPress( unsigned char key );
-
-        };
-
-    } /* namespace: XTRUITES */
+  } /* namespace: XTRUITES */
 
 } /* namespace: qb50 */
 

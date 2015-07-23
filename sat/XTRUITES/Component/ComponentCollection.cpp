@@ -10,7 +10,7 @@
 #include "../PageRepertory/Page.h"
 #include "Component.h"
 #include "ComponentCollection.h"
-
+#include <algorithm>
 
 using namespace qb50::XTRUITES;
 
@@ -22,25 +22,19 @@ ComponentCollection::ComponentCollection(Page* pageVal)
 
 ComponentCollection::~ComponentCollection()
 {
-    for (component_collection_map_t::iterator it = _collection.begin(); it != _collection.end(); ++it)
-    {
-        delete it->second;
-    }
+  for (auto &item : _collection) // access by reference to avoid copying
+  {
+    delete item;
+  }
 }
 
-ComponentCollection& ComponentCollection::add(component_collection_pair_t item)
+ComponentCollection& ComponentCollection::addComponent(Component* component)
 {
-    _collection.insert(item);
-    item.second->
-         setName(item.first)
-        .setCollection(this);
+    _collection.push_back(component);
+    component->setCollection(this);
     return *this;
 }
 
-Component* ComponentCollection::getComponentByName(std::string nameComponent)
-{
-	return _collection[nameComponent];
-}
 
 ComponentCollection& ComponentCollection::setPage(Page* pageVal)
 {
@@ -48,44 +42,48 @@ ComponentCollection& ComponentCollection::setPage(Page* pageVal)
     return *this;
 }
 
-Page* ComponentCollection::getPage()
+Page& ComponentCollection::getPage()
 {
-	return _page;
+	return *_page;
 }
 
 void ComponentCollection::loadAllComponents()
 {
-    for (component_collection_map_t::iterator it = _collection.begin(); it != _collection.end(); ++it)
-    {
-        it->second->onLoad();
-    }
+  for (auto &item : _collection) // access by reference to avoid copying
+  {
+    item->onLoad();
+  }
 }
 
 
 void ComponentCollection::updateAllComponents()
 {
-
-    for (component_collection_map_t::iterator it = _collection.begin(); it != _collection.end(); ++it)
-    {
-        it->second->onUpdate();
-    }
+  for (auto &item : _collection) // access by reference to avoid copying
+  {
+    item->onUpdate();
+  }
 }
 void ComponentCollection::unloadAllComponents()
 {
-
-    for (component_collection_map_t::iterator it = _collection.begin(); it != _collection.end(); ++it)
-    {
-        it->second->onUnload();
-    }
+  for (auto &item : _collection) // access by reference to avoid copying
+  {
+    item->onUnload();
+  }
 }
 
 void ComponentCollection::keyPressAllComponents( unsigned char key )
 {
+  for (auto &item : _collection) // access by reference to avoid copying
+  {
+    item->onKeyPress( key );
+  }
+}
 
-    for (component_collection_map_t::iterator it = _collection.begin(); it != _collection.end(); ++it)
-    {
-        it->second->onKeyPress( key );
-    }
+
+ComponentCollection& ComponentCollection::eraseComponent(Component* component)
+{
+  _collection.erase(std::remove(_collection.begin(), _collection.end(), component), _collection.end());
+  return *this;
 }
 
 /*EoF*/
