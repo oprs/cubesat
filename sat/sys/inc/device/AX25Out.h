@@ -9,6 +9,7 @@
 #include "device/GPIOPin.h"
 #include "Device.h"
 #include "device/EXTI.h"
+#include "device/NRZI.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,22 +32,16 @@ namespace qb50 {
 
             void sendFlag();
             void sendPacket( const uint8_t *x, unsigned len );
-            /*void fifoBuffer(const std::queue<uint8_t>& val);
-            void afficherFifoBuffer(const std::queue<uint8_t>& data);
-            */
-
 
         private:
 
             xSemaphoreHandle _sendLock;
 
-/*
-            GPIOPin& _clkPin;
-            GPIOPin& _txPin;
-*/
+            void _sendByte( uint8_t x, bool stuff );
 
-            //FIFO<bool> _fifo( 1024 );
             FIFO<bool>& _fifo;
+            int         _nbit;
+            uint16_t    _fcs;
 
     };
 

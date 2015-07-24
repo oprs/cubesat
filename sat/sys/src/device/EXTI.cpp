@@ -66,11 +66,22 @@ void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
 
     EXTIx->IMR |= exti_mask;
 
-    if(( edge == RISING  ) || ( edge == BOTH ))
-        EXTIx->RTSR |= exti_mask;
+    switch( edge ) {
+        case RISING:
+            EXTIx->RTSR |=  exti_mask;
+            EXTIx->FTSR &= ~exti_mask;
+            break;
 
-    if(( edge == FALLING ) || ( edge == BOTH ))
-        EXTIx->FTSR |= exti_mask;
+        case FALLING:
+            EXTIx->RTSR &= ~exti_mask;
+            EXTIx->FTSR |=  exti_mask;
+            break;
+
+        case BOTH:
+            EXTIx->RTSR |=  exti_mask;
+            EXTIx->FTSR |=  exti_mask;
+            break;
+    }
 
     EXTIx->SWIER |= exti_mask; // XXX
     EXTIx->PR    |= exti_mask;

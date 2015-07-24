@@ -22,6 +22,7 @@ using namespace qb50;
  */
 void AX25_PacketExampleThread( Thread *self )
 {
+for( ;; ) {
     PacketAX25 PacketAX25;
 
     // Define destination
@@ -47,9 +48,11 @@ void AX25_PacketExampleThread( Thread *self )
     // Define information/data
     uint8_t AX25Data[]="Lorem ipsum dolor sit posuere.";
     size_t AX25Data_len = (size_t)30;
+/*
     AX25Data[0] = 0xFF; // Bit stuffing Test
     AX25Data[1] = 0xFF; // Bit stuffing Test
     AX25Data[30]= 0xFF; // Bit stuffing Test
+*/
 
     // Memory receive packet
     uint8_t *contentPacket = new uint8_t[120];
@@ -71,7 +74,8 @@ void AX25_PacketExampleThread( Thread *self )
     (void)self;
     (void)packetSend_len;
 
-    while(1);
+    delay( 500 );
+}
 }
 
 
