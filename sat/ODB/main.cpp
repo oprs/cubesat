@@ -73,19 +73,19 @@ void thread1( Thread *self )
 	};
 #endif
 
-	dataMem.enable();
-	softMem.enable();
+	flash1.enable();
+	flash0.enable();
 
 #if 0
 	(void)printf( "Sector Erase...\r\n" );
 
-	dataMem.WREN();
-	dataMem.SE( 0 );
+	flash1.WREN();
+	flash1.SE( 0 );
 
 	(void)printf( "Page Program...\r\n" );
 
-	dataMem.WREN();
-	dataMem.PP( 0, rom, 64 );
+	flash1.WREN();
+	flash1.PP( 0, rom, 64 );
 #endif
 
 	for( ;; ) {
@@ -95,37 +95,37 @@ void thread1( Thread *self )
 
 		(void)printf( "[DATA]\r\n" );
 
-		dataMem.RDID( &rdid );
+		flash1.RDID( &rdid );
 		hexdump( &rdid, sizeof( rdid ));
 
-		dataMem.REMS( &rems );
+		flash1.REMS( &rems );
 		hexdump( &rems, sizeof( rems ));
 
-		dataMem.RDSR1( &rdsr );
+		flash1.RDSR1( &rdsr );
 		hexdump( &rdsr, sizeof( rdsr ));
 
-		dataMem.RDSR2( &rdsr );
+		flash1.RDSR2( &rdsr );
 		hexdump( &rdsr, sizeof( rdsr ));
 
-		dataMem.READ( 0, buf, 64 );
+		flash1.READ( 0, buf, 64 );
 		hexdump( buf, 64 );
 
 		(void)printf( "[SOFT]\r\n" );
 
-		softMem.RDID( &rdid );
+		flash0.RDID( &rdid );
 		hexdump( &rdid, sizeof( rdid ));
 
 
-		softMem.REMS( &rems );
+		flash0.REMS( &rems );
 		hexdump( &rems, sizeof( rems ));
 
-		softMem.RDSR1( &rdsr );
+		flash0.RDSR1( &rdsr );
 		hexdump( &rdsr, sizeof( rdsr ));
 
-		softMem.RDSR2( &rdsr );
+		flash0.RDSR2( &rdsr );
 		hexdump( &rdsr, sizeof( rdsr ));
 
-		softMem.READ( 0, buf, 64 );
+		flash0.READ( 0, buf, 64 );
 		hexdump( buf, 64 );
 
 
