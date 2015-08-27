@@ -32,21 +32,21 @@ void CTCSSThread( Thread *self )
     LED3.enable().out().off();
     LED4.enable().out().off();
 
-    PB12.enable().in().off();
-    PB13.enable().in().off();
-    PB15.enable().in().off();
+    PB12.enable().out().on();   // CTCSS_ON
+    PB13.enable().out().off(); // ON/OFF_PA
+    PB15.enable().out().off(); // ON/OFF_TX
 
-    CTCSS ctcss( PB15, PB12 );
-    ctcss.enable();
-
+    CTCSS ctcss( PB15, PB13 );
 
     for( ;; )
     {
+        ctcss.enable();
+        ctcss.modeRelaisFM();
+        ctcss.disable();
 
-       ctcss.modeRelaisFM();
-
-       LED3.toggle();
-       LED1.on();
-       delay( 100 );
+        //LED3.toggle();
+        //LED1.on();
+        delay( 100 );
     }
+
 }

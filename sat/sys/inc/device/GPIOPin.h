@@ -20,6 +20,7 @@ namespace qb50 {
 			GPIOPin& on     ( void );
 			GPIOPin& off    ( void );
 			GPIOPin& toggle ( void );
+            bool     read   ( void );
 
 			/* mode */
 

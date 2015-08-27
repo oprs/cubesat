@@ -78,6 +78,7 @@ void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
             break;
 
         case BOTH:
+        default:
             EXTIx->RTSR |=  exti_mask;
             EXTIx->FTSR |=  exti_mask;
             break;
@@ -95,6 +96,7 @@ void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
     IRQ.enable( EXTI4_IRQn     );
     IRQ.enable( EXTI9_5_IRQn   );
     IRQ.enable( EXTI15_10_IRQn );
+
 }
 
 

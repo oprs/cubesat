@@ -60,7 +60,7 @@ void thread1( Thread *self )
 
     PC10.enable().out().off();
 
-#if 0
+//#if 0
 	uint8_t rom[ 64 ] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 		0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -71,7 +71,7 @@ void thread1( Thread *self )
 		0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
 		0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
 	};
-#endif
+//#endif
 
 	flash1.enable();
 	flash0.enable();
@@ -92,7 +92,7 @@ void thread1( Thread *self )
 		//LED1.toggle();
 		//PC10.toggle();
 		//LED2.on();
-
+/*
 		(void)printf( "[DATA]\r\n" );
 
 		flash1.RDID( &rdid );
@@ -128,7 +128,7 @@ void thread1( Thread *self )
 		flash0.READ( 0, buf, 64 );
 		hexdump( buf, 64 );
 
-
+*/
 		LED2.on();
 		delay( 500 );
 	}
@@ -177,11 +177,12 @@ int main( void )
 {
 
 
-
 	//LED1.enable().out().off();
 	//LED2.enable().out().on();
 	//LED3.enable().out().off();
 	//LED4.enable().out().off();
+
+    UART3.enable();
 
     //EXTI1.trigged( PC9 );
 	/* Antenne */
@@ -189,10 +190,7 @@ int main( void )
 
     //ax25.enable();
 
-    //ctcss( PB15, PB12 );
-    //ctcss.enable();
-
-	(void)createThread("Thread 1", thread1 );
+	//(void)createThread("Thread 1", thread1 );
 /*
 #ifdef XTRUITES
 	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );

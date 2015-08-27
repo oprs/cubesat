@@ -1,5 +1,6 @@
 
 #include "DECTONEHandler.h"
+#include "CTCSS.H"
 
 using namespace qb50;
 
@@ -16,17 +17,15 @@ DECTONEHandler::~DECTONEHandler()
 }
 
 
- void DECTONEHandler::handle( EXTI::EXTIn )
+void DECTONEHandler::handle( EXTI::EXTIn )
 {
-    //xSemaphoreTake( _dectoneLock, WAIT1MN ); //xxx ctcss class
-
-    //EXTI1.registerHandler( PA8, this );
-    portBASE_TYPE ph = pdFALSE;
+    portBASE_TYPE ph = pdFAIL;
 
     xSemaphoreGiveFromISR( _ctcssLock, &ph);
 
-    if ( ph == pdTRUE )
+    if ( ph == pdPASS )
     {
         portEND_SWITCHING_ISR( ph );
     }
+
 }
