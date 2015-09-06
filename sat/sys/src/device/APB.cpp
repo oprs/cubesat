@@ -12,7 +12,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-APB::APB( uint32_t APBn, const char *name ) : Bus( name ), _APBn( APBn )
+APB::APB( BusId id, const char *name ) : Bus( name ), _id( id )
 { ; }
 
 
@@ -26,13 +26,9 @@ APB::~APB()
 
 APB& APB::enable( BusDevice *dev )
 {
-	switch( _APBn ) {
-
-		case 1: RCC->APB1ENR |= dev->periph; break;
-		case 2: RCC->APB2ENR |= dev->periph; break;
-
-		default:
-			throw 42; /* XXX */
+	switch( _id ) {
+		case BUS1: RCC->APB1ENR |= dev->periph; break;
+		case BUS2: RCC->APB2ENR |= dev->periph; break;
 	}
 
 	//std::cout << _name << ": " << dev->name() << " enabled\r\n";
@@ -43,13 +39,9 @@ APB& APB::enable( BusDevice *dev )
 
 APB& APB::disable( BusDevice *dev )
 {
-	switch( _APBn ) {
-
-		case 1: RCC->APB1ENR &= ~dev->periph; break;
-		case 2: RCC->APB2ENR &= ~dev->periph; break;
-
-		default:
-			throw 42; /* XXX */
+	switch( _id ) {
+		case BUS1: RCC->APB1ENR &= ~dev->periph; break;
+		case BUS2: RCC->APB2ENR &= ~dev->periph; break;
 	}
 
 	//std::cout << _name << ": " << dev->name() << " disabled\r\n";
@@ -65,13 +57,9 @@ uint32_t APB::freq( void )
 
 	uint32_t rv = 0;
 
-	switch( _APBn ) {
-
-		case 1: rv = clocks.PCLK1_Frequency; break;
-		case 2: rv = clocks.PCLK2_Frequency; break;
-
-		default:
-			throw 42; /* XXX */
+	switch( _id ) {
+		case BUS1: rv = clocks.PCLK1_Frequency; break;
+		case BUS2: rv = clocks.PCLK2_Frequency; break;
 	}
 
 	return rv;

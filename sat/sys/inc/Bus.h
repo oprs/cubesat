@@ -11,7 +11,9 @@ namespace qb50 {
 
 	class Bus
 	{
+
 		public:
+
 			Bus( const char *name ) : _name( name )
 			{ ; }
 

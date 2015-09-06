@@ -10,18 +10,26 @@ namespace qb50 {
 
 	class AHB : public Bus
 	{
+
 		public:
 
-			AHB( uint32_t AHBn, const char *name );
+			enum BusId {
+				BUS1 = 1,
+				BUS2 = 2,
+				BUS3 = 3
+			};
+
+			AHB( BusId id, const char *name );
 			~AHB();
 
 			AHB&     enable  ( BusDevice *dev );
 			AHB&     disable ( BusDevice *dev );
 			uint32_t freq    ( void );
 
-		private:
+		protected:
 
-			uint32_t _AHBn;
+			const BusId _id;
+
 	};
 
 	extern qb50::AHB AHB1;

@@ -10,16 +10,25 @@ namespace qb50 {
 
 	class APB : public Bus
 	{
+
 		public:
 
-			APB( uint32_t APBn, const char *name );
+			enum BusId {
+				BUS1 = 1,
+				BUS2 = 2
+			};
+
+			APB( BusId id, const char *name );
 			~APB();
 
 			APB&     enable  ( BusDevice *dev );
 			APB&     disable ( BusDevice *dev );
 			uint32_t freq    ( void );
 
-			uint32_t _APBn;
+		protected:
+
+			BusId _id;
+
 	};
 
 	extern qb50::APB APB1;

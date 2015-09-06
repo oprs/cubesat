@@ -32,13 +32,13 @@ namespace qb50 {
 //  - - - - - - - - - -  //
 
 	/*       id  name */
-	AHB AHB1( 1, "AHB1" );
-	AHB AHB2( 2, "AHB2" );
-	AHB AHB3( 3, "AHB3" );
+	AHB AHB1( AHB::BUS1, "AHB1" );
+	AHB AHB2( AHB::BUS2, "AHB2" );
+	AHB AHB3( AHB::BUS3, "AHB3" );
 
 	/*       id  name */
-	APB APB1( 1, "APB1" );
-	APB APB2( 2, "APB2" );
+	APB APB1( APB::BUS1, "APB1" );
+	APB APB2( APB::BUS2, "APB2" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
