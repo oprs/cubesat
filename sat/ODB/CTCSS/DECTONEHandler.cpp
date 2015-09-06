@@ -1,6 +1,6 @@
 
 #include "DECTONEHandler.h"
-#include "CTCSS.H"
+#include "CTCSS.h"
 
 using namespace qb50;
 
