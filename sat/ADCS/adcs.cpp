@@ -243,17 +243,17 @@ namespace qb50 {
 //  A D C   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-	/*        bus   iobase     periph               pin    Mode */
-	ADC SUN1( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG, GPIOPin::PC0);
-	ADC SUN2( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC1,   GPIOPin::ANALOG, GPIOPin::PC1);
-	ADC SUN3( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC5,   GPIOPin::ANALOG, GPIOPin::PC5);
-	ADC SUN4( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PB0,   GPIOPin::ANALOG, GPIOPin::PB0);
-	ADC SUN5( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PB1,   GPIOPin::ANALOG, GPIOPin::PB1);
+	/*        bus   iobase     periph               name    pin  Mode */
+	ADC SUN1( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN1", PC0, GPIOPin::ANALOG, GPIOPin::PC0 );
+	ADC SUN2( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN2", PC1, GPIOPin::ANALOG, GPIOPin::PC1 );
+	ADC SUN3( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN3", PC5, GPIOPin::ANALOG, GPIOPin::PC5 );
+	ADC SUN4( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN4", PB0, GPIOPin::ANALOG, GPIOPin::PB0 );
+	ADC SUN5( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN5", PB1, GPIOPin::ANALOG, GPIOPin::PB1 );
 	//For the 4 other sun sensors to be added
-	//ADC SUN6( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
-	//ADC SUN7( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
-	//ADC SUN8( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
-	//ADC SUN9( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, PC0,   GPIOPin::ANALOG);
+	//ADC SUN6( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN6", PC0, GPIOPin::ANALOG );
+	//ADC SUN7( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN7", PC0, GPIOPin::ANALOG );
+	//ADC SUN8( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN8", PC0, GPIOPin::ANALOG );
+	//ADC SUN9( APB2, ADC1_BASE, RCC_APB2Periph_ADC1, "SUN9", PC0, GPIOPin::ANALOG );
 
 //  - - - - - - - - - - - - - - -  //
 //  T I M   C O N T R O L L E R S  //

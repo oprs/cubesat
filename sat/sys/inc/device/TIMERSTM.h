@@ -21,6 +21,7 @@ namespace qb50{
 		TIMER(Bus& bus,
 			const uint32_t iobase,
 			const uint32_t periph,
+			const char *name,
 			GPIOPin& pin,
 			GPIOPin::Alt mode
 		);

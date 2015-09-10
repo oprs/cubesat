@@ -1,4 +1,6 @@
 
+#include "system/qb50.h"
+
 #include "DECTONEHandler.h"
 #include "CTCSS.h"
 

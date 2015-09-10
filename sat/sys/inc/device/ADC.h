@@ -25,6 +25,7 @@ namespace qb50{
 		ADC(Bus& bus,
 			const uint32_t iobase,
 			const uint32_t periph,
+			const char *name,
 			GPIOPin& pin,
 			GPIOPin::Mode mode,
 			GPIOPin::Channel channel

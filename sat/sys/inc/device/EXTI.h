@@ -2,9 +2,6 @@
 #ifndef _QB50_SYS_EXTI_H
 #define _QB50_SYS_EXTI_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-
 #include "device/GPIOPin.h"
 #include "device/FIFO.hpp"
 #include "Device.h"

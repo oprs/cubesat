@@ -1,7 +1,8 @@
 
+#include "system/qb50.h"
+
 #include "CTCSS.h"
 #include "DECTONEHandler.h"
-#include "system/qb50.h"
 #include "device/MAX111x.h"
 #include "device/EXTI.h"
 #include "device/GPIOPin.h"

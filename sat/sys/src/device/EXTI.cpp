@@ -3,6 +3,7 @@
 #include "device/NVIC.h"
 #include "device/GPIOPin.h"
 #include <stm32f4xx.h>
+
 #undef EXTI
 #undef NVIC
 
@@ -13,14 +14,14 @@ using namespace qb50;
 EXTI::EXTI()
 {
     for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (EXTIHandler*)NULL;
+        _extiHandler[i] = (EXTIHandler*)0;
 }
 
 
 EXTI::~EXTI()
 {
     for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (EXTIHandler*)NULL;
+        _extiHandler[i] = (EXTIHandler*)0;
 }
 
 
@@ -107,7 +108,7 @@ void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
 void EXTI::isr( EXTIn i )
 {
     EXTIHandler *handler = _extiHandler[ i ];
-    if( handler != NULL )
+    if( handler != 0 )
         handler->handle( i );
 }
 

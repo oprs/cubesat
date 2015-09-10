@@ -1,8 +1,10 @@
-#ifndef CTCSS_H_INCLUDED
-#define CTCSS_H_INCLUDED
+
+#ifndef _QB50_CTCSS_H
+#define _QB50_CTCSS_H
+
+#include <semphr.h>
 
 #include "system/qb50.h"
-#include <FreeRTOS.h>
 #include "DECTONEHandler.h"
 #include "device/GPIOPin.h"
 
@@ -47,4 +49,4 @@ namespace qb50 {
 
 
 
-#endif /* CTCSS_H_INCLUDED */
+#endif /* _QB50_CTCSS_H */

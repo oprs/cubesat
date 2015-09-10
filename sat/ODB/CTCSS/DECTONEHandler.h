@@ -1,18 +1,20 @@
-#ifndef DECTONEHANDLER_H_INCLUDED
-#define DECTONEHANDLER_H_INCLUDED
 
-#include "system/qb50.h"
-#include <FreeRTOS.h>
+#ifndef _QB50_DECTONE_HANDLER_H
+#define _QB50_DECTONE_HANDLER_H
+
 #include <semphr.h>
+#undef EXTI
+
+#include "device/EXTI.h"
 
 
 namespace qb50 {
 
-    class DECTONEHandler:public EXTIHandler
+    class DECTONEHandler : public EXTIHandler
     {
         public:
 
-            DECTONEHandler(xSemaphoreHandle &ctcssLock);
+            DECTONEHandler( xSemaphoreHandle &ctcssLock );
             virtual ~DECTONEHandler();
 
             virtual void handle( EXTI::EXTIn );
@@ -28,5 +30,4 @@ namespace qb50 {
 }
 
 
-
-#endif /* DECTONEHANDLER_H_INCLUDED */
+#endif /* _QB50_DECTONE_HANDLER_H */

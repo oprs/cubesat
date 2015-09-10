@@ -5,9 +5,10 @@ using namespace qb50;
 TIMER::TIMER(Bus& bus,
              const uint32_t iobase,
              const uint32_t periph,
+             const char *name,
              GPIOPin& pin,
              GPIOPin::Alt alt)
-             :BusDevice( bus, iobase, periph),
+             :BusDevice( bus, iobase, periph, name ),
              _pin( pin ),
              _alt( alt ) {}
 
