@@ -36,6 +36,7 @@ namespace qb50 {
 
 			/* synchronous read */
 			size_t read    (       void *x, size_t len );
+			size_t readLine(       void *x, size_t len );
 			/* synchronous write */
 			size_t write   ( const void *x, size_t len );
 

@@ -69,8 +69,7 @@ UART& UART::enable( void )
 	USARTx->CR2 = 0;
 	USARTx->CR3 = 0;
 
-	baudRate( 115200 );
-	//baudRate( 9600 );
+	baudRate( 9600 );
 
 	USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
 	IRQ.enable( _IRQn );
@@ -104,6 +103,36 @@ size_t UART::read( void *x, size_t len )
 	for( n = 0 ; n < len ; ++n ) {
 		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
 		((uint8_t*)x)[ n ] = USARTx->DR;
+	}
+
+	xSemaphoreGive( _rdLock );
+
+	return n;
+}
+
+
+size_t UART::readLine( void *x, size_t len )
+{
+	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
+
+	uint16_t dr;
+	size_t n = 0;
+
+	xSemaphoreTake( _rdLock, portMAX_DELAY );
+
+	while( n < len ) {
+		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+		dr = USARTx->DR;
+
+		if( dr == 0x0a ) break;
+		if( dr == 0x0d ) continue;
+
+		((uint8_t*)x)[ n++ ] = (uint8_t)dr & 0xff;
+	}
+
+	while( dr != 0x0a ) {
+		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+		dr = USARTx->DR;
 	}
 
 	xSemaphoreGive( _rdLock );
