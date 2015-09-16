@@ -17,15 +17,6 @@ namespace qb50 {
 			MAX111x& enable  ( void );
 			MAX111x& disable ( void );
 
-			/* perform conversion */
-
-			struct ConvResp {
-				uint8_t rb1;
-				uint8_t rb2;
-				uint8_t rb3;
-				uint8_t rb4;
-			} __attribute__(( packed ));
-
 			/* channel selection */
 
 			enum Channel {
@@ -39,13 +30,13 @@ namespace qb50 {
 				CH7 = 7  /*!< channel 7 */
 			};
 
-			MAX111x& conv( Channel sel, ConvResp *resp );
+			int readChannel( Channel sel );
 	};
 
-	extern qb50::MAX111x ADC_Power_1;
-	extern qb50::MAX111x ADC_Power_2;
-	extern qb50::MAX111x ADC_ODB;
-	extern qb50::MAX111x ADC_FiPEX;
+	extern qb50::MAX111x ADC1;
+	extern qb50::MAX111x ADC2;
+	extern qb50::MAX111x ADC3;
+	extern qb50::MAX111x ADC4;
 
 } /* qb50 */
 

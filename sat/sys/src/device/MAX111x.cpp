@@ -32,9 +32,10 @@ MAX111x& MAX111x::disable( void )
 { return *this; }
 
 
-MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
+int MAX111x::readChannel( Channel sel )
 {
 	uint8_t ConvCmd[ 4 ];
+	uint8_t ConvRes[ 4 ];
 
 	ConvCmd[ 0 ] = 0x00;
 	ConvCmd[ 1 ] = 0x8f | (( sel & 0x07 ) << 4 ) ;
@@ -42,10 +43,10 @@ MAX111x& MAX111x::conv( Channel sel, ConvResp *resp )
 	ConvCmd[ 3 ] = 0x00;
 
 	select();
-	_spi.pollXfer( ConvCmd, resp, sizeof( ConvCmd ));
+	_spi.pollXfer( ConvCmd, ConvRes, sizeof( ConvCmd ));
 	deselect();
 
-	return *this;
+	return(( ConvRes[1] << 8 ) | ConvRes[2] );
 }
 
 /*EoF*/
