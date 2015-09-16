@@ -58,7 +58,7 @@ $(SUBCLEAN): %.clean:
 
 %.o: %.s
 	@echo "  [AS] $@"
-	$(QUIET) $(AS) -o $@ -c $<
+	$(QUIET) $(AS) $(MCUFLAGS) -o $@ -c $<
 
 $(ARCHIVE): $(OBJFILES)
 	@echo "  [AR] $@"

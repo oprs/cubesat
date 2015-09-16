@@ -58,11 +58,11 @@ class FIFO
 		}
 
 
-        FIFO<T>& flush( void )
-        {
-            _r = _w = 0;
-            return *this;
-        }
+		FIFO<T>& flush( void )
+		{
+			_r = _w = 0;
+			return *this;
+		}
 
 
 		virtual void lock( void )

@@ -20,13 +20,14 @@ UART::UART( Bus& bus,
 	         const uint32_t IRQn,
 	         GPIOPin::Alt   alt )
 	: BusDevice( bus, iobase, periph, name ),
-	  _fo    ( FIFO<uint8_t>(1024) ),
+	  _fo    ( FIFO<uint8_t>(512) ),
 	  _rxPin ( rxPin ),
 	  _txPin ( txPin ),
 	  _IRQn  ( IRQn  ),
 	  _alt   ( alt   )
 {
 	_rdLock  = xSemaphoreCreateMutex();
+	_wrLock  = xSemaphoreCreateMutex();
 	_isrRXNE = xSemaphoreCreateBinary();
 }
 
@@ -35,6 +36,7 @@ UART::~UART()
 {
 	disable();
 
+	vSemaphoreDelete( _wrLock );
 	vSemaphoreDelete( _rdLock );
 }
 
@@ -146,6 +148,8 @@ size_t UART::write( const void *x, size_t len )
 	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 	size_t n;
 
+	xSemaphoreTake( _wrLock, portMAX_DELAY );
+
 	/*
 	 * write() might be called early, ie. before the UART is enabled
 	 * (boot process), in that case just feed the fifo and return
@@ -157,6 +161,7 @@ size_t UART::write( const void *x, size_t len )
 			(void)_fo.push( ((uint8_t*)x)[ n ] );
 		}
 
+		xSemaphoreGive( _wrLock );
 		return n;
 	}
 
@@ -185,6 +190,7 @@ size_t UART::write( const void *x, size_t len )
 
 	USARTx->CR1 |= USART_CR1_TXEIE;
 
+	xSemaphoreGive( _wrLock );
 	return n;
 }
 
