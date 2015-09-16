@@ -63,11 +63,11 @@ GPIOPin& GPIOPin::toggle( void )
 	return *this;
 }
 
-// Read GPIOPin status ( 0 = PullDn or 1 = PullUp )
+
 bool GPIOPin::read( void )
 {
 	GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
-	return ( ( GPIOx->IDR & _mask ) );
+	return ( GPIOx->IDR & _mask ) != 0;
 }
 
 
