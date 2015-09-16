@@ -45,6 +45,7 @@ namespace qb50 {
 		private:
 
 			xSemaphoreHandle _rdLock;  /**< global lock on the read end  */
+			xSemaphoreHandle _wrLock;  /**< global lock on the write end */
 			xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
 
 			FIFO<uint8_t>  _fo;
