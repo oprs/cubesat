@@ -20,7 +20,8 @@ UART::UART( Bus& bus,
 	         const uint32_t IRQn,
 	         GPIOPin::Alt   alt )
 	: BusDevice( bus, iobase, periph, name ),
-	  _fo    ( FIFO<uint8_t>(512) ),
+	  _fi    ( FIFO<uint8_t>(64) ),
+	  _fo    ( FIFO<uint8_t>(1024) ),
 	  _rxPin ( rxPin ),
 	  _txPin ( txPin ),
 	  _IRQn  ( IRQn  ),
@@ -74,6 +75,7 @@ UART& UART::enable( void )
 	baudRate( 9600 );
 
 	USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
+	//USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_TXEIE );
 	IRQ.enable( _IRQn );
 
 	return *this;
@@ -97,14 +99,17 @@ UART& UART::disable( void )
 
 size_t UART::read( void *x, size_t len )
 {
-	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-	size_t n;
+	size_t n = 0;
 
 	xSemaphoreTake( _rdLock, portMAX_DELAY );
 
-	for( n = 0 ; n < len ; ++n ) {
-		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
-		((uint8_t*)x)[ n ] = USARTx->DR;
+	while( n < len ) {
+		if( _fi.isEmpty() ) {
+			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+			continue;
+		}
+
+		((uint8_t*)x)[ n++ ] = _fi.pull();
 	}
 
 	xSemaphoreGive( _rdLock );
@@ -115,26 +120,32 @@ size_t UART::read( void *x, size_t len )
 
 size_t UART::readLine( void *x, size_t len )
 {
-	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-
-	uint16_t dr;
-	size_t n = 0;
+	uint8_t ch;
+	size_t  n = 0;
 
 	xSemaphoreTake( _rdLock, portMAX_DELAY );
 
 	while( n < len ) {
-		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
-		dr = USARTx->DR;
+		if( _fi.isEmpty() ) {
+			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+			continue;
+		}
 
-		if( dr == 0x0a ) break;
-		if( dr == 0x0d ) continue;
+		ch = _fi.pull();
 
-		((uint8_t*)x)[ n++ ] = (uint8_t)dr & 0xff;
+		if( ch == 0x0a ) break;
+		if( ch == 0x0d ) continue;
+
+		((uint8_t*)x)[ n++ ] = ch;
 	}
 
-	while( dr != 0x0a ) {
-		xSemaphoreTake( _isrRXNE, portMAX_DELAY );
-		dr = USARTx->DR;
+	while( ch != 0x0a ) {
+		if( _fi.isEmpty() ) {
+			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+			continue;
+		}
+
+		ch = _fi.pull();
 	}
 
 	xSemaphoreGive( _rdLock );
@@ -150,45 +161,16 @@ size_t UART::write( const void *x, size_t len )
 
 	xSemaphoreTake( _wrLock, portMAX_DELAY );
 
-	/*
-	 * write() might be called early, ie. before the UART is enabled
-	 * (boot process), in that case just feed the fifo and return
-	 */
-
-	if( _refCount == 0 ) {
-		for( n = 0 ; n < len ; ++n ) {
-			if( _fo.isFull() ) break;
-			(void)_fo.push( ((uint8_t*)x)[ n ] );
-		}
-
-		xSemaphoreGive( _wrLock );
-		return n;
-	}
-
-	/*
-	 * otherwise (UART is enabled), make sure that TXE interrupts are
-	 * disabled so that we can safely fill up the fifo
-	 */
-
-	USARTx->CR1 &= ~USART_CR1_TXEIE;
-
-	/*
-	 * any data not fitting in is just discarded;  overruns should not
-	 * be a problem since we're not transmitting _that_ much data over
-	 * the UARTs (except perhaps debug output, but who cares)
-	 */
+	if( _refCount != 0 )
+		USARTx->CR1 &= ~USART_CR1_TXEIE;
 
 	for( n = 0 ; n < len ; ++n ) {
 		if( _fo.isFull() ) break;
 		(void)_fo.push( ((uint8_t*)x)[ n ] );
 	}
 
-	/*
-	 * enable TXE interrupts again, and let the ISR pull from the fifo
-	 * at its own pace (= baud rate for this UART)
-	 */
-
-	USARTx->CR1 |= USART_CR1_TXEIE;
+	if(( _refCount != 0 ) && ( !_fo.isEmpty() ))
+		USARTx->CR1 |= USART_CR1_TXEIE;
 
 	xSemaphoreGive( _wrLock );
 	return n;
@@ -226,15 +208,21 @@ void UART::isr( void )
 	USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 	portBASE_TYPE hpTask  = pdFALSE;
 
-	if( USARTx->SR & USART_SR_RXNE) {
+	uint16_t SR = USARTx->SR;
+	uint16_t DR = USARTx->DR;
+
+	if( SR & USART_SR_RXNE ) {
 		USARTx->SR &= ~USART_SR_RXNE;
-		xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
+		if( !_fi.isFull() ) {
+			(void)_fi.push( DR & 0xff );
+			xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
+		}
 	}
 
-	if( USARTx->SR & USART_SR_TXE ) {
+	if( SR & USART_SR_TXE ) {
+		USARTx->SR &= ~USART_SR_TXE;
 		if( _fo.isEmpty() ) {
 			USARTx->CR1 &= ~USART_CR1_TXEIE;
-			USARTx->SR  &= ~USART_SR_TXE;
 		} else {
 			USARTx->DR = _fo.pull();
 		}

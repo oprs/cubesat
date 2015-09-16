@@ -34,6 +34,10 @@ class FIFO
 		{ return((( _r & _m ) == ( _w & _m )) && ( _r != _w )); }
 
 
+		unsigned avail( void )
+		{ return( _w - _r ); }
+
+
 		FIFO<T>& push( T val )
 		{
 			if( isFull() )

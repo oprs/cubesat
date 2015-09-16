@@ -48,6 +48,7 @@ namespace qb50 {
 			xSemaphoreHandle _wrLock;  /**< global lock on the write end */
 			xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
 
+			FIFO<uint8_t>  _fi;
 			FIFO<uint8_t>  _fo;
 
 			GPIOPin&       _rxPin;
