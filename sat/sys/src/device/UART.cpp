@@ -1,7 +1,7 @@
 
 #include "device/UART.h"
+#include "system/Logger.h"
 
-#include <iostream>
 #include <stm32f4xx.h>
 
 using namespace qb50;
@@ -20,8 +20,8 @@ UART::UART( Bus& bus,
 	         const uint32_t IRQn,
 	         GPIOPin::Alt   alt )
 	: BusDevice( bus, iobase, periph, name ),
-	  _fi    ( FIFO<uint8_t>(64) ),
-	  _fo    ( FIFO<uint8_t>(1024) ),
+	  _rxFIFO( FIFO<uint8_t>(64) ),
+	  _txFIFO( FIFO<uint8_t>(2048) ),
 	  _rxPin ( rxPin ),
 	  _txPin ( txPin ),
 	  _IRQn  ( IRQn  ),
@@ -55,11 +55,6 @@ UART& UART::enable( void )
 
 	bus.enable( this );
 
-	std::cout << _name << ": System UART controller at " << bus.name()
-	          << ", rx: " << _rxPin.name()
-	          << ", tx: " << _txPin.name()
-	          << "\r\n";
-
 	_rxPin.enable()
 	      .pullUp()
 	      .alt( _alt );
@@ -68,6 +63,11 @@ UART& UART::enable( void )
 	      .pullUp()
 	      .alt( _alt );
 
+	LOG << _name << ": System UART controller at " << bus.name()
+	    << ", rx: " << _rxPin.name()
+	    << ", tx: " << _txPin.name()
+	    << std::flush;
+
 	USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
 	USARTx->CR2 = 0;
 	USARTx->CR3 = 0;
@@ -75,7 +75,6 @@ UART& UART::enable( void )
 	baudRate( 9600 );
 
 	USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-	//USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_TXEIE );
 	IRQ.enable( _IRQn );
 
 	return *this;
@@ -104,12 +103,12 @@ size_t UART::read( void *x, size_t len )
 	xSemaphoreTake( _rdLock, portMAX_DELAY );
 
 	while( n < len ) {
-		if( _fi.isEmpty() ) {
+		if( _rxFIFO.isEmpty() ) {
 			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
 			continue;
 		}
 
-		((uint8_t*)x)[ n++ ] = _fi.pull();
+		((uint8_t*)x)[ n++ ] = _rxFIFO.pull();
 	}
 
 	xSemaphoreGive( _rdLock );
@@ -120,18 +119,18 @@ size_t UART::read( void *x, size_t len )
 
 size_t UART::readLine( void *x, size_t len )
 {
-	uint8_t ch;
-	size_t  n = 0;
+	uint8_t ch = 0x00;
+	size_t   n = 0;
 
 	xSemaphoreTake( _rdLock, portMAX_DELAY );
 
 	while( n < len ) {
-		if( _fi.isEmpty() ) {
+		if( _rxFIFO.isEmpty() ) {
 			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
 			continue;
 		}
 
-		ch = _fi.pull();
+		ch = _rxFIFO.pull();
 
 		if( ch == 0x0a ) break;
 		if( ch == 0x0d ) continue;
@@ -140,12 +139,12 @@ size_t UART::readLine( void *x, size_t len )
 	}
 
 	while( ch != 0x0a ) {
-		if( _fi.isEmpty() ) {
+		if( _rxFIFO.isEmpty() ) {
 			xSemaphoreTake( _isrRXNE, portMAX_DELAY );
 			continue;
 		}
 
-		ch = _fi.pull();
+		ch = _rxFIFO.pull();
 	}
 
 	xSemaphoreGive( _rdLock );
@@ -165,14 +164,15 @@ size_t UART::write( const void *x, size_t len )
 		USARTx->CR1 &= ~USART_CR1_TXEIE;
 
 	for( n = 0 ; n < len ; ++n ) {
-		if( _fo.isFull() ) break;
-		(void)_fo.push( ((uint8_t*)x)[ n ] );
+		if( _txFIFO.isFull() ) break;
+		(void)_txFIFO.push( ((uint8_t*)x)[ n ] );
 	}
 
-	if(( _refCount != 0 ) && ( !_fo.isEmpty() ))
+	if(( _refCount != 0 ) && ( !_txFIFO.isEmpty() ))
 		USARTx->CR1 |= USART_CR1_TXEIE;
 
 	xSemaphoreGive( _wrLock );
+
 	return n;
 }
 
@@ -194,7 +194,7 @@ UART& UART::baudRate( unsigned rate )
 
 	USARTx->BRR = (uint16_t)tmp32;
 
-	std::cout << _name << ": Baud rate set to " << rate << "\r\n";
+	LOG << _name << ": Baud rate set to " << rate << std::flush;
 
 	return *this;
 }
@@ -213,18 +213,18 @@ void UART::isr( void )
 
 	if( SR & USART_SR_RXNE ) {
 		USARTx->SR &= ~USART_SR_RXNE;
-		if( !_fi.isFull() ) {
-			(void)_fi.push( DR & 0xff );
+		if( !_rxFIFO.isFull() ) {
+			(void)_rxFIFO.push( DR & 0xff );
 			xSemaphoreGiveFromISR( _isrRXNE, &hpTask );
 		}
 	}
 
 	if( SR & USART_SR_TXE ) {
 		USARTx->SR &= ~USART_SR_TXE;
-		if( _fo.isEmpty() ) {
+		if( _txFIFO.isEmpty() ) {
 			USARTx->CR1 &= ~USART_CR1_TXEIE;
 		} else {
-			USARTx->DR = _fo.pull();
+			USARTx->DR = _txFIFO.pull();
 		}
 	}
 

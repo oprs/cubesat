@@ -11,7 +11,7 @@ namespace qb50 {
 	{
 		public:
 
-			MAX111x( SPI& spi, GPIOPin& csPin );
+			MAX111x( SPI& spi, const char *name, GPIOPin& csPin );
 			~MAX111x();
 
 			MAX111x& enable  ( void );
@@ -31,6 +31,11 @@ namespace qb50 {
 			};
 
 			int readChannel( Channel sel );
+
+		private:
+
+			const char *_name;
+
 	};
 
 	extern qb50::MAX111x ADC1;

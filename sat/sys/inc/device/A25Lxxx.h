@@ -80,8 +80,8 @@ namespace qb50 {
 			A25Lxxx& _WIPWait( unsigned ms = 10 );
 	};
 
-	extern qb50::A25Lxxx flash0;
-	extern qb50::A25Lxxx flash1;
+	extern qb50::A25Lxxx MEM0;
+	extern qb50::A25Lxxx MEM1;
 
 } /* qb50 */
 

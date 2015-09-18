@@ -1,14 +1,11 @@
 
-
 #include "system/qb50.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
 
 #undef errno
-
 extern int errno;
-
 
 
 extern "C" {
@@ -123,9 +120,12 @@ ssize_t _write( int fd, const void *x, size_t len )
 {
 	(void)fd;
 
-	return
-		qb50::UART3.write( x, len );
+	(void)qb50::UART3.write( x, len );
 
+	// Always pretend that write() was successful, regardless of UART6
+	// occasionnally dropping some of the data (i.e. _txFIFO overflow).
+
+	return len;
 }
 
 /*EoF*/

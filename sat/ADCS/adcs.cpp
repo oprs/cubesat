@@ -267,17 +267,23 @@ namespace qb50 {
 //  - - - - - - - - - - - - - -  //
 
 	/*               SPI   name     csPin */
-	A25Lxxx softMem( SPI3, "flash0", PA15 );  /* CS6 - mémoire soft    */
+	A25Lxxx MEM0( SPI3, "MEM0", PA15 );  /* CS6 - mémoire soft    */
 
 //  - - - - - - - - - - -  //
 //  O N B O A R D   A D C  //
 //  - - - - - - - - - - -  //
 
 	/*              SPI  csPin */
-	//MAX111x maxADC( SPI3, PA4 ); /* CS1 - ADC carte energie */
-	//MAX111x maxADC( SPI3, PA5 ); /* CS2 - ADC carte energie */
-	MAX111x maxADC( SPI3, PA6 ); /* CS3 - ADC carte ODB     */
-	//MAX111x maxADC( SPI3, PC4 ); /* CS4 - ADC carte FiPEX   */
+	//MAX111x maxADC( SPI3, "ADC1", PA4 ); /* CS1 - ADC carte energie */
+	//MAX111x maxADC( SPI3, "ADC2", PA5 ); /* CS2 - ADC carte energie */
+	MAX111x maxADC( SPI3, "ADC3", PA6 ); /* CS3 - ADC carte ODB     */
+	//MAX111x maxADC( SPI3, "ADC4", PC4 ); /* CS4 - ADC carte FiPEX   */
+
+//  - - - - - -  //
+//  L O G G E R  //
+//  - - - - - -  //
+
+	Logger LOG;
 
 
 //  - - - - - - - - - - -  //

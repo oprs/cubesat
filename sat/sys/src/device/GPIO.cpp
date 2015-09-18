@@ -1,7 +1,6 @@
 
-#include <iostream>
-
 #include "device/GPIO.h"
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -30,7 +29,7 @@ GPIO& GPIO::enable( void )
 
 	bus.enable( this );
 
-	std::cout << _name << ": System GPIO controller at " << bus.name() << "\r\n";
+	LOG << _name << ": System GPIO controller at " << bus.name() << std::flush;
 
 	return *this;
 }

@@ -1,5 +1,6 @@
 
 #include "device/MAX111x.h"
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -8,8 +9,9 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-MAX111x::MAX111x( SPI& spi, GPIOPin& csPin )
-	: SPIDevice( spi, csPin, SPIDevice::ActiveLow )
+MAX111x::MAX111x( SPI& spi, const char *name, GPIOPin& csPin )
+	: SPIDevice( spi, csPin, SPIDevice::ActiveLow ),
+	  _name( name )
 { ; }
 
 
@@ -23,7 +25,15 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::enable( void )
 {
+	if( _incRef() > 0 )
+		return *this;
+
 	_spi.enable();
+
+	LOG << _name << ": MAX111x Serial ADC at " << _spi.name()
+	    << ", cs: " << _csPin.name()
+	    << std::flush;
+
 	return *this;
 }
 
@@ -46,7 +56,10 @@ int MAX111x::readChannel( Channel sel )
 	_spi.pollXfer( ConvCmd, ConvRes, sizeof( ConvCmd ));
 	deselect();
 
-	return(( ConvRes[1] << 8 ) | ConvRes[2] );
+	//hexdump( ConvRes, 4 );
+
+	return
+		(( ConvRes[2] << 8 ) | ConvRes[3] ) >> 6;
 }
 
 /*EoF*/

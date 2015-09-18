@@ -1,7 +1,6 @@
 
 #include "device/A25Lxxx.h"
-
-#include <stdio.h>
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -23,6 +22,32 @@ using namespace qb50;
 
 /* typical Page Program Cycle Time (ms) */
 #define tPP 2
+
+/* A25Lxxx parts definitions */
+
+struct A25LPart {
+   const uint16_t sig;  /* JEDEC signature */
+   const uint16_t mask; /* signature mask  */
+   const char    *name; /* part name       */
+   const size_t   bpc;  /* blocks per chip */
+   const size_t   ppb;  /* pages per block */
+   const size_t   bpp;  /* bytes per page  */
+};
+
+static A25LPart parts[] = {
+   /* sig.    mask    part #     bpc  ppb  bpp */
+   { 0x3010, 0xffff, "A25L512",    1, 256, 256 }, /* 512 Kbit */
+   { 0x3011, 0xffff, "A25L010",    2, 256, 256 }, /*   1 Mbit */
+   { 0x3012, 0xffff, "A25L020",    4, 256, 256 }, /*   2 Mbit */
+   { 0x3013, 0xffff, "A25L040",    8, 256, 256 }, /*   4 Mbit */
+   { 0x3014, 0xffff, "A25L080",   16, 256, 256 }, /*   8 Mbit */
+   { 0x3015, 0xffff, "A25L016",   32, 256, 256 }, /*  16 Mbit */
+   { 0x4015, 0xffff, "A25LQ16",   32, 256, 256 }, /*  16 Mbit */
+   { 0x3016, 0xffff, "A25L032",   64, 256, 256 }, /*  32 Mbit */
+   { 0x4016, 0xffff, "A25LQ32A",  64, 256, 256 }, /*  32 Mbit */
+   { 0x4017, 0xffff, "A25LQ64",  128, 256, 256 }, /*  64 Mbit */
+   {      0,      0,  NULL,        0,   0,   0 }
+};
 
 /* SPI commands */
 
@@ -55,28 +80,60 @@ A25Lxxx& A25Lxxx::enable( void )
 {
 	RDIDResp rdid;
 
+	if( _incRef() > 0 )
+		return *this;
+
 	_spi.enable();
 
 	(void)RDID( &rdid );
 
-	(void)printf( "%s: AMIC A25L", name() );
+#if 0
 
-	switch( rdid.memType ) {
-		case 0x30: (void)printf( "032"  ); break;
-		case 0x40: (void)printf( "Q32A" ); break;
-		default:   (void)printf( "xxx"  ); break;
-	}
+	uint16_t  sig  = ( rdid.memType << 8 ) | rdid.memCap;
+	A25LPart *part = parts;
 
-	(void)printf( " Serial Flash Memory (" );
+	while(( part->mask != 0 ) && ( part->sig != ( sig & part->mask )))
+		++part;
 
-	switch( rdid.memCap ) {
-		case 0x16: (void)printf( "32Mbit"  ); break;
-		default:   (void)printf( "unknown" ); break;
-	}
+	if( part->mask == 0 )
+		throw( "unsupported flash chip" ); /* XXX exception... */
 
-	(void)printf( ") at %s, cs: %s\r\n", _spi.name(), _csPin.name() );
+/*
+	_bpc = part->bpc;
+	_ppb = part->ppb;
+	_bpp = part->bpp;
+*/
+
+	LOG << _name << ": AMIC " << part->name
+	    << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
+	    << _spi.name() << ", cs: " << _csPin.name()
+	    << std::flush;
 
 	return *this;
+
+#else
+
+	LOG << _name << ": AMIC A25L";
+
+	switch( rdid.memType ) {
+		case 0x30: LOG << "032";  break;
+		case 0x40: LOG << "Q32A"; break;
+		default:   LOG << "xxx";  break;
+	}
+
+	LOG << " Serial Flash Memory (";
+
+	switch( rdid.memCap ) {
+		case 0x16: LOG << "32Mbit";  break;
+		default:   LOG << "unknown"; break;
+	}
+
+	LOG << ") at " << _spi.name() << ", cs: " << _csPin.name()
+	    << std::flush;
+
+	return *this;
+
+#endif
 }
 
 

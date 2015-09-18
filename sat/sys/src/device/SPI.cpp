@@ -1,8 +1,8 @@
 
 #include "device/SPI.h"
 #include "device/UART.h"
+#include "system/Logger.h"
 
-#include <iostream>
 #include <stm32f4xx.h>
 
 using namespace qb50;
@@ -50,11 +50,11 @@ SPI& SPI::enable( void )
 
 	bus.enable( this );
 
-	std::cout << _name << ": System SPI controller at " << bus.name()
-	          << ", clk: " << _clkPin.name()
-	          << ", miso: " << _stMISO._pin.name()
-	          << ", mosi: " << _stMOSI._pin.name()
-	          << "\r\n";
+	LOG << _name << ": System SPI controller at " << bus.name()
+	    << ", clk: " << _clkPin.name()
+	    << ", miso: " << _stMISO._pin.name()
+	    << ", mosi: " << _stMOSI._pin.name()
+	    << std::flush;
 
 	_clkPin.enable()
 	       .pullDn()

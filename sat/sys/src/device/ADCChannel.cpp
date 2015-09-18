@@ -29,19 +29,11 @@ ADCChannel::~ADCChannel()
 //  - - - - - - - - - - - - - -  //
 
 ADCChannel& ADCChannel::enable( void )
-{
-	_adc.enable();
-
-	return *this;
-}
+{ return *this; }
 
 
 ADCChannel& ADCChannel::disable( void )
-{
-	_adc.disable(); /* _adc.refcount */
-
-	return *this;
-}
+{ return *this; }
 
 
 float ADCChannel::read( void )

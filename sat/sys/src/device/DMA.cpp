@@ -1,7 +1,7 @@
 
 #include "device/DMA.h"
+#include "system/Logger.h"
 
-#include <iostream>
 #include <stm32f4xx.h>
 
 #undef DMA1
@@ -39,7 +39,7 @@ DMA& DMA::enable( void )
 
 	bus.enable( this );
 
-	std::cout << _name << ": System DMA controller at " << bus.name() << "\r\n";
+	LOG << _name << ": System DMA controller at " << bus.name() << std::flush;
 
 	return *this;
 }
