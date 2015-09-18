@@ -103,17 +103,7 @@ void CTCSS::modeRelaisFM()
 
                 int T_PA = 0;
 
-                MAX111x::ConvResp conv;
-                ADC_ODB.enable();
-
-                //for( ;; ) {
-                ADC_ODB.conv( MAX111x::CH7, &conv ); //valeur obtenue par ADC entre 0 et 255
-
-                hexdump( &conv, sizeof( conv ));
-
-                T_PA = (int)conv.rb3 << 8 | conv.rb4;
-                T_PA = T_PA >> 3;  //prise en compte de 8bit de conversion adc (sinon >> 6 préalable).
-                T_PA = ( T_PA * 0.2 ) - 273; //conversion du numerique en °C.
+                T_PA = (int)ADC3CH7.read() - 273;
 
                 printf( "%d\r\n", T_PA );
                 printf("%d\r\n", PA8.read());

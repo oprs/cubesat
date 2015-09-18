@@ -47,7 +47,7 @@ void thread1( Thread *self )
 	A25Lxxx::RDIDResp rdid;
 	A25Lxxx::REMSResp rems;
 	A25Lxxx::RDSRResp rdsr;
-	MAX111x::ConvResp conv;
+	//MAX111x::ConvResp conv;
 
 	uint8_t *buf = new uint8_t[1024];
 
@@ -73,10 +73,10 @@ void thread1( Thread *self )
 	};
 //#endif
 
+#if 0
 	flash1.enable();
 	flash0.enable();
 
-#if 0
 	(void)printf( "Sector Erase...\r\n" );
 
 	flash1.WREN();

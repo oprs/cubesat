@@ -12,6 +12,7 @@
 #include "device/GPIO.h"
 #include "device/UART.h"
 #include "device/A25Lxxx.h"
+#include "device/ADC.h"
 #include "device/MAX111x.h"
 #include "device/ADCChannel.h"
 #include "device/AX25Out.h"
@@ -19,8 +20,8 @@
 #include "device/FIFO.hpp"
 #include "device/Satellite.h"
 
-//#include "commun/State.h"
-//#include "commun/Raw.h"
+#include "commun/State.h"
+#include "commun/Raw.h"
 
 #include "system/Application.h"
 #include "system/UserLock.h"
