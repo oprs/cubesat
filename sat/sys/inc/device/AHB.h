@@ -22,6 +22,7 @@ namespace qb50 {
 			AHB( BusId id, const char *name );
 			~AHB();
 
+			AHB&     init    ( void );
 			AHB&     enable  ( BusDevice *dev );
 			AHB&     disable ( BusDevice *dev );
 			uint32_t freq    ( void );

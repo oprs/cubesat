@@ -6,16 +6,17 @@ using namespace qb50;
 
 void GPSThread( Thread *self )
 {
-	uint8_t *x = new uint8_t[ 128 ];
-	size_t n;
+	uint8_t c;
 
-	(void)self; /* prevent gcc from complaining about self being unused */
+	(void)self;
 
-	UART3.enable();
+	LOG << "GPSThread starting..." << std::flush;
+
+	PC3.enable().out().off(); /* ON_OFF_GPS */
 
 	for( ;; ) {
-		n = UART3.read( x, 128 );
-		UART6.write( x, n );
+		(void)UART3.read( &c, 1 );
+		(void)UART2.write( &c, 1 );
 	}
 }
 

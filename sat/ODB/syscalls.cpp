@@ -120,7 +120,7 @@ ssize_t _write( int fd, const void *x, size_t len )
 {
 	(void)fd;
 
-	(void)qb50::UART3.write( x, len );
+	(void)qb50::UART6.write( x, len );
 
 	// Always pretend that write() was successful, regardless of UART6
 	// occasionnally dropping some of the data (i.e. _txFIFO overflow).

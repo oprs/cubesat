@@ -1,207 +1,142 @@
+
 #include "system/qb50.h"
-#include "AX25/AX25.h"
-#include "CTCSS/CTCSS.h"
-
-#ifdef XTRUITES
-#include "XTRUITES/textualInterface.h"
-#endif
-
+#include "CMD/FormParser.h"
 
 using namespace std;
 using namespace qb50;
 
 
-extern void ADCSThread  ( Thread *self );
+#define LED1 PC5
+#define LED2 PB0
+#define LED3 PB1
+#define LED4 PA1
+
+#define _QB50_NMODES  13
+#define _QB50_NTHREADS 6
+
+
+QueueHandle_t cmdQueue;
+
+
+extern void CMDThread   ( Thread *self );
 extern void CWThread    ( Thread *self );
-extern void FiPEXThread ( Thread *self );
 extern void GPSThread   ( Thread *self );
-extern void CTCSSThread ( Thread *self );
+extern void ADCSThread  ( Thread *self );
+extern void PMUThread   ( Thread *self );
+extern void FiPEXThread ( Thread *self );
+extern void WODEXThread ( Thread *self );
 
 
-/*
- * LEDS:
- *
- * 12: green   PD12
- * 13: orange  PD13
- * 14: red     PD14
- * 15: blue    PD15
- */
+static unsigned MT[ _QB50_NMODES ] = {
 
-#if 0
- #define LED1 PD12
- #define LED2 PD13
- #define LED3 PD14
- #define LED4 PD15
-#else
- #define LED1 PC5
- #define LED2 PB0
- #define LED3 PB1
- #define LED4 PA1
-#endif
+         /*     +------------ CW
+                | +---------- GPS
+                | | +-------- ADCS
+                | | | +------ Power
+                | | | | +---- FiPEX
+                | | | | | +-- WODEX
+                | | | | | |                            */
+   0x00, /* 0 0 0 0 0 0 0 0 - Standby                  */
+   0x00, /* 0 0 0 0 0 0 0 0 - Charge batteries         */
+   0x00, /* 0 0 0 0 0 0 0 0 - Relais FM                */
+   0x00, /* 0 0 0 0 0 0 0 0 - Transmission Telemesures */
+   0x00, /* 0 0 0 0 0 0 0 0 - Experience               */
+   0x00, /* 0 0 0 0 0 0 0 0 - WOD                      */
+   0x00, /* 0 0 0 0 0 0 0 0 - Controle d'attitude      */
+   0x00, /* 0 0 0 0 0 0 0 0 - Mesure d'attitude        */
+   0x00, /* 0 0 0 0 0 0 0 0 - CW                       */
+   0x00, /* 0 0 0 0 0 0 0 0 - Lecture GPS              */
+   0x00, /* 0 0 0 0 0 0 0 0 - Initialisation           */
+   0x00, /* 0 0 0 0 0 0 0 0 - Test controle d'attitude */
+   0x00, /* 0 0 0 0 0 0 0 0 - Test mesure d'attitude   */
 
-void thread1( Thread *self )
+};
+
+
+static Thread *tv[ _QB50_NTHREADS ];
+
+
+void control( Thread *self )
 {
+   CForm cform;
 
-	(void)self;
+   LOG << "[MODE_INIT]" << std::flush;
 
-	A25Lxxx::RDIDResp rdid;
-	A25Lxxx::REMSResp rems;
-	A25Lxxx::RDSRResp rdsr;
-	//MAX111x::ConvResp conv;
+   SAT.enable();
 
-	uint8_t *buf = new uint8_t[1024];
+MEM0.enable();
+MEM1.enable();
+   LOG << "Waiting for 30mn..." << std::flush;
+   delay( 5000 );
+   LOG << "Done waiting" << std::flush;
+MEM1.disable();
+MEM0.disable();
 
-	PA0.enable().pullUp().out().on();
-	PA4.enable().pullUp().out().on();
-	PA5.enable().pullUp().out().on();
-	PA6.enable().pullUp().out().on();
-	PA7.enable().pullUp().out().on();
-	PC4.enable().pullUp().out().on();
+   SAT.aDeploy();
 
-    PC10.enable().out().off();
+   (void)self;
 
-//#if 0
-	uint8_t rom[ 64 ] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-		0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-		0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-		0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
-		0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
-		0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
-		0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-		0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
-	};
-//#endif
+   (void)createThread( "CMDThread", CMDThread );
 
-#if 0
-	flash1.enable();
-	flash0.enable();
-
-	(void)printf( "Sector Erase...\r\n" );
-
-	flash1.WREN();
-	flash1.SE( 0 );
-
-	(void)printf( "Page Program...\r\n" );
-
-	flash1.WREN();
-	flash1.PP( 0, rom, 64 );
-#endif
-
-	for( ;; ) {
-		//LED1.toggle();
-		//PC10.toggle();
-		//LED2.on();
+   tv[ 5 ] = createThread( "CWThread",    CWThread    );
+   tv[ 4 ] = createThread( "GPSThread",   GPSThread   );
 /*
-		(void)printf( "[DATA]\r\n" );
-
-		flash1.RDID( &rdid );
-		hexdump( &rdid, sizeof( rdid ));
-
-		flash1.REMS( &rems );
-		hexdump( &rems, sizeof( rems ));
-
-		flash1.RDSR1( &rdsr );
-		hexdump( &rdsr, sizeof( rdsr ));
-
-		flash1.RDSR2( &rdsr );
-		hexdump( &rdsr, sizeof( rdsr ));
-
-		flash1.READ( 0, buf, 64 );
-		hexdump( buf, 64 );
-
-		(void)printf( "[SOFT]\r\n" );
-
-		flash0.RDID( &rdid );
-		hexdump( &rdid, sizeof( rdid ));
-
-
-		flash0.REMS( &rems );
-		hexdump( &rems, sizeof( rems ));
-
-		flash0.RDSR1( &rdsr );
-		hexdump( &rdsr, sizeof( rdsr ));
-
-		flash0.RDSR2( &rdsr );
-		hexdump( &rdsr, sizeof( rdsr ));
-
-		flash0.READ( 0, buf, 64 );
-		hexdump( buf, 64 );
-
+   tv[ 3 ] = createThread( "ADCSThread",  ADCSThread  );
+   tv[ 2 ] = createThread( "PMUThread",   PMUThread   );
 */
-		LED2.on();
-		delay( 500 );
-	}
+   tv[ 1 ] = createThread( "FiPEXThread", FiPEXThread );
+/*
+   tv[ 0 ] = createThread( "WODEXThread", WODEXThread );
+*/
 
-	delete[] buf;
+   for( ;; ) {
+      xQueueReceive( cmdQueue, &cform, portMAX_DELAY );
+      if( cform.argc > 0 ) {
+         std::cout << "+ C" << cform.argv[0];
+         for( int i = 1 ; i < cform.argc ; ++i )
+            std::cout << ',' << cform.argv[i];
+         std::cout << "\r\n";
+      }
+   }
 }
-
-
-void AX25NIMAThread(Thread *self )
-{
-
-	int cnt = 0;
-    uint8_t tmp8[8] = {0xAA, 0xFF, 0x01, 0xCB, 0xFF, 0x23, 0xE9, 0x44};
-
-	for( ;; ) {
-		(void)printf( "hello: %p - %d\r\n", self, cnt );
-		++cnt;
-
-		//ax25.sendPacket(tmp8, 8);
-		delay( 100 );
-	}
-}
-
-
-#ifdef XTRUITES
-void XTRUITESThread(Thread *self )
-{
-    (void)self;
-
-    UART3.enable();
-
-    uint8_t keyPress;
-    XTRUITES *interface= new XTRUITES();
-
-    while(1)
-    {
-        UART3.read(&keyPress, 1);
-        interface->readKey(keyPress);
-        delay(100);
-    }
-}
-#endif
 
 
 int main( void )
 {
+   SAT.init();
 
+#if 0
+   PA0.enable().out().on();   /* CS6 - MEM0 */
+   PA4.enable().out().on();   /* CS1 - ADC1 */
+   PA5.enable().out().on();   /* CS2 - ADC2 */
+   PA6.enable().out().on();   /* CS3 - ADC3 */
+   PA7.enable().out().on();   /* CS4 - MEM1 */
+   PC4.enable().out().on();   /* CS5 - ADC4 */
 
-	//LED1.enable().out().off();
-	//LED2.enable().out().on();
-	//LED3.enable().out().off();
-	//LED4.enable().out().off();
+   UART6.enable();            /* AX.25      */
+   UART1.enable();            /* ADCS       */
+   UART2.enable();            /* FiPEX      */
+   UART3.enable();            /* GPS        */
 
-    UART3.enable();
-
-    //EXTI1.trigged( PC9 );
-	/* Antenne */
-	//PA15.enable().out().off();
-
-    //ax25.enable();
-
-	//(void)createThread("Thread 1", thread1 );
-/*
-#ifdef XTRUITES
-	(void)createThread("XTRUITE Thread"             , XTRUITESThread            );
+   MEM0.enable();
+   MEM1.enable();
+   ADC1.enable();
+   ADC2.enable();
+   ADC3.enable();
+   ADC4.enable();
 #endif
-   (void)createThread("AX25NIMAThread"             , AX25NIMAThread            );
-*/
-   (void)createThread("CTCSSThread", CTCSSThread );
 
-	run();
+   // GPS.enable();
 
-	for( ;; );
+   for( int i = 0 ; i < _QB50_NTHREADS ; ++i )
+      tv[i] = (Thread*)0;
+
+   cmdQueue = xQueueCreate( 16, sizeof( CForm ));
+   (void)createThread( "Control", control );
+
+   LOG << "Starting FreeRTOS..." << std::flush;
+
+   run();
 }
 
 /*EoF*/

@@ -1,6 +1,6 @@
 
 #include "device/SPIDevice.h"
-
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -9,54 +9,78 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPIDevice::SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode )
-	: _spi( spi ), _csPin( csPin ), _csMode( csMode )
-{
-	_csPin.enable();
-
-	if( _csMode == ActiveLow ) {
-	   _csPin.on();
-	} else {
-	   _csPin.off();
-	}
-}
+SPIDevice::SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode, const char *name )
+   : Device( name ), _spi( spi ), _csPin( csPin ), _csMode( csMode )
+{ ; }
 
 
 SPIDevice::~SPIDevice()
-{
-	_csPin.disable();
-}
+{ ; }
 
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
 
+SPIDevice& SPIDevice::init( void )
+{
+   if( _csMode == ActiveLow ) {
+      _csPin.enable().out().on();
+   } else {
+      _csPin.enable().out().off();
+   }
+
+   return *this;
+}
+
+
+SPIDevice& SPIDevice::enable( void )
+{
+   if( _incRef() == 0 ) {
+      _spi.enable();
+      LOG << _spi.name() << ": " << _name << " enabled" << std::flush;
+   }
+
+   return *this;
+}
+
+
+SPIDevice& SPIDevice::disable( void )
+{
+   if( _decRef() == 0 ) {
+      LOG << _spi.name() << ": " << _name << " disabled" << std::flush;
+      _spi.disable();
+   }
+
+   return *this;
+}
+
+
 SPIDevice& SPIDevice::select( void )
 {
-	_spi.grab();
+   _spi.grab();
 
-	if( _csMode == ActiveLow ) {
-	   _csPin.off();
-	} else {
-	   _csPin.on();
-	}
+   if( _csMode == ActiveLow ) {
+      _csPin.off();
+   } else {
+      _csPin.on();
+   }
 
-	return *this;
+   return *this;
 }
 
 
 SPIDevice& SPIDevice::deselect( void )
 {
-	if( _csMode == ActiveLow ) {
-	   _csPin.on();
-	} else {
-	   _csPin.off();
-	}
+   if( _csMode == ActiveLow ) {
+      _csPin.on();
+   } else {
+      _csPin.off();
+   }
 
-	_spi.release();
+   _spi.release();
 
-	return *this;
+   return *this;
 }
 
 

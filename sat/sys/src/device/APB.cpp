@@ -4,6 +4,7 @@
 #include <stm32f4xx_rcc.h>
 
 #include "device/APB.h"
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -24,45 +25,54 @@ APB::~APB()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
+APB& APB::init( void )
+{
+   LOG << _name << ": Advanced Peripheral Bus (AMBA)"
+       << std::flush;
+
+   return *this;
+}
+
+
 APB& APB::enable( BusDevice *dev )
 {
-	switch( _id ) {
-		case BUS1: RCC->APB1ENR |= dev->periph; break;
-		case BUS2: RCC->APB2ENR |= dev->periph; break;
-	}
+   switch( _id ) {
+      case BUS1: RCC->APB1ENR |= dev->periph; break;
+      case BUS2: RCC->APB2ENR |= dev->periph; break;
+   }
 
-	//std::cout << _name << ": " << dev->name() << " enabled\r\n";
+   LOG << _name << ": " << dev->name() << " enabled" << std::flush;
 
-	return *this;
+   return *this;
 }
 
 
 APB& APB::disable( BusDevice *dev )
 {
-	switch( _id ) {
-		case BUS1: RCC->APB1ENR &= ~dev->periph; break;
-		case BUS2: RCC->APB2ENR &= ~dev->periph; break;
-	}
+   switch( _id ) {
+      case BUS1: RCC->APB1ENR &= ~dev->periph; break;
+      case BUS2: RCC->APB2ENR &= ~dev->periph; break;
+   }
 
-	//std::cout << _name << ": " << dev->name() << " disabled\r\n";
+   LOG << _name << ": " << dev->name() << " disabled" << std::flush;
 
-	return *this;
+   return *this;
 }
 
 
 uint32_t APB::freq( void )
 {
-	RCC_ClocksTypeDef clocks;
-	RCC_GetClocksFreq( &clocks );
+   RCC_ClocksTypeDef clocks;
+   RCC_GetClocksFreq( &clocks );
 
-	uint32_t rv = 0;
+   uint32_t rv = 0;
 
-	switch( _id ) {
-		case BUS1: rv = clocks.PCLK1_Frequency; break;
-		case BUS2: rv = clocks.PCLK2_Frequency; break;
-	}
+   switch( _id ) {
+      case BUS1: rv = clocks.PCLK1_Frequency; break;
+      case BUS2: rv = clocks.PCLK2_Frequency; break;
+   }
 
-	return rv;
+   return rv;
 }
 
 /*EoF*/

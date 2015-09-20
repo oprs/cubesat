@@ -21,6 +21,7 @@ namespace qb50 {
 			APB( BusId id, const char *name );
 			~APB();
 
+			APB&     init    ( void );
 			APB&     enable  ( BusDevice *dev );
 			APB&     disable ( BusDevice *dev );
 			uint32_t freq    ( void );

@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins )
-	: BusDevice( bus, iobase, periph, name ), _id( id ), _pins( pins )
+   : BusDevice( bus, iobase, periph, name ), _id( id ), _pins( pins )
 { ; }
 
 
@@ -22,23 +22,28 @@ GPIO::~GPIO()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
+GPIO& GPIO::init( void )
+{
+   LOG << _name << ": System GPIO controller at " << bus.name() << std::flush;
+   return *this;
+}
+
+
 GPIO& GPIO::enable( void )
 {
-	if( _incRef() > 0 )
-		return *this;
+   if( _incRef() == 0 )
+      bus.enable( this );
 
-	bus.enable( this );
-
-	LOG << _name << ": System GPIO controller at " << bus.name() << std::flush;
-
-	return *this;
+   return *this;
 }
 
 
 GPIO& GPIO::disable( void )
 {
-	//bus.disable( this );
-	return *this;
+   if( _decRef() == 0 )
+      bus.disable( this );
+
+   return *this;
 }
 
 /*EoF*/

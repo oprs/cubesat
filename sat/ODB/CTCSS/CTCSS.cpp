@@ -91,7 +91,7 @@ void CTCSS::modeRelaisFM()
     if ( vp == pdPASS )
     {
 
-        printf( "------------------------------------\r\n" );
+        //printf( "------------------------------------\r\n" );
 
         if( PA8.read() == true )
 
@@ -105,8 +105,8 @@ void CTCSS::modeRelaisFM()
 
                 T_PA = (int)ADC3CH7.read() - 273;
 
-                printf( "%d\r\n", T_PA );
-                printf("%d\r\n", PA8.read());
+                //printf( "%d\r\n", T_PA );
+                //printf("%d\r\n", PA8.read());
                 /*delay( 1000 );
                 }
                 return;*/

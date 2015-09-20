@@ -8,32 +8,26 @@
 
 namespace qb50 {
 
-	class BusDevice : public Device
-	{
-		public:
+   class BusDevice : public Device
+   {
+      public:
 
-			BusDevice( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name )
-				: bus( bus ), iobase( iobase ), periph( periph ), _name( name )
-			{ ; }
+         BusDevice( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name )
+            : Device( name ), bus( bus ), iobase( iobase ), periph( periph )
+         { ; }
 
-			virtual ~BusDevice()
-			{ ; }
+         virtual ~BusDevice()
+         { ; }
 
-			const char *name ( void ) const
-			{ return _name; }
+         Bus&           bus;
+         const uint32_t iobase;
+         const uint32_t periph;
 
-			Bus&           bus;
-			const uint32_t iobase;
-			const uint32_t periph;
+         virtual BusDevice& init    ( void ) = 0;
+         virtual BusDevice& enable  ( void ) = 0;
+         virtual BusDevice& disable ( void ) = 0;
 
-			virtual BusDevice& enable  ( void ) = 0;
-			virtual BusDevice& disable ( void ) = 0;
-
-		protected:
-
-			const char *_name;
-
-	};
+   };
 
 } /* qb50 */
 

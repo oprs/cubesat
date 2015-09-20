@@ -12,64 +12,65 @@
 
 namespace qb50 {
 
-	class SPI : public BusDevice
-	{
-		public:
+   class SPI : public BusDevice
+   {
+      public:
 
-			SPI( Bus&           bus,
-				  const uint32_t iobase,
-				  const uint32_t periph,
-				  const char*    name,
-				  SPIStream&     stMISO,
-				  SPIStream&     stMOSI,
-				  GPIOPin&       clkPin,
-				  GPIOPin::Alt   alt
-			);
+         SPI( Bus&           bus,
+              const uint32_t iobase,
+              const uint32_t periph,
+              const char*    name,
+              SPIStream&     stMISO,
+              SPIStream&     stMOSI,
+              GPIOPin&       clkPin,
+              GPIOPin::Alt   alt
+         );
 
-			~SPI();
+         ~SPI();
 
-			SPI& enable  ( void );
-			SPI& disable ( void );
+         SPI& init    ( void );
+         SPI& enable  ( void );
+         SPI& disable ( void );
 
-			SPI& grab    ( void );
-			SPI& release ( void );
+         SPI& grab    ( void );
+         SPI& release ( void );
 
-			SPI& master  ( void );
-			SPI& slave   ( void );
+         SPI& master  ( void );
+         SPI& slave   ( void );
 
-			/* synchronous transfer */
+         /* synchronous transfer */
 
-			SPI& xfer    ( const void *src, void *dst, size_t len );
-			SPI& write   ( const void *src, size_t len );
-			SPI& read    ( void *dst, size_t len );
+         SPI& xfer    ( const void *src, void *dst, size_t len );
+         SPI& write   ( const void *src, size_t len );
+         SPI& read    ( void *dst, size_t len );
 
-			SPI& pollXfer( const void *src, void *dst, size_t len );
+         SPI& pollXfer( const void *src, void *dst, size_t len );
 
-			void isr     ( void );
+         void isr     ( void );
 
-		private:
+      private:
 
-			SPI& _xfer   ( void );
+         SPI& _xfer   ( void );
 
-			xSemaphoreHandle _lock;  /**< bus lock */
+         xSemaphoreHandle _lock;  /**< bus lock */
 
-			SPIStream&      _stMISO;
-			SPIStream&      _stMOSI;
-			GPIOPin&        _clkPin;
-			GPIOPin::Alt    _alt;
-	};
+         SPIStream&      _stMISO;
+         SPIStream&      _stMOSI;
+         GPIOPin&        _clkPin;
+         GPIOPin::Alt    _alt;
+   };
 
-	extern qb50::SPI SPI1;
-	extern qb50::SPI SPI2;
-	extern qb50::SPI SPI3;
+   extern qb50::SPI SPI1;
+   extern qb50::SPI SPI2;
+   extern qb50::SPI SPI3;
 
 } /* qb50 */
 
 
 extern "C" {
-	void SPI1_IRQHandler ( void );
-	void SPI2_IRQHandler ( void );
-	void SPI3_IRQHandler ( void );
+   void SPI1_IRQHandler ( void );
+   void SPI2_IRQHandler ( void );
+   void SPI3_IRQHandler ( void );
 }
 
 

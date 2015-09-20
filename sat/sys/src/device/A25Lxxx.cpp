@@ -1,5 +1,6 @@
 
 #include "device/A25Lxxx.h"
+#include "system/Application.h"
 #include "system/Logger.h"
 
 using namespace qb50;
@@ -63,8 +64,7 @@ static const uint8_t WRENCmd[]  = { 0x06 };
 //  - - - - - - - - -  //
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin )
-	: SPIDevice( spi, csPin, SPIDevice::ActiveLow ),
-	  _name( name )
+   : SPIDevice( spi, csPin, SPIDevice::ActiveLow, name )
 { ; }
 
 
@@ -76,191 +76,184 @@ A25Lxxx::~A25Lxxx()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-A25Lxxx& A25Lxxx::enable( void )
+A25Lxxx& A25Lxxx::init( void )
 {
-	RDIDResp rdid;
+   LOG << _name << ": Onboard AMIC A25Lxxx (Serial Flash Memory)"
+       << " at " << _spi.name() << ", cs: " << _csPin.name()
+       << std::flush;
 
-	if( _incRef() > 0 )
-		return *this;
-
-	_spi.enable();
-
-	(void)RDID( &rdid );
+   (void)SPIDevice::init();
 
 #if 0
 
-	uint16_t  sig  = ( rdid.memType << 8 ) | rdid.memCap;
-	A25LPart *part = parts;
+   uint16_t  sig  = ( rdid.memType << 8 ) | rdid.memCap;
+   A25LPart *part = parts;
 
-	while(( part->mask != 0 ) && ( part->sig != ( sig & part->mask )))
-		++part;
+   while(( part->mask != 0 ) && ( part->sig != ( sig & part->mask )))
+      ++part;
 
-	if( part->mask == 0 )
-		throw( "unsupported flash chip" ); /* XXX exception... */
+   if( part->mask == 0 )
+      throw( "unsupported flash chip" ); /* XXX exception... */
 
 /*
-	_bpc = part->bpc;
-	_ppb = part->ppb;
-	_bpp = part->bpp;
+   _bpc = part->bpc;
+   _ppb = part->ppb;
+   _bpp = part->bpp;
 */
 
-	LOG << _name << ": AMIC " << part->name
-	    << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
-	    << _spi.name() << ", cs: " << _csPin.name()
-	    << std::flush;
-
-	return *this;
+   LOG << _name << ": AMIC " << part->name
+       << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
+       << _spi.name() << ", cs: " << _csPin.name()
+       << std::flush;
 
 #else
 
-	LOG << _name << ": AMIC A25L";
+/*
+   LOG << _name << ": AMIC A25L";
 
-	switch( rdid.memType ) {
-		case 0x30: LOG << "032";  break;
-		case 0x40: LOG << "Q32A"; break;
-		default:   LOG << "xxx";  break;
-	}
+   switch( rdid.memType ) {
+      case 0x30: LOG << "032";  break;
+      case 0x40: LOG << "Q32A"; break;
+      default:   LOG << "xxx";  break;
+   }
 
-	LOG << " Serial Flash Memory (";
+   LOG << " Serial Flash Memory (";
 
-	switch( rdid.memCap ) {
-		case 0x16: LOG << "32Mbit";  break;
-		default:   LOG << "unknown"; break;
-	}
+   switch( rdid.memCap ) {
+      case 0x16: LOG << "32Mbit";  break;
+      default:   LOG << "unknown"; break;
+   }
 
-	LOG << ") at " << _spi.name() << ", cs: " << _csPin.name()
-	    << std::flush;
-
-	return *this;
+   LOG << ") at " << _spi.name() << ", cs: " << _csPin.name()
+       << std::flush;
+*/
 
 #endif
+
+   return *this;
 }
-
-
-A25Lxxx& A25Lxxx::disable( void )
-{ return *this; }
 
 
 A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
 {
-	select();
-	_spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
-	deselect();
+   select();
+   _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
 {
-	select();
-	_spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
-	deselect();
+   select();
+   _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
 {
-	select();
-	_spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
-	deselect();
+   select();
+   _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::RDSR2( RDSRResp *rdsr )
 {
-	select();
-	_spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
-	deselect();
+   select();
+   _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
 {
-	uint8_t READCmd[ 4 ];
+   uint8_t READCmd[ 4 ];
 
-	READCmd[ 0 ] = 0x03;
-	READCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-	READCmd[ 2 ] = ( addr >>  8 ) & 0xff;
-	READCmd[ 3 ] =   addr         & 0xff;
+   READCmd[ 0 ] = 0x03;
+   READCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   READCmd[ 2 ] = ( addr >>  8 ) & 0xff;
+   READCmd[ 3 ] =   addr         & 0xff;
 
-	select();
-	_spi.pollXfer( READCmd, NULL, sizeof( READCmd ));
-	_spi.read( x, len );
-	deselect();
+   select();
+   _spi.pollXfer( READCmd, NULL, sizeof( READCmd ));
+   _spi.read( x, len );
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::WREN( void )
 {
-	select();
-	_spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
-	deselect();
+   select();
+   _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::SE( uint32_t addr )
 {
-	uint8_t SECmd[ 4 ];
+   uint8_t SECmd[ 4 ];
 
-	SECmd[ 0 ] = 0x20;
-	SECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-	SECmd[ 2 ] = ( addr >>  8 ) & 0xf0;
-	SECmd[ 3 ] =   addr         & 0x00;
+   SECmd[ 0 ] = 0x20;
+   SECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   SECmd[ 2 ] = ( addr >>  8 ) & 0xf0;
+   SECmd[ 3 ] =   addr         & 0x00;
 
-	select();
-	_spi.pollXfer( SECmd, NULL, sizeof( SECmd ));
-	_WIPWait( tSE );
-	deselect();
+   select();
+   _spi.pollXfer( SECmd, NULL, sizeof( SECmd ));
+   _WIPWait( tSE );
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::BE( uint32_t addr )
 {
-	uint8_t BECmd[ 4 ];
+   uint8_t BECmd[ 4 ];
 
-	BECmd[ 0 ] = 0x20;
-	BECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-	BECmd[ 2 ] = ( addr >>  8 ) & 0x00;
-	BECmd[ 3 ] =   addr         & 0x00;
+   BECmd[ 0 ] = 0x20;
+   BECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   BECmd[ 2 ] = ( addr >>  8 ) & 0x00;
+   BECmd[ 3 ] =   addr         & 0x00;
 
-	select();
-	_spi.pollXfer( BECmd, NULL, sizeof( BECmd ));
-	_WIPWait( tBE );
-	deselect();
+   select();
+   _spi.pollXfer( BECmd, NULL, sizeof( BECmd ));
+   _WIPWait( tBE );
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
 A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
 {
-	uint8_t PPCmd[ 4 ];
+   uint8_t PPCmd[ 4 ];
 
-	PPCmd[ 0 ] = 0x02;
-	PPCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-	PPCmd[ 2 ] = ( addr >>  8 ) & 0xff;
-	PPCmd[ 3 ] =   addr         & 0xff;
+   PPCmd[ 0 ] = 0x02;
+   PPCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   PPCmd[ 2 ] = ( addr >>  8 ) & 0xff;
+   PPCmd[ 3 ] =   addr         & 0xff;
 
-	select();
-	_spi.pollXfer( PPCmd, NULL, sizeof( PPCmd ));
-	_spi.write( x, len );
-	_WIPWait( tPP );
-	deselect();
+   select();
+   _spi.pollXfer( PPCmd, NULL, sizeof( PPCmd ));
+   _spi.write( x, len );
+   _WIPWait( tPP );
+   deselect();
 
-	return *this;
+   return *this;
 }
 
 
@@ -270,25 +263,25 @@ A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
 
 A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
 {
-	RDSRResp rdsr;
-	uint8_t rx;
-	uint8_t tx = 0xff;
+   RDSRResp rdsr;
+   uint8_t rx;
+   uint8_t tx = 0xff;
 
-	if( ms > 0 ) {
-	   delay( ms );
-	   ms >>= 3;
-	}
+   if( ms > 0 ) {
+      delay( ms );
+      ms >>= 3;
+   }
 
-	_spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
+   _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
 
-	if( rdsr.sr & 0x01 ) {
-	   do {
-	      if( ms > 0 ) delay( ms );
-	      _spi.pollXfer( &tx, &rx, 1 );
-	   } while( rx & 0x01 );
-	}
+   if( rdsr.sr & 0x01 ) {
+      do {
+         if( ms > 0 ) delay( ms );
+         _spi.pollXfer( &tx, &rx, 1 );
+      } while( rx & 0x01 );
+   }
 
-	return *this;
+   return *this;
 }
 
 /*EoF*/

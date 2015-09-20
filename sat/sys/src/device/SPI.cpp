@@ -20,20 +20,20 @@ SPI::SPI( Bus&           bus,
           SPIStream&     stMOSI,
           GPIOPin&       clkPin,
           GPIOPin::Alt   alt )
-	: BusDevice( bus, iobase, periph, name ),
-	  _stMISO( stMISO ),
-	  _stMOSI( stMOSI ),
-	  _clkPin( clkPin ),
-	  _alt( alt )
+   : BusDevice( bus, iobase, periph, name ),
+     _stMISO( stMISO ),
+     _stMOSI( stMOSI ),
+     _clkPin( clkPin ),
+     _alt( alt )
 {
-	_lock = xSemaphoreCreateMutex();
+   _lock = xSemaphoreCreateMutex();
 }
 
 
 SPI::~SPI()
 {
-	disable();
-	vSemaphoreDelete( _lock );
+   disable();
+   vSemaphoreDelete( _lock );
 }
 
 
@@ -41,184 +41,192 @@ SPI::~SPI()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
+SPI& SPI::init( void )
+{
+   LOG << _name << ": System SPI controller at " << bus.name()
+       << ", clk: " << _clkPin.name()
+       << ", miso: " << _stMISO._pin.name()
+       << ", mosi: " << _stMOSI._pin.name()
+       << std::flush;
+
+   _clkPin.enable().pullDn().alt( _alt );
+
+   _stMISO.init();
+   _stMOSI.init();
+
+   return *this;
+}
+
+
 SPI& SPI::enable( void )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   if( _incRef() > 0 )
+      return *this;
 
-	if( _incRef() > 0 )
-		return *this;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-	bus.enable( this );
+   bus.enable( this );
 
-	LOG << _name << ": System SPI controller at " << bus.name()
-	    << ", clk: " << _clkPin.name()
-	    << ", miso: " << _stMISO._pin.name()
-	    << ", mosi: " << _stMOSI._pin.name()
-	    << std::flush;
+   _stMISO.enable();
+   _stMOSI.enable();
 
-	_clkPin.enable()
-	       .pullDn()
-	       .alt( _alt );
+   SPIx->CR1 &= ~SPI_CR1_SPE;
 
-	_stMISO.enable();
-	_stMOSI.enable();
+   SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
+             | 0x5 << 3      /* baud rate control     */
+             | SPI_CR1_SSI   /* internal slave select */
+             | SPI_CR1_SSM   /* software slave mgmt.  */
+             ;
 
-	SPIx->CR1 &= ~SPI_CR1_SPE;
+   SPIx->CR2 |= ( SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN );
+   SPIx->CR1 |= SPI_CR1_SPE;
 
-	SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
-	          | 0x5 << 3      /* baud rate control     */
-	          | SPI_CR1_SSI   /* internal slave select */
-	          | SPI_CR1_SSM   /* software slave mgmt.  */
-	          ;
-
-	SPIx->CR2 |= ( SPI_CR2_RXDMAEN | SPI_CR2_TXDMAEN );
-	SPIx->CR1 |= SPI_CR1_SPE;
-
-	return *this;
+   return *this;
 }
 
 
 SPI& SPI::disable( void )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   if( _decRef() > 0 )
+      return *this;
 
-	SPIx->CR1 &= ~SPI_CR1_SPE;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-	_stMOSI.disable();
-	_stMISO.disable();
+   SPIx->CR1 &= ~SPI_CR1_SPE;
 
-	_clkPin.disable();
+   _stMOSI.disable();
+   _stMISO.disable();
 
-	bus.disable( this );
+   bus.disable( this );
 
-	return *this;
+   return *this;
 }
 
 
 SPI& SPI::grab( void )
 {
-	xSemaphoreTake( _lock, portMAX_DELAY );
-	return *this;
+   xSemaphoreTake( _lock, portMAX_DELAY );
+   return *this;
 }
 
 
 SPI& SPI::release( void )
 {
-	xSemaphoreGive( _lock );
-	return *this;
+   xSemaphoreGive( _lock );
+   return *this;
 }
 
 
 SPI& SPI::master( void )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-	SPIx->CR1 |= SPI_CR1_MSTR;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   SPIx->CR1 |= SPI_CR1_MSTR;
 
-	return *this;
+   return *this;
 }
 
 
 SPI& SPI::slave( void )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-	SPIx->CR1 &= ~SPI_CR1_MSTR;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   SPIx->CR1 &= ~SPI_CR1_MSTR;
 
-	return *this;
+   return *this;
 }
 
 
 SPI& SPI::xfer( const void *src, void *dst, size_t len )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-	_stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)     dst     )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::INCR        )
-	                 .direction (DMAStream::P2M         );
+   _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     dst     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::P2M         );
 
-	_stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)     src     )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::INCR        )
-	                 .direction (DMAStream::M2P         );
+   _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     src     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::M2P         );
 
-	return _xfer();
+   return _xfer();
 }
 
 
 SPI& SPI::write( const void *src, size_t len )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-	uint8_t dummy;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   uint8_t dummy;
 
-	_stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)   &dummy    )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::FIXED       )
-	                 .direction (DMAStream::P2M         );
+   _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)   &dummy    )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::FIXED       )
+                    .direction (DMAStream::P2M         );
 
-	_stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)     src     )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::INCR        )
-	                 .direction (DMAStream::M2P         );
+   _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     src     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::M2P         );
 
-	return _xfer();
+   return _xfer();
 }
 
 
 SPI& SPI::read( void *dst, size_t len )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-	uint8_t dummy = 0xff;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   uint8_t dummy = 0xff;
 
-	_stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)     dst     )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::INCR        )
-	                 .direction (DMAStream::P2M         );
+   _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)     dst     )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::INCR        )
+                    .direction (DMAStream::P2M         );
 
-	_stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
-	                 .m0Addr    ((uint32_t)   &dummy    )
-	                 .counter   ((uint32_t)     len     )
-	                 .pIncMode  (DMAStream::FIXED       )
-	                 .mIncMode  (DMAStream::FIXED       )
-	                 .direction (DMAStream::M2P         );
+   _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
+                    .m0Addr    ((uint32_t)   &dummy    )
+                    .counter   ((uint32_t)     len     )
+                    .pIncMode  (DMAStream::FIXED       )
+                    .mIncMode  (DMAStream::FIXED       )
+                    .direction (DMAStream::M2P         );
 
-	return _xfer();
+   return _xfer();
 }
 
 /* polling methods */
 
 SPI& SPI::pollXfer( const void *src, void *dst, size_t len )
 {
-	SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
-	uint8_t rx;
+   SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   uint8_t rx;
 
-	for( size_t i = 0 ; i < len ; ++i ) {
-	   while( !( SPIx->SR & SPI_SR_TXE ));
+   for( size_t i = 0 ; i < len ; ++i ) {
+      while( !( SPIx->SR & SPI_SR_TXE ));
 
-	   if( src == NULL ) {
-	      SPIx->DR = 0xff;
-	   } else {
-	      SPIx->DR = ((uint8_t*)src)[ i ];
-	   }
+      if( src == NULL ) {
+         SPIx->DR = 0xff;
+      } else {
+         SPIx->DR = ((uint8_t*)src)[ i ];
+      }
 
-	   while( !( SPIx->SR & SPI_SR_RXNE ));
+      while( !( SPIx->SR & SPI_SR_RXNE ));
 
-	   rx = SPIx->DR & 0xff;
-	   if( dst != NULL ) {
-	      ((uint8_t*)dst)[ i ] = rx;
-	   }
-	}
+      rx = SPIx->DR & 0xff;
+      if( dst != NULL ) {
+         ((uint8_t*)dst)[ i ] = rx;
+      }
+   }
 
-	return *this;
+   return *this;
 }
 
 
@@ -228,25 +236,25 @@ SPI& SPI::pollXfer( const void *src, void *dst, size_t len )
 
 SPI& SPI::_xfer( void )
 {
-	/* enable transmission for both RX and TX streams */
+   /* enable transmission for both RX and TX streams */
 
-	_stMISO.dmaStream.start();
-	_stMOSI.dmaStream.start();
+   _stMISO.dmaStream.start();
+   _stMOSI.dmaStream.start();
 
-	/*
-	 * block until the transmission is complete,
-	 * FreeRTOS will let other threads run in the meantime.
-	 */
+   /*
+    * block until the transmission is complete,
+    * FreeRTOS will let other threads run in the meantime.
+    */
 
-	_stMOSI.dmaStream.wait();
-	_stMISO.dmaStream.wait();
+   _stMOSI.dmaStream.wait();
+   _stMISO.dmaStream.wait();
 
-	/* we're done: disable both streams and return */
+   /* we're done: disable both streams and return */
 
-	_stMOSI.dmaStream.stop();
-	_stMISO.dmaStream.stop();
+   _stMOSI.dmaStream.stop();
+   _stMISO.dmaStream.stop();
 
-	return *this;
+   return *this;
 }
 
 

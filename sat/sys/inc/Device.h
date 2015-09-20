@@ -2,37 +2,32 @@
 #ifndef _QB50_SYSTEM_DEVICE_H
 #define _QB50_SYSTEM_DEVICE_H
 
-#include "system/Application.h"
 
 namespace qb50 {
 
-	class Device
-	{
-		public:
+   class Device
+   {
+      public:
 
-			Device() : _refCount( 0 )
-			{ ; }
+         Device( const char *name );
+         virtual ~Device();
 
-			virtual ~Device()
-			{ ; }
+         inline const char *name ( void ) const
+         { return _name; }
 
-			virtual Device& enable  ( void ) = 0;
-			virtual Device& disable ( void ) = 0;
+         virtual Device& init    ( void ) = 0;
+         virtual Device& enable  ( void ) = 0;
+         virtual Device& disable ( void ) = 0;
 
-		protected:
+      protected:
 
-			unsigned _refCount;
+         const char *_name;
+         unsigned    _refCount;
 
-			inline unsigned _incRef( void )
-			{ return _refCount++; }
+         unsigned _incRef ( void );
+         unsigned _decRef ( void );
 
-			inline unsigned _decRef( void )
-			{
-				if( _refCount > 0 ) _refCount--;
-				return _refCount;
-			}
-
-	};
+   };
 
 } /* qb50 */
 

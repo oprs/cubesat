@@ -1,14 +1,18 @@
 
 #include "device/AX25Out.h"
-#include "device/GPIOPin.h"
+#include "system/Logger.h"
 
 
 using namespace qb50;
 using namespace std;
 
 
-AX25Out::AX25Out( FIFO<bool>& fifo )
-	: _fifo( fifo ), _nbit( 0 ), _fcs( 0xffff )
+//  - - - - - - - - -  //
+//  S T R U C T O R S  //
+//  - - - - - - - - -  //
+
+AX25Out::AX25Out( const char *name, FIFO<bool>& fifo )
+   : Device( name ), _fifo( fifo ), _nbit( 0 ), _fcs( 0xffff )
 {
    _sendLock = xSemaphoreCreateMutex();
 }
@@ -16,19 +20,23 @@ AX25Out::AX25Out( FIFO<bool>& fifo )
 
 AX25Out::~AX25Out()
 {
-    disable();
-
     vSemaphoreDelete( _sendLock );
 }
 
 
-AX25Out& AX25Out::enable( void )
+//  - - - - - - -  //
+//  M E T H O D S  //
+//  - - - - - - -  //
+
+AX25Out& AX25Out::init( void )
 {
-#if 0
-    _txPin.enable().out().off();  // _txPin is in Output mode
-#endif
-    return *this;
+   LOG << _name << ": AX.25 Controller" << std::flush;
+   return *this;
 }
+
+
+AX25Out& AX25Out::enable( void )
+{ return *this; }
 
 
 AX25Out& AX25Out::disable( void )

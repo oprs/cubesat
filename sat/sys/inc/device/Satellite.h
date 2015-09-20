@@ -15,6 +15,7 @@ namespace qb50 {
          Satellite( const char *name, GPIOPin& selPin, GPIOPin& asPin, GPIOPin& adPin );
          virtual ~Satellite();
 
+         Satellite& init    ( void );
          Satellite& enable  ( void );
          Satellite& disable ( void );
 
@@ -36,7 +37,6 @@ namespace qb50 {
 
       private:
 
-         const char *_name;
          GPIOPin&    _selPin; /* satellite selection (in) */
          GPIOPin&    _asPin;  /* antenna status      (in) */
          GPIOPin&    _adPin;  /* antenna deploy     (out) */

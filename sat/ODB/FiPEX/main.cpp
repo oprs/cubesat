@@ -7,7 +7,23 @@
 
 using namespace qb50;
 
+
 void FiPEXThread( Thread *self )
+{
+   uint8_t c;
+
+   (void)self;
+
+   LOG << "FiPEXThread starting..." << std::flush;
+
+   for( ;; ) {
+      (void)UART2.read( &c, 1 );
+      (void)UART3.write( &c, 1 );
+   }
+}
+
+
+void FiPEXThread1( Thread *self )
 {
 	(void)self;
 

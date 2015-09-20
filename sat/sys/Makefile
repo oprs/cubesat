@@ -14,6 +14,7 @@ OBJ_RTOS = \
    $(patsubst %cpp,%o,$(wildcard ./sys/*.cpp))
 
 OBJ_DEVICE = \
+   $(patsubst %cpp,%o,$(wildcard ./src/*.cpp)) \
    $(patsubst %c,%o,$(wildcard ./src/device/*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./src/device/*.cpp))
 

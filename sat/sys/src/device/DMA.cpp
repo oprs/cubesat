@@ -19,37 +19,32 @@ DMA::DMA( Bus& bus,
           const uint32_t periph,
           const char *name,
           DMAStream *streams )
-	: BusDevice( bus, iobase, periph, name ),
-	  streams( streams )
+   : BusDevice( bus, iobase, periph, name ),
+     streams( streams )
 { ; }
 
 
 DMA::~DMA()
-{ disable(); }
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-DMA& DMA::enable( void )
+DMA& DMA::init( void )
 {
-	if( _incRef() > 0 )
-		return *this;
-
-	bus.enable( this );
-
-	LOG << _name << ": System DMA controller at " << bus.name() << std::flush;
-
-	return *this;
+   LOG << _name << ": System DMA controller at " << bus.name() << std::flush;
+   return *this;
 }
+
+
+DMA& DMA::enable( void )
+{ return *this; }
 
 
 DMA& DMA::disable( void )
-{
-	bus.disable( this );
-	return *this;
-}
+{ return *this; }
 
 
 //  - - - - - - - - - - -  //

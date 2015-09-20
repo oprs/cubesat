@@ -13,34 +13,35 @@
 
 namespace qb50{
 
-	class TIMER : public BusDevice
-	{
-	public:
+   class TIMER : public BusDevice
+   {
+   public:
 
-		//Constructor
-		TIMER(Bus& bus,
-			const uint32_t iobase,
-			const uint32_t periph,
-			const char *name,
-			GPIOPin& pin,
-			GPIOPin::Alt mode
-		);
+      //Constructor
+      TIMER(Bus& bus,
+         const uint32_t iobase,
+         const uint32_t periph,
+         const char *name,
+         GPIOPin& pin,
+         GPIOPin::Alt mode
+      );
 
-		//Destructor
-		~TIMER();
+      //Destructor
+      ~TIMER();
 
-		TIMER& enable(void);
-		TIMER& disable(void);
+      TIMER& init    ( void );
+      TIMER& enable  ( void );
+      TIMER& disable ( void );
 
-	private:
+   private:
 
-		GPIOPin& _pin;
-		GPIOPin::Alt  _alt;
+      GPIOPin&     _pin;
+      GPIOPin::Alt _alt;
     };
 
-	extern qb50::TIMER TIMER1;
-	extern qb50::TIMER TIMER2;
-	extern qb50::TIMER TIMER8;
+   extern qb50::TIMER TIMER1;
+   extern qb50::TIMER TIMER2;
+   extern qb50::TIMER TIMER8;
 }
 
 #endif

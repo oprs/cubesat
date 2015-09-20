@@ -13,20 +13,24 @@ ADCChannel::ADCChannel( MAX111x& adc,
                         MAX111x::Channel chan,
                         const char *name,
                         float mul )
-	: _adc( adc ),
-	  _chan( chan ),
-	  _name( name ),
-	  _mul( mul )
-{ enable(); }
+   : Device( name ),
+     _adc( adc ),
+     _chan( chan ),
+     _mul( mul )
+{ ; }
 
 
 ADCChannel::~ADCChannel()
-{ disable(); }
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
+
+ADCChannel& ADCChannel::init( void )
+{ return *this; }
+
 
 ADCChannel& ADCChannel::enable( void )
 { return *this; }
@@ -38,9 +42,9 @@ ADCChannel& ADCChannel::disable( void )
 
 float ADCChannel::read( void )
 {
-	int raw = _adc.readChannel( _chan );
+   int raw = _adc.readChannel( _chan );
 
-	return _mul * raw;
+   return _mul * raw;
 }
 
 /*EoF*/

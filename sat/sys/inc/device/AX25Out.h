@@ -10,9 +10,6 @@
 #include "Device.h"
 #include "device/EXTI.h"
 #include "device/NRZI.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #undef FIFO
 #include "device/FIFO.hpp"
@@ -24,9 +21,10 @@ namespace qb50 {
     {
         public:
 
-            AX25Out( FIFO<bool>& fifo );
+            AX25Out( const char *name, FIFO<bool>& fifo );
             ~AX25Out();
 
+            AX25Out& init    ( void );
             AX25Out& enable  ( void );
             AX25Out& disable ( void );
 
