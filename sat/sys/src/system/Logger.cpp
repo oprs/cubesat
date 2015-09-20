@@ -38,9 +38,13 @@ int Logger::LogBuf::sync( void )
    char x[16];
    unsigned ts = ticks();
 
+   _lock.P();
+
    (void)snprintf( x, sizeof( x ), "% 9.3f", (float)ts / 1000 );
    _os << '[' << x << "] " << str() << "\r\n";
    str( "" );
+
+   _lock.V();
 
    return 0;
 }

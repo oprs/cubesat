@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "system/UserLock.h"
+
 
 namespace qb50 {
 
@@ -32,6 +34,7 @@ namespace qb50 {
             protected:
 
                std::ostream& _os;
+               UserLock _lock;
 
          };
 
