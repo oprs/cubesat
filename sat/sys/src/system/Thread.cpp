@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "system/Thread.h"
+#include "system/Logger.h"
 
 using namespace qb50;
 
@@ -12,16 +13,19 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Thread::Thread( const char *name, ThreadWorker worker )
+Thread::Thread( const char *name, int prio )
 {
-	this->name       = name == NULL ? "(generic thread)" : name;
-	this->worker     = worker;
-	this->priority   = 1;
-	this->stackDepth = 1024;
+   this->name       = name == NULL ? "(generic thread)" : name;
+   this->priority   = prio;
+   this->stackDepth = 1024;
+
+   onInit();
 }
 
 Thread::~Thread()
-{ ; }
+{
+   onExit();
+}
 
 
 //  - - - - - - -  //
@@ -30,14 +34,36 @@ Thread::~Thread()
 
 void Thread::suspend( void )
 {
-	vTaskSuspend( (TaskHandle_t)handle );
+   vTaskSuspend( (TaskHandle_t)handle );
+   onSuspend();
 }
 
 
 void Thread::resume( void )
 {
-	vTaskResume( (TaskHandle_t)handle );
+   onResume();
+   vTaskResume( (TaskHandle_t)handle );
 }
 
+/* handlers */
+
+void Thread::onInit( void )
+{ ; }
+
+
+void Thread::onExit( void )
+{ ; }
+
+
+void Thread::onSuspend( void )
+{
+   LOG << "Suspending thread \"" << name << '"' << std::flush;
+}
+
+
+void Thread::onResume( void )
+{
+   LOG << "Resuming thread \"" << name << '"' << std::flush;
+}
 
 /*EoF*/

@@ -5,25 +5,28 @@
 
 namespace qb50 {
 
-	class Thread;
-	typedef void (*ThreadWorker)( Thread *self );
+   class Thread
+   {
+      public:
 
-	class Thread
-	{
-		public:
+         Thread( const char *name, int prio );
+         ~Thread();
 
-			Thread( const char *name, ThreadWorker worker );
-			~Thread();
+                 void suspend   ( void );
+                 void resume    ( void );
 
-			void suspend ( void );
-			void resume  ( void );
+         virtual void run       ( void ) = 0;
 
-			const char   *name;
-			ThreadWorker  worker;
-			void         *handle;
-			unsigned      priority;
-			unsigned      stackDepth;
-	};
+         virtual void onInit    ( void );
+         virtual void onExit    ( void );
+         virtual void onSuspend ( void );
+         virtual void onResume  ( void );
+
+         const char *name;
+         void       *handle;
+         unsigned    priority;
+         unsigned    stackDepth;
+   };
 
 } /* qb50 */
 

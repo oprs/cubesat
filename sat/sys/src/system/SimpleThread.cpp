@@ -1,0 +1,28 @@
+
+#include "system/SimpleThread.h"
+
+using namespace qb50;
+
+
+//  - - - - - - - - -  //
+//  S T R U C T O R S  //
+//  - - - - - - - - -  //
+
+SimpleThread::SimpleThread( const char *name, ThreadWorker worker, int prio )
+   : Thread( name, prio ), _worker( worker )
+{ ; }
+
+
+SimpleThread::~SimpleThread()
+{ ; }
+
+
+//  - - - - - - -  //
+//  M E T H O D S  //
+//  - - - - - - -  //
+
+void SimpleThread::run( void )
+{ _worker( this ); }
+
+
+/*EoF*/
