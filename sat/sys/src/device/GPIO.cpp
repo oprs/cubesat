@@ -15,7 +15,7 @@ GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsign
 
 
 GPIO::~GPIO()
-{ disable(); }
+{ ; }
 
 
 //  - - - - - - -  //

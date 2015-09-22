@@ -1,5 +1,6 @@
 
 #include "device/Transceiver.h"
+#include "system/Application.h"
 #include "system/Logger.h"
 
 using namespace qb50;
@@ -9,8 +10,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Transceiver::Transceiver( const char *name, GPIOPin& enPin )
-	: Device( name ), _enPin( enPin )
+Transceiver::Transceiver( const char *name, GPIOPin& enTXPin, GPIOPin& enPAPin )
+   : Device( name ), _enTXPin( enTXPin ), _enPAPin( enPAPin )
 { ; }
 
 
@@ -24,15 +25,30 @@ Transceiver::~Transceiver()
 
 Transceiver& Transceiver::init( void )
 {
-   _enPin.enable().pullDn().out();
+   LOG << _name << ": AMSAT-F Radio Board (F6FA0)"
+       << ", enTX: " << _enTXPin.name()
+       << ", enPA: " << _enPAPin.name()
+       << std::flush;
+
+   _enTXPin.enable().out().off();
+   _enPAPin.enable().out().off();
+
    return *this;
 }
 
 
 Transceiver& Transceiver::enable( void )
 {
-   if( _incRef() == 0 )
-      _enPin.on();
+   if( _incRef() > 0 )
+      return *this;
+
+   _enTXPin.on();
+   LOG << _name << ": Waiting for 500ms..." << std::flush;
+
+   delay( 500 );
+
+   _enPAPin.on();
+   LOG << _name << ": Enabled" << std::flush;
 
    return *this;
 }
@@ -40,8 +56,13 @@ Transceiver& Transceiver::enable( void )
 
 Transceiver& Transceiver::disable( void )
 {
-   if( _decRef() == 0 )
-      _enPin.off();
+   if( _decRef() > 0 )
+      return *this;
+
+   _enPAPin.off();
+   _enTXPin.off();
+
+   LOG << _name << ": Disabled" << std::flush;
 
    return *this;
 }

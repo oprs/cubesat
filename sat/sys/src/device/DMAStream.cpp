@@ -30,7 +30,7 @@ DMAStream::DMAStream( DMA& dma,
 
 
 DMAStream::~DMAStream()
-{ disable(); }
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //

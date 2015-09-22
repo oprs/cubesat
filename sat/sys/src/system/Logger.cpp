@@ -40,6 +40,11 @@ int Logger::LogBuf::sync( void )
 
    _lock.P();
 
+   /*
+    * I considered using stream manipulators here (std::setw(), etc...)
+    * but the resulting code turned out to be clumsy and slow.
+    * Let's just stick with snprintf() and stdio.
+    */
    (void)snprintf( x, sizeof( x ), "% 9.3f", (float)ts / 1000 );
    _os << '[' << x << "] " << str() << "\r\n";
    str( "" );

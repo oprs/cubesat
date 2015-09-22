@@ -32,7 +32,6 @@ SPI::SPI( Bus&           bus,
 
 SPI::~SPI()
 {
-   disable();
    vSemaphoreDelete( _lock );
 }
 

@@ -64,15 +64,17 @@ void control( Thread *self )
 
    SAT.enable();
 
-MEM0.enable();
-MEM1.enable();
+   //MEM0.enable();
+   //MEM1.enable();
    LOG << "Waiting for 30mn..." << std::flush;
    delay( 5000 );
    LOG << "Done waiting" << std::flush;
-MEM1.disable();
-MEM0.disable();
+   //MEM1.disable();
+   //MEM0.disable();
 
    SAT.aDeploy();
+
+   RFTX.enable();
 
    (void)self;
 
@@ -134,7 +136,7 @@ int main( void )
    cmdQueue = xQueueCreate( 16, sizeof( CForm ));
    (void)createThread( "Control", control );
 
-   LOG << "Starting FreeRTOS..." << std::flush;
+   LOG << "Starting FreeRTOS" << std::flush;
 
    run();
 }

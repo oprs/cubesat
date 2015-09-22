@@ -63,6 +63,7 @@ Satellite& Satellite::init( void )
    ADC4.init();
    MEM0.init();
    MEM1.init();
+   RFTX.init();
 
    _selPin.enable().in().noPull();
    _asPin.enable().in().noPull();
@@ -74,7 +75,7 @@ Satellite& Satellite::init( void )
    ADC3.init();
    ADC4.init();
 */
-   LOG << _name << ": AMSAT-F Micro-Satellite" << std::flush;
+   LOG << _name << ": AMSAT-F micro-satellite" << std::flush;
 
    switch( id() ) {
 

@@ -17,7 +17,7 @@ GPIOPin::GPIOPin( GPIO& gpio, const unsigned id, const char* name, const uint16_
 
 
 GPIOPin::~GPIOPin()
-{ disable(); }
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //

@@ -35,8 +35,6 @@ UART::UART( Bus& bus,
 
 UART::~UART()
 {
-   disable();
-
    vSemaphoreDelete( _wrLock );
    vSemaphoreDelete( _rdLock );
 }

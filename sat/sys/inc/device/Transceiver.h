@@ -13,7 +13,7 @@ namespace qb50 {
 
       public:
 
-         Transceiver( const char *name, GPIOPin& enPin );
+         Transceiver( const char *name, GPIOPin& enTXPin, GPIOPin& enPAPin );
 
          ~Transceiver();
 
@@ -24,9 +24,12 @@ namespace qb50 {
 
       private:
 
-         GPIOPin& _enPin;
+         GPIOPin& _enTXPin;
+         GPIOPin& _enPAPin;
 
    };
+
+   extern qb50::Transceiver RFTX;
 
 } /* qb50 */
 

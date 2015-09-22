@@ -343,7 +343,7 @@ namespace qb50 {
 //  T R A N S C E I V E R  //
 //  - - - - - - - - - - -  //
 
-   Transceiver TX( "TX", PB14 );
+   Transceiver RFTX( "RFTX", PB15, PB13 );
 
 //  - - - - -  //
 //  A X . 2 5  //
