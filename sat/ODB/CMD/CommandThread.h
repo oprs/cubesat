@@ -3,6 +3,7 @@
 #define _QB50_COMMAND_THREAD_H
 
 #include "system/qb50.h"
+#include "Form.h"
 
 
 namespace qb50 {
@@ -16,6 +17,10 @@ namespace qb50 {
          ~CommandThread();
 
          void run( void );
+
+      protected:
+
+         Form* _parseLine( UART& uart );
 
    };
 

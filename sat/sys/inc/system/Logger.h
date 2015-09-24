@@ -1,6 +1,6 @@
 
-#ifndef _QB50_SYS_SYSTEM_UART_H
-#define _QB50_SYS_SYSTEM_UART_H
+#ifndef _QB50_SYS_SYSTEM_LOGGER_H
+#define _QB50_SYS_SYSTEM_LOGGER_H
 
 #include <iostream>
 #include <sstream>
@@ -31,6 +31,6 @@ namespace qb50 {
 }
 
 
-#endif /*_QB50_SYS_SYSTEM_UART_H*/
+#endif /*_QB50_SYS_SYSTEM_LOGGER_H*/
 
 /*EoF*/

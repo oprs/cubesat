@@ -17,7 +17,7 @@ Thread::Thread( const char *name, int prio )
 {
    this->name       = name == NULL ? "(generic thread)" : name;
    this->priority   = prio;
-   this->stackDepth = 1024;
+   this->stackDepth = 2048;
 
    onInit();
 }

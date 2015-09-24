@@ -74,11 +74,11 @@ Satellite& Satellite::init( void )
    switch( id() ) {
 
       case Satellite::FR01:
-         LOG << _name << ": ONFR01 (X-CubeSat - Ecole Polytechnique)" << std::flush;
+         LOG << _name << ": ON0FR1 (X-CubeSat - Ecole Polytechnique)" << std::flush;
          break;
 
       case Satellite::FR05:
-         LOG << _name << ": ONFR05 (SpaceCube - Mines ParisTech)" << std::flush;
+         LOG << _name << ": ON0FR5 (SpaceCube - Mines ParisTech)" << std::flush;
          break;
 
       default:

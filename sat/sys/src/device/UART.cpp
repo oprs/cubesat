@@ -136,13 +136,13 @@ size_t UART::readLine( void *x, size_t len )
 
       ch = _rxFIFO.pull();
 
-      if( ch == 0x0a ) break;
-      if( ch == 0x0d ) continue;
+      if( ch == 0x0a ) continue;
+      if( ch == 0x0d ) break;
 
       ((uint8_t*)x)[ n++ ] = ch;
    }
 
-   while( ch != 0x0a ) {
+   while( ch != 0x0d ) {
       if( _rxFIFO.isEmpty() ) {
          xSemaphoreTake( _isrRXNE, portMAX_DELAY );
          continue;

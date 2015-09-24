@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 PMUThread::PMUThread()
-   : Thread( "PMUThread", 1 )
+   : Thread( "Power Monitor", 1 )
 { ; }
 
 
@@ -24,8 +24,6 @@ PMUThread::~PMUThread()
 
 void PMUThread::run( void )
 {
-   LOG << "PMUThread::run()";
-
    for( ;; ) {
       delay( 1000 );
    }
