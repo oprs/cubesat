@@ -5,7 +5,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "system/UserLock.h"
+
+#define LOG Logger().get()
 
 
 namespace qb50 {
@@ -18,29 +19,14 @@ namespace qb50 {
          Logger();
          virtual ~Logger();
 
-      private:
-
-         class LogBuf : public std::stringbuf
-         {
-
-            public:
-
-               LogBuf( std::ostream& os );
-               virtual ~LogBuf();
-
-               virtual int sync( void );
+         std::ostringstream& get( void );
 
 
-            protected:
+      protected:
 
-               std::ostream& _os;
-               UserLock _lock;
-
-         };
+         std::ostringstream _os;
 
    };
-
-   extern qb50::Logger LOG;
 
 }
 

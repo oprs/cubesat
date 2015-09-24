@@ -49,16 +49,16 @@ static void trampoline( void *x )
 }
 
 
-Thread *createThread( const char *name, ThreadWorker worker, int prio )
+Thread *createThread( const char *name, ThreadWorker worker )
 {
-   Thread *thread = new SimpleThread( name, worker, prio );
+   Thread *thread = new SimpleThread( name, worker );
    registerThread( thread );
 
    return thread;
 }
 
 
-void registerThread( Thread *thread )
+Thread* registerThread( Thread *thread )
 {
    int rv = xTaskCreate(
       trampoline,
@@ -74,6 +74,8 @@ void registerThread( Thread *thread )
 
    /* initial state: suspended */
    vTaskSuspend( thread->handle );
+
+   return thread;
 }
 
 

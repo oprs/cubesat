@@ -8,8 +8,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SimpleThread::SimpleThread( const char *name, ThreadWorker worker, int prio )
-   : Thread( name, prio ), _worker( worker )
+SimpleThread::SimpleThread( const char *name, ThreadWorker worker )
+   : Thread( name, 1 ), _worker( worker )
 { ; }
 
 

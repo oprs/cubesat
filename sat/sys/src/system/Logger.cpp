@@ -1,8 +1,8 @@
 
+#include "device/UART.h"
 #include "system/Logger.h"
 #include "system/Application.h"
 
-#include <iostream>
 #include <cstdio>
 
 using namespace qb50;
@@ -13,45 +13,37 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 Logger::Logger()
-	: std::ostream( new LogBuf( std::cout ))
 { ; }
 
 
 Logger::~Logger()
-{ ; }
+{
+   _os << "\r\n" << std::flush;
 
+   std::string s = _os.str();
+   UART6.write( s.data(), s.size() );
+}
 
-Logger::LogBuf::LogBuf( std::ostream& os )
-   : _os( os )
-{ ; }
-
-
-Logger::LogBuf::~LogBuf()
-{ pubsync(); }
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-int Logger::LogBuf::sync( void )
+std::ostringstream& Logger::get( void )
 {
-   char x[16];
    unsigned ts = ticks();
-
-   _lock.P();
+   char x[16];
 
    /*
     * I considered using stream manipulators here (std::setw(), etc...)
     * but the resulting code turned out to be clumsy and slow.
     * Let's just stick with snprintf() and stdio.
     */
-   (void)snprintf( x, sizeof( x ), "% 9.3f", (float)ts / 1000 );
-   _os << '[' << x << "] " << str() << "\r\n";
-   str( "" );
+   (void)snprintf( x, sizeof( x ), "[% 9.3f] ", (float)ts / 1000 );
+   _os << x;
 
-   _lock.V();
-
-   return 0;
+   return _os;
 }
+
 
 /*EoF*/

@@ -68,13 +68,7 @@ Satellite& Satellite::init( void )
    _selPin.enable().in().noPull();
    _asPin.enable().in().noPull();
    _adPin.enable().out().off();
-/*
-   MEM1.init();
-   ADC1.init();
-   ADC2.init();
-   ADC3.init();
-   ADC4.init();
-*/
+
    LOG << _name << ": AMSAT-F micro-satellite" << std::flush;
 
    switch( id() ) {
@@ -145,12 +139,17 @@ Satellite::AntState Satellite::aDeploy( void )
 {
    Satellite::AntState st;
 
+   if( aState() == Satellite::DEPLOYED ) {
+      LOG << "Antenna deployed" << std::flush;
+      return Satellite::DEPLOYED;
+   }
+
    _adPin.on();
 
    for( int i = 0 ; i < 3 ; ++i )
    {
       LOG << "Trying to deploy antenna (" << ( i + 1 ) << "/3)..." << std::flush;
-      delay( 5000 );
+      delay( 4999 );
 
       st = aState();
       if( st == Satellite::DEPLOYED )

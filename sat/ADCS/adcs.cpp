@@ -279,13 +279,6 @@ namespace qb50 {
    MAX111x maxADC( SPI3, "ADC3", PA6 ); /* CS3 - ADC carte ODB     */
    //MAX111x maxADC( SPI3, "ADC4", PC4 ); /* CS4 - ADC carte FiPEX   */
 
-//  - - - - - -  //
-//  L O G G E R  //
-//  - - - - - -  //
-
-   Logger LOG;
-
-
 //  - - - - - - - - - - -  //
 //        S T A T E        //
 //  - - - - - - - - - - -  //

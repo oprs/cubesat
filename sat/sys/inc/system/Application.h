@@ -7,8 +7,8 @@
 
 namespace qb50 {
 
-	extern Thread  *createThread( const char *name, ThreadWorker worker, int prio = 1 );
-	extern void     registerThread( Thread *t );
+	extern Thread  *createThread( const char *name, ThreadWorker worker );
+	extern Thread  *registerThread( Thread *t );
 	extern void     run( void );
 	extern void     delay( unsigned ms );
 	extern unsigned ticks( void );

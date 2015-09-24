@@ -14,7 +14,7 @@ namespace qb50 {
 
       public:
 
-         SimpleThread( const char *name, ThreadWorker worker, int prio );
+         SimpleThread( const char *name, ThreadWorker worker );
          virtual ~SimpleThread();
 
          virtual void run( void );
