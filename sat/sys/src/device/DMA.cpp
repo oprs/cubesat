@@ -34,7 +34,7 @@ DMA::~DMA()
 
 DMA& DMA::init( void )
 {
-   LOG << _name << ": System DMA controller at " << bus.name() << std::flush;
+   LOG << _name << ": System DMA controller at " << bus.name();
    return *this;
 }
 

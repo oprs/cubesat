@@ -24,7 +24,7 @@ GPIO::~GPIO()
 
 GPIO& GPIO::init( void )
 {
-   LOG << _name << ": System GPIO controller at " << bus.name() << std::flush;
+   LOG << _name << ": System GPIO controller at " << bus.name();
    return *this;
 }
 

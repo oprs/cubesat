@@ -30,7 +30,7 @@ AX25Out::~AX25Out()
 
 AX25Out& AX25Out::init( void )
 {
-   LOG << _name << ": AX.25 Controller" << std::flush;
+   LOG << _name << ": AX.25 Controller";
    return *this;
 }
 

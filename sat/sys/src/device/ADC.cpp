@@ -34,8 +34,7 @@ ADC& ADC::init( void )
 {
    _pin.enable().pullUp().mode( _mode );
 
-   LOG << _name << ": Internal ADC at " << bus.name()
-       << std::flush;
+   LOG << _name << ": Internal ADC at " << bus.name();
 
    return *this;
 }

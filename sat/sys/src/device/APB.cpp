@@ -27,8 +27,7 @@ APB::~APB()
 
 APB& APB::init( void )
 {
-   LOG << _name << ": Advanced Peripheral Bus (AMBA)"
-       << std::flush;
+   LOG << _name << ": Advanced Peripheral Bus (AMBA)";
 
    return *this;
 }
@@ -41,7 +40,7 @@ APB& APB::enable( BusDevice *dev )
       case BUS2: RCC->APB2ENR |= dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " enabled" << std::flush;
+   LOG << _name << ": " << dev->name() << " enabled";
 
    return *this;
 }
@@ -54,7 +53,7 @@ APB& APB::disable( BusDevice *dev )
       case BUS2: RCC->APB2ENR &= ~dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " disabled" << std::flush;
+   LOG << _name << ": " << dev->name() << " disabled";
 
    return *this;
 }

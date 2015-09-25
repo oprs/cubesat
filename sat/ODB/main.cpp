@@ -25,7 +25,7 @@ int main( void )
    UART3.enable();            /* GPS        */
 #endif
 
-   LOG << "Starting RTOS" << std::flush;
+   LOG << "Starting RTOS";
 
    Thread *ctrl = registerThread( new ControlThread() );
    ctrl->resume();

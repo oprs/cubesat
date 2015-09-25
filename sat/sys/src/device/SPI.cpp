@@ -46,7 +46,7 @@ SPI& SPI::init( void )
        << ", clk: " << _clkPin.name()
        << ", miso: " << _stMISO._pin.name()
        << ", mosi: " << _stMOSI._pin.name()
-       << std::flush;
+       ;
 
    _clkPin.enable().pullDn().alt( _alt );
 

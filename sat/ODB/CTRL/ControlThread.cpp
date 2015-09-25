@@ -65,9 +65,9 @@ void ControlThread::run( void )
 */
    _tv[ 4 ] = registerThread( new PMUThread() );
 
-   LOG << "Waiting for 30mn..." << std::flush;
+   LOG << "Waiting for 30mn...";
    delay( 5000 );
-   LOG << "Done waiting" << std::flush;
+   LOG << "Done waiting";
 
    SAT.aDeploy();
 
@@ -77,6 +77,8 @@ void ControlThread::run( void )
 
    for( ;; ) {
       xQueueReceive( evQueue, &ev, portMAX_DELAY );
+      if( ev ) {
+         LOG << "EVENT TYPE " << ev->type();
 /*
       if( cform.argc > 0 ) {
          std::cout << "+ C" << cform.argv[0];
@@ -85,6 +87,8 @@ void ControlThread::run( void )
          std::cout << "\r\n";
       }
 */
+         delete ev;
+      }
    }
 }
 

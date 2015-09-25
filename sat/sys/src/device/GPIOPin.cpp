@@ -26,7 +26,7 @@ GPIOPin::~GPIOPin()
 
 GPIOPin& GPIOPin::init( void )
 {
-   //LOG << _name << ": GPIO pin at " << _gpio.name() << std::flush;
+   //LOG << _name << ": GPIO pin at " << _gpio.name();
    return *this;
 }
 
@@ -36,7 +36,7 @@ GPIOPin& GPIOPin::enable( void )
    if( _incRef() == 0 )
       _gpio.enable();
 
-   //LOG << _name << ": enabled" << std::flush;
+   //LOG << _name << ": enabled";
 
    return *this;
 }
@@ -45,7 +45,7 @@ GPIOPin& GPIOPin::enable( void )
 GPIOPin& GPIOPin::disable( void )
 {
    if( _decRef() == 0 ) {
-      //LOG << _name << ": disabled" << std::flush;
+      //LOG << _name << ": disabled";
       _gpio.disable();
    }
 

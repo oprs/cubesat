@@ -49,7 +49,7 @@ UART& UART::init( void )
    LOG << _name << ": System UART controller at " << bus.name()
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
-       << std::flush;
+       ;
 
    _rxPin.enable().pullUp().alt( _alt );
    _txPin.enable().pullUp().alt( _alt );
@@ -198,7 +198,7 @@ UART& UART::baudRate( unsigned rate )
 
    USARTx->BRR = (uint16_t)tmp32;
 
-   LOG << _name << ": Baud rate set to " << rate << std::flush;
+   LOG << _name << ": Baud rate set to " << rate;
 
    return *this;
 }

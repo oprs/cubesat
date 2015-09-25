@@ -28,7 +28,7 @@ Transceiver& Transceiver::init( void )
    LOG << _name << ": AMSAT-F Radio Board (F6FA0)"
        << ", enTX: " << _enTXPin.name()
        << ", enPA: " << _enPAPin.name()
-       << std::flush;
+       ;
 
    _enTXPin.enable().out().off();
    _enPAPin.enable().out().off();
@@ -43,12 +43,12 @@ Transceiver& Transceiver::enable( void )
       return *this;
 
    _enTXPin.on();
-   LOG << _name << ": Waiting for 500ms..." << std::flush;
+   LOG << _name << ": Waiting for 500ms...";
 
    delay( 500 );
 
    _enPAPin.on();
-   LOG << _name << ": Enabled" << std::flush;
+   LOG << _name << ": Enabled";
 
    return *this;
 }
@@ -62,7 +62,7 @@ Transceiver& Transceiver::disable( void )
    _enPAPin.off();
    _enTXPin.off();
 
-   LOG << _name << ": Disabled" << std::flush;
+   LOG << _name << ": Disabled";
 
    return *this;
 }

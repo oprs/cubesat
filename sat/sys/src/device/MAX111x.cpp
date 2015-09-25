@@ -4,6 +4,11 @@
 
 using namespace qb50;
 
+/*
+namespace qb50 {
+ extern void hexdump( const void *x, unsigned len );
+}
+*/
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -25,8 +30,7 @@ MAX111x::~MAX111x()
 MAX111x& MAX111x::init( void )
 {
    LOG << _name << ": Onboard MAX111x Serial ADC at " << _spi.name()
-       << ", cs: " << _csPin.name()
-       << std::flush;
+       << ", cs: " << _csPin.name();
 
    (void)SPIDevice::init();
 
@@ -52,6 +56,13 @@ int MAX111x::readChannel( Channel sel )
 
    return
       (( ConvRes[2] << 8 ) | ConvRes[3] ) >> 6;
+}
+
+
+int MAX111x::readChannel( int n )
+{
+   Channel ch[ 8 ] = { CH0, CH1, CH2, CH3, CH4, CH5, CH6, CH7 };
+   return( readChannel( ch[n] ));
 }
 
 /*EoF*/

@@ -79,8 +79,7 @@ A25Lxxx::~A25Lxxx()
 A25Lxxx& A25Lxxx::init( void )
 {
    LOG << _name << ": Onboard AMIC A25Lxxx (Serial Flash Memory)"
-       << " at " << _spi.name() << ", cs: " << _csPin.name()
-       << std::flush;
+       << " at " << _spi.name() << ", cs: " << _csPin.name();
 
    (void)SPIDevice::init();
 
@@ -103,8 +102,7 @@ A25Lxxx& A25Lxxx::init( void )
 
    LOG << _name << ": AMIC " << part->name
        << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
-       << _spi.name() << ", cs: " << _csPin.name()
-       << std::flush;
+       << _spi.name() << ", cs: " << _csPin.name();
 
 #else
 
@@ -124,8 +122,7 @@ A25Lxxx& A25Lxxx::init( void )
       default:   LOG << "unknown"; break;
    }
 
-   LOG << ") at " << _spi.name() << ", cs: " << _csPin.name()
-       << std::flush;
+   LOG << ") at " << _spi.name() << ", cs: " << _csPin.name();
 */
 
 #endif

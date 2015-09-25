@@ -32,7 +32,7 @@ TIMER& TIMER::init( void )
 {
    LOG << _name << ": System timer controller at " << bus.name()
        //<< ", rx: " << _rxPin.name()
-       << std::flush;
+       ;
 
    return *this;
 }

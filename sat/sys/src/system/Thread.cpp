@@ -58,13 +58,13 @@ void Thread::onExit( void )
 
 void Thread::onSuspend( void )
 {
-   LOG << "Suspending thread [" << name << ']' << std::flush;
+   LOG << "Suspending thread [" << name << ']';
 }
 
 
 void Thread::onResume( void )
 {
-   LOG << "Resuming thread [" << name << ']' << std::flush;
+   LOG << "Resuming thread [" << name << ']';
 }
 
 /*EoF*/

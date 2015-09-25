@@ -61,6 +61,7 @@ Satellite& Satellite::init( void )
    ADC2.init();
    ADC3.init();
    ADC4.init();
+   PMU0.init();
    MEM0.init();
    MEM1.init();
    RFTX.init();
@@ -69,16 +70,16 @@ Satellite& Satellite::init( void )
    _asPin.enable().in().noPull();
    _adPin.enable().out().off();
 
-   LOG << _name << ": AMSAT-F micro-satellite" << std::flush;
+   LOG << _name << ": AMSAT-F micro-satellite";
 
    switch( id() ) {
 
       case Satellite::FR01:
-         LOG << _name << ": ON0FR1 (X-CubeSat - Ecole Polytechnique)" << std::flush;
+         LOG << _name << ": ON0FR1 (X-CubeSat - Ecole Polytechnique)";
          break;
 
       case Satellite::FR05:
-         LOG << _name << ": ON0FR5 (SpaceCube - Mines ParisTech)" << std::flush;
+         LOG << _name << ": ON0FR5 (SpaceCube - Mines ParisTech)";
          break;
 
       default:
@@ -95,11 +96,11 @@ Satellite& Satellite::enable( void )
    switch( id() ) {
 
       case Satellite::FR01:
-         LOG << _name << ": ONFR01 (X-CubeSat - Ecole Polytechnique)" << std::flush;
+         LOG << _name << ": ONFR01 (X-CubeSat - Ecole Polytechnique)";
          break;
 
       case Satellite::FR05:
-         LOG << _name << ": ONFR05 (SpaceCube - Mines ParisTech)" << std::flush;
+         LOG << _name << ": ONFR05 (SpaceCube - Mines ParisTech)";
          break;
 
       default:
@@ -140,7 +141,7 @@ Satellite::AntState Satellite::aDeploy( void )
    Satellite::AntState st;
 
    if( aState() == Satellite::DEPLOYED ) {
-      LOG << "Antenna deployed" << std::flush;
+      LOG << "Antenna deployed";
       return Satellite::DEPLOYED;
    }
 
@@ -148,7 +149,7 @@ Satellite::AntState Satellite::aDeploy( void )
 
    for( int i = 0 ; i < 3 ; ++i )
    {
-      LOG << "Trying to deploy antenna (" << ( i + 1 ) << "/3)..." << std::flush;
+      LOG << "Trying to deploy antenna (" << ( i + 1 ) << "/3)...";
       delay( 4999 );
 
       st = aState();
@@ -159,9 +160,9 @@ Satellite::AntState Satellite::aDeploy( void )
    _adPin.off();
 
    if( aState() == Satellite::DEPLOYED )
-      LOG << "Antenna deployed" << std::flush;
+      LOG << "Antenna deployed";
    else
-      LOG << "Giving up on antenna deployment" << std::flush;
+      LOG << "Giving up on antenna deployment";
 
    return st;
 }

@@ -25,8 +25,7 @@ AHB::~AHB()
 
 AHB& AHB::init( void )
 {
-   LOG << _name << ": Advanced High-Performance Bus (AMBA)"
-       << std::flush;
+   LOG << _name << ": Advanced High-Performance Bus (AMBA)";
 
    return *this;
 }
@@ -40,7 +39,7 @@ AHB& AHB::enable( BusDevice *dev )
       case BUS3: RCC->AHB3ENR |= dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " enabled" << std::flush;
+   LOG << _name << ": " << dev->name() << " enabled";
 
    return *this;
 }
@@ -54,7 +53,7 @@ AHB& AHB::disable( BusDevice *dev )
       case BUS3: RCC->AHB3ENR &= ~dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " disabled" << std::flush;
+   LOG << _name << ": " << dev->name() << " disabled";
 
    return *this;
 }

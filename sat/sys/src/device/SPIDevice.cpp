@@ -38,7 +38,7 @@ SPIDevice& SPIDevice::enable( void )
 {
    if( _incRef() == 0 ) {
       _spi.enable();
-      LOG << _spi.name() << ": " << _name << " enabled" << std::flush;
+      LOG << _spi.name() << ": " << _name << " enabled";
    }
 
    return *this;
@@ -48,7 +48,7 @@ SPIDevice& SPIDevice::enable( void )
 SPIDevice& SPIDevice::disable( void )
 {
    if( _decRef() == 0 ) {
-      LOG << _spi.name() << ": " << _name << " disabled" << std::flush;
+      LOG << _spi.name() << ": " << _name << " disabled";
       _spi.disable();
    }
 
