@@ -13,11 +13,14 @@ namespace qb50 {
          enum EventType {
             BAT_HIGH = 0,
             BAT_LOW  = 1,
-            CMD      = 2
+            FORM     = 2
          };
 
          Event( EventType type );
          ~Event();
+
+         EventType type( void ) const
+         { return _type; }
 
 
       protected:

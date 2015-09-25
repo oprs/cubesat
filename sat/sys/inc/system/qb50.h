@@ -7,6 +7,7 @@
 #include "device/APB.h"
 #include "device/NVIC.h"
 #include "device/EXTI.h"
+#include "device/PMU.h"
 #include "device/DMA.h"
 #include "device/SPI.h"
 #include "device/GPIO.h"

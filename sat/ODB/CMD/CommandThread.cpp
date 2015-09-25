@@ -6,6 +6,9 @@
 using namespace qb50;
 
 
+extern QueueHandle_t evQueue;
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -33,14 +36,14 @@ void CommandThread::run( void )
       try {
          form = _parseLine( UART2 /* XXX !!! */ );
       } catch( const char *e ) {
-         LOG << "- " << e;
+         LOG << "Exception: " << e;
          continue;
       }
 
-      switch( form->type ) {
+      switch( form->formType ) {
          case Form::FORM_TYPE_C:
          {
-            //xQueueSendToBack( cmdQueue, form, portMAX_DELAY );
+            xQueueSendToBack( evQueue, &form, portMAX_DELAY );
             break;
          }
 
@@ -101,8 +104,6 @@ void CommandThread::run( void )
          default:
             ;
       }
-
-      delete form;
    }
 }
 
@@ -113,7 +114,6 @@ Form* CommandThread::_parseLine( UART& uart )
    size_t i, n;
 
    n = uart.readLine( x, 128 );
-   hexdump( x, n );
 
    for( i = 0 ; i < n ; ++i )
       if( x[i] == ':' ) break;

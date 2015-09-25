@@ -31,6 +31,7 @@ namespace qb50 {
          };
 
          int readChannel( Channel sel );
+         int readChannel( int n );
 
    };
 

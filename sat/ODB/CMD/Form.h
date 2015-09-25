@@ -2,6 +2,8 @@
 #ifndef _QB50_FORM_H
 #define _QB50_FORM_H
 
+#include "system/Event.h"
+
 #include <cstdint>
 #include <ctime>
 #include <ctime>
@@ -13,7 +15,7 @@ extern "C" {
 
 namespace qb50 {
 
-   struct Form
+   struct Form : public Event
    {
       enum FormType {
          FORM_TYPE_0  = 0,
@@ -25,11 +27,11 @@ namespace qb50 {
          FORM_TYPE_T2 = 6
       };
 
-      FormType type;
+      FormType formType;
 
       protected:
 
-         Form( FormType ftype ) : type( ftype )
+         Form( FormType ftype ) : Event( Event::FORM ), formType( ftype )
          { ; }
    };
 

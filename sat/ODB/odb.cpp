@@ -333,6 +333,12 @@ namespace qb50 {
    ADCChannel& ADC4CH4 = ADC4_Channels[ 4 ];  ADCChannel& ADC4CH5 = ADC4_Channels[ 5 ];
    ADCChannel& ADC4CH6 = ADC4_Channels[ 6 ];  ADCChannel& ADC4CH7 = ADC4_Channels[ 7 ];
 
+//  - - - - - - - - - - - - - - -  //
+//  P O W E R   M A N A G E M E R  //
+//  - - - - - - - - - - - - - - -  //
+
+   PMU PMU0( "PMU0" );
+
 //  - - - - - - - - - - -  //
 //  T R A N S C E I V E R  //
 //  - - - - - - - - - - -  //
