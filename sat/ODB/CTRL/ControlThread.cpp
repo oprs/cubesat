@@ -32,7 +32,7 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
 //  - - - - - - - - -  //
 
 ControlThread::ControlThread()
-   : Thread( "Event Manager", configMAX_PRIORITIES - 1 )
+   : Thread( "Event Manager", 2 )
 {
    for( int i = 0 ; i < _QB50_NTHREADS ; ++i )
       _tv[i] = (Thread*)0;
@@ -55,15 +55,8 @@ void ControlThread::run( void )
 {
    Event *ev;
 
+   SAT.init();
    SAT.enable();
-
-   _tv[ 0 ] = registerThread( new CommandThread() );
-   _tv[ 1 ] = registerThread( new CWThread() );
-/*
-   _tv[ 2 ] = registerThread( new GPSThread() );
-   _tv[ 3 ] = registerThread( new FiPEXThread() );
-*/
-   _tv[ 4 ] = registerThread( new PMUThread() );
 
    LOG << "Waiting for 30mn...";
    delay( 5000 );
@@ -71,9 +64,11 @@ void ControlThread::run( void )
 
    SAT.aDeploy();
 
-   _tv[ 4 ]->resume();
-   _tv[ 1 ]->resume();
-   _tv[ 0 ]->resume();
+// _tv[ 0 ] = registerThread( new CommandThread() );
+   _tv[ 1 ] = registerThread( new CWThread() );
+ //_tv[ 2 ] = registerThread( new GPSThread() );
+ //_tv[ 3 ] = registerThread( new FiPEXThread() );
+   _tv[ 4 ] = registerThread( new PMUThread() );
 
    for( ;; ) {
       xQueueReceive( evQueue, &ev, portMAX_DELAY );

@@ -7,6 +7,9 @@
 using namespace qb50;
 
 
+static void _trampoline( void *x );
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -27,41 +30,142 @@ UART::UART( Bus& bus,
      _IRQn  ( IRQn  ),
      _alt   ( alt   )
 {
-   _rdLock  = xSemaphoreCreateMutex();
-   _wrLock  = xSemaphoreCreateMutex();
+   _lock    = xSemaphoreCreateMutex();
    _isrRXNE = xSemaphoreCreateBinary();
+   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
+   _enabled = false;
 }
 
 
 UART::~UART()
 {
-   vSemaphoreDelete( _wrLock );
-   vSemaphoreDelete( _rdLock );
+   vQueueDelete( _ioQueue );
+   vSemaphoreDelete( _isrRXNE );
+   vSemaphoreDelete( _lock );
 }
 
 
-//  - - - - - - - - - - - - - -  //
-//  P U B L I C   M E T H O D S  //
-//  - - - - - - - - - - - - - -  //
+//  - - - - - - - - - - - - - - - -  //
+//  P U B L I C   I N T E R F A C E  //
+//  - - - - - - - - - - - - - - - -  //
 
 UART& UART::init( void )
 {
+   (void)xTaskCreate( _trampoline, _name, 2048, this, configMAX_PRIORITIES - 1, &_ioTask );
+
    LOG << _name << ": System UART controller at " << bus.name()
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
        ;
 
-   _rxPin.enable().pullUp().alt( _alt );
-   _txPin.enable().pullUp().alt( _alt );
+   return *this;
+}
 
+
+UART& UART::ioctl( IOReq *req, TickType_t maxWait )
+{
+   (void)xQueueSend( _ioQueue, &req, maxWait );
+   (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
    return *this;
 }
 
 
 UART& UART::enable( void )
 {
+   IOReq req( ENABLE );
+   return ioctl( &req );
+}
+
+
+UART& UART::disable( void )
+{
+   IOReq req( DISABLE );
+   return ioctl( &req );
+}
+
+
+size_t UART::read( void *x, size_t len )
+{
+   IOReq_read req( x, len );
+   (void)ioctl( &req );
+   return req._len;
+}
+
+
+size_t UART::readLine( void *x, size_t len )
+{
+   IOReq_readLine req( x, len );
+   (void)ioctl( &req );
+   return req._len;
+}
+
+
+size_t UART::write( const void *x, size_t len )
+{
+   IOReq_write req( x, len );
+
+   if( _enabled )
+      (void)ioctl( &req );
+   else
+      _write( &req );
+
+   return req._len;
+}
+
+
+UART& UART::baudRate( unsigned rate )
+{
+   IOReq_baudRate req( rate );
+   return ioctl( &req );
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+static void _trampoline( void *x )
+{
+   UART *self = (UART*)x;
+   self->run();
+   vTaskDelete( NULL );
+}
+
+
+void UART::run( void )
+{
+   IOReq *req;
+
+   for( ;; ) {
+      if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
+         continue;
+
+      (void)xSemaphoreTake( _lock, portMAX_DELAY );
+
+      switch( req->_op ) {
+         case ENABLE:   _enable  (                  req ); break;
+         case DISABLE:  _disable (                  req ); break;
+         case READ:     _read    (     (IOReq_read*)req ); break;
+         case READLINE: _readLine( (IOReq_readLine*)req ); break;
+         case WRITE:    _write   (    (IOReq_write*)req ); break;
+         case BAUDRATE: _baudRate( (IOReq_baudRate*)req ); break;
+      }
+
+      (void)xSemaphoreGive( _lock );
+      (void)xTaskNotifyGive( req->_handle );
+   }
+}
+
+
+void UART::_enable( IOReq *req )
+{
+   (void)req;
+
    if( _incRef() > 0 )
-      return *this;
+      return;
+
+   _rxPin.enable().pullUp().alt( _alt );
+   _txPin.enable().pullUp().alt( _alt );
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -71,19 +175,24 @@ UART& UART::enable( void )
    USARTx->CR2 = 0;
    USARTx->CR3 = 0;
 
-   baudRate( 9600 );
+   {
+      IOReq_baudRate req( 9600 );
+      _baudRate( &req );
+   }
 
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    IRQ.enable( _IRQn );
 
-   return *this;
+   _enabled = true;
 }
 
 
-UART& UART::disable( void )
+void UART::_disable( IOReq *req )
 {
+   (void)req;
+
    if( _decRef() > 0 )
-      return *this;
+      return;
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -95,16 +204,14 @@ UART& UART::disable( void )
 
    _txPin.disable();
    _rxPin.disable();
-
-   return *this;
 }
 
 
-size_t UART::read( void *x, size_t len )
+void UART::_read( IOReq_read *req )
 {
-   size_t n = 0;
-
-   xSemaphoreTake( _rdLock, portMAX_DELAY );
+   uint8_t *x = (uint8_t*)req->_x;
+   size_t len = req->_len;
+   size_t   n = 0;
 
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
@@ -115,18 +222,16 @@ size_t UART::read( void *x, size_t len )
       ((uint8_t*)x)[ n++ ] = _rxFIFO.pull();
    }
 
-   xSemaphoreGive( _rdLock );
-
-   return n;
+   req->_len = n;
 }
 
 
-size_t UART::readLine( void *x, size_t len )
+void UART::_readLine( IOReq_readLine *req )
 {
+   uint8_t *x = (uint8_t*)req->_x;
+   size_t len = req->_len;
    uint8_t ch = 0x00;
    size_t   n = 0;
-
-   xSemaphoreTake( _rdLock, portMAX_DELAY );
 
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
@@ -151,18 +256,17 @@ size_t UART::readLine( void *x, size_t len )
       ch = _rxFIFO.pull();
    }
 
-   xSemaphoreGive( _rdLock );
-
-   return n;
+   req->_len = n;
 }
 
 
-size_t UART::write( const void *x, size_t len )
+void UART::_write( IOReq_write *req )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-   size_t n;
 
-   xSemaphoreTake( _wrLock, portMAX_DELAY );
+   const uint8_t *x = (const uint8_t*)req->_x;
+   size_t len = req->_len;
+   size_t n;
 
    if( _refCount != 0 )
       USARTx->CR1 &= ~USART_CR1_TXEIE;
@@ -175,13 +279,11 @@ size_t UART::write( const void *x, size_t len )
    if(( _refCount != 0 ) && ( !_txFIFO.isEmpty() ))
       USARTx->CR1 |= USART_CR1_TXEIE;
 
-   xSemaphoreGive( _wrLock );
-
-   return n;
+   req->_len = n;
 }
 
 
-UART& UART::baudRate( unsigned rate )
+void UART::_baudRate( IOReq_baudRate *req )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -190,7 +292,7 @@ UART& UART::baudRate( unsigned rate )
 
    /* assuming oversampling by 16 (CR1.OVER8 = 0) */
 
-   idiv   = ( 25 * bus.freq() ) / ( 4 * rate );
+   idiv   = ( 25 * bus.freq() ) / ( 4 * req->_rate );
    tmp32  = idiv / 100;
    fdiv   = idiv - ( 100 * tmp32 );
    tmp32  = tmp32 << 4;
@@ -198,10 +300,9 @@ UART& UART::baudRate( unsigned rate )
 
    USARTx->BRR = (uint16_t)tmp32;
 
-   LOG << _name << ": Baud rate set to " << rate;
-
-   return *this;
+   LOG << _name << ": Baud rate set to " << req->_rate;
 }
+
 
 //  - - - - - - - - - - - -  //
 //  I S R   H A N D L E R S  //

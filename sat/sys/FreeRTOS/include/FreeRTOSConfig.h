@@ -87,7 +87,7 @@
 //#define configCPU_CLOCK_HZ               (168*MHz)
 #define configCPU_CLOCK_HZ               (16*MHz)
 #define configTICK_RATE_HZ               ((TickType_t)1000)
-#define configMAX_PRIORITIES             3
+#define configMAX_PRIORITIES             5
 #define configMINIMAL_STACK_SIZE         ((unsigned short)128)
 #define configTOTAL_HEAP_SIZE            ((size_t)(75*1024))
 #define configMAX_TASK_NAME_LEN          16
@@ -132,6 +132,10 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend             1
 #define INCLUDE_vTaskDelayUntil          1
 #define INCLUDE_vTaskDelay               1
+
+#ifdef DEBUG
+ #define INCLUDE_uxTaskGetStackHighWaterMark 1
+#endif
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

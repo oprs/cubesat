@@ -16,20 +16,13 @@ QueueHandle_t evQueue;
 
 int main( void )
 {
-   SAT.init();
-
 #if 0
    UART6.enable();            /* AX.25      */
    UART1.enable();            /* ADCS       */
    UART2.enable();            /* FiPEX      */
    UART3.enable();            /* GPS        */
 #endif
-
-   LOG << "Starting RTOS";
-
    Thread *ctrl = registerThread( new ControlThread() );
-   ctrl->resume();
-
    run();
 }
 
