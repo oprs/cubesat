@@ -84,7 +84,7 @@ A25Lxxx::~A25Lxxx()
 
 A25Lxxx& A25Lxxx::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, 2048, this, configMAX_PRIORITIES - 1, &_ioTask );
+   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
    LOG << _name << ": Onboard AMIC A25Lxxx (Serial Flash Memory)"
        << " at " << _spi.name() << ", cs: " << _csPin.name();
@@ -143,6 +143,22 @@ A25Lxxx& A25Lxxx::ioctl( IOReq *req, TickType_t maxWait )
 {
    (void)xQueueSend( _ioQueue, &req, maxWait );
    (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+   return *this;
+}
+
+
+A25Lxxx& A25Lxxx::enable( void )
+{
+   IOReq req( ENABLE );
+   (void)ioctl( &req );
+   return *this;
+}
+
+
+A25Lxxx& A25Lxxx::disable( void )
+{
+   IOReq req( DISABLE );
+   (void)ioctl( &req );
    return *this;
 }
 
@@ -211,11 +227,13 @@ void A25Lxxx::run( void )
       select();    // chip select ON
 
       switch( req->_op ) {
-         case RDID: _RDID ( (IOReq_RDID*)req ); break;
-         case READ: _READ ( (IOReq_READ*)req ); break;
-         case SE:   _SE   (   (IOReq_SE*)req ); break;
-         case BE:   _BE   (   (IOReq_BE*)req ); break;
-         case PP:   _PP   (   (IOReq_PP*)req ); break;
+         case ENABLE:  _enable();                  break;
+         case DISABLE: _disable();                 break;
+         case RDID:    _RDID ( (IOReq_RDID*)req ); break;
+         case READ:    _READ ( (IOReq_READ*)req ); break;
+         case SE:      _SE   (   (IOReq_SE*)req ); break;
+         case BE:      _BE   (   (IOReq_BE*)req ); break;
+         case PP:      _PP   (   (IOReq_PP*)req ); break;
       }
 
       deselect();     // chip select OFF

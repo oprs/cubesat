@@ -56,6 +56,8 @@ namespace qb50 {
             uint8_t sr;      /*!< status register */
          } __attribute__(( packed ));
 
+         A25Lxxx& enable      ( void );
+         A25Lxxx& disable     ( void );
          A25Lxxx& pageRead    ( uint32_t addr, void *x );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
          A25Lxxx& sectorErase ( uint32_t addr );
@@ -71,11 +73,13 @@ namespace qb50 {
          /* IOCTLs */
 
          enum IOCTL {
-            RDID = 0,
-            READ = 1,
-            SE   = 2,
-            BE   = 3,
-            PP   = 4
+            ENABLE  = 0,
+            DISABLE = 1,
+            RDID    = 2,
+            READ    = 3,
+            SE      = 4,
+            BE      = 5,
+            PP      = 6
          };
 
          struct IOReq
