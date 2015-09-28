@@ -10,6 +10,7 @@ namespace qb50 {
 
    class SPIDevice : public Device
    {
+
       public:
 
          enum SelectMode {
@@ -20,9 +21,9 @@ namespace qb50 {
          SPIDevice( SPI& spi, GPIOPin& csPin, SelectMode csMode, const char *name );
          virtual ~SPIDevice();
 
-         virtual SPIDevice& init    ( void );
-         virtual SPIDevice& enable  ( void );
-         virtual SPIDevice& disable ( void );
+         virtual SPIDevice& init    ( void ) = 0;
+         virtual SPIDevice& enable  ( void ) = 0;
+         virtual SPIDevice& disable ( void ) = 0;
 
          SPIDevice& select   ( void );
          SPIDevice& deselect ( void );
@@ -32,6 +33,10 @@ namespace qb50 {
          SPI&       _spi;
          GPIOPin&   _csPin;
          SelectMode _csMode;
+
+         virtual void _enable  ( void );
+         virtual void _disable ( void );
+
    };
 
 } /* qb50 */

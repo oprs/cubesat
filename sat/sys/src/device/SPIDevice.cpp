@@ -18,9 +18,9 @@ SPIDevice::~SPIDevice()
 { ; }
 
 
-//  - - - - - - -  //
-//  M E T H O D S  //
-//  - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  P U B L I C   M E T H O D S  //
+//  - - - - - - - - - - - - - -  //
 
 SPIDevice& SPIDevice::init( void )
 {
@@ -28,28 +28,6 @@ SPIDevice& SPIDevice::init( void )
       _csPin.enable().out().on();
    } else {
       _csPin.enable().out().off();
-   }
-
-   return *this;
-}
-
-
-SPIDevice& SPIDevice::enable( void )
-{
-   if( _incRef() == 0 ) {
-      _spi.enable();
-      LOG << _spi.name() << ": " << _name << " enabled";
-   }
-
-   return *this;
-}
-
-
-SPIDevice& SPIDevice::disable( void )
-{
-   if( _decRef() == 0 ) {
-      LOG << _spi.name() << ": " << _name << " disabled";
-      _spi.disable();
    }
 
    return *this;
@@ -77,6 +55,28 @@ SPIDevice& SPIDevice::deselect( void )
    }
 
    return *this;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+void SPIDevice::_enable( void )
+{
+   if( _incRef() == 0 ) {
+      _spi.enable();
+      LOG << _spi.name() << ": " << _name << " enabled";
+   }
+}
+
+
+void SPIDevice::_disable( void )
+{
+   if( _decRef() == 0 ) {
+      LOG << _spi.name() << ": " << _name << " disabled";
+      _spi.disable();
+   }
 }
 
 
