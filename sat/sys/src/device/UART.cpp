@@ -51,7 +51,7 @@ UART::~UART()
 
 UART& UART::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, 2048, this, configMAX_PRIORITIES - 1, &_ioTask );
+   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
    LOG << _name << ": System UART controller at " << bus.name()
        << ", rx: " << _rxPin.name()
@@ -143,12 +143,12 @@ void UART::run( void )
       (void)xSemaphoreTake( _lock, portMAX_DELAY );
 
       switch( req->_op ) {
-         case ENABLE:   _enable  (                  req ); break;
-         case DISABLE:  _disable (                  req ); break;
-         case READ:     _read    (     (IOReq_read*)req ); break;
-         case READLINE: _readLine( (IOReq_readLine*)req ); break;
-         case WRITE:    _write   (    (IOReq_write*)req ); break;
-         case BAUDRATE: _baudRate( (IOReq_baudRate*)req ); break;
+         case ENABLE:   _enable   (                  req ); break;
+         case DISABLE:  _disable  (                  req ); break;
+         case READ:     _read     (     (IOReq_read*)req ); break;
+         case READLINE: _readLine ( (IOReq_readLine*)req ); break;
+         case WRITE:    _write    (    (IOReq_write*)req ); break;
+         case BAUDRATE: _baudRate ( (IOReq_baudRate*)req ); break;
       }
 
       (void)xSemaphoreGive( _lock );
