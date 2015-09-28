@@ -10,6 +10,7 @@
 #undef DMA2
 #undef SPI1
 #undef SPI2
+#undef SPI3
 #undef ADC1
 #undef ADC2
 #undef ADC3
@@ -55,8 +56,9 @@ Satellite& Satellite::init( void )
    UART2.init();
    UART3.init();
    UART6.init().enable();
-   SPI1.init();
-   SPI2.init();
+ //SPI1.init();
+ //SPI2.init();
+   SPI3.init();
    ADC1.init();
    ADC2.init();
    ADC3.init();
@@ -91,32 +93,16 @@ Satellite& Satellite::init( void )
 
 
 Satellite& Satellite::enable( void )
-{
-/*
-   switch( id() ) {
-
-      case Satellite::FR01:
-         LOG << _name << ": ONFR01 (X-CubeSat - Ecole Polytechnique)";
-         break;
-
-      case Satellite::FR05:
-         LOG << _name << ": ONFR05 (SpaceCube - Mines ParisTech)";
-         break;
-
-      default:
-         ;
-   }
-*/
-
-   return *this;
-}
+{ return *this; }
 
 
 Satellite& Satellite::disable( void )
 {
+/*
    _selPin.disable();
    _asPin.disable();
    _adPin.disable();
+*/
 
    return *this;
 }

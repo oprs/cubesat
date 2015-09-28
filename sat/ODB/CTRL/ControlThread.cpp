@@ -58,13 +58,21 @@ void ControlThread::run( void )
    SAT.init();
    SAT.enable();
 
+MEM0.enable();
+MEM1.enable();
+A25Lxxx::RDIDResp rdid;
+MEM0.readId( &rdid );
+LOG << "MEM0: [" << std::hex << (int)rdid.manId << ' ' << (int)rdid.memType << ' ' << (int)rdid.memCap << ']';
+MEM1.readId( &rdid );
+LOG << "MEM1: [" << std::hex << (int)rdid.manId << ' ' << (int)rdid.memType << ' ' << (int)rdid.memCap << ']';
+
    LOG << "Waiting for 30mn...";
    delay( 5000 );
    LOG << "Done waiting";
 
    SAT.aDeploy();
 
-// _tv[ 0 ] = registerThread( new CommandThread() );
+   _tv[ 0 ] = registerThread( new CommandThread() );
    _tv[ 1 ] = registerThread( new CWThread() );
  //_tv[ 2 ] = registerThread( new GPSThread() );
  //_tv[ 3 ] = registerThread( new FiPEXThread() );

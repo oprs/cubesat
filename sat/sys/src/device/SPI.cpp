@@ -209,7 +209,7 @@ SPI& SPI::pollXfer( const void *src, void *dst, size_t len )
    uint8_t rx;
 
    for( size_t i = 0 ; i < len ; ++i ) {
-      while( !( SPIx->SR & SPI_SR_TXE ));
+      while( !( SPIx->SR & SPI_SR_TXE )); // XXX hard limit
 
       if( src == NULL ) {
          SPIx->DR = 0xff;
@@ -217,7 +217,7 @@ SPI& SPI::pollXfer( const void *src, void *dst, size_t len )
          SPIx->DR = ((uint8_t*)src)[ i ];
       }
 
-      while( !( SPIx->SR & SPI_SR_RXNE ));
+      while( !( SPIx->SR & SPI_SR_RXNE )); // XXX hard limit
 
       rx = SPIx->DR & 0xff;
       if( dst != NULL ) {
@@ -272,11 +272,13 @@ void SPI::isr( void )
 #undef SPI2
 #undef SPI3
 
+/*
 void SPI1_IRQHandler( void )
 { qb50::SPI1.isr(); }
 
 void SPI2_IRQHandler( void )
 { qb50::SPI2.isr(); }
+*/
 
 void SPI3_IRQHandler( void )
 { qb50::SPI3.isr(); }

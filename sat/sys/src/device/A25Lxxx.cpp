@@ -58,6 +58,8 @@ static const uint8_t RDSR1Cmd[] = { 0x05, 0xff };
 static const uint8_t RDSR2Cmd[] = { 0x35, 0xff };
 static const uint8_t WRENCmd[]  = { 0x06 };
 
+static void _trampoline( void *x );
+
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -65,11 +67,15 @@ static const uint8_t WRENCmd[]  = { 0x06 };
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin )
    : SPIDevice( spi, csPin, SPIDevice::ActiveLow, name )
-{ ; }
+{
+   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
+}
 
 
 A25Lxxx::~A25Lxxx()
-{ deselect(); }
+{
+   vQueueDelete( _ioQueue );
+}
 
 
 //  - - - - - - - - - - - - - -  //
@@ -78,6 +84,8 @@ A25Lxxx::~A25Lxxx()
 
 A25Lxxx& A25Lxxx::init( void )
 {
+   (void)xTaskCreate( _trampoline, _name, 2048, this, configMAX_PRIORITIES - 1, &_ioTask );
+
    LOG << _name << ": Onboard AMIC A25Lxxx (Serial Flash Memory)"
        << " at " << _spi.name() << ", cs: " << _csPin.name();
 
@@ -131,125 +139,50 @@ A25Lxxx& A25Lxxx::init( void )
 }
 
 
-A25Lxxx& A25Lxxx::RDID( RDIDResp *rdid )
+A25Lxxx& A25Lxxx::ioctl( IOReq *req, TickType_t maxWait )
 {
-   select();
-   _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
-   deselect();
-
+   (void)xQueueSend( _ioQueue, &req, maxWait );
+   (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::REMS( REMSResp *rems )
+A25Lxxx& A25Lxxx::readId( RDIDResp *rdid )
 {
-   select();
-   _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
-   deselect();
-
+   IOReq_RDID req( rdid );
+   (void)ioctl( &req );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::RDSR1( RDSRResp *rdsr )
+A25Lxxx& A25Lxxx::pageRead( uint32_t addr, void *x )
 {
-   select();
-   _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
-   deselect();
-
+   IOReq_READ req( addr, x );
+   (void)ioctl( &req );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::RDSR2( RDSRResp *rdsr )
+A25Lxxx& A25Lxxx::pageWrite( uint32_t addr, const void *x )
 {
-   select();
-   _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
-   deselect();
-
+   IOReq_PP req( addr, x );
+   (void)ioctl( &req );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::READ( uint32_t addr, void *x, uint32_t len )
+A25Lxxx& A25Lxxx::sectorErase( uint32_t addr )
 {
-   uint8_t READCmd[ 4 ];
-
-   READCmd[ 0 ] = 0x03;
-   READCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-   READCmd[ 2 ] = ( addr >>  8 ) & 0xff;
-   READCmd[ 3 ] =   addr         & 0xff;
-
-   select();
-   _spi.pollXfer( READCmd, NULL, sizeof( READCmd ));
-   _spi.read( x, len );
-   deselect();
-
+   IOReq_SE req( addr );
+   (void)ioctl( &req );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::WREN( void )
+A25Lxxx& A25Lxxx::blockErase( uint32_t addr )
 {
-   select();
-   _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
-   deselect();
-
-   return *this;
-}
-
-
-A25Lxxx& A25Lxxx::SE( uint32_t addr )
-{
-   uint8_t SECmd[ 4 ];
-
-   SECmd[ 0 ] = 0x20;
-   SECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-   SECmd[ 2 ] = ( addr >>  8 ) & 0xf0;
-   SECmd[ 3 ] =   addr         & 0x00;
-
-   select();
-   _spi.pollXfer( SECmd, NULL, sizeof( SECmd ));
-   _WIPWait( tSE );
-   deselect();
-
-   return *this;
-}
-
-
-A25Lxxx& A25Lxxx::BE( uint32_t addr )
-{
-   uint8_t BECmd[ 4 ];
-
-   BECmd[ 0 ] = 0x20;
-   BECmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-   BECmd[ 2 ] = ( addr >>  8 ) & 0x00;
-   BECmd[ 3 ] =   addr         & 0x00;
-
-   select();
-   _spi.pollXfer( BECmd, NULL, sizeof( BECmd ));
-   _WIPWait( tBE );
-   deselect();
-
-   return *this;
-}
-
-
-A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
-{
-   uint8_t PPCmd[ 4 ];
-
-   PPCmd[ 0 ] = 0x02;
-   PPCmd[ 1 ] = ( addr >> 16 ) & 0x3f;
-   PPCmd[ 2 ] = ( addr >>  8 ) & 0xff;
-   PPCmd[ 3 ] =   addr         & 0xff;
-
-   select();
-   _spi.pollXfer( PPCmd, NULL, sizeof( PPCmd ));
-   _spi.write( x, len );
-   _WIPWait( tPP );
-   deselect();
-
+   IOReq_BE req( addr );
+   (void)ioctl( &req );
    return *this;
 }
 
@@ -258,7 +191,129 @@ A25Lxxx& A25Lxxx::PP( uint32_t addr, void *x, uint32_t len )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
+static void _trampoline( void *x )
+{
+   A25Lxxx *self = (A25Lxxx*)x;
+   self->run();
+   vTaskDelete( NULL );
+}
+
+
+void A25Lxxx::run( void )
+{
+   IOReq *req;
+
+   for( ;; ) {
+      if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
+         continue;
+
+      _spi.grab(); // lock the SPI bus
+      select();    // chip select ON
+
+      switch( req->_op ) {
+         case RDID: _RDID ( (IOReq_RDID*)req ); break;
+         case READ: _READ ( (IOReq_READ*)req ); break;
+         case SE:   _SE   (   (IOReq_SE*)req ); break;
+         case BE:   _BE   (   (IOReq_BE*)req ); break;
+         case PP:   _PP   (   (IOReq_PP*)req ); break;
+      }
+
+      deselect();     // chip select OFF
+      _spi.release(); // release the SPI bus
+
+      (void)xTaskNotifyGive( req->_handle );
+   }
+}
+
+
+void A25Lxxx::_RDID( IOReq_RDID *req )
+{
+   _spi.pollXfer( RDIDCmd, req->_rdid, sizeof( RDIDCmd ));
+}
+
+
+void A25Lxxx::_READ( IOReq_READ *req )
+{
+   uint8_t cmd[ 4 ];
+
+   cmd[ 0 ] = 0x03;
+   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xff;
+   cmd[ 3 ] =   req->_addr         & 0xff;
+
+   _spi.pollXfer( cmd, NULL, sizeof( cmd ));
+   _spi.read( req->_x, 256 /*req->_len*/ );
+}
+
+
+void A25Lxxx::_SE( IOReq_SE *req )
+{
+   uint8_t cmd[ 4 ];
+
+   cmd[ 0 ] = 0x20;
+   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xf0;
+   cmd[ 3 ] =   req->_addr         & 0x00;
+
+   _spi.pollXfer( cmd, NULL, sizeof( cmd ));
+   _WIPWait( tSE );
+}
+
+
+void A25Lxxx::_BE( IOReq_BE *req )
+{
+   uint8_t cmd[ 4 ];
+
+   cmd[ 0 ] = 0x20;
+   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( req->_addr >>  8 ) & 0x00;
+   cmd[ 3 ] =   req->_addr         & 0x00;
+
+   _spi.pollXfer( cmd, NULL, sizeof( cmd ));
+   _WIPWait( tBE );
+}
+
+
+void A25Lxxx::_PP( IOReq_PP *req )
+{
+   uint8_t cmd[ 4 ];
+
+   cmd[ 0 ] = 0x02;
+   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xff;
+   cmd[ 3 ] =   req->_addr         & 0xff;
+
+   _spi.pollXfer( cmd, NULL, sizeof( cmd ));
+   _spi.write( req->_x, 256 /*req->_len*/ );
+   _WIPWait( tPP );
+}
+
+
+void A25Lxxx::_WREN( void )
+{
+   _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
+}
+
+
+void A25Lxxx::_REMS( REMSResp *rems )
+{
+   _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
+}
+
+
+void A25Lxxx::_RDSR1( RDSRResp *rdsr )
+{
+   _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
+}
+
+
+void A25Lxxx::_RDSR2( RDSRResp *rdsr )
+{
+   _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
+}
+
+
+void A25Lxxx::_WIPWait( unsigned ms )
 {
    RDSRResp rdsr;
    uint8_t rx;
@@ -275,10 +330,8 @@ A25Lxxx& A25Lxxx::_WIPWait( unsigned ms )
       do {
          if( ms > 0 ) delay( ms );
          _spi.pollXfer( &tx, &rx, 1 );
-      } while( rx & 0x01 );
+      } while( rx & 0x01 ); // XXX hard limit
    }
-
-   return *this;
 }
 
 /*EoF*/

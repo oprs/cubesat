@@ -58,8 +58,6 @@ SPIDevice& SPIDevice::disable( void )
 
 SPIDevice& SPIDevice::select( void )
 {
-   _spi.grab();
-
    if( _csMode == ActiveLow ) {
       _csPin.off();
    } else {
@@ -77,8 +75,6 @@ SPIDevice& SPIDevice::deselect( void )
    } else {
       _csPin.off();
    }
-
-   _spi.release();
 
    return *this;
 }
