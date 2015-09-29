@@ -42,16 +42,16 @@ SPI::~SPI()
 
 SPI& SPI::init( void )
 {
+   _clkPin.enable().pullDn().alt( _alt );
+
+   _stMISO.init();
+   _stMOSI.init();
+
    LOG << _name << ": System SPI controller at " << bus.name()
        << ", clk: " << _clkPin.name()
        << ", miso: " << _stMISO._pin.name()
        << ", mosi: " << _stMOSI._pin.name()
        ;
-
-   _clkPin.enable().pullDn().alt( _alt );
-
-   _stMISO.init();
-   _stMOSI.init();
 
    return *this;
 }
@@ -64,10 +64,10 @@ SPI& SPI::enable( bool silent )
 
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-   bus.enable( this, silent );
-
    _stMISO.enable( silent );
    _stMOSI.enable( silent );
+
+   bus.enable( this, silent );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
@@ -93,10 +93,10 @@ SPI& SPI::disable( bool silent )
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
+   bus.disable( this, silent );
+
    _stMOSI.disable( silent );
    _stMISO.disable( silent );
-
-   bus.disable( this, silent );
 
    return *this;
 }

@@ -29,12 +29,12 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
+   (void)SPIDevice::init();
 
    LOG << _name << ": Onboard MAX111x Serial ADC at " << _spi.name()
        << ", cs: " << _csPin.name();
 
-   (void)SPIDevice::init();
+   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
    return *this;
 }

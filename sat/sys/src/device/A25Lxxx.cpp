@@ -86,7 +86,7 @@ A25Lxxx& A25Lxxx::init( void )
 {
    RDIDResp rdid;
 
-   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
+   (void)SPIDevice::init();
 
    /* temporarily (silently) enable the device
     * in order to read its identification ID */
@@ -119,7 +119,7 @@ A25Lxxx& A25Lxxx::init( void )
           << _spi.name() << ", cs: " << _csPin.name();
    }
 
-   (void)SPIDevice::init();
+   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
    return *this;
 }
