@@ -39,12 +39,18 @@ DMA& DMA::init( void )
 }
 
 
-DMA& DMA::enable( void )
-{ return *this; }
+DMA& DMA::enable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
-DMA& DMA::disable( void )
-{ return *this; }
+DMA& DMA::disable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
 //  - - - - - - - - - - -  //

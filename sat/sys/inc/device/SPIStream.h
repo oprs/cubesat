@@ -23,8 +23,8 @@ namespace qb50 {
          ~SPIStream();
 
          SPIStream& init    ( void );
-         SPIStream& enable  ( void );
-         SPIStream& disable ( void );
+         SPIStream& enable  ( bool silent = false );
+         SPIStream& disable ( bool silent = false );
 
          DMAStream&           dmaStream;
          DMAStream::Channel   dmaChannel;

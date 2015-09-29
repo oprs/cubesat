@@ -40,8 +40,8 @@ namespace qb50 {
             CH7 = 7  /*!< channel 7 */
          };
 
-         MAX111x& enable      ( void );
-         MAX111x& disable     ( void );
+         MAX111x& enable      ( bool silent = false );
+         MAX111x& disable     ( bool silent = false );
          int      readChannel ( Channel sel );
          int      readChannel ( int n );
          void     readAll     ( void );

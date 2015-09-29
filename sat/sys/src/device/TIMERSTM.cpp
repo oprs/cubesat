@@ -31,33 +31,33 @@ TIMER::~TIMER()
 TIMER& TIMER::init( void )
 {
    LOG << _name << ": System timer controller at " << bus.name()
-       //<< ", rx: " << _rxPin.name()
-       ;
+      //<< ", rx: " << _rxPin.name()
+      ;
 
    return *this;
 }
 
 
-TIMER& TIMER::enable( void )
+TIMER& TIMER::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
-   bus.enable(this);
-   _pin.enable()
+   bus.enable( this, silent );
+   _pin.enable( silent )
        .pullUp()
        .alt(_alt);
 
    return *this;
 }
 
-TIMER& TIMER::disable( void )
+TIMER& TIMER::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _pin.disable();
-   bus.disable( this );
+   _pin.disable( silent );
+   bus.disable( this, silent );
 
    return *this;
 }

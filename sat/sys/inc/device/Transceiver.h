@@ -18,8 +18,8 @@ namespace qb50 {
          ~Transceiver();
 
          Transceiver& init    ( void );
-         Transceiver& enable  ( void );
-         Transceiver& disable ( void );
+         Transceiver& enable  ( bool silent = false );
+         Transceiver& disable ( bool silent = false );
 
 
       private:

@@ -16,8 +16,8 @@ namespace qb50 {
          ~ADCChannel();
 
          ADCChannel& init    ( void );
-         ADCChannel& enable  ( void );
-         ADCChannel& disable ( void );
+         ADCChannel& enable  ( bool silent = false );
+         ADCChannel& disable ( bool silent = false );
 
          float       read    ( void );
 

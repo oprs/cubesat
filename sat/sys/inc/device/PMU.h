@@ -55,8 +55,8 @@ namespace qb50 {
          virtual ~PMU();
 
          PMU& init    ( void );
-         PMU& enable  ( void );
-         PMU& disable ( void );
+         PMU& enable  ( bool silent = false );
+         PMU& disable ( bool silent = false );
 
          PMU& update  ( int ns );
 

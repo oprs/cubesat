@@ -56,8 +56,8 @@ namespace qb50 {
             uint8_t sr;      /*!< status register */
          } __attribute__(( packed ));
 
-         A25Lxxx& enable      ( void );
-         A25Lxxx& disable     ( void );
+         A25Lxxx& enable      ( bool silent = false );
+         A25Lxxx& disable     ( bool silent = false );
          A25Lxxx& pageRead    ( uint32_t addr, void *x );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
          A25Lxxx& sectorErase ( uint32_t addr );

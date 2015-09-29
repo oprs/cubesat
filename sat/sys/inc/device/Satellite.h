@@ -16,8 +16,8 @@ namespace qb50 {
          virtual ~Satellite();
 
          Satellite& init    ( void );
-         Satellite& enable  ( void );
-         Satellite& disable ( void );
+         Satellite& enable  ( bool silent = false );
+         Satellite& disable ( bool silent = false );
 
          enum SatSel {
             FR01 = 0, /* X-CubeSat (Polytechnique)   */

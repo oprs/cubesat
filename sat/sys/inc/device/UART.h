@@ -36,8 +36,8 @@ namespace qb50 {
          ~UART();
 
          UART& init     ( void );
-         UART& enable   ( void );
-         UART& disable  ( void );
+         UART& enable   ( bool silent = false );
+         UART& disable  ( bool silent = false );
 
          UART& ioctl    ( IOReq *req, TickType_t maxWait = portMAX_DELAY );
 

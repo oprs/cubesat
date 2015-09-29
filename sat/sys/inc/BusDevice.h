@@ -24,8 +24,8 @@ namespace qb50 {
          const uint32_t periph;
 
          virtual BusDevice& init    ( void ) = 0;
-         virtual BusDevice& enable  ( void ) = 0;
-         virtual BusDevice& disable ( void ) = 0;
+         virtual BusDevice& enable  ( bool silent = false ) = 0;
+         virtual BusDevice& disable ( bool silent = false ) = 0;
 
    };
 

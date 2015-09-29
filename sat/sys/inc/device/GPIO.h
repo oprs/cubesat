@@ -17,8 +17,8 @@ namespace qb50 {
 			~GPIO();
 
 			GPIO& init    ( void );
-			GPIO& enable  ( void );
-			GPIO& disable ( void );
+			GPIO& enable  ( bool silent = false );
+			GPIO& disable ( bool silent = false );
 
 			unsigned id ( void ) const { return _id;   }
 

@@ -31,23 +31,19 @@ GPIOPin& GPIOPin::init( void )
 }
 
 
-GPIOPin& GPIOPin::enable( void )
+GPIOPin& GPIOPin::enable( bool silent )
 {
    if( _incRef() == 0 )
-      _gpio.enable();
-
-   //LOG << _name << ": enabled";
+      _gpio.enable( silent );
 
    return *this;
 }
 
 
-GPIOPin& GPIOPin::disable( void )
+GPIOPin& GPIOPin::disable( bool silent )
 {
-   if( _decRef() == 0 ) {
-      //LOG << _name << ": disabled";
-      _gpio.disable();
-   }
+   if( _decRef() == 0 )
+      _gpio.disable( silent );
 
    return *this;
 }

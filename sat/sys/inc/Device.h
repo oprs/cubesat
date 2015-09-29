@@ -16,8 +16,8 @@ namespace qb50 {
          { return _name; }
 
          virtual Device& init    ( void ) = 0;
-         virtual Device& enable  ( void ) = 0;
-         virtual Device& disable ( void ) = 0;
+         virtual Device& enable  ( bool silent = false ) = 0;
+         virtual Device& disable ( bool silent = false ) = 0;
 
       protected:
 

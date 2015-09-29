@@ -26,12 +26,11 @@ AHB::~AHB()
 AHB& AHB::init( void )
 {
    LOG << _name << ": Advanced High-Performance Bus (AMBA)";
-
    return *this;
 }
 
 
-AHB& AHB::enable( BusDevice *dev )
+AHB& AHB::enable( BusDevice *dev, bool silent )
 {
    switch( _id ) {
       case BUS1: RCC->AHB1ENR |= dev->periph; break;
@@ -39,13 +38,14 @@ AHB& AHB::enable( BusDevice *dev )
       case BUS3: RCC->AHB3ENR |= dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " enabled";
+   if( !silent )
+      LOG << _name << ": " << dev->name() << " enabled";
 
    return *this;
 }
 
 
-AHB& AHB::disable( BusDevice *dev )
+AHB& AHB::disable( BusDevice *dev, bool silent )
 {
    switch( _id ) {
       case BUS1: RCC->AHB1ENR &= ~dev->periph; break;
@@ -53,7 +53,8 @@ AHB& AHB::disable( BusDevice *dev )
       case BUS3: RCC->AHB3ENR &= ~dev->periph; break;
    }
 
-   LOG << _name << ": " << dev->name() << " disabled";
+   if( !silent )
+      LOG << _name << ": " << dev->name() << " disabled";
 
    return *this;
 }

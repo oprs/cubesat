@@ -70,15 +70,17 @@ UART& UART::ioctl( IOReq *req, TickType_t maxWait )
 }
 
 
-UART& UART::enable( void )
+UART& UART::enable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( ENABLE );
    return ioctl( &req );
 }
 
 
-UART& UART::disable( void )
+UART& UART::disable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( DISABLE );
    return ioctl( &req );
 }

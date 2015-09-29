@@ -25,8 +25,8 @@ namespace qb50 {
             ~AX25Out();
 
             AX25Out& init    ( void );
-            AX25Out& enable  ( void );
-            AX25Out& disable ( void );
+            AX25Out& enable  ( bool silent = false );
+            AX25Out& disable ( bool silent = false );
 
             void sendFlag();
             void sendPacket( const uint8_t *x, unsigned len );

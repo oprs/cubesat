@@ -57,17 +57,17 @@ SPI& SPI::init( void )
 }
 
 
-SPI& SPI::enable( void )
+SPI& SPI::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-   bus.enable( this );
+   bus.enable( this, silent );
 
-   _stMISO.enable();
-   _stMOSI.enable();
+   _stMISO.enable( silent );
+   _stMOSI.enable( silent );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
@@ -84,7 +84,7 @@ SPI& SPI::enable( void )
 }
 
 
-SPI& SPI::disable( void )
+SPI& SPI::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -93,10 +93,10 @@ SPI& SPI::disable( void )
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
-   _stMOSI.disable();
-   _stMISO.disable();
+   _stMOSI.disable( silent );
+   _stMISO.disable( silent );
 
-   bus.disable( this );
+   bus.disable( this, silent );
 
    return *this;
 }

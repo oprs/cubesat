@@ -30,26 +30,26 @@ PMU& PMU::init( void )
 }
 
 
-PMU& PMU::enable( void )
+PMU& PMU::enable( bool silent )
 {
    if( _incRef() == 0 ) {
-      ADC1.enable();
-      ADC2.enable();
-      ADC3.enable();
-      ADC4.enable();
+      ADC1.enable( silent );
+      ADC2.enable( silent );
+      ADC3.enable( silent );
+      ADC4.enable( silent );
    }
 
    return *this;
 }
 
 
-PMU& PMU::disable( void )
+PMU& PMU::disable( bool silent )
 {
    if( _decRef() == 0 ) {
-      ADC4.enable();
-      ADC3.enable();
-      ADC2.enable();
-      ADC1.enable();
+      ADC4.enable( silent );
+      ADC3.enable( silent );
+      ADC2.enable( silent );
+      ADC1.enable( silent );
    }
 
    return *this;

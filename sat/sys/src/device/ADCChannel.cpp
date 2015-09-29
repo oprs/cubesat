@@ -32,12 +32,18 @@ ADCChannel& ADCChannel::init( void )
 { return *this; }
 
 
-ADCChannel& ADCChannel::enable( void )
-{ return *this; }
+ADCChannel& ADCChannel::enable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
-ADCChannel& ADCChannel::disable( void )
-{ return *this; }
+ADCChannel& ADCChannel::disable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
 float ADCChannel::read( void )

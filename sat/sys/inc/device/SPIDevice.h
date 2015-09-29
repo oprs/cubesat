@@ -22,8 +22,8 @@ namespace qb50 {
          virtual ~SPIDevice();
 
          virtual SPIDevice& init    ( void ) = 0;
-         virtual SPIDevice& enable  ( void ) = 0;
-         virtual SPIDevice& disable ( void ) = 0;
+         virtual SPIDevice& enable  ( bool silent = false ) = 0;
+         virtual SPIDevice& disable ( bool silent = false ) = 0;
 
          SPIDevice& select   ( void );
          SPIDevice& deselect ( void );
@@ -34,8 +34,8 @@ namespace qb50 {
          GPIOPin&   _csPin;
          SelectMode _csMode;
 
-         virtual void _enable  ( void );
-         virtual void _disable ( void );
+         virtual void _enable  ( bool silent = false );
+         virtual void _disable ( bool silent = false );
 
    };
 

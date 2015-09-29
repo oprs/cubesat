@@ -29,8 +29,8 @@ namespace qb50 {
          ~SPI();
 
          SPI& init    ( void );
-         SPI& enable  ( void );
-         SPI& disable ( void );
+         SPI& enable  ( bool silent = false );
+         SPI& disable ( bool silent = false );
 
          SPI& grab    ( void );
          SPI& release ( void );

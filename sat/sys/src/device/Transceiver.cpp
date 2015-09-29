@@ -37,24 +37,24 @@ Transceiver& Transceiver::init( void )
 }
 
 
-Transceiver& Transceiver::enable( void )
+Transceiver& Transceiver::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
    _enTXPin.on();
-   LOG << _name << ": Waiting for 500ms...";
+   if( !silent ) LOG << _name << ": Waiting for 500ms...";
 
    delay( 500 );
 
    _enPAPin.on();
-   LOG << _name << ": Enabled";
+   if( !silent ) LOG << _name << ": Enabled";
 
    return *this;
 }
 
 
-Transceiver& Transceiver::disable( void )
+Transceiver& Transceiver::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -62,7 +62,7 @@ Transceiver& Transceiver::disable( void )
    _enPAPin.off();
    _enTXPin.off();
 
-   LOG << _name << ": Disabled";
+   if( !silent ) LOG << _name << ": Disabled";
 
    return *this;
 }

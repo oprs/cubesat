@@ -22,10 +22,11 @@ namespace qb50 {
 
 			const char *name ( void ) const { return _name; }
 
-			virtual Bus&     init    ( void )           = 0;
-			virtual Bus&     enable  ( BusDevice *dev ) = 0;
-			virtual Bus&     disable ( BusDevice *dev ) = 0;
-			virtual uint32_t freq    ( void )           = 0;
+			virtual Bus& init    ( void ) = 0;
+			virtual Bus& enable  ( BusDevice *dev, bool silent = false ) = 0;
+			virtual Bus& disable ( BusDevice *dev, bool silent = false ) = 0;
+
+			virtual uint32_t freq ( void ) = 0;
 
 		protected:
 

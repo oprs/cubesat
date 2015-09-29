@@ -30,8 +30,8 @@ namespace qb50{
       ~TIMER();
 
       TIMER& init    ( void );
-      TIMER& enable  ( void );
-      TIMER& disable ( void );
+      TIMER& enable  ( bool silent = false );
+      TIMER& disable ( bool silent = false );
 
    private:
 

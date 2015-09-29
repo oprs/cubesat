@@ -29,19 +29,19 @@ GPIO& GPIO::init( void )
 }
 
 
-GPIO& GPIO::enable( void )
+GPIO& GPIO::enable( bool silent )
 {
    if( _incRef() == 0 )
-      bus.enable( this );
+      bus.enable( this, silent );
 
    return *this;
 }
 
 
-GPIO& GPIO::disable( void )
+GPIO& GPIO::disable( bool silent )
 {
    if( _decRef() == 0 )
-      bus.disable( this );
+      bus.disable( this, silent );
 
    return *this;
 }

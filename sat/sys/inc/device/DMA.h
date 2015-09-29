@@ -16,8 +16,8 @@ namespace qb50 {
          ~DMA();
 
          DMA& init    ( void );
-         DMA& enable  ( void );
-         DMA& disable ( void );
+         DMA& enable  ( bool silent = false );
+         DMA& disable ( bool silent = false );
 
          DMAStream *streams;
    };

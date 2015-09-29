@@ -32,22 +32,20 @@ ADC::~ADC()
 
 ADC& ADC::init( void )
 {
-   _pin.enable().pullUp().mode( _mode );
-
    LOG << _name << ": Internal ADC at " << bus.name();
-
    return *this;
 }
 
 
-ADC& ADC::enable( void )
+ADC& ADC::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
-   bus.enable( this );
+   _pin.enable( silent ).pullUp().mode( _mode );
+   bus.enable( this, silent );
 
    ADCx->CR1 = 0; //Set resolution for the ADC
    uint32_t tmpreg = 0;
@@ -72,16 +70,15 @@ ADC& ADC::enable( void )
 }
 
 
-ADC& ADC::disable( void )
+ADC& ADC::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
 
    //ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
-   _pin.disable();
-
-   bus.disable( this );
+   bus.disable( this, silent );
+   _pin.disable( silent );
 
    return *this;
 }

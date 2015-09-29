@@ -35,12 +35,18 @@ AX25Out& AX25Out::init( void )
 }
 
 
-AX25Out& AX25Out::enable( void )
-{ return *this; }
+AX25Out& AX25Out::enable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
-AX25Out& AX25Out::disable( void )
-{ return *this; }
+AX25Out& AX25Out::disable( bool silent )
+{
+   (void)silent;
+   return *this;
+}
 
 
 void AX25Out::sendPacket( const uint8_t *x, unsigned len )

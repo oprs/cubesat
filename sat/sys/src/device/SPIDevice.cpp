@@ -62,20 +62,22 @@ SPIDevice& SPIDevice::deselect( void )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void SPIDevice::_enable( void )
+void SPIDevice::_enable( bool silent )
 {
    if( _incRef() == 0 ) {
-      _spi.enable();
-      LOG << _spi.name() << ": " << _name << " enabled";
+      _spi.enable( silent );
+      if( !silent )
+         LOG << _spi.name() << ": " << _name << " enabled";
    }
 }
 
 
-void SPIDevice::_disable( void )
+void SPIDevice::_disable( bool silent )
 {
    if( _decRef() == 0 ) {
-      LOG << _spi.name() << ": " << _name << " disabled";
-      _spi.disable();
+      if( !silent )
+         LOG << _spi.name() << ": " << _name << " disabled";
+      _spi.disable( silent );
    }
 }
 

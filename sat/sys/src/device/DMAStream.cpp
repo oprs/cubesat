@@ -41,7 +41,7 @@ DMAStream& DMAStream::init( void )
 { return *this; }
 
 
-DMAStream& DMAStream::enable( void )
+DMAStream& DMAStream::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -49,7 +49,7 @@ DMAStream& DMAStream::enable( void )
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
    IRQ.enable( _IRQn );
-   _dma.enable();
+   _dma.enable( silent );
 
    /* reset the stream */
 
@@ -69,12 +69,12 @@ DMAStream& DMAStream::enable( void )
 }
 
 
-DMAStream& DMAStream::disable( void )
+DMAStream& DMAStream::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _dma.disable(); /* _dma.refcount */
+   _dma.disable( silent ); /* _dma.refcount */
    IRQ.disable( _IRQn );
 
    return *this;

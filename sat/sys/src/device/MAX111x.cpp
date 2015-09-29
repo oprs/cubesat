@@ -48,16 +48,18 @@ MAX111x& MAX111x::ioctl( IOReq *req, TickType_t maxWait )
 }
 
 
-MAX111x& MAX111x::enable( void )
+MAX111x& MAX111x::enable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( ENABLE );
    (void)ioctl( &req );
    return *this;
 }
 
 
-MAX111x& MAX111x::disable( void )
+MAX111x& MAX111x::disable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( DISABLE );
    (void)ioctl( &req );
    return *this;

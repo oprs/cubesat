@@ -84,14 +84,25 @@ A25Lxxx::~A25Lxxx()
 
 A25Lxxx& A25Lxxx::init( void )
 {
+   RDIDResp rdid;
+
    (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
-   LOG << _name << ": Onboard AMIC A25Lxxx (Serial Flash Memory)"
-       << " at " << _spi.name() << ", cs: " << _csPin.name();
+   /* temporarily (silently) enable the device
+    * in order to read its identification ID */
 
-   (void)SPIDevice::init();
+   _spi.grab();
+   select();
+   _enable( true ); /* be silent */
 
-#if 0
+   IOReq_RDID req( &rdid );
+   _RDID( &req );
+
+   _disable( true ); /* be silent */
+   deselect();
+   _spi.release();
+
+   /* display ID infos */
 
    uint16_t  sig  = ( rdid.memType << 8 ) | rdid.memCap;
    A25LPart *part = parts;
@@ -99,41 +110,16 @@ A25Lxxx& A25Lxxx::init( void )
    while(( part->mask != 0 ) && ( part->sig != ( sig & part->mask )))
       ++part;
 
-   if( part->mask == 0 )
-      throw( "unsupported flash chip" ); /* XXX exception... */
-
-/*
-   _bpc = part->bpc;
-   _ppb = part->ppb;
-   _bpp = part->bpp;
-*/
-
-   LOG << _name << ": AMIC " << part->name
-       << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
-       << _spi.name() << ", cs: " << _csPin.name();
-
-#else
-
-/*
-   LOG << _name << ": AMIC A25L";
-
-   switch( rdid.memType ) {
-      case 0x30: LOG << "032";  break;
-      case 0x40: LOG << "Q32A"; break;
-      default:   LOG << "xxx";  break;
+   if( part->mask == 0 ) {
+      LOG << _name << ": unknown chip - defaulting to AMIC A25L032 at "
+          << _spi.name() << ", cs: " << _csPin.name();
+   } else {
+      LOG << _name << ": AMIC " << part->name
+          << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
+          << _spi.name() << ", cs: " << _csPin.name();
    }
 
-   LOG << " Serial Flash Memory (";
-
-   switch( rdid.memCap ) {
-      case 0x16: LOG << "32Mbit";  break;
-      default:   LOG << "unknown"; break;
-   }
-
-   LOG << ") at " << _spi.name() << ", cs: " << _csPin.name();
-*/
-
-#endif
+   (void)SPIDevice::init();
 
    return *this;
 }
@@ -147,16 +133,18 @@ A25Lxxx& A25Lxxx::ioctl( IOReq *req, TickType_t maxWait )
 }
 
 
-A25Lxxx& A25Lxxx::enable( void )
+A25Lxxx& A25Lxxx::enable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( ENABLE );
    (void)ioctl( &req );
    return *this;
 }
 
 
-A25Lxxx& A25Lxxx::disable( void )
+A25Lxxx& A25Lxxx::disable( bool silent )
 {
+   (void)silent; /*XXX*/
    IOReq req( DISABLE );
    (void)ioctl( &req );
    return *this;

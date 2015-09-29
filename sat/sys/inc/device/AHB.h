@@ -23,8 +23,8 @@ namespace qb50 {
 			~AHB();
 
 			AHB&     init    ( void );
-			AHB&     enable  ( BusDevice *dev );
-			AHB&     disable ( BusDevice *dev );
+			AHB&     enable  ( BusDevice *dev, bool silent = false );
+			AHB&     disable ( BusDevice *dev, bool silent = false );
 			uint32_t freq    ( void );
 
 		protected:

@@ -92,12 +92,16 @@ Satellite& Satellite::init( void )
 }
 
 
-Satellite& Satellite::enable( void )
-{ return *this; }
-
-
-Satellite& Satellite::disable( void )
+Satellite& Satellite::enable( bool silent )
 {
+   (void)silent;
+   return *this;
+}
+
+
+Satellite& Satellite::disable( bool silent )
+{
+   (void)silent;
 /*
    _selPin.disable();
    _asPin.disable();

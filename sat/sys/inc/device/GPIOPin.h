@@ -15,8 +15,8 @@ namespace qb50 {
          ~GPIOPin();
 
          GPIOPin& init   ( void );
-         GPIOPin& enable ( void );
-         GPIOPin& disable( void );
+         GPIOPin& enable ( bool silent = false );
+         GPIOPin& disable( bool silent = false );
 
          GPIOPin& on     ( void );
          GPIOPin& off    ( void );

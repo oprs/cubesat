@@ -22,8 +22,8 @@ namespace qb50 {
 			~APB();
 
 			APB&     init    ( void );
-			APB&     enable  ( BusDevice *dev );
-			APB&     disable ( BusDevice *dev );
+			APB&     enable  ( BusDevice *dev, bool silent = false );
+			APB&     disable ( BusDevice *dev, bool silent = false );
 			uint32_t freq    ( void );
 
 		protected:

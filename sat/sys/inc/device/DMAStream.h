@@ -44,7 +44,7 @@ namespace qb50 {
           * @return Une self-reference sur cette instance.
           */
 
-         DMAStream& enable( void );
+         DMAStream& enable( bool silent = false );
 
          /**
           * Désactive le stream DMA
@@ -55,7 +55,7 @@ namespace qb50 {
           * @return Une self-reference sur cette instance.
           */
 
-         DMAStream& disable( void );
+         DMAStream& disable( bool silent = false );
 
       /* channel selection */
 
