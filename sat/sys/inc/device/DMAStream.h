@@ -4,10 +4,9 @@
 
 #include <FreeRTOS.h>
 #include <semphr.h>
+#include <stdint.h>
 
 #include "Device.h"
-
-#include <stdint.h>
 
 
 namespace qb50 {
@@ -16,6 +15,7 @@ namespace qb50 {
 
    class DMAStream : public Device
    {
+
       public:
 
          /**
@@ -318,9 +318,49 @@ namespace qb50 {
          const uint32_t _iobase;
          const uint32_t _IRQn;
          const uint32_t _shl;
+
    };
 
+   extern qb50::DMAStream DMA1ST0;
+   extern qb50::DMAStream DMA1ST1;
+   extern qb50::DMAStream DMA1ST2;
+   extern qb50::DMAStream DMA1ST3;
+   extern qb50::DMAStream DMA1ST4;
+   extern qb50::DMAStream DMA1ST5;
+   extern qb50::DMAStream DMA1ST6;
+   extern qb50::DMAStream DMA1ST7;
+
+   extern qb50::DMAStream DMA2ST0;
+   extern qb50::DMAStream DMA2ST1;
+   extern qb50::DMAStream DMA2ST2;
+   extern qb50::DMAStream DMA2ST3;
+   extern qb50::DMAStream DMA2ST4;
+   extern qb50::DMAStream DMA2ST5;
+   extern qb50::DMAStream DMA2ST6;
+   extern qb50::DMAStream DMA2ST7;
+
 } /* qb50 */
+
+
+extern "C" {
+   void DMA1_Stream0_IRQHandler( void );
+   void DMA1_Stream1_IRQHandler( void );
+   void DMA1_Stream2_IRQHandler( void );
+   void DMA1_Stream3_IRQHandler( void );
+   void DMA1_Stream4_IRQHandler( void );
+   void DMA1_Stream5_IRQHandler( void );
+   void DMA1_Stream6_IRQHandler( void );
+   void DMA1_Stream7_IRQHandler( void );
+
+   void DMA2_Stream0_IRQHandler( void );
+   void DMA2_Stream1_IRQHandler( void );
+   void DMA2_Stream2_IRQHandler( void );
+   void DMA2_Stream3_IRQHandler( void );
+   void DMA2_Stream4_IRQHandler( void );
+   void DMA2_Stream5_IRQHandler( void );
+   void DMA2_Stream6_IRQHandler( void );
+   void DMA2_Stream7_IRQHandler( void );
+}
 
 
 #endif /*_QB50_SYS_DEVICE_DMA_STREAM_H*/

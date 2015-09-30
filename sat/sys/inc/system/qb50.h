@@ -9,6 +9,7 @@
 #include "device/EXTI.h"
 #include "device/PMU.h"
 #include "device/DMA.h"
+#include "device/DMAStream.h"
 #include "device/SPI.h"
 #include "device/GPIO.h"
 #include "device/UART.h"

@@ -22,7 +22,7 @@ int main( void )
    UART2.enable();            /* FiPEX      */
    UART3.enable();            /* GPS        */
 #endif
-   Thread *ctrl = registerThread( new ControlThread() );
+   (void)registerThread( new ControlThread() );
    run();
 }
 

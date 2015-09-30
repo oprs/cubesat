@@ -35,7 +35,7 @@ void PMUThread::run( void )
 {
    PMU0.enable();
 
-   uint8_t channels[ 32 ];
+ //uint8_t channels[ 32 ];
 
    unsigned vbat, tbat,      // tension + temperature batterie
             irx, itx,        // courant global consommé

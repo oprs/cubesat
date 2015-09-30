@@ -143,7 +143,9 @@ void MAX111x::_RDCH( IOReq_RDCH *req )
 
 
 void MAX111x::_RDALL( IOReq_RDALL *req )
-{ ; }
+{
+   (void)req; /* XXX */
+}
 
 
 /*EoF*/

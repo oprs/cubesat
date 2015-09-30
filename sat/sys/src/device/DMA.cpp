@@ -17,10 +17,8 @@ using namespace qb50;
 DMA::DMA( Bus& bus,
           const uint32_t iobase,
           const uint32_t periph,
-          const char *name,
-          DMAStream *streams )
-   : BusDevice( bus, iobase, periph, name ),
-     streams( streams )
+          const char *name )
+   : BusDevice( bus, iobase, periph, name )
 { ; }
 
 
@@ -41,68 +39,23 @@ DMA& DMA::init( void )
 
 DMA& DMA::enable( bool silent )
 {
-   (void)silent;
+   if( _incRef() > 0 )
+      return *this;
+
+   bus.enable( this, silent );
+
    return *this;
 }
 
 
 DMA& DMA::disable( bool silent )
 {
-   (void)silent;
+   if( _decRef() > 0 )
+      return *this;
+
+   bus.disable( this, silent );
+
    return *this;
 }
-
-
-//  - - - - - - - - - - -  //
-//  T R A M P O L I N E S  //
-//  - - - - - - - - - - -  //
-
-void DMA1_Stream0_IRQHandler( void )
-{ qb50::DMA1.streams[0].isr(); }
-
-void DMA1_Stream1_IRQHandler( void )
-{ qb50::DMA1.streams[1].isr(); }
-
-void DMA1_Stream2_IRQHandler( void )
-{ qb50::DMA1.streams[2].isr(); }
-
-void DMA1_Stream3_IRQHandler( void )
-{ qb50::DMA1.streams[3].isr(); }
-
-void DMA1_Stream4_IRQHandler( void )
-{ qb50::DMA1.streams[4].isr(); }
-
-void DMA1_Stream5_IRQHandler( void )
-{ qb50::DMA1.streams[5].isr(); }
-
-void DMA1_Stream6_IRQHandler( void )
-{ qb50::DMA1.streams[6].isr(); }
-
-void DMA1_Stream7_IRQHandler( void )
-{ qb50::DMA1.streams[7].isr(); }
-
-void DMA2_Stream0_IRQHandler( void )
-{ qb50::DMA2.streams[0].isr(); }
-
-void DMA2_Stream1_IRQHandler( void )
-{ qb50::DMA2.streams[1].isr(); }
-
-void DMA2_Stream2_IRQHandler( void )
-{ qb50::DMA2.streams[2].isr(); }
-
-void DMA2_Stream3_IRQHandler( void )
-{ qb50::DMA2.streams[3].isr(); }
-
-void DMA2_Stream4_IRQHandler( void )
-{ qb50::DMA2.streams[4].isr(); }
-
-void DMA2_Stream5_IRQHandler( void )
-{ qb50::DMA2.streams[5].isr(); }
-
-void DMA2_Stream6_IRQHandler( void )
-{ qb50::DMA2.streams[6].isr(); }
-
-void DMA2_Stream7_IRQHandler( void )
-{ qb50::DMA2.streams[7].isr(); }
 
 /*EoF*/

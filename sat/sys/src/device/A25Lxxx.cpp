@@ -57,6 +57,7 @@ static const uint8_t REMSCmd[]  = { 0x90, 0xff, 0xff, 0x00, 0xff, 0xff };
 static const uint8_t RDSR1Cmd[] = { 0x05, 0xff };
 static const uint8_t RDSR2Cmd[] = { 0x35, 0xff };
 static const uint8_t WRENCmd[]  = { 0x06 };
+static const uint8_t WRDICmd[]  = { 0x04 };
 
 static void _trampoline( void *x );
 
@@ -92,14 +93,12 @@ A25Lxxx& A25Lxxx::init( void )
     * in order to read its identification ID */
 
    _spi.grab();
-   select();
    _enable( true ); /* be silent */
 
-   IOReq_RDID req( &rdid );
-   _RDID( &req );
+   _RDID( &rdid );
 
    _disable( true ); /* be silent */
-   deselect();
+   // XXX switch to deep power down
    _spi.release();
 
    /* display ID infos */
@@ -119,7 +118,7 @@ A25Lxxx& A25Lxxx::init( void )
           << _spi.name() << ", cs: " << _csPin.name();
    }
 
-   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
+   (void)xTaskCreate( _trampoline, _name, 768, this, configMAX_PRIORITIES - 1, &_ioTask );
 
    return *this;
 }
@@ -146,14 +145,6 @@ A25Lxxx& A25Lxxx::disable( bool silent )
 {
    (void)silent; /*XXX*/
    IOReq req( DISABLE );
-   (void)ioctl( &req );
-   return *this;
-}
-
-
-A25Lxxx& A25Lxxx::readId( RDIDResp *rdid )
-{
-   IOReq_RDID req( rdid );
    (void)ioctl( &req );
    return *this;
 }
@@ -211,111 +202,147 @@ void A25Lxxx::run( void )
       if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
          continue;
 
-      _spi.grab(); // lock the SPI bus
-      select();    // chip select ON
+      _spi.grab();
 
       switch( req->_op ) {
-         case ENABLE:  _enable();                  break;
-         case DISABLE: _disable();                 break;
-         case RDID:    _RDID ( (IOReq_RDID*)req ); break;
-         case READ:    _READ ( (IOReq_READ*)req ); break;
-         case SE:      _SE   (   (IOReq_SE*)req ); break;
-         case BE:      _BE   (   (IOReq_BE*)req ); break;
-         case PP:      _PP   (   (IOReq_PP*)req ); break;
+         case ENABLE:  _enable();                         break;
+         case DISABLE: _disable();                        break;
+         case READ:    _pageRead    ( (IOReq_READ*)req ); break;
+         case SE:      _sectorErase (   (IOReq_SE*)req ); break;
+         case BE:      _blockErase  (   (IOReq_BE*)req ); break;
+         case PP:      _pageWrite   (   (IOReq_PP*)req ); break;
       }
 
-      deselect();     // chip select OFF
-      _spi.release(); // release the SPI bus
+      _spi.release();
 
       (void)xTaskNotifyGive( req->_handle );
    }
 }
 
 
-void A25Lxxx::_RDID( IOReq_RDID *req )
+void A25Lxxx::_pageWrite( IOReq_PP *req )
 {
-   _spi.pollXfer( RDIDCmd, req->_rdid, sizeof( RDIDCmd ));
+   _WREN();
+   _PP( req->_addr, req->_x );
+   _WRDI();
 }
 
 
-void A25Lxxx::_READ( IOReq_READ *req )
+void A25Lxxx::_pageRead( IOReq_READ *req )
+{ _READ( req->_addr, req->_x ); }
+
+
+void A25Lxxx::_sectorErase( IOReq_SE *req )
+{
+   _WREN();
+   _SE( req->_addr );
+   _WRDI();
+}
+
+
+void A25Lxxx::_blockErase( IOReq_BE *req )
+{
+   _WREN();
+   _BE( req->_addr );
+   _WRDI();
+}
+
+
+void A25Lxxx::_RDID( RDIDResp *rdid )
+{
+   select();
+   _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
+   deselect();
+}
+
+
+void A25Lxxx::_READ( uint32_t addr, void *x )
 {
    uint8_t cmd[ 4 ];
 
    cmd[ 0 ] = 0x03;
-   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
-   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xff;
-   cmd[ 3 ] =   req->_addr         & 0xff;
+   cmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( addr >>  8 ) & 0xff;
+   cmd[ 3 ] =   addr         & 0xff;
 
+   select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
-   _spi.read( req->_x, 256 /*req->_len*/ );
+   _spi.read( x, 256 /*req->_len*/ );
+   deselect();
 }
 
 
-void A25Lxxx::_SE( IOReq_SE *req )
+void A25Lxxx::_SE( uint32_t addr )
 {
    uint8_t cmd[ 4 ];
 
    cmd[ 0 ] = 0x20;
-   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
-   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xf0;
-   cmd[ 3 ] =   req->_addr         & 0x00;
+   cmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( addr >>  8 ) & 0xf0;
+   cmd[ 3 ] =   addr         & 0x00;
 
+   select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _WIPWait( tSE );
+   deselect();
 }
 
 
-void A25Lxxx::_BE( IOReq_BE *req )
+void A25Lxxx::_BE( uint32_t addr )
 {
    uint8_t cmd[ 4 ];
 
    cmd[ 0 ] = 0x20;
-   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
-   cmd[ 2 ] = ( req->_addr >>  8 ) & 0x00;
-   cmd[ 3 ] =   req->_addr         & 0x00;
+   cmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( addr >>  8 ) & 0x00;
+   cmd[ 3 ] =   addr         & 0x00;
 
+   select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _WIPWait( tBE );
+   deselect();
 }
 
 
-void A25Lxxx::_PP( IOReq_PP *req )
+void A25Lxxx::_PP( uint32_t addr, const void *x )
 {
    uint8_t cmd[ 4 ];
 
    cmd[ 0 ] = 0x02;
-   cmd[ 1 ] = ( req->_addr >> 16 ) & 0x3f;
-   cmd[ 2 ] = ( req->_addr >>  8 ) & 0xff;
-   cmd[ 3 ] =   req->_addr         & 0xff;
+   cmd[ 1 ] = ( addr >> 16 ) & 0x3f;
+   cmd[ 2 ] = ( addr >>  8 ) & 0xff;
+   cmd[ 3 ] =   addr         & 0xff;
 
+   select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
-   _spi.write( req->_x, 256 /*req->_len*/ );
+   _spi.write( x, 256 /*req->_len*/ );
+   deselect();
+
    _WIPWait( tPP );
 }
 
 
 void A25Lxxx::_WREN( void )
 {
+   select();
    _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
+   deselect();
+}
+
+
+void A25Lxxx::_WRDI( void )
+{
+   select();
+   _spi.pollXfer( WRDICmd, NULL, sizeof( WRDICmd ));
+   deselect();
 }
 
 
 void A25Lxxx::_REMS( REMSResp *rems )
 {
+   select();
    _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
-}
-
-
-void A25Lxxx::_RDSR1( RDSRResp *rdsr )
-{
-   _spi.pollXfer( RDSR1Cmd, rdsr, sizeof( RDSR1Cmd ));
-}
-
-
-void A25Lxxx::_RDSR2( RDSRResp *rdsr )
-{
-   _spi.pollXfer( RDSR2Cmd, rdsr, sizeof( RDSR2Cmd ));
+   deselect();
 }
 
 
@@ -330,6 +357,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
       ms >>= 3;
    }
 
+   select();
    _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
 
    if( rdsr.sr & 0x01 ) {
@@ -338,6 +366,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
          _spi.pollXfer( &tx, &rx, 1 );
       } while( rx & 0x01 ); // XXX hard limit
    }
+   deselect();
 }
 
 /*EoF*/

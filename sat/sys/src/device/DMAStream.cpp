@@ -4,9 +4,6 @@
 
 #include <stm32f4xx.h>
 
-#undef DMA1
-#undef DMA2
-
 using namespace qb50;
 
 
@@ -89,6 +86,7 @@ DMAStream& DMAStream::start( void )
 
    _clearIFR( 0x3d );
 
+   STRMx->CR &= ~DMA_SxCR_EN;
    STRMx->CR |= ( DMA_SxCR_TCIE | DMA_SxCR_TEIE );
    STRMx->CR |= DMA_SxCR_EN;
 
@@ -214,5 +212,60 @@ void DMAStream::isr( void )
    if( hpTask == pdTRUE )
       portEND_SWITCHING_ISR( hpTask );
 }
+
+
+//  - - - - - - - - - - -  //
+//  T R A M P O L I N E S  //
+//  - - - - - - - - - - -  //
+
+/*
+void DMA1_Stream0_IRQHandler( void )
+{ qb50::DMA1ST0.isr(); }
+
+void DMA1_Stream1_IRQHandler( void )
+{ qb50::DMA1ST1.isr(); }
+*/
+void DMA1_Stream2_IRQHandler( void )
+{ qb50::DMA1ST2.isr(); }
+/*
+void DMA1_Stream3_IRQHandler( void )
+{ qb50::DMA1ST3.isr(); }
+
+void DMA1_Stream4_IRQHandler( void )
+{ qb50::DMA1ST4.isr(); }
+*/
+void DMA1_Stream5_IRQHandler( void )
+{ qb50::DMA1ST5.isr(); }
+/*
+void DMA1_Stream6_IRQHandler( void )
+{ qb50::DMA1ST6.isr(); }
+
+void DMA1_Stream7_IRQHandler( void )
+{ qb50::DMA1ST7.isr(); }
+
+void DMA2_Stream0_IRQHandler( void )
+{ qb50::DMA2ST0.isr(); }
+
+void DMA2_Stream1_IRQHandler( void )
+{ qb50::DMA2ST1.isr(); }
+
+void DMA2_Stream2_IRQHandler( void )
+{ qb50::DMA2ST2.isr(); }
+
+void DMA2_Stream3_IRQHandler( void )
+{ qb50::DMA2ST3.isr(); }
+
+void DMA2_Stream4_IRQHandler( void )
+{ qb50::DMA2ST4.isr(); }
+
+void DMA2_Stream5_IRQHandler( void )
+{ qb50::DMA2ST5.isr(); }
+
+void DMA2_Stream6_IRQHandler( void )
+{ qb50::DMA2ST6.isr(); }
+
+void DMA2_Stream7_IRQHandler( void )
+{ qb50::DMA2ST7.isr(); }
+*/
 
 /*EoF*/

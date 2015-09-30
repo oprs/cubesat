@@ -48,7 +48,7 @@ Satellite& Satellite::init( void )
    APB1.init();
    APB2.init();
    DMA1.init();
-   DMA2.init();
+ //DMA2.init();
    GPIOA.init();
    GPIOB.init();
    GPIOC.init();

@@ -38,9 +38,11 @@ SPIStream& SPIStream::init( void )
 
 SPIStream& SPIStream::enable( bool silent )
 {
-   if( _incRef() == 0 )
-      dmaStream.enable( silent )
-               .channel( dmaChannel );
+   if( _incRef() > 0 )
+      return *this;
+
+   dmaStream.enable( silent )
+            .channel( dmaChannel );
 
    return *this;
 }
@@ -48,8 +50,10 @@ SPIStream& SPIStream::enable( bool silent )
 
 SPIStream& SPIStream::disable( bool silent )
 {
-   if( _decRef() == 0 )
-      dmaStream.disable( silent );
+   if( _decRef() > 0 )
+      return *this;
+
+   dmaStream.disable( silent );
 
    return *this;
 }

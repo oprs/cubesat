@@ -27,6 +27,20 @@ namespace qb50 {
 
          A25Lxxx& ioctl( IOReq *req, TickType_t maxWait = portMAX_DELAY );
 
+         A25Lxxx& enable      ( bool silent = false );
+         A25Lxxx& disable     ( bool silent = false );
+         A25Lxxx& pageRead    ( uint32_t addr, void *x );
+         A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
+         A25Lxxx& sectorErase ( uint32_t addr );
+         A25Lxxx& blockErase  ( uint32_t addr );
+
+         void run( void );
+
+      private:
+
+         xQueueHandle _ioQueue;
+         TaskHandle_t _ioTask;
+
          /* read device id */
 
          struct RDIDResp {
@@ -35,8 +49,6 @@ namespace qb50 {
             uint8_t memType; /*!< Memory Type     */
             uint8_t memCap;  /*!< Memory Capacity */
          } __attribute__(( packed ));
-
-         A25Lxxx& readId( RDIDResp *rdid );
 
          /* read electronic manufacturer id */
 
@@ -56,30 +68,15 @@ namespace qb50 {
             uint8_t sr;      /*!< status register */
          } __attribute__(( packed ));
 
-         A25Lxxx& enable      ( bool silent = false );
-         A25Lxxx& disable     ( bool silent = false );
-         A25Lxxx& pageRead    ( uint32_t addr, void *x );
-         A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
-         A25Lxxx& sectorErase ( uint32_t addr );
-         A25Lxxx& blockErase  ( uint32_t addr );
-
-         void run( void );
-
-      private:
-
-         xQueueHandle _ioQueue;
-         TaskHandle_t _ioTask;
-
          /* IOCTLs */
 
          enum IOCTL {
             ENABLE  = 0,
             DISABLE = 1,
-            RDID    = 2,
-            READ    = 3,
-            SE      = 4,
-            BE      = 5,
-            PP      = 6
+            READ    = 2,
+            SE      = 3,
+            BE      = 4,
+            PP      = 5
          };
 
          struct IOReq
@@ -91,15 +88,6 @@ namespace qb50 {
             { _handle = xTaskGetCurrentTaskHandle(); }
 
             ~IOReq()
-            { ; }
-         };
-
-         struct IOReq_RDID : public IOReq
-         {
-            RDIDResp *_rdid;
-
-            IOReq_RDID( RDIDResp *rdid )
-            : IOReq( RDID ), _rdid( rdid )
             { ; }
          };
 
@@ -141,15 +129,18 @@ namespace qb50 {
 
          /* operations */
 
-         void _RDID ( IOReq_RDID *req );
-         void _READ ( IOReq_READ *req );
-         void _SE   ( IOReq_SE   *req );
-         void _BE   ( IOReq_BE   *req );
-         void _PP   ( IOReq_PP   *req );
+         void _pageWrite   ( IOReq_PP   *req );
+         void _pageRead    ( IOReq_READ *req );
+         void _sectorErase ( IOReq_SE   *req );
+         void _blockErase  ( IOReq_BE   *req );
 
+         void _SE   ( uint32_t addr );
+         void _BE   ( uint32_t addr  );
+         void _RDID ( RDIDResp *rdid );
+         void _READ ( uint32_t addr, void * );
+         void _PP   ( uint32_t addr, const void *x );
          void _WREN ( void );
-         void _RDSR1( RDSRResp *rdsr );
-         void _RDSR2( RDSRResp *rdsr );
+         void _WRDI ( void );
          void _REMS ( REMSResp *rems );
 
          void _WIPWait( unsigned ms = 10 );
