@@ -147,8 +147,8 @@ namespace qb50 {
 
    };
 
-   extern qb50::A25Lxxx MEM0;
-   extern qb50::A25Lxxx MEM1;
+   extern qb50::A25Lxxx FLASH0;
+   extern qb50::A25Lxxx FLASH1;
 
 } /* qb50 */
 

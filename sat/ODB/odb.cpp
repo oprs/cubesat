@@ -245,9 +245,9 @@ namespace qb50 {
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
 
-   /*            SPI    name  csPin */
-   A25Lxxx MEM0( SPI3, "MEM0", PA0 /*CS6*/ );  /* U9 - "mémoire soft"    */
-   A25Lxxx MEM1( SPI3, "MEM1", PA7 /*CS4*/ );  /* U5 - "mémoire données" */
+   /*              SPI    name    csPin */
+   A25Lxxx FLASH0( SPI3, "FLASH0", PA0 /*CS6*/ );  /* U9 - "mémoire soft"    */
+   A25Lxxx FLASH1( SPI3, "FLASH1", PA7 /*CS4*/ );  /* U5 - "mémoire données" */
 
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //

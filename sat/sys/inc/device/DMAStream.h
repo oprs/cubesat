@@ -121,8 +121,8 @@ namespace qb50 {
       /* current target */
 
          enum Target {
-            MEM0     = 0, /*!< target memory is memory 0 */
-            MEM1     = 1  /*!< target memory is memory 1 */
+            MEM0 = 0, /*!< target memory is memory 0 */
+            MEM1 = 1  /*!< target memory is memory 1 */
          };
 
          /**

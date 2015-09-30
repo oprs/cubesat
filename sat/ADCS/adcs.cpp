@@ -262,8 +262,8 @@ namespace qb50 {
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
 
-   /*               SPI   name     csPin */
-   A25Lxxx MEM0( SPI3, "MEM0", PA15 );  /* CS6 - mémoire soft    */
+   /*              SPI   name     csPin */
+   A25Lxxx FLASH0( SPI3, "FLASH0", PA15 );  /* CS6 - mémoire soft    */
 
 //  - - - - - - - - - - -  //
 //  O N B O A R D   A D C  //

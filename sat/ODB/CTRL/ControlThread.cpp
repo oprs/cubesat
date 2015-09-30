@@ -58,18 +58,18 @@ void ControlThread::run( void )
    SAT.init();
    SAT.enable();
 
-MEM0.enable();
-MEM1.enable();
+FLASH0.enable();
+FLASH1.enable();
 
 uint8_t *x = new uint8_t[256];
 
 //for( int i = 0 ; i < 256 ; ++i ) x[i] = (uint8_t)i;
-//MEM0.pageWrite( 0, x );
+//FLASH0.pageWrite( 0, x );
 
 for( int i = 0 ; i < 256 ; ++i ) x[i] = 0;
-MEM0.pageRead( 0, x );
+FLASH0.pageRead( 0, x );
 
-LOG << "MEM0 bytes: " << std::hex << (int)x[0] << ' ' << (int)x[1] << ' ' << (int)x[2] << ' ' << (int)x[3] << " ...";
+LOG << "FLASH0 bytes: " << std::hex << (int)x[0] << ' ' << (int)x[1] << ' ' << (int)x[2] << ' ' << (int)x[3] << " ...";
 delete[] x;
 
    LOG << "Waiting for 30mn...";

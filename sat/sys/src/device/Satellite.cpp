@@ -64,8 +64,8 @@ Satellite& Satellite::init( void )
    ADC3.init();
    ADC4.init();
    PMU0.init();
-   MEM0.init();
-   MEM1.init();
+   FLASH0.init();
+   FLASH1.init();
    RFTX.init();
 
    _selPin.enable().in().noPull();
