@@ -6,12 +6,13 @@
 #include <semphr.h>
 #include <task.h>
 
-#include "device/SPIDevice.h"
+#include "device/FlashMemory.h"
+#include "device/SPISlave.h"
 
 
 namespace qb50 {
 
-   class A25Lxxx : public SPIDevice
+   class A25Lxxx : public FlashMemory, public SPISlave
    {
 
       private:
@@ -23,23 +24,37 @@ namespace qb50 {
          A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin );
          ~A25Lxxx();
 
-         A25Lxxx& init( void );
+         void run( void );
 
-         A25Lxxx& ioctl( IOReq *req, TickType_t maxWait = portMAX_DELAY );
+         /* FlashMemory interface */
 
+         A25Lxxx& init        ( void );
          A25Lxxx& enable      ( bool silent = false );
          A25Lxxx& disable     ( bool silent = false );
+         A25Lxxx& ioctl       ( IOReq *req, TickType_t maxWait = portMAX_DELAY );
+
          A25Lxxx& pageRead    ( uint32_t addr, void *x );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
          A25Lxxx& sectorErase ( uint32_t addr );
          A25Lxxx& blockErase  ( uint32_t addr );
 
-         void run( void );
-
       private:
 
          xQueueHandle _ioQueue;
          TaskHandle_t _ioTask;
+
+         /* type definition for A25Lxxx chips */
+
+         struct A25LChip {
+            const uint16_t sig;  /* JEDEC signature */
+            const uint16_t mask; /* signature mask  */
+            const char    *name; /* chip name       */
+            uint16_t       bpc;  /* blocks per chip */
+            uint16_t       ppb;  /* pages per block */
+            uint16_t       bpp;  /* bytes per page  */
+         };
+
+         static A25LChip chips[];
 
          /* read device id */
 
@@ -91,6 +106,24 @@ namespace qb50 {
             { ; }
          };
 
+         struct IOReq_ENABLE : public IOReq
+         {
+            bool _silent;
+
+            IOReq_ENABLE( bool silent )
+            : IOReq( ENABLE ), _silent( silent )
+            { ; }
+         };
+
+         struct IOReq_DISABLE : public IOReq
+         {
+            bool _silent;
+
+            IOReq_DISABLE( bool silent )
+            : IOReq( DISABLE ), _silent( silent )
+            { ; }
+         };
+
          struct IOReq_READ : public IOReq
          {
             uint32_t _addr;
@@ -129,10 +162,12 @@ namespace qb50 {
 
          /* operations */
 
-         void _pageWrite   ( IOReq_PP   *req );
-         void _pageRead    ( IOReq_READ *req );
-         void _sectorErase ( IOReq_SE   *req );
-         void _blockErase  ( IOReq_BE   *req );
+         void _enable      ( IOReq_ENABLE  *req );
+         void _disable     ( IOReq_DISABLE *req );
+         void _pageWrite   ( IOReq_PP      *req );
+         void _pageRead    ( IOReq_READ    *req );
+         void _sectorErase ( IOReq_SE      *req );
+         void _blockErase  ( IOReq_BE      *req );
 
          void _SE   ( uint32_t addr );
          void _BE   ( uint32_t addr  );

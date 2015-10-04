@@ -24,18 +24,9 @@ using namespace qb50;
 /* typical Page Program Cycle Time (ms) */
 #define tPP 2
 
-/* A25Lxxx parts definitions */
+/* supported A25Lxxx chips */
 
-struct A25LPart {
-   const uint16_t sig;  /* JEDEC signature */
-   const uint16_t mask; /* signature mask  */
-   const char    *name; /* part name       */
-   const size_t   bpc;  /* blocks per chip */
-   const size_t   ppb;  /* pages per block */
-   const size_t   bpp;  /* bytes per page  */
-};
-
-static A25LPart parts[] = {
+A25Lxxx::A25LChip A25Lxxx::chips[] = {
    /* sig.    mask    part #     bpc  ppb  bpp */
    { 0x3010, 0xffff, "A25L512",    1, 256, 256 }, /* 512 Kbit */
    { 0x3011, 0xffff, "A25L010",    2, 256, 256 }, /*   1 Mbit */
@@ -67,7 +58,7 @@ static void _trampoline( void *x );
 //  - - - - - - - - -  //
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin )
-   : SPIDevice( spi, csPin, SPIDevice::ActiveLow, name )
+   : FlashMemory( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 {
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
 }
@@ -87,36 +78,41 @@ A25Lxxx& A25Lxxx::init( void )
 {
    RDIDResp rdid;
 
-   (void)SPIDevice::init();
+   (void)SPISlave::init();
 
    /* temporarily (silently) enable the device
     * in order to read its identification ID */
 
    _spi.grab();
-   _enable( true ); /* be silent */
+   IOReq_ENABLE re( true );
+   _enable( &re ); /* be silent */
 
    _RDID( &rdid );
 
-   _disable( true ); /* be silent */
-   // XXX switch to deep power down
+   IOReq_DISABLE rd( true );
+   _disable( &rd ); /* be silent */
    _spi.release();
 
    /* display ID infos */
 
    uint16_t  sig  = ( rdid.memType << 8 ) | rdid.memCap;
-   A25LPart *part = parts;
+   A25LChip *chip = chips;
 
-   while(( part->mask != 0 ) && ( part->sig != ( sig & part->mask )))
-      ++part;
+   while(( chip->mask != 0 ) && ( chip->sig != ( sig & chip->mask )))
+      ++chip;
 
-   if( part->mask == 0 ) {
-      LOG << _name << ": unknown chip - defaulting to AMIC A25L032 at "
-          << _spi.name() << ", cs: " << _csPin.name();
-   } else {
-      LOG << _name << ": AMIC " << part->name
-          << " Onboard serial flash (" << (( part->bpc * part->ppb * part->bpp ) >> 17 ) << "Mbit) at "
-          << _spi.name() << ", cs: " << _csPin.name();
+   if( chip->mask == 0 ) {
+      LOG << _name << ": unknown chip - defaulting to AMIC A25L032";
+      chip = &chips[7];
    }
+
+   LOG << _name << ": AMIC " << chip->name
+       << " Onboard serial flash (" << (( chip->bpc * chip->ppb * chip->bpp ) >> 17 ) << "Mbit) at "
+       << _spi.name() << ", cs: " << _csPin.name();
+
+   _geo.bpc = chip->bpc;
+   _geo.ppb = chip->ppb;
+   _geo.bpp = chip->bpp;
 
    (void)xTaskCreate( _trampoline, _name, 768, this, configMAX_PRIORITIES - 1, &_ioTask );
 
@@ -134,18 +130,24 @@ A25Lxxx& A25Lxxx::ioctl( IOReq *req, TickType_t maxWait )
 
 A25Lxxx& A25Lxxx::enable( bool silent )
 {
-   (void)silent; /*XXX*/
-   IOReq req( ENABLE );
+   IOReq_ENABLE req( silent );
    (void)ioctl( &req );
+
+   if( !silent )
+      LOG << _name << ": enabled";
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::disable( bool silent )
 {
-   (void)silent; /*XXX*/
-   IOReq req( DISABLE );
+   IOReq_DISABLE req( silent );
    (void)ioctl( &req );
+
+   if( !silent )
+      LOG << _name << ": disabled";
+
    return *this;
 }
 
@@ -205,18 +207,36 @@ void A25Lxxx::run( void )
       _spi.grab();
 
       switch( req->_op ) {
-         case ENABLE:  _enable();                         break;
-         case DISABLE: _disable();                        break;
-         case READ:    _pageRead    ( (IOReq_READ*)req ); break;
-         case SE:      _sectorErase (   (IOReq_SE*)req ); break;
-         case BE:      _blockErase  (   (IOReq_BE*)req ); break;
-         case PP:      _pageWrite   (   (IOReq_PP*)req ); break;
+         case ENABLE:  _enable      (  (IOReq_ENABLE*)req ); break;
+         case DISABLE: _disable     ( (IOReq_DISABLE*)req ); break;
+         case READ:    _pageRead    (    (IOReq_READ*)req ); break;
+         case SE:      _sectorErase (      (IOReq_SE*)req ); break;
+         case BE:      _blockErase  (      (IOReq_BE*)req ); break;
+         case PP:      _pageWrite   (      (IOReq_PP*)req ); break;
       }
 
       _spi.release();
 
       (void)xTaskNotifyGive( req->_handle );
    }
+}
+
+
+void A25Lxxx::_enable( IOReq_ENABLE *req )
+{
+   if( _incRef() > 0 )
+      return;
+
+   _spi.enable( req->_silent );
+}
+
+
+void A25Lxxx::_disable( IOReq_DISABLE *req )
+{
+   if( _decRef() > 0 )
+      return;
+
+   _spi.disable( req->_silent );
 }
 
 
@@ -250,9 +270,9 @@ void A25Lxxx::_blockErase( IOReq_BE *req )
 
 void A25Lxxx::_RDID( RDIDResp *rdid )
 {
-   select();
+   _select();
    _spi.pollXfer( RDIDCmd, rdid, sizeof( RDIDCmd ));
-   deselect();
+   _deselect();
 }
 
 
@@ -265,10 +285,10 @@ void A25Lxxx::_READ( uint32_t addr, void *x )
    cmd[ 2 ] = ( addr >>  8 ) & 0xff;
    cmd[ 3 ] =   addr         & 0xff;
 
-   select();
+   _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _spi.read( x, 256 /*req->_len*/ );
-   deselect();
+   _deselect();
 }
 
 
@@ -281,10 +301,10 @@ void A25Lxxx::_SE( uint32_t addr )
    cmd[ 2 ] = ( addr >>  8 ) & 0xf0;
    cmd[ 3 ] =   addr         & 0x00;
 
-   select();
+   _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _WIPWait( tSE );
-   deselect();
+   _deselect();
 }
 
 
@@ -297,10 +317,10 @@ void A25Lxxx::_BE( uint32_t addr )
    cmd[ 2 ] = ( addr >>  8 ) & 0x00;
    cmd[ 3 ] =   addr         & 0x00;
 
-   select();
+   _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _WIPWait( tBE );
-   deselect();
+   _deselect();
 }
 
 
@@ -313,10 +333,10 @@ void A25Lxxx::_PP( uint32_t addr, const void *x )
    cmd[ 2 ] = ( addr >>  8 ) & 0xff;
    cmd[ 3 ] =   addr         & 0xff;
 
-   select();
+   _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
    _spi.write( x, 256 /*req->_len*/ );
-   deselect();
+   _deselect();
 
    _WIPWait( tPP );
 }
@@ -324,25 +344,25 @@ void A25Lxxx::_PP( uint32_t addr, const void *x )
 
 void A25Lxxx::_WREN( void )
 {
-   select();
+   _select();
    _spi.pollXfer( WRENCmd, NULL, sizeof( WRENCmd ));
-   deselect();
+   _deselect();
 }
 
 
 void A25Lxxx::_WRDI( void )
 {
-   select();
+   _select();
    _spi.pollXfer( WRDICmd, NULL, sizeof( WRDICmd ));
-   deselect();
+   _deselect();
 }
 
 
 void A25Lxxx::_REMS( REMSResp *rems )
 {
-   select();
+   _select();
    _spi.pollXfer( REMSCmd, rems, sizeof( REMSCmd ));
-   deselect();
+   _deselect();
 }
 
 
@@ -357,7 +377,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
       ms >>= 3;
    }
 
-   select();
+   _select();
    _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
 
    if( rdsr.sr & 0x01 ) {
@@ -366,7 +386,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
          _spi.pollXfer( &tx, &rx, 1 );
       } while( rx & 0x01 ); // XXX hard limit
    }
-   deselect();
+   _deselect();
 }
 
 /*EoF*/

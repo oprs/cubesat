@@ -10,6 +10,7 @@ namespace qb50 {
 
    class BusDevice : public Device
    {
+
       public:
 
          BusDevice( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name )

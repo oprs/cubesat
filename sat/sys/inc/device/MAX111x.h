@@ -6,12 +6,13 @@
 #include <semphr.h>
 #include <task.h>
 
-#include "device/SPIDevice.h"
+#include "Device.h"
+#include "device/SPISlave.h"
 
 
 namespace qb50 {
 
-   class MAX111x : public SPIDevice
+   class MAX111x : public Device, public SPISlave
    {
 
       private:
@@ -72,6 +73,24 @@ namespace qb50 {
             { ; }
          };
 
+         struct IOReq_ENABLE : public IOReq
+         {
+            bool _silent;
+
+            IOReq_ENABLE( bool silent )
+            : IOReq( ENABLE ), _silent( silent )
+            { ; }
+         };
+
+         struct IOReq_DISABLE : public IOReq
+         {
+            bool _silent;
+
+            IOReq_DISABLE( bool silent )
+            : IOReq( DISABLE ), _silent( silent )
+            { ; }
+         };
+
          struct IOReq_RDCH : public IOReq
          {
             Channel _ch;
@@ -92,8 +111,10 @@ namespace qb50 {
 
          /* operations */
 
-         void _RDCH  ( IOReq_RDCH  *req );
-         void _RDALL ( IOReq_RDALL *req );
+         void _enable  ( IOReq_ENABLE  *req );
+         void _disable ( IOReq_DISABLE *req );
+         void _RDCH    ( IOReq_RDCH    *req );
+         void _RDALL   ( IOReq_RDALL   *req );
 
    };
 

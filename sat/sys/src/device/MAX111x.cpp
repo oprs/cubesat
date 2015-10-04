@@ -13,7 +13,7 @@ static void _trampoline( void *x );
 //  - - - - - - - - -  //
 
 MAX111x::MAX111x( SPI& spi, const char *name, GPIOPin& csPin )
-   : SPIDevice( spi, csPin, SPIDevice::ActiveLow, name )
+   : Device( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 {
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
 }
@@ -29,7 +29,7 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::init( void )
 {
-   (void)SPIDevice::init();
+   (void)SPISlave::init();
 
    LOG << _name << ": Onboard MAX111x Serial ADC at " << _spi.name()
        << ", cs: " << _csPin.name();
@@ -50,18 +50,24 @@ MAX111x& MAX111x::ioctl( IOReq *req, TickType_t maxWait )
 
 MAX111x& MAX111x::enable( bool silent )
 {
-   (void)silent; /*XXX*/
-   IOReq req( ENABLE );
+   IOReq_ENABLE req( silent );
    (void)ioctl( &req );
+
+   if( !silent )
+      LOG << _name << ": enabled";
+
    return *this;
 }
 
 
 MAX111x& MAX111x::disable( bool silent )
 {
-   (void)silent; /*XXX*/
-   IOReq req( DISABLE );
+   IOReq_DISABLE req( silent );
    (void)ioctl( &req );
+
+   if( !silent )
+      LOG << _name << ": disabled";
+
    return *this;
 }
 
@@ -109,20 +115,38 @@ void MAX111x::run( void )
          continue;
 
       _spi.grab(); // lock the SPI bus
-      select();    // chip select ON
+      _select();   // chip select ON
 
       switch( req->_op ) {
-         case ENABLE:  _enable();                      break;
-         case DISABLE: _disable();                     break;
-         case RDCH:    _RDCH    (  (IOReq_RDCH*)req ); break;
-         case RDALL:   _RDALL   ( (IOReq_RDALL*)req ); break;
+         case ENABLE:  _enable  (  (IOReq_ENABLE*)req ); break;
+         case DISABLE: _disable ( (IOReq_DISABLE*)req ); break;
+         case RDCH:    _RDCH    (    (IOReq_RDCH*)req ); break;
+         case RDALL:   _RDALL   (   (IOReq_RDALL*)req ); break;
       }
 
-      deselect();     // chip select OFF
+      _deselect();    // chip select OFF
       _spi.release(); // release the SPI bus
 
       (void)xTaskNotifyGive( req->_handle );
    }
+}
+
+
+void MAX111x::_enable( IOReq_ENABLE *req )
+{
+   if( _incRef() > 0 )
+      return;
+
+   _spi.enable( req->_silent );
+}
+
+
+void MAX111x::_disable( IOReq_DISABLE *req )
+{
+   if( _decRef() > 0 )
+      return;
+
+   _spi.disable( req->_silent );
 }
 
 
