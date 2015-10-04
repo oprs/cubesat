@@ -2,11 +2,9 @@
 #ifndef _QB50_SYS_DEVICE_DMA_STREAM_H
 #define _QB50_SYS_DEVICE_DMA_STREAM_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-#include <stdint.h>
-
 #include "Device.h"
+
+#include <stdint.h>
 
 
 namespace qb50 {

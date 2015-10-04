@@ -2,12 +2,10 @@
 #ifndef _QB50_SYS_DEVICE_A25LXXX_H
 #define _QB50_SYS_DEVICE_A25LXXX_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-#include <task.h>
-
 #include "device/FlashMemory.h"
 #include "device/SPISlave.h"
+
+#include <task.h>
 
 
 namespace qb50 {

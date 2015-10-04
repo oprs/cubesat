@@ -1,9 +1,6 @@
 #ifndef _QB50_SYS_DEVICE_ADC_H
 #define _QB50_SYS_DEVICE_ADC_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-
 #include "BusDevice.h"
 #include "GPIOPin.h"
 #include "NVIC.h"

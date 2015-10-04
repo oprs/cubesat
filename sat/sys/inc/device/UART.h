@@ -2,14 +2,12 @@
 #ifndef _QB50_SYS_DEVICE_UART_H
 #define _QB50_SYS_DEVICE_UART_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-#include <task.h>
-
 #include "BusDevice.h"
 #include "GPIOPin.h"
 #include "NVIC.h"
 #include "FIFO.hpp"
+
+#include <task.h>
 
 
 namespace qb50 {

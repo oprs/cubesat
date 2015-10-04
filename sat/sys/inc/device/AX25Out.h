@@ -2,10 +2,6 @@
 #ifndef _QB50_SYS_AX25OUT_H
 #define _QB50_SYS_AX25OUT_H
 
-#include <FreeRTOS.h>
-#include <semphr.h>
-#include <queue>
-#include <iostream>
 #include "device/GPIOPin.h"
 #include "Device.h"
 #include "device/EXTI.h"
@@ -13,6 +9,9 @@
 
 #undef FIFO
 #include "device/FIFO.hpp"
+
+#include <queue>
+#include <iostream>
 
 
 namespace qb50 {
