@@ -30,7 +30,6 @@ UART::UART( Bus& bus,
      _IRQn  ( IRQn  ),
      _alt   ( alt   )
 {
-   _lock    = xSemaphoreCreateMutex();
    _isrRXNE = xSemaphoreCreateBinary();
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
    _enabled = false;
@@ -41,7 +40,6 @@ UART::~UART()
 {
    vQueueDelete( _ioQueue );
    vSemaphoreDelete( _isrRXNE );
-   vSemaphoreDelete( _lock );
 }
 
 
@@ -142,7 +140,7 @@ void UART::run( void )
       if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
          continue;
 
-      (void)xSemaphoreTake( _lock, portMAX_DELAY );
+      _lock();
 
       switch( req->_op ) {
          case ENABLE:   _enable   (                  req ); break;
@@ -153,7 +151,7 @@ void UART::run( void )
          case BAUDRATE: _baudRate ( (IOReq_baudRate*)req ); break;
       }
 
-      (void)xSemaphoreGive( _lock );
+      _unlock();
       (void)xTaskNotifyGive( req->_handle );
    }
 }

@@ -54,7 +54,6 @@ namespace qb50 {
 
       private:
 
-         xSemaphoreHandle _lock;    /**< global lock on the device    */
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
 
          xQueueHandle     _ioQueue;

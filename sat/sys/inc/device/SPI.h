@@ -52,8 +52,6 @@ namespace qb50 {
 
          SPI& _xfer   ( void );
 
-         xSemaphoreHandle _lock;  /**< bus lock */
-
          SPIStream&      _stMISO;
          SPIStream&      _stMOSI;
          GPIOPin&        _clkPin;

@@ -25,15 +25,11 @@ SPI::SPI( Bus&           bus,
      _stMOSI( stMOSI ),
      _clkPin( clkPin ),
      _alt( alt )
-{
-   _lock = xSemaphoreCreateMutex();
-}
+{ ; }
 
 
 SPI::~SPI()
-{
-   vSemaphoreDelete( _lock );
-}
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //
@@ -104,14 +100,14 @@ SPI& SPI::disable( bool silent )
 
 SPI& SPI::grab( void )
 {
-   xSemaphoreTake( _lock, portMAX_DELAY );
+   _lock();
    return *this;
 }
 
 
 SPI& SPI::release( void )
 {
-   xSemaphoreGive( _lock );
+   _unlock();
    return *this;
 }
 

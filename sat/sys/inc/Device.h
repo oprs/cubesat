@@ -2,6 +2,9 @@
 #ifndef _QB50_SYSTEM_DEVICE_H
 #define _QB50_SYSTEM_DEVICE_H
 
+#include <FreeRTOS.h>
+#include <semphr.h>
+
 
 namespace qb50 {
 
@@ -22,9 +25,12 @@ namespace qb50 {
 
       protected:
 
-         const char *_name;
-         unsigned    _refCount;
+         const char      *_name;     /**< device name               */
+         unsigned         _refCount; /**< reference counter         */
+         xSemaphoreHandle _devLock;  /**< global lock on the device */
 
+         Device&  _lock   ( void );
+         Device&  _unlock ( void );
          unsigned _incRef ( void );
          unsigned _decRef ( void );
 
