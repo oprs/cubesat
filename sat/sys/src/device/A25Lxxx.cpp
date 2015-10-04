@@ -138,10 +138,6 @@ A25Lxxx& A25Lxxx::enable( bool silent )
 {
    IOReq_ENABLE req( silent );
    (void)ioctl( &req );
-
-   if( !silent )
-      LOG << _name << ": enabled";
-
    return *this;
 }
 
@@ -150,10 +146,6 @@ A25Lxxx& A25Lxxx::disable( bool silent )
 {
    IOReq_DISABLE req( silent );
    (void)ioctl( &req );
-
-   if( !silent )
-      LOG << _name << ": disabled";
-
    return *this;
 }
 
@@ -234,6 +226,9 @@ void A25Lxxx::_enable( IOReq_ENABLE *req )
       return;
 
    _spi.enable( req->_silent );
+
+   if( !req->_silent )
+      LOG << _name << ": enabled";
 }
 
 
@@ -243,6 +238,9 @@ void A25Lxxx::_disable( IOReq_DISABLE *req )
       return;
 
    _spi.disable( req->_silent );
+
+   if( !req->_silent )
+      LOG << _name << ": disabled";
 }
 
 

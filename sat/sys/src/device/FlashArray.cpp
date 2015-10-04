@@ -9,7 +9,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-FlashArray::FlashArray( const char *name, int nSlaves, FlashMemory *slaves[] )
+FlashArray::FlashArray( const char *name, const int nSlaves, FlashMemory *slaves[] )
    : FlashMemory( name ), _nSlaves( nSlaves ), _slaves( slaves )
 { ; }
 
@@ -58,6 +58,9 @@ FlashArray& FlashArray::init( void )
 
 FlashArray& FlashArray::enable( bool silent )
 {
+   if( _incRef() > 0 )
+      return *this;
+
    for( int i = 0 ; i < _nSlaves ; ++i )
       _slaves[i]->enable( silent );
 
@@ -70,11 +73,14 @@ FlashArray& FlashArray::enable( bool silent )
 
 FlashArray& FlashArray::disable( bool silent )
 {
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( _decRef() > 0 )
+      return *this;
 
    for( int i = 0 ; i < _nSlaves ; ++i )
       _slaves[i]->disable( silent );
+
+   if( !silent )
+      LOG << _name << ": disabled";
 
    return *this;
 }

@@ -58,7 +58,7 @@ void ControlThread::run( void )
    SAT.init();
    SAT.enable();
 
-VFLASH.enable();
+FCACHE.enable();
 
 uint8_t *x = new uint8_t[256];
 
@@ -66,9 +66,9 @@ uint8_t *x = new uint8_t[256];
 //FLASH0.pageWrite( 0, x );
 
 for( int i = 0 ; i < 256 ; ++i ) x[i] = 0;
-VFLASH.pageRead( 0, x );
+FCACHE.pageRead( 0, x );
 
-LOG << "VFLASH bytes: " << std::hex << (int)x[0] << ' ' << (int)x[1] << ' ' << (int)x[2] << ' ' << (int)x[3] << " ...";
+LOG << "FCACHE bytes: " << std::hex << (int)x[0] << ' ' << (int)x[1] << ' ' << (int)x[2] << ' ' << (int)x[3] << " ...";
 delete[] x;
 
    LOG << "Waiting for 30mn...";

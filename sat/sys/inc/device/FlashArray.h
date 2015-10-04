@@ -14,7 +14,7 @@ namespace qb50 {
 
          FlashArray();
 
-         FlashArray( const char *name, int nSlaves, FlashMemory *slaves[] );
+         FlashArray( const char *name, const int nSlaves, FlashMemory *slaves[] );
          ~FlashArray();
 
          /* FlashMemory interface */
@@ -30,7 +30,7 @@ namespace qb50 {
 
       protected:
 
-         int           _nSlaves;
+         const int     _nSlaves;
          FlashMemory **_slaves;
 
          uint32_t      _mask; /* mask for the address part    */
@@ -40,7 +40,7 @@ namespace qb50 {
 
    };
 
-   extern qb50::FlashArray VFLASH;
+   extern qb50::FlashArray FARRAY;
 
 } /* qb50 */
 
