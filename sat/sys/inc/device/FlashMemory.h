@@ -13,15 +13,19 @@ namespace qb50 {
 
       public:
 
-         FlashMemory( const char *name );
-         virtual ~FlashMemory();
+         FlashMemory( const char *name ) : Device( name )
+         { ; }
+
+         virtual ~FlashMemory()
+         { ; }
 
          struct Geometry {
-            uint16_t bpc;  /* blocks per chip */
-            uint16_t ppb;  /* pages per block */
-            uint16_t bpp;  /* bytes per page  */
+            uint16_t bpc;  /* blocks per chip   */
+            uint16_t spb;  /* sectors per block */
+            uint16_t pps;  /* pages per sector  */
+            uint16_t bpp;  /* bytes per page    */
 
-            Geometry() : bpc( 0 ), ppb( 0 ), bpp( 0 )
+            Geometry() : bpc( 0 ), spb( 0 ), pps( 0 ), bpp( 0 )
             { ; }
 
             virtual ~Geometry()
@@ -37,8 +41,27 @@ namespace qb50 {
          virtual FlashMemory& sectorErase ( uint32_t addr                ) = 0;
          virtual FlashMemory& blockErase  ( uint32_t addr                ) = 0;
 
-         FlashMemory& geometry ( Geometry *geo );
-         uint32_t size( void );
+         FlashMemory& geometry( Geometry *geo )
+         {
+            geo->bpc = _geo.bpc;
+            geo->spb = _geo.spb;
+            geo->pps = _geo.pps;
+            geo->bpp = _geo.bpp;
+
+            return *this;
+         }
+
+         uint32_t chipSize( void )
+         { return (uint32_t)_geo.bpc * blockSize(); }
+
+         uint32_t blockSize( void )
+         { return (uint32_t)_geo.spb * sectorSize(); }
+
+         uint32_t sectorSize( void )
+         { return (uint32_t)_geo.pps * pageSize(); }
+
+         uint32_t pageSize( void )
+         { return (uint32_t)_geo.bpp; }
 
       protected:
 

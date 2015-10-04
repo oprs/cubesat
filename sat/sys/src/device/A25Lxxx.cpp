@@ -27,18 +27,18 @@ using namespace qb50;
 /* supported A25Lxxx chips */
 
 A25Lxxx::A25LChip A25Lxxx::chips[] = {
-   /* sig.    mask    part #     bpc  ppb  bpp */
-   { 0x3010, 0xffff, "A25L512",    1, 256, 256 }, /* 512 Kbit */
-   { 0x3011, 0xffff, "A25L010",    2, 256, 256 }, /*   1 Mbit */
-   { 0x3012, 0xffff, "A25L020",    4, 256, 256 }, /*   2 Mbit */
-   { 0x3013, 0xffff, "A25L040",    8, 256, 256 }, /*   4 Mbit */
-   { 0x3014, 0xffff, "A25L080",   16, 256, 256 }, /*   8 Mbit */
-   { 0x3015, 0xffff, "A25L016",   32, 256, 256 }, /*  16 Mbit */
-   { 0x4015, 0xffff, "A25LQ16",   32, 256, 256 }, /*  16 Mbit */
-   { 0x3016, 0xffff, "A25L032",   64, 256, 256 }, /*  32 Mbit */
-   { 0x4016, 0xffff, "A25LQ32A",  64, 256, 256 }, /*  32 Mbit */
-   { 0x4017, 0xffff, "A25LQ64",  128, 256, 256 }, /*  64 Mbit */
-   {      0,      0,  NULL,        0,   0,   0 }
+  /* sig.    mask     part #     bpc  spb  pps  bpp */
+   { 0x3010, 0xffff, "A25L512",    1,  16,  16, 256 }, /* 512 Kbit */
+   { 0x3011, 0xffff, "A25L010",    2,  16,  16, 256 }, /*   1 Mbit */
+   { 0x3012, 0xffff, "A25L020",    4,  16,  16, 256 }, /*   2 Mbit */
+   { 0x3013, 0xffff, "A25L040",    8,  16,  16, 256 }, /*   4 Mbit */
+   { 0x3014, 0xffff, "A25L080",   16,  16,  16, 256 }, /*   8 Mbit */
+   { 0x3015, 0xffff, "A25L016",   32,  16,  16, 256 }, /*  16 Mbit */
+   { 0x4015, 0xffff, "A25LQ16",   32,  16,  16, 256 }, /*  16 Mbit */
+   { 0x3016, 0xffff, "A25L032",   64,  16,  16, 256 }, /*  32 Mbit */
+   { 0x4016, 0xffff, "A25LQ32A",  64,  16,  16, 256 }, /*  32 Mbit */
+   { 0x4017, 0xffff, "A25LQ64",  128,  16,  16, 256 }, /*  64 Mbit */
+   {      0,      0,  NULL,        0,   0,   0,   0 }
 };
 
 /* SPI commands */
@@ -106,13 +106,19 @@ A25Lxxx& A25Lxxx::init( void )
       chip = &chips[7];
    }
 
-   LOG << _name << ": AMIC " << chip->name
-       << " Onboard serial flash (" << (( chip->bpc * chip->ppb * chip->bpp ) >> 17 ) << "Mbit) at "
+   _geo.bpc = chip->bpc;
+   _geo.spb = chip->spb;
+   _geo.pps = chip->pps;
+   _geo.bpp = chip->bpp;
+
+   LOG << _name << ": Onboard AMIC " << chip->name
+       << " serial flash (" << ( chipSize() >> 17 ) << "Mbit) at "
        << _spi.name() << ", cs: " << _csPin.name();
 
-   _geo.bpc = chip->bpc;
-   _geo.ppb = chip->ppb;
-   _geo.bpp = chip->bpp;
+   LOG << _name << ": " << _geo.bpc << " blocks * "
+                        << _geo.spb << " sectors * "
+                        << _geo.pps << " pages * "
+                        << _geo.bpp << " bytes";
 
    (void)xTaskCreate( _trampoline, _name, 768, this, configMAX_PRIORITIES - 1, &_ioTask );
 

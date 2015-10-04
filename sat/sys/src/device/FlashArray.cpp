@@ -28,6 +28,8 @@ FlashArray& FlashArray::init( void )
 {
    FlashMemory::Geometry geo;
 
+   // XXX check that _nSlaves > 0
+
    _slaves[0]->init();
    _slaves[0]->geometry( &_geo );
 
@@ -39,7 +41,16 @@ FlashArray& FlashArray::init( void )
       _geo.bpc += geo.bpc;
    }
 
-   LOG << _name << ": Virtual flash memory device (" << ( size() >> 17 ) << "Mbit)";
+   uint32_t sz = _slaves[0]->chipSize();
+   _mask = sz - 1;
+   _shft = log2( sz );
+
+   LOG << _name << ": Virtual flash memory device (" << ( chipSize() >> 17 ) << "Mbit)";
+
+   LOG << _name << ": " << _geo.bpc << " blocks * "
+                        << _geo.spb << " sectors * "
+                        << _geo.pps << " pages * "
+                        << _geo.bpp << " bytes";
 
    return *this;
 }
@@ -73,8 +84,8 @@ FlashArray& FlashArray::disable( bool silent )
 
 FlashArray& FlashArray::pageRead( uint32_t addr, void *x )
 {
-   (void)addr;
-   (void)x;
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->pageRead( addr & _mask, x );
 
    return *this;
 }
@@ -82,8 +93,8 @@ FlashArray& FlashArray::pageRead( uint32_t addr, void *x )
 
 FlashArray& FlashArray::pageWrite( uint32_t addr, const void *x )
 {
-   (void)addr;
-   (void)x;
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->pageWrite( addr & _mask, x );
 
    return *this;
 }
@@ -91,7 +102,8 @@ FlashArray& FlashArray::pageWrite( uint32_t addr, const void *x )
 
 FlashArray& FlashArray::sectorErase( uint32_t addr )
 {
-   (void)addr;
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->sectorErase( addr & _mask );
 
    return *this;
 }
@@ -99,9 +111,29 @@ FlashArray& FlashArray::sectorErase( uint32_t addr )
 
 FlashArray& FlashArray::blockErase( uint32_t addr )
 {
-   (void)addr;
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->blockErase( addr & _mask );
 
    return *this;
 }
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+unsigned FlashArray::log2( uint32_t u )
+{
+   unsigned r = 0;
+
+   if( u & 0xffff0000 /* 11111111111111110000000000000000 */ ) { u >>= 16; r |= 0x10; }
+   if( u & 0x0000ff00 /* 00000000000000001111111100000000 */ ) { u >>=  8; r |= 0x08; }
+   if( u & 0x000000f0 /* 00000000000000000000000011110000 */ ) { u >>=  4; r |= 0x04; }
+   if( u & 0x0000000c /* 00000000000000000000000000001100 */ ) { u >>=  2; r |= 0x02; }
+   if( u & 0x00000002 /* 00000000000000000000000000000010 */ ) { u >>=  1; r |= 0x01; }
+
+   return r;
+}
+
 
 /*EoF*/

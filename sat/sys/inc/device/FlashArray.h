@@ -33,6 +33,11 @@ namespace qb50 {
          int           _nSlaves;
          FlashMemory **_slaves;
 
+         uint32_t      _mask; /* mask for the address part    */
+         unsigned      _shft; /* bits to shift for the chip # */
+
+         unsigned log2( uint32_t u );
+
    };
 
    extern qb50::FlashArray VFLASH;

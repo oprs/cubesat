@@ -31,7 +31,7 @@ MAX111x& MAX111x::init( void )
 {
    (void)SPISlave::init();
 
-   LOG << _name << ": Onboard MAX111x Serial ADC at " << _spi.name()
+   LOG << _name << ": Onboard MAX111x serial ADC at " << _spi.name()
        << ", cs: " << _csPin.name();
 
    (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );

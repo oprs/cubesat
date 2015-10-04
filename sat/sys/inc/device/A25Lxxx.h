@@ -46,12 +46,13 @@ namespace qb50 {
          /* type definition for A25Lxxx chips */
 
          struct A25LChip {
-            const uint16_t sig;  /* JEDEC signature */
-            const uint16_t mask; /* signature mask  */
-            const char    *name; /* chip name       */
-            uint16_t       bpc;  /* blocks per chip */
-            uint16_t       ppb;  /* pages per block */
-            uint16_t       bpp;  /* bytes per page  */
+            const uint16_t sig;  /* JEDEC signature   */
+            const uint16_t mask; /* signature mask    */
+            const char    *name; /* chip name         */
+            uint16_t       bpc;  /* blocks per chip   */
+            uint16_t       spb;  /* sectors per block */
+            uint16_t       pps;  /* pages per sector  */
+            uint16_t       bpp;  /* bytes per page    */
          };
 
          static A25LChip chips[];
