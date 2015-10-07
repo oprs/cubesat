@@ -31,10 +31,12 @@ namespace qb50 {
          A25Lxxx& disable     ( bool silent = false );
          A25Lxxx& ioctl       ( IOReq *req, TickType_t maxWait = portMAX_DELAY );
 
-         A25Lxxx& pageRead    ( uint32_t addr, void *x );
+         A25Lxxx& pageRead    ( uint32_t addr, void *x       );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );
-         A25Lxxx& sectorErase ( uint32_t addr );
-         A25Lxxx& blockErase  ( uint32_t addr );
+         A25Lxxx& sectorErase ( uint32_t addr                );
+         A25Lxxx& sectorRead  ( uint32_t addr, void *x       );
+         A25Lxxx& sectorWrite ( uint32_t addr, const void *x );
+         A25Lxxx& blockErase  ( uint32_t addr                );
 
       private:
 
@@ -89,8 +91,10 @@ namespace qb50 {
             DISABLE = 1,
             READ    = 2,
             SE      = 3,
-            BE      = 4,
-            PP      = 5
+            SR      = 4,
+            SW      = 5,
+            BE      = 6,
+            PP      = 7
          };
 
          struct IOReq
@@ -141,6 +145,26 @@ namespace qb50 {
             { ; }
          };
 
+         struct IOReq_SR : public IOReq
+         {
+            uint32_t _addr;
+            void    *_x;
+
+            IOReq_SR( uint32_t addr, void *x )
+            : IOReq( SR ), _addr( addr ), _x( x )
+            { ; }
+         };
+
+         struct IOReq_SW : public IOReq
+         {
+            uint32_t    _addr;
+            const void *_x;
+
+            IOReq_SW( uint32_t addr, const void *x )
+            : IOReq( SW ), _addr( addr ), _x( x )
+            { ; }
+         };
+
          struct IOReq_BE : public IOReq
          {
             uint32_t _addr;
@@ -166,6 +190,8 @@ namespace qb50 {
          void _pageWrite   ( IOReq_PP      *req );
          void _pageRead    ( IOReq_READ    *req );
          void _sectorErase ( IOReq_SE      *req );
+         void _sectorRead  ( IOReq_SR      *req );
+         void _sectorWrite ( IOReq_SW      *req );
          void _blockErase  ( IOReq_BE      *req );
 
          void _SE   ( uint32_t addr );

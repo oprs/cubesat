@@ -15,7 +15,7 @@
 #include "device/UART.h"
 #include "device/A25Lxxx.h"
 #include "device/FlashArray.h"
-#include "device/FlashCache.h"
+#include "device/ConfSlice.h"
 #include "device/ADC.h"
 #include "device/MAX111x.h"
 #include "device/ADCChannel.h"

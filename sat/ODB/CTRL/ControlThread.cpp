@@ -7,7 +7,8 @@
 using namespace qb50;
 
 
-extern QueueHandle_t evQueue;
+QueueHandle_t evQueue;
+
 
 uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
          /*     +------------ CW
@@ -58,24 +59,15 @@ void ControlThread::run( void )
    SAT.init();
    SAT.enable();
 
-FCACHE.enable();
+delay( 3000 );
 
-uint8_t *x = new uint8_t[256];
-
-//for( int i = 0 ; i < 256 ; ++i ) x[i] = (uint8_t)i;
-//FLASH0.pageWrite( 0, x );
-
-for( int i = 0 ; i < 256 ; ++i ) x[i] = 0;
-FCACHE.pageRead( 0, x );
-
-LOG << "FCACHE bytes: " << std::hex << (int)x[0] << ' ' << (int)x[1] << ' ' << (int)x[2] << ' ' << (int)x[3] << " ...";
-delete[] x;
+CONF.enable();
 
    LOG << "Waiting for 30mn...";
    delay( 5000 );
    LOG << "Done waiting";
 
-   SAT.aDeploy();
+   //SAT.aDeploy();
 
    _tv[ 0 ] = registerThread( new CommandThread() );
    _tv[ 1 ] = registerThread( new CWThread() );

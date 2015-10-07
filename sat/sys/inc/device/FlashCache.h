@@ -22,6 +22,8 @@ namespace qb50 {
          virtual FlashCache& pageRead    ( uint32_t addr, void *x       );
          virtual FlashCache& pageWrite   ( uint32_t addr, const void *x );
          virtual FlashCache& sectorErase ( uint32_t addr                );
+         virtual FlashCache& sectorRead  ( uint32_t addr, void *x       );
+         virtual FlashCache& sectorWrite ( uint32_t addr, const void *x );
          virtual FlashCache& blockErase  ( uint32_t addr                );
 
       protected:

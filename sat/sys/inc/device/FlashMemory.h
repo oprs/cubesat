@@ -39,6 +39,8 @@ namespace qb50 {
          virtual FlashMemory& pageRead    ( uint32_t addr, void *x       ) = 0;
          virtual FlashMemory& pageWrite   ( uint32_t addr, const void *x ) = 0;
          virtual FlashMemory& sectorErase ( uint32_t addr                ) = 0;
+         virtual FlashMemory& sectorRead  ( uint32_t addr, void *x       ) = 0;
+         virtual FlashMemory& sectorWrite ( uint32_t addr, const void *x ) = 0;
          virtual FlashMemory& blockErase  ( uint32_t addr                ) = 0;
 
          FlashMemory& geometry( Geometry *geo )

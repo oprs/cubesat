@@ -115,6 +115,24 @@ FlashArray& FlashArray::sectorErase( uint32_t addr )
 }
 
 
+FlashArray& FlashArray::sectorRead( uint32_t addr, void *x )
+{
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->sectorRead( addr & _mask, x );
+
+   return *this;
+}
+
+
+FlashArray& FlashArray::sectorWrite( uint32_t addr, const void *x )
+{
+   unsigned sn = addr >> _shft;
+   _slaves[ sn ]->sectorWrite( addr & _mask, x );
+
+   return *this;
+}
+
+
 FlashArray& FlashArray::blockErase( uint32_t addr )
 {
    unsigned sn = addr >> _shft;

@@ -76,6 +76,20 @@ FlashCache& FlashCache::sectorErase( uint32_t addr )
 }
 
 
+FlashCache& FlashCache::sectorRead( uint32_t addr, void *x )
+{
+   (void)_mem.sectorRead( addr, x );
+   return *this;
+}
+
+
+FlashCache& FlashCache::sectorWrite( uint32_t addr, const void *x )
+{
+   (void)_mem.sectorWrite( addr, x );
+   return *this;
+}
+
+
 FlashCache& FlashCache::blockErase( uint32_t addr )
 {
    (void)_mem.blockErase( addr );

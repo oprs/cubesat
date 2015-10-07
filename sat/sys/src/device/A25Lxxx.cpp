@@ -174,6 +174,22 @@ A25Lxxx& A25Lxxx::sectorErase( uint32_t addr )
 }
 
 
+A25Lxxx& A25Lxxx::sectorRead( uint32_t addr, void *x )
+{
+   IOReq_SR req( addr, x );
+   (void)ioctl( &req );
+   return *this;
+}
+
+
+A25Lxxx& A25Lxxx::sectorWrite( uint32_t addr, const void *x )
+{
+   IOReq_SW req( addr, x );
+   (void)ioctl( &req );
+   return *this;
+}
+
+
 A25Lxxx& A25Lxxx::blockErase( uint32_t addr )
 {
    IOReq_BE req( addr );
@@ -209,6 +225,8 @@ void A25Lxxx::run( void )
          case DISABLE: _disable     ( (IOReq_DISABLE*)req ); break;
          case READ:    _pageRead    (    (IOReq_READ*)req ); break;
          case SE:      _sectorErase (      (IOReq_SE*)req ); break;
+         case SR:      _sectorRead  (      (IOReq_SR*)req ); break;
+         case SW:      _sectorWrite (      (IOReq_SW*)req ); break;
          case BE:      _blockErase  (      (IOReq_BE*)req ); break;
          case PP:      _pageWrite   (      (IOReq_PP*)req ); break;
       }
@@ -248,7 +266,6 @@ void A25Lxxx::_pageWrite( IOReq_PP *req )
 {
    _WREN();
    _PP( req->_addr, req->_x );
-   _WRDI();
 }
 
 
@@ -260,7 +277,36 @@ void A25Lxxx::_sectorErase( IOReq_SE *req )
 {
    _WREN();
    _SE( req->_addr );
-   _WRDI();
+}
+
+
+void A25Lxxx::_sectorRead( IOReq_SR *req )
+{
+   uint8_t *x    = (uint8_t*)req->_x;
+   uint32_t addr = req->_addr;
+
+   for( int i = 0 ; i < _geo.pps ; ++i ) {
+      _READ( addr, x );
+      x    += _geo.bpp;
+      addr += _geo.bpp;
+   }
+}
+
+
+void A25Lxxx::_sectorWrite( IOReq_SW *req )
+{
+   const uint8_t *x = (const uint8_t*)req->_x;
+   uint32_t addr    = req->_addr;
+
+   _WREN();
+   _SE( req->_addr );
+
+   for( int i = 0 ; i < _geo.pps ; ++i ) {
+      _WREN();
+      _PP( addr, x );
+      x    += _geo.bpp;
+      addr += _geo.bpp;
+   }
 }
 
 
@@ -268,7 +314,6 @@ void A25Lxxx::_blockErase( IOReq_BE *req )
 {
    _WREN();
    _BE( req->_addr );
-   _WRDI();
 }
 
 
@@ -307,8 +352,9 @@ void A25Lxxx::_SE( uint32_t addr )
 
    _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
-   _WIPWait( tSE );
    _deselect();
+
+   _WIPWait( tSE );
 }
 
 
@@ -323,8 +369,9 @@ void A25Lxxx::_BE( uint32_t addr )
 
    _select();
    _spi.pollXfer( cmd, NULL, sizeof( cmd ));
-   _WIPWait( tBE );
    _deselect();
+
+   _WIPWait( tBE );
 }
 
 

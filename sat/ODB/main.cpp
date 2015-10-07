@@ -11,9 +11,6 @@ using namespace qb50;
 #define LED4 PA1
 
 
-QueueHandle_t evQueue;
-
-
 int main( void )
 {
 #if 0

@@ -23,10 +23,12 @@ namespace qb50 {
          FlashArray& enable      ( bool silent = false );
          FlashArray& disable     ( bool silent = false );
 
-         FlashArray& pageRead    ( uint32_t addr, void *x );
+         FlashArray& pageRead    ( uint32_t addr, void *x       );
          FlashArray& pageWrite   ( uint32_t addr, const void *x );
-         FlashArray& sectorErase ( uint32_t addr );
-         FlashArray& blockErase  ( uint32_t addr );
+         FlashArray& sectorErase ( uint32_t addr                );
+         FlashArray& sectorRead  ( uint32_t addr, void *x       );
+         FlashArray& sectorWrite ( uint32_t addr, const void *x );
+         FlashArray& blockErase  ( uint32_t addr                );
 
       protected:
 
@@ -40,7 +42,7 @@ namespace qb50 {
 
    };
 
-   extern qb50::FlashArray FARRAY;
+   extern qb50::FlashArray VFLASH;
 
 } /* qb50 */
 
