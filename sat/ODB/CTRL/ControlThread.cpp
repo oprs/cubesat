@@ -61,6 +61,7 @@ void ControlThread::run( void )
 
 delay( 3000 );
 
+BKP.enable();
 CONF.enable();
 
    LOG << "Waiting for 30mn...";

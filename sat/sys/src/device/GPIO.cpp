@@ -1,4 +1,5 @@
 
+#include "device/RstClk.h"
 #include "device/GPIO.h"
 #include "system/Logger.h"
 
@@ -24,7 +25,7 @@ GPIO::~GPIO()
 
 GPIO& GPIO::init( void )
 {
-   LOG << _name << ": System GPIO controller at " << bus.name();
+   LOG << _name << ": System GPIO controller at " << bus.name;
    return *this;
 }
 
@@ -32,7 +33,7 @@ GPIO& GPIO::init( void )
 GPIO& GPIO::enable( bool silent )
 {
    if( _incRef() == 0 )
-      bus.enable( this, silent );
+      RCC.enable( this, silent );
 
    return *this;
 }
@@ -41,7 +42,7 @@ GPIO& GPIO::enable( bool silent )
 GPIO& GPIO::disable( bool silent )
 {
    if( _decRef() == 0 )
-      bus.disable( this, silent );
+      RCC.disable( this, silent );
 
    return *this;
 }

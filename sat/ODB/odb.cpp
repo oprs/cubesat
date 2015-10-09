@@ -1,12 +1,16 @@
 
 #include "system/qb50.h"
-#include "CMD/Parameters.h"
+#include "CMD/Parameters.h" // XXX
 
 #include <stm32f4xx.h>
-#include <stm32f4xx_rcc.h>
 
 
 /* CMSIS is polluting the whole namespace with these macros... */
+
+#undef RCC
+#undef NVIC
+#undef EXTI
+#undef PWR
 
 #undef DMA1
 #undef DMA2
@@ -29,9 +33,6 @@
 #undef ADC3
 #undef ADC4
 
-#undef NVIC
-#undef EXTI
-
 
 namespace qb50 {
 
@@ -40,13 +41,19 @@ namespace qb50 {
 //  - - - - - - - - - -  //
 
    /*        id         name */
-   AHB AHB1( AHB::BUS1, "AHB1" );
-   AHB AHB2( AHB::BUS2, "AHB2" );
-   AHB AHB3( AHB::BUS3, "AHB3" );
+   Bus AHB1( Bus::AHB1, "AHB1" );
+   Bus AHB2( Bus::AHB2, "AHB2" );
+   Bus AHB3( Bus::AHB3, "AHB3" );
 
    /*        id         name */
-   APB APB1( APB::BUS1, "APB1" );
-   APB APB2( APB::BUS2, "APB2" );
+   Bus APB1( Bus::APB1, "APB1" );
+   Bus APB2( Bus::APB2, "APB2" );
+
+//  - - - - - - - - - - - - - - - - - - - - - -  //
+//  R E S E T / C L O C K   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - - - - - - - - - -  //
+
+   RstClk RCC( RCC_BASE, "RCC" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
@@ -55,13 +62,25 @@ namespace qb50 {
    NVIC IRQ;
    EXTI EXTI1;
 
+//  - - - - - - - - - - - - - - - -  //
+//  P O W E R   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - - - -  //
+
+   Power PWR( APB1, PWR_BASE, RstClk::APB1Periph_PWR, "PWR" );
+
+//  - - - - - - - - - - -  //
+//  B A C K U P   S R A M  //
+//  - - - - - - - - - - -  //
+
+   Backup BKP( AHB1, BKPSRAM_BASE, RstClk::AHB1Periph_BKPSRAM, "BKP" );
+
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph               name */
-   DMA DMA1( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA1, "DMA1" );
- //DMA DMA2( AHB1, DMA1_BASE, RCC_AHB1Periph_DMA2, "DMA2" );
+   /*        bus   iobase     periph                name */
+   DMA DMA1( AHB1, DMA1_BASE, RstClk::AHB1Periph_DMA1, "DMA1" );
+ //DMA DMA2( AHB1, DMA1_BASE, RstClk::AHB1Periph_DMA2, "DMA2" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
@@ -195,24 +214,24 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase      periph               id  name     pins */
-   GPIO GPIOA( AHB1, GPIOA_BASE, RCC_AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
-   GPIO GPIOB( AHB1, GPIOB_BASE, RCC_AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
-   GPIO GPIOC( AHB1, GPIOC_BASE, RCC_AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
- //GPIO GPIOD( AHB1, GPIOD_BASE, RCC_AHB1Periph_GPIOD, 3, "GPIOD", GPIOD_Pins );
- //GPIO GPIOE( AHB1, GPIOE_BASE, RCC_AHB1Periph_GPIOE, 4, "GPIOE", GPIOE_Pins );
+   /*          bus   iobase      periph                id  name     pins */
+   GPIO GPIOA( AHB1, GPIOA_BASE, RstClk::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
+   GPIO GPIOB( AHB1, GPIOB_BASE, RstClk::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
+   GPIO GPIOC( AHB1, GPIOC_BASE, RstClk::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
+ //GPIO GPIOD( AHB1, GPIOD_BASE, RstClk::AHB1Periph_GPIOD, 3, "GPIOD", GPIOD_Pins );
+ //GPIO GPIOE( AHB1, GPIOE_BASE, RstClk::AHB1Periph_GPIOE, 4, "GPIOE", GPIOE_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase       periph                 name    rxPin txPin  IRQ number   alt. function */
-   UART UART1( APB2, USART1_BASE, RCC_APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
-   UART UART2( APB1, USART2_BASE, RCC_APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
-   UART UART3( APB1, USART3_BASE, RCC_APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
- //UART UART4( APB1, UART4_BASE,  RCC_APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );
- //UART UART5( APB1, UART5_BASE,  RCC_APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  GPIOPin::UART5 );
-   UART UART6( APB2, USART6_BASE, RCC_APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIOPin::UART6 );
+   /*          bus   iobase       periph                  name    rxPin txPin  IRQ number   alt. function */
+   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIOPin::UART1 );
+   UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIOPin::UART2 );
+   UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIOPin::UART3 );
+ //UART UART4( APB1, UART4_BASE,  RstClk::APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIOPin::UART4 );
+ //UART UART5( APB1, UART5_BASE,  RstClk::APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  GPIOPin::UART5 );
+   UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIOPin::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -236,10 +255,10 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph               name    rx stream  tx stream  clk   alt. function */
- //SPI SPI1( APB2, SPI1_BASE, RCC_APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIOPin::SPI1 );
- //SPI SPI2( APB1, SPI2_BASE, RCC_APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
-   SPI SPI3( APB1, SPI3_BASE, RCC_APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
+   /*        bus   iobase     periph                name    rx stream  tx stream  clk   alt. function */
+ //SPI SPI1( APB2, SPI1_BASE, RstClk::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIOPin::SPI1 );
+ //SPI SPI2( APB1, SPI2_BASE, RstClk::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIOPin::SPI2 );
+   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIOPin::SPI3 );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

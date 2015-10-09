@@ -3,10 +3,12 @@
 #define _QB50_H
 
 
-#include "device/AHB.h"
-#include "device/APB.h"
+#include "Bus.h"
 #include "device/NVIC.h"
 #include "device/EXTI.h"
+#include "device/RstClk.h"
+#include "device/Power.h"
+#include "device/Backup.h"
 #include "device/PMU.h"
 #include "device/DMA.h"
 #include "device/DMAStream.h"

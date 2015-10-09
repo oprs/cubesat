@@ -1,6 +1,12 @@
 
+#include "device/RstClk.h"
 #include "device/ADC.h"
 #include "system/Logger.h"
+
+#include <stm32f4xx_adc.h>
+
+#undef ADC
+#undef RCC
 
 using namespace qb50;
 
@@ -32,7 +38,7 @@ ADC::~ADC()
 
 ADC& ADC::init( void )
 {
-   LOG << _name << ": Internal ADC at " << bus.name();
+   LOG << _name << ": Internal ADC at " << bus.name;
    return *this;
 }
 
@@ -45,7 +51,7 @@ ADC& ADC::enable( bool silent )
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
    _pin.enable( silent ).pullUp().mode( _mode );
-   bus.enable( this, silent );
+   RCC.enable( this, silent );
 
    ADCx->CR1 = 0; //Set resolution for the ADC
    uint32_t tmpreg = 0;
@@ -64,7 +70,7 @@ ADC& ADC::enable( bool silent )
    tmpreg |= (uint32_t)(_numConv-1) << 20;
 
    ADCx->SQR1 = tmpreg;
-   ADC_Cmd(ADCx, ENABLE);
+   ADCx->CR2 |= ADC_CR2_ADON;
 
    return *this;
 }
@@ -75,13 +81,16 @@ ADC& ADC::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   //ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
+   ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
-   bus.disable( this, silent );
+   ADCx->CR2 &= ~ADC_CR2_ADON;
+
+   RCC.disable( this, silent );
    _pin.disable( silent );
 
    return *this;
 }
+
 
 //Rather than modifying individual registers we just use the code written for the ADC using the stm32f4 peripheral library
 uint16_t ADC::getValue_adc()
@@ -96,3 +105,5 @@ uint16_t ADC::getValue_adc()
    adc_val = ADC_GetConversionValue(ADCx);
    return adc_val;
 }
+
+/*EoF*/

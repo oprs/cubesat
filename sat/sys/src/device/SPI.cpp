@@ -1,9 +1,11 @@
 
+#include "device/RstClk.h"
 #include "device/SPI.h"
 #include "device/UART.h"
 #include "system/Logger.h"
 
 #include <stm32f4xx.h>
+#undef RCC
 
 using namespace qb50;
 
@@ -43,7 +45,7 @@ SPI& SPI::init( void )
    _stMISO.init();
    _stMOSI.init();
 
-   LOG << _name << ": System SPI controller at " << bus.name()
+   LOG << _name << ": System SPI controller at " << bus.name
        << ", clk: " << _clkPin.name()
        << ", miso: " << _stMISO._pin.name()
        << ", mosi: " << _stMOSI._pin.name()
@@ -63,7 +65,7 @@ SPI& SPI::enable( bool silent )
    _stMISO.enable( silent );
    _stMOSI.enable( silent );
 
-   bus.enable( this, silent );
+   RCC.enable( this, silent );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
@@ -89,7 +91,7 @@ SPI& SPI::disable( bool silent )
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
-   bus.disable( this, silent );
+   RCC.disable( this, silent );
 
    _stMOSI.disable( silent );
    _stMISO.disable( silent );

@@ -4,7 +4,6 @@
 #include "BusDevice.h"
 #include "GPIOPin.h"
 #include "NVIC.h"
-#include "stm32f4xx_adc.h"
 
 //Over-ride macros defined by CMSIS
 #undef ADC

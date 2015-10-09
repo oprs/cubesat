@@ -1,6 +1,9 @@
 
+#include "device/RstClk.h"
 #include "device/TIMERSTM.h"
 #include "system/Logger.h"
+
+#undef RCC
 
 using namespace qb50;
 
@@ -30,7 +33,7 @@ TIMER::~TIMER()
 
 TIMER& TIMER::init( void )
 {
-   LOG << _name << ": System timer controller at " << bus.name()
+   LOG << _name << ": System timer controller at " << bus.name
       //<< ", rx: " << _rxPin.name()
       ;
 
@@ -43,7 +46,7 @@ TIMER& TIMER::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   bus.enable( this, silent );
+   RCC.enable( this, silent );
    _pin.enable( silent )
        .pullUp()
        .alt(_alt);
@@ -57,7 +60,7 @@ TIMER& TIMER::disable( bool silent )
       return *this;
 
    _pin.disable( silent );
-   bus.disable( this, silent );
+   RCC.disable( this, silent );
 
    return *this;
 }

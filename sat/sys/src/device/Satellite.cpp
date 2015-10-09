@@ -1,6 +1,7 @@
 
 #include "system/qb50.h"
 
+#undef RCC
 #undef GPIOA
 #undef GPIOB
 #undef GPIOC
@@ -44,9 +45,9 @@ Satellite::~Satellite()
 
 Satellite& Satellite::init( void )
 {
-   AHB1.init();
-   APB1.init();
-   APB2.init();
+   RCC.init();
+   PWR.init();
+   BKP.init();
    DMA1.init();
  //DMA2.init();
    GPIOA.init();

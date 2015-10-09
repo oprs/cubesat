@@ -1,8 +1,11 @@
 
+#include "device/RstClk.h"
 #include "device/UART.h"
 #include "system/Logger.h"
 
 #include <stm32f4xx.h>
+
+#undef RCC
 
 using namespace qb50;
 
@@ -51,7 +54,7 @@ UART& UART::init( void )
 {
    (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
 
-   LOG << _name << ": System UART controller at " << bus.name()
+   LOG << _name << ": System UART controller at " << bus.name
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
        ;
@@ -169,7 +172,7 @@ void UART::_enable( IOReq *req )
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
-   bus.enable( this );
+   RCC.enable( this );
 
    USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
    USARTx->CR2 = 0;
@@ -198,9 +201,7 @@ void UART::_disable( IOReq *req )
 
    IRQ.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-   bus.disable( this );
-
-   bus.disable( this );
+   RCC.disable( this );
 
    _txPin.disable();
    _rxPin.disable();
@@ -292,7 +293,7 @@ void UART::_baudRate( IOReq_baudRate *req )
 
    /* assuming oversampling by 16 (CR1.OVER8 = 0) */
 
-   idiv   = ( 25 * bus.freq() ) / ( 4 * req->_rate );
+   idiv   = ( 25 * RCC.freq( bus )) / ( 4 * req->_rate );
    tmp32  = idiv / 100;
    fdiv   = idiv - ( 100 * tmp32 );
    tmp32  = tmp32 << 4;

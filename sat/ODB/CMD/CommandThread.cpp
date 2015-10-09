@@ -30,11 +30,11 @@ void CommandThread::run( void )
 {
    Form *form;
 
-   UART2.enable(); /* XXX !!! */
+   UART2.enable(); /* XXX UART6 */
 
    for( ;; ) {
       try {
-         form = _parseLine( UART2 /* XXX !!! */ );
+         form = _parseLine( UART2 /* XXX UART6 */ );
       } catch( const char *e ) {
          LOG << "Exception: " << e;
          continue;

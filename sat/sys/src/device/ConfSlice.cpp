@@ -3,6 +3,8 @@
 #include "system/Logger.h"
 #include "ODBConfig.h"
 
+#include <stm32f4xx.h>
+
 using namespace qb50;
 
 
@@ -27,8 +29,11 @@ ConfSlice& ConfSlice::init( void )
 {
    Slice::init();
 
+/*
    unsigned size = _mem.sectorSize();
    _x = new uint8_t[ size ];
+*/
+   _x = (uint8_t*)BKPSRAM_BASE;
 
    return *this;
 }
@@ -39,14 +44,14 @@ ConfSlice& ConfSlice::enable( bool silent )
    ODBConfig *conf = (ODBConfig*)_x;
    Slice::enable( silent );
 
-   uint32_t addr = _off * _mem.sectorSize();
-   _mem.sectorRead( addr, _x );
+ //uint32_t addr = _off * _mem.sectorSize();
+ //_mem.sectorRead( addr, _x );
 
    LOG << "System configuration loaded";
    LOG << "Reset count: " << conf->nReset;
 
    ++conf->nReset;
-   sync();
+//   sync();
 
    return *this;
 }

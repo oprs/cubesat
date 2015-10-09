@@ -7,32 +7,25 @@
 
 namespace qb50 {
 
-	class BusDevice;
+   struct Bus
+   {
 
-	class Bus
-	{
+      enum BusId {
+         AHB1 = 0,
+         AHB2 = 1,
+         AHB3 = 2,
+       //AHB4 = 3,
+         APB1 = 4,
+         APB2 = 5
+      };
 
-		public:
+      Bus( const BusId busId, const char *busName ) : id( busId ), name( busName )
+      { ; }
 
-			Bus( const char *name ) : _name( name )
-			{ ; }
+      const BusId id;
+      const char *name;
 
-			virtual ~Bus()
-			{ ; }
-
-			const char *name ( void ) const { return _name; }
-
-			virtual Bus& init    ( void ) = 0;
-			virtual Bus& enable  ( BusDevice *dev, bool silent = false ) = 0;
-			virtual Bus& disable ( BusDevice *dev, bool silent = false ) = 0;
-
-			virtual uint32_t freq ( void ) = 0;
-
-		protected:
-
-			const char *_name;
-
-	};
+   };
 
 } /* qb50 */
 

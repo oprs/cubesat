@@ -1,4 +1,5 @@
 
+#include "device/RstClk.h"
 #include "device/DMA.h"
 #include "system/Logger.h"
 
@@ -6,6 +7,7 @@
 
 #undef DMA1
 #undef DMA2
+#undef RCC
 
 using namespace qb50;
 
@@ -32,7 +34,7 @@ DMA::~DMA()
 
 DMA& DMA::init( void )
 {
-   LOG << _name << ": System DMA controller at " << bus.name();
+   LOG << _name << ": System DMA controller at " << bus.name;
    return *this;
 }
 
@@ -42,7 +44,7 @@ DMA& DMA::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   bus.enable( this, silent );
+   RCC.enable( this, silent );
 
    return *this;
 }
@@ -53,7 +55,7 @@ DMA& DMA::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   bus.disable( this, silent );
+   RCC.disable( this, silent );
 
    return *this;
 }
