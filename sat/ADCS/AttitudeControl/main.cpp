@@ -13,13 +13,13 @@ void AttitudeControlThread( Thread *self)
             //Modification for demonstrations purposes only
             //For soutenance de PSC 01/06/2015
 
-            (void)printf( "PWM Duty Cycle x: %u\r \n", Current_state.PWM.duty_cycle_x);
+            (void)printf( "PWM Duty Cycle x: %lu\r \n", Current_state.PWM.duty_cycle_x);
             (void)printf( "PWM X Dir: %d\r \n", Current_state.PWM.x_dir);
 
-            (void)printf( "PWM Duty Cycle x: %u\r \n", Current_state.PWM.duty_cycle_y);
+            (void)printf( "PWM Duty Cycle x: %lu\r \n", Current_state.PWM.duty_cycle_y);
             (void)printf( "PWM X Dir: %d\r \n", Current_state.PWM.y_dir);
 
-            (void)printf( "PWM Duty Cycle x: %u\r \n", Current_state.PWM.duty_cycle_z);
+            (void)printf( "PWM Duty Cycle x: %lu\r \n", Current_state.PWM.duty_cycle_z);
             (void)printf( "PWM X Dir: %d\r \n", Current_state.PWM.z_dir);
 
     }

@@ -124,7 +124,7 @@ void CTCSS::modeRelaisFM()
                 {
                     /*if( T_PA == temp_PA14[i] )
                     {*/
-                        temp_PA14[i];
+                        //temp_PA14[i];
 
                         if( T_PA > T_PA_MAX )
                         {
@@ -149,7 +149,7 @@ void CTCSS::modeRelaisFM()
                 {
                     /*if( T_PA == temp_PA15[j] )
                     {*/
-                    temp_PA15[j];
+                    //temp_PA15[j];
 
                     //}
                 }
