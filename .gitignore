@@ -6,6 +6,7 @@ tags
 *.comarker
 # local code::blocks files
 *.elay
+*.elay.ebTemp
 *.layout
 *.depend
 # vi backup files
