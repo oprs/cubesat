@@ -45,6 +45,7 @@ Satellite::~Satellite()
 
 Satellite& Satellite::init( void )
 {
+   SYSLOG.init();
    RCC.init();
    PWR.init();
    BKP.init();
@@ -56,7 +57,7 @@ Satellite& Satellite::init( void )
    UART1.init();
    UART2.init();
    UART3.init();
-   UART6.init().enable();
+   UART6.init();
  //SPI1.init();
  //SPI2.init();
    SPI3.init();
@@ -96,7 +97,7 @@ Satellite& Satellite::init( void )
 
 Satellite& Satellite::enable( bool silent )
 {
-   (void)silent;
+   SYSLOG.enable( silent );
    return *this;
 }
 

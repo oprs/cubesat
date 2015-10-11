@@ -26,22 +26,23 @@ UART::UART( Bus& bus,
             const uint32_t IRQn,
             GPIOPin::Alt   alt )
    : BusDevice( bus, iobase, periph, name ),
-     _rxFIFO( FIFO<uint8_t>(   64 )),
-     _txFIFO( FIFO<uint8_t>( 2048 )),
+     _rxFIFO( FIFO<uint8_t>( 64 )),
+     _txFIFO( FIFO<uint8_t>( 64 )),
      _rxPin ( rxPin ),
      _txPin ( txPin ),
      _IRQn  ( IRQn  ),
      _alt   ( alt   )
 {
    _isrRXNE = xSemaphoreCreateBinary();
+   _isrTXE  = xSemaphoreCreateBinary();
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
-   _enabled = false;
 }
 
 
 UART::~UART()
 {
    vQueueDelete( _ioQueue );
+   vSemaphoreDelete( _isrTXE );
    vSemaphoreDelete( _isrRXNE );
 }
 
@@ -106,12 +107,7 @@ size_t UART::readLine( void *x, size_t len )
 size_t UART::write( const void *x, size_t len )
 {
    IOReq_write req( x, len );
-
-   if( _enabled )
-      (void)ioctl( &req );
-   else
-      _write( &req );
-
+   (void)ioctl( &req );
    return req._len;
 }
 
@@ -185,8 +181,6 @@ void UART::_enable( IOReq *req )
 
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    IRQ.enable( _IRQn );
-
-   _enabled = true;
 }
 
 
@@ -267,18 +261,16 @@ void UART::_write( IOReq_write *req )
 
    const uint8_t *x = (const uint8_t*)req->_x;
    size_t len = req->_len;
-   size_t n;
+   size_t n = 0;
 
-   if( _refCount != 0 )
-      USARTx->CR1 &= ~USART_CR1_TXEIE;
-
-   for( n = 0 ; n < len ; ++n ) {
-      if( _txFIFO.isFull() ) break;
-      (void)_txFIFO.push( ((uint8_t*)x)[ n ] );
+   while( n < len ) {
+      if( _txFIFO.isFull() ) {
+         xSemaphoreTake( _isrTXE, portMAX_DELAY );
+         continue;
+      }
+      (void)_txFIFO.push( ((uint8_t*)x)[ n++ ] );
    }
-
-   if(( _refCount != 0 ) && ( !_txFIFO.isEmpty() ))
-      USARTx->CR1 |= USART_CR1_TXEIE;
+   USARTx->CR1 |= USART_CR1_TXEIE;
 
    req->_len = n;
 }
@@ -331,6 +323,7 @@ void UART::isr( void )
          USARTx->CR1 &= ~USART_CR1_TXEIE;
       } else {
          USARTx->DR = _txFIFO.pull();
+         xSemaphoreGiveFromISR( _isrTXE, &hpTask );
       }
    }
 

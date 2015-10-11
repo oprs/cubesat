@@ -47,6 +47,11 @@ ConfSlice& ConfSlice::enable( bool silent )
  //uint32_t addr = _off * _mem.sectorSize();
  //_mem.sectorRead( addr, _x );
 
+#if 0
+   for( int i = 0 ; i < 4096 ; ++i )
+      _x[i] = 0;
+#endif
+
    LOG << "System configuration loaded";
    LOG << "Reset count: " << conf->nReset;
 

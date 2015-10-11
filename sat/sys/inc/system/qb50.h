@@ -4,6 +4,7 @@
 
 
 #include "Bus.h"
+#include "device/Syslog.h"
 #include "device/NVIC.h"
 #include "device/EXTI.h"
 #include "device/RstClk.h"

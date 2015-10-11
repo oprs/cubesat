@@ -53,6 +53,7 @@ namespace qb50 {
       private:
 
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
+         xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
 
          xQueueHandle     _ioQueue;
          TaskHandle_t     _ioTask;
@@ -64,8 +65,6 @@ namespace qb50 {
          GPIOPin&         _txPin;
          const uint32_t   _IRQn;
          GPIOPin::Alt     _alt;
-
-         bool _enabled;
 
          /* IOCTLs */
 

@@ -1,9 +1,9 @@
 
-#include <stm32f4xx.h>
-#undef RCC
-
 #include "device/RstClk.h"
 #include "system/Logger.h"
+
+#include <stm32f4xx.h>
+#undef RCC
 
 using namespace qb50;
 
@@ -35,9 +35,11 @@ RstClk& RstClk::init( void )
 
    clocks( &clk );
 
-   LOG << _name << ": System clock: " << clk.SYSCLKFreq / ( 1000 * 1000 ) << "MHz";
+   LOG << _name << ": SYSCLK: " << clk.SYSCLKFreq / ( 1000 * 1000 ) << "MHz"
+                << ", HCLK: "   << clk.HCLKFreq   / ( 1000 * 1000 ) << "MHz"
+                << ", PCLK1: "  << clk.PCLK1Freq  / ( 1000 * 1000 ) << "MHz"
+                << ", PCLK2: "  << clk.PCLK2Freq  / ( 1000 * 1000 ) << "MHz";
 
-   // XXX talk to me
    return *this;
 }
 
@@ -65,8 +67,6 @@ RstClk& RstClk::enable( BusDevice *dev, bool silent )
 
 RstClk& RstClk::disable( BusDevice *dev, bool silent )
 {
-   (void)silent; /*XXX*/
-
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
    switch( dev->bus.id ) {

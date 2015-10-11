@@ -59,7 +59,7 @@ void ControlThread::run( void )
    SAT.init();
    SAT.enable();
 
-delay( 3000 );
+//delay( 3000 );
 
 BKP.enable();
 CONF.enable();

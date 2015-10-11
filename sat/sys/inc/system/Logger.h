@@ -2,33 +2,10 @@
 #ifndef _QB50_SYS_SYSTEM_LOGGER_H
 #define _QB50_SYS_SYSTEM_LOGGER_H
 
-#include <iostream>
-#include <sstream>
+#include "device/Syslog.h"
 
 
-#define LOG Logger().get()
-
-
-namespace qb50 {
-
-   class Logger : public std::ostream
-   {
-
-      public:
-
-         Logger();
-         virtual ~Logger();
-
-         std::ostringstream& get( void );
-
-
-      protected:
-
-         std::ostringstream _os;
-
-   };
-
-}
+#define LOG Syslog::LogLine( SYSLOG ).get()
 
 
 #endif /*_QB50_SYS_SYSTEM_LOGGER_H*/
