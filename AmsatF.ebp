@@ -32,30 +32,6 @@
 					<Add library="build\system.a" />
 				</Linker>
 			</Target>
-			<Target title="XTRUITES">
-				<Option output="build\XTRUITES.elf" />
-				<Option object_output="build" />
-				<Option external_deps="build\system.a;" />
-				<Option type="0" />
-				<Option create_hex="1" />
-				<Option compiler="armgcc" />
-				<Option projectDeviceOptionsRelation="0" />
-				<Compiler>
-					<Add option="-g3" />
-					<Add option="-DDEBUG" />
-					<Add option="-std=c++11" />
-					<Add directory="sat\sys\inc" />
-					<Add directory="sat\sys\FreeRTOS\include" />
-					<Add directory="sat\sys\FreeRTOS\portable\stm32f4" />
-					<Add directory="sat\sys\stm32f4\inc" />
-					<Add directory="sat\sys\stm32f4\inc\core" />
-					<Add directory="sat\sys\stm32f4\inc\peripherals" />
-				</Compiler>
-				<Linker>
-					<Add option="-Wl,--gc-sections" />
-					<Add library="build\system.a" />
-				</Linker>
-			</Target>
 			<Target title="ADCS">
 				<Option output="build\ADCS.elf" />
 				<Option object_output="build" />
@@ -124,20 +100,13 @@
 			<Add option="-mthumb-interwork" />
 			<Add option="--specs=nosys.specs" />
 		</Linker>
-		<Unit filename="sat\ADCS\AttitudeControl\main.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sat\ADCS\AttitudeDetermination\main.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="sat\ADCS\ODBCommDown\main.cpp">
 			<Option compilerVar="CC" />
+			<Option target="ADCS" />
 		</Unit>
 		<Unit filename="sat\ADCS\ODBCommUP\main.cpp">
 			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sat\ADCS\TestThreads\main.cpp">
-			<Option compilerVar="CC" />
+			<Option target="ADCS" />
 		</Unit>
 		<Unit filename="sat\ADCS\adcs.cpp">
 			<Option compilerVar="CC" />
@@ -148,6 +117,18 @@
 			<Option target="ADCS" />
 		</Unit>
 		<Unit filename="sat\ADCS\syscalls.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\ADCS\AttitudeDetermination\main.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\ADCS\AttitudeControl\main.cpp">
+			<Option compilerVar="CC" />
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\ADCS\TestThreads\main.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ADCS" />
 		</Unit>
@@ -177,24 +158,6 @@
 			<Option target="ODB" />
 		</Unit>
 		<Unit filename="sat\ODB\AX25\main.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\CTCSS\CTCSS.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\CTCSS\CTCSS.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\CTCSS\DECTONEHandler.cpp">
-			<Option compilerVar="CC" />
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\CTCSS\DECTONEHandler.h">
-			<Option target="ODB" />
-		</Unit>
-		<Unit filename="sat\ODB\CTCSS\main.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
@@ -243,282 +206,41 @@
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Color.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Color.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Component.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Component.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\ComponentCollection.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\ComponentCollection.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\ListView.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\ListView.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\NavigationLabel.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\NavigationLabel.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\NavigationMenu.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\NavigationMenu.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\TextBlock.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Control\TextBlock.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Point.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Point.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Rectangle.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Rectangle.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Size.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Component\Size.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Container.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\Container.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\EscapeSequences.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\EscapeSequences.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\Config.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\Config.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\OutputStream.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\OutputStream.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\OutputStreamChannel.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\OutputStream\OutputStreamChannel.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\ADCPage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\ADCPage.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCChannelWatch.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCChannelWatch.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCWatch.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Component\ADCWatch.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\ConvFormula.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\ConvFormula.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChannel.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChannel.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChip.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Resources\TestADCChip.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Test_ADC_Config.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\ADC\Test_ADC_Config.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashLabel.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashLabel.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashWatch.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\FlashWatch.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\ItemSector.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\ItemSector.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelBlock.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelBlock.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelSector.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\Component\LabelSector.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\FlashPage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Flash\FlashPage.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Page.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Page.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\PageRepertory.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\PageRepertory.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\SystemPages.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\homePage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\homePage.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\quitPage.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\SystemPages\quitPage.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Utilities\ColorPalette.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\PageRepertory\Utilities\ColorPalette.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\XTRUITES.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\XTRUITES.h">
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\main.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\XTRUITES\syscalls.cpp">
-			<Option compilerVar="CC" />
-			<Option target="XTRUITES" />
-		</Unit>
-		<Unit filename="sat\commun\ADCSCLASS.cpp">
+		<Unit filename="sat\common\ADCSCLASS.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
-		<Unit filename="sat\commun\ADCSCLASS.h">
+		<Unit filename="sat\common\ADCSCLASS.h">
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
-		<Unit filename="sat\commun\Control_attitude.cpp">
+		<Unit filename="sat\common\Control_attitude.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
-		<Unit filename="sat\commun\Control_attitude.h">
+		<Unit filename="sat\common\Control_attitude.h">
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
-		<Unit filename="sat\commun\Exception.h" />
-		<Unit filename="sat\commun\STRUCTURE.cpp">
+		<Unit filename="sat\common\STRUCTURE.cpp">
 			<Option compilerVar="CC" />
 			<Option target="ODB" />
 			<Option target="ADCS" />
 		</Unit>
-		<Unit filename="sat\commun\STRUCTURE.h">
+		<Unit filename="sat\common\STRUCTURE.h">
 			<Option target="ODB" />
 			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat\inc\stm32f4xx.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\inc\stm32f4xx_conf.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\inc\system_stm32f4xx.h">
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\stm32f405rg_flash.ld">
 			<Option target="system" />
@@ -606,25 +328,37 @@
 		<Unit filename="sat\sys\inc\Bus.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\BusDevice.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\CoreDevice.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\Device.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\inc\commun\Message.h" />
-		<Unit filename="sat\sys\inc\commun\Raw.h" />
-		<Unit filename="sat\sys\inc\commun\State.h" />
+		<Unit filename="sat\sys\inc\ODBConfig.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\TLE.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\device\A25Lxxx.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\ADC.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\inc\device\AHB.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\inc\device\APB.h">
+		<Unit filename="sat\sys\inc\device\ADCChannel.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\AX25Out.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Backup.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\ConfSlice.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\DMA.h">
@@ -634,6 +368,15 @@
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\EXTI.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\FlashArray.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\FlashCache.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\FlashMemory.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\GPIO.h">
@@ -651,17 +394,37 @@
 		<Unit filename="sat\sys\inc\device\NVIC.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\device\PMU.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Power.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\RstClk.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\device\SPI.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\inc\device\SPIDevice.h">
+		<Unit filename="sat\sys\inc\device\SPISlave.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\SPIStream.h">
-			<Option compilerVar="CPP" />
-			<Option target="&lt;{~None~}&gt;" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Satellite.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Slice.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Syslog.h">
+			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\TIMERSTM.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\device\Transceiver.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\device\UART.h">
@@ -670,7 +433,16 @@
 		<Unit filename="sat\sys\inc\system\Application.h">
 			<Option target="system" />
 		</Unit>
+		<Unit filename="sat\sys\inc\system\Event.h">
+			<Option target="system" />
+		</Unit>
 		<Unit filename="sat\sys\inc\system\Lock.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\Logger.h">
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\inc\system\SimpleThread.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\inc\system\Thread.h">
@@ -682,84 +454,227 @@
 		<Unit filename="sat\sys\inc\system\qb50.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\src\device\A25Lxxx.cpp">
+		<Unit filename="sat\sys\src\Device.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\device\A25Lxxx.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\ADC.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
-		<Unit filename="sat\sys\src\device\AHB.cpp">
+		<Unit filename="sat\sys\src\device\ADCChannel.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\src\device\APB.cpp">
-			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\AX25Out.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Backup.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\ConfSlice.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\DMA.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\DMAStream.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\EXTI.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\FlashArray.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\FlashCache.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\GPIO.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\GPIOPin.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\MAX111x.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\NRZI.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\NVIC.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\PMU.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Power.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\RstClk.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPI.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
-		<Unit filename="sat\sys\src\device\SPIDevice.cpp">
+		<Unit filename="sat\sys\src\device\SPISlave.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\SPIStream.cpp">
 			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Satellite.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Slice.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Syslog.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\TIMERSTM.cpp">
 			<Option compilerVar="CC" />
-			<Option target="ADCS" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\device\Transceiver.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\device\UART.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\system\Application.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
+		</Unit>
+		<Unit filename="sat\sys\src\system\Event.cpp">
+			<Option compilerVar="CC" />
+			<Option target="system" />
+		</Unit>
+		<Unit filename="sat\sys\src\system\SimpleThread.cpp">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\src\system\Thread.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\src\system\UserLock.cpp">
 			<Option compilerVar="CC" />
@@ -767,7 +682,10 @@
 		</Unit>
 		<Unit filename="sat\sys\src\system\hexdump.cpp">
 			<Option compilerVar="CC" />
-			<Option target="system" />
+			<Option target="system">
+				<Option CompilerOptionsRelation="3" />
+				<Add option="-std=c++11" />
+			</Option>
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\inc\core\core_cm4.h">
 			<Option target="system" />
@@ -781,82 +699,13 @@
 		<Unit filename="sat\sys\stm32f4\inc\core\core_cmInstr.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\misc.h">
-			<Option target="system" />
-		</Unit>
 		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_adc.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_can.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_crc.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_cryp.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dac.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dbgmcu.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dcmi.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_dma.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_exti.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_flash.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_fsmc.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_gpio.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_hash.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_i2c.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_iwdg.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_pwr.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rcc.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rng.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_rtc.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_sdio.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_spi.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_syscfg.h">
-			<Option target="system" />
-		</Unit>
 		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_tim.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_usart.h">
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\inc\peripherals\stm32f4xx_wwdg.h">
 			<Option target="system" />
 		</Unit>
 		<Unit filename="sat\sys\stm32f4\inc\stm32f4xx.h">
@@ -868,91 +717,7 @@
 		<Unit filename="sat\sys\stm32f4\inc\system_stm32f4xx.h">
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\misc.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_adc.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_can.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_crc.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_aes.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_des.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_cryp_tdes.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dac.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dbgmcu.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dcmi.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_dma.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_exti.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_flash.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_fsmc.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_gpio.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash_md5.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_hash_sha1.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_i2c.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_iwdg.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_pwr.c">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
@@ -960,35 +725,7 @@
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_rng.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_rtc.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_sdio.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_spi.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_syscfg.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
 		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_tim.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_usart.c">
-			<Option compilerVar="CC" />
-			<Option target="system" />
-		</Unit>
-		<Unit filename="sat\sys\stm32f4\src\peripherals\stm32f4xx_wwdg.c">
 			<Option compilerVar="CC" />
 			<Option target="system" />
 		</Unit>
@@ -1012,7 +749,7 @@
 			</DoxyBlocks>
 			<code_completion />
 			<debugger>
-				<target_debugging_settings target="ADCS" active_interface="ST-link">
+				<target_debugging_settings target="ODB" active_interface="ST-link">
 					<debug_interface interface_id="ST-link" ip_address="localhost" ip_port="4242" path="${EMBLOCKS}\share\contrib" executable="STLinkGDB.exe" description="" dont_start_server="false" backoff_time="1000" options="0" reg_filter="0" active_family="STMicroelectronics">
 						<family_options family_id="STMicroelectronics">
 							<option opt_id="ID_JTAG_SWD" opt_value="swd" />
@@ -1029,7 +766,7 @@
 						</family_options>
 					</debug_interface>
 				</target_debugging_settings>
-				<target_debugging_settings target="ODB" active_interface="ST-link">
+				<target_debugging_settings target="ADCS" active_interface="ST-link">
 					<debug_interface interface_id="ST-link" ip_address="localhost" ip_port="4242" path="${EMBLOCKS}\share\contrib" executable="STLinkGDB.exe" description="" dont_start_server="false" backoff_time="1000" options="0" reg_filter="0" active_family="STMicroelectronics">
 						<family_options family_id="STMicroelectronics">
 							<option opt_id="ID_JTAG_SWD" opt_value="swd" />
