@@ -31,7 +31,7 @@ RstClk& RstClk::init( void )
 {
    Clocks clk;
 
-   LOG << _name << ": Reset/Clock controller";
+   LOG << _name << ": Reset and Clock controller";
 
    clocks( &clk );
 

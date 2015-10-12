@@ -34,7 +34,7 @@ namespace qb50 {
 //  S Y S T E M   L O G G E R  //
 //  - - - - - - - - - - - - -  //
 
-   Syslog SYSLOG( "SYSLOG", UART6 );
+   Syslog SYSLOG( "SYSLOG", UART1 );
 
 //  - - - - - - - - - -  //
 //  C O R E   B U S E S  //

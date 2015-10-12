@@ -1,8 +1,4 @@
 
-#ifdef XTRUITES
-#include "../XTRUITES/textualInterface.h"
-#endif
-
 #include "system/qb50.h"
 #include <stdio.h>
 
@@ -14,18 +10,27 @@ extern void ODBCommUpThread                 ( Thread *self );  //Thread for Comm
 extern void ODBCommDownThread               ( Thread *self );  //Thread for Communication with ODB (Receiving Data)
 extern void TestThreads                     ( Thread *self );  //Thread for testing purposes only
 
+static void initDevices( void );
+
+
 void testThread1( Thread *self )  //Test Thread
 {
-   int cnt = 0;
+    int cnt = 0;
 
-   (void)self;
+    (void)self;
 
-   for( ;; ) {
-      (void)printf(" ------- Hello Test  Thread -------\r\n");
-      (void)printf( "hello: %p - %d\r\n", self, cnt );
-      ++cnt;
-      delay( 500 );
-   }
+    initDevices();
+    SYSLOG.enable();
+
+    for( ;; ) {
+        LOG << "test: " << cnt;
+/*
+        (void)printf(" ------- Hello Test  Thread -------\r\n");
+        (void)printf( "hello: %p - %d\r\n", self, cnt );
+*/
+        ++cnt;
+        delay( 500 );
+    }
 }
 
 //Principal Thread for ADCS
@@ -66,12 +71,29 @@ void Main_Thread( Thread *self){
             }
     }
 }
+
+
+void initDevices( void )
+{
+    SYSLOG.init();
+    RCC.init();
+    GPIOA.init();
+    GPIOB.init();
+    GPIOC.init();
+    UART1.init();
+/*
+    UART2.init();
+    DMA1.init();
+    DMA2.init();
+    SPI1.init();
+    SPI2.init();
+    SPI3.init();
+    FLASH0.init();
+*/
+}
+
 int main( void )
 {
-   /* enable UART1 (debug) */
-
-   UART1.enable();
-
     //Initialize the state to some standard values
     //For testing purposes only
 
@@ -81,24 +103,27 @@ int main( void )
     Current_state.MAGFIE.B_z = 0;
 
     //Position calculated
-    Current_state.POS.pos_x = 10;
+    Current_state.POS.pos_x =  10;
     Current_state.POS.pos_y = -20;
-    Current_state.POS.pos_z = 15;
+    Current_state.POS.pos_z =  15;
 
     //Sun Vector calculated
     Current_state.SUNVEC.s_x = -0.5;
-    Current_state.SUNVEC.s_y = 0.6;
+    Current_state.SUNVEC.s_y =  0.6;
     Current_state.SUNVEC.s_z = -0.7;
 
    /* create worker threads */
 
-   //createThread( "Thread 1", testThread1 );
+#if 1
+   createThread( "Thread 1", testThread1 );
+#else
    createThread( "ADC Test Thread", TestThreads);
    //createThread( "ODB Comm Up Thread", ODBCommUpThread);
    createThread( "ODB Comm Down Thread", ODBCommDownThread);
    //createThread( "Attitude Determination Thread", AttitudeDeterThread);
    //createThread( "Attitude Control Thread", AttitudeControlThread);
    createThread( "Main Thread", Main_Thread);
+#endif
 
    run();
 
