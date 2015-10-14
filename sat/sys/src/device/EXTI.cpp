@@ -2,11 +2,10 @@
 #include "device/EXTI.h"
 #include "device/NVIC.h"
 #include "device/GPIOPin.h"
-#include <stm32f4xx.h>
+
+#include <stm32f4xx.h> /* XXX */
 
 #undef EXTI
-#undef NVIC
-
 
 using namespace qb50;
 

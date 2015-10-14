@@ -9,6 +9,7 @@ namespace qb50 {
 
    class GPIOPin : public Device
    {
+
       public:
 
          GPIOPin( GPIO& gpio, const unsigned id, const char *name, const uint16_t mask );
@@ -26,10 +27,10 @@ namespace qb50 {
          /* mode */
 
          enum Mode {
-            INPUT        = 0x00,
-            OUTPUT       = 0x01,
-            ALTERNATE    = 0x02,
-            ANALOG       = 0x03
+            INPUT     = 0x00,
+            OUTPUT    = 0x01,
+            ALTERNATE = 0x02,
+            ANALOG    = 0x03
          };
 
          unsigned      id ( void ) const { return _id; }
@@ -86,7 +87,7 @@ namespace qb50 {
             AF15 = 0x0f, EVENTOUT = AF15
          };
 
-         GPIOPin& alt    ( Alt alt );
+         GPIOPin& alt ( Alt alt );
 
          /* output speed */
 
@@ -124,17 +125,17 @@ namespace qb50 {
 
             /* Channel Definitions for ADC */
 
-            enum Channel {
-         CH0 = 0x00,
-         CH1 = 0x01,
-         CH2 = 0x02,
-         CH3 = 0x03,
-         CH4 = 0x04,
-         CH5 = 0x05,
-         CH6 = 0x06,
-         CH7 = 0x07,
-         CH8 = 0x08,   PB0 = CH8,
-         CH9 = 0x09,   PB1 = CH9,
+      enum Channel {
+         CH0  = 0x00,
+         CH1  = 0x01,
+         CH2  = 0x02,
+         CH3  = 0x03,
+         CH4  = 0x04,
+         CH5  = 0x05,
+         CH6  = 0x06,
+         CH7  = 0x07,
+         CH8  = 0x08, PB0 = CH8,
+         CH9  = 0x09, PB1 = CH9,
          CH10 = 0x0A, PC0 = CH10,
          CH11 = 0x0B, PC1 = CH11,
          CH12 = 0x0C,
@@ -152,92 +153,8 @@ namespace qb50 {
          GPIO&           _gpio;
          const unsigned  _id;
          const uint16_t  _mask;
+
    };
-
-   extern qb50::GPIOPin& PA0;
-   extern qb50::GPIOPin& PA1;
-   extern qb50::GPIOPin& PA2;
-   extern qb50::GPIOPin& PA3;
-   extern qb50::GPIOPin& PA4;
-   extern qb50::GPIOPin& PA5;
-   extern qb50::GPIOPin& PA6;
-   extern qb50::GPIOPin& PA7;
-   extern qb50::GPIOPin& PA8;
-   extern qb50::GPIOPin& PA9;
-   extern qb50::GPIOPin& PA10;
-   extern qb50::GPIOPin& PA11;
-   extern qb50::GPIOPin& PA12;
-   extern qb50::GPIOPin& PA13;
-   extern qb50::GPIOPin& PA14;
-   extern qb50::GPIOPin& PA15;
-
-   extern qb50::GPIOPin& PB0;
-   extern qb50::GPIOPin& PB1;
-   extern qb50::GPIOPin& PB2;
-   extern qb50::GPIOPin& PB3;
-   extern qb50::GPIOPin& PB4;
-   extern qb50::GPIOPin& PB5;
-   extern qb50::GPIOPin& PB6;
-   extern qb50::GPIOPin& PB7;
-   extern qb50::GPIOPin& PB8;
-   extern qb50::GPIOPin& PB9;
-   extern qb50::GPIOPin& PB10;
-   extern qb50::GPIOPin& PB11;
-   extern qb50::GPIOPin& PB12;
-   extern qb50::GPIOPin& PB13;
-   extern qb50::GPIOPin& PB14;
-   extern qb50::GPIOPin& PB15;
-
-   extern qb50::GPIOPin& PC0;
-   extern qb50::GPIOPin& PC1;
-   extern qb50::GPIOPin& PC2;
-   extern qb50::GPIOPin& PC3;
-   extern qb50::GPIOPin& PC4;
-   extern qb50::GPIOPin& PC5;
-   extern qb50::GPIOPin& PC6;
-   extern qb50::GPIOPin& PC7;
-   extern qb50::GPIOPin& PC8;
-   extern qb50::GPIOPin& PC9;
-   extern qb50::GPIOPin& PC10;
-   extern qb50::GPIOPin& PC11;
-   extern qb50::GPIOPin& PC12;
-   extern qb50::GPIOPin& PC13;
-   extern qb50::GPIOPin& PC14;
-   extern qb50::GPIOPin& PC15;
-
-   extern qb50::GPIOPin& PD0;
-   extern qb50::GPIOPin& PD1;
-   extern qb50::GPIOPin& PD2;
-   extern qb50::GPIOPin& PD3;
-   extern qb50::GPIOPin& PD4;
-   extern qb50::GPIOPin& PD5;
-   extern qb50::GPIOPin& PD6;
-   extern qb50::GPIOPin& PD7;
-   extern qb50::GPIOPin& PD8;
-   extern qb50::GPIOPin& PD9;
-   extern qb50::GPIOPin& PD10;
-   extern qb50::GPIOPin& PD11;
-   extern qb50::GPIOPin& PD12;
-   extern qb50::GPIOPin& PD13;
-   extern qb50::GPIOPin& PD14;
-   extern qb50::GPIOPin& PD15;
-
-   extern qb50::GPIOPin& PE0;
-   extern qb50::GPIOPin& PE1;
-   extern qb50::GPIOPin& PE2;
-   extern qb50::GPIOPin& PE3;
-   extern qb50::GPIOPin& PE4;
-   extern qb50::GPIOPin& PE5;
-   extern qb50::GPIOPin& PE6;
-   extern qb50::GPIOPin& PE7;
-   extern qb50::GPIOPin& PE8;
-   extern qb50::GPIOPin& PE9;
-   extern qb50::GPIOPin& PE10;
-   extern qb50::GPIOPin& PE11;
-   extern qb50::GPIOPin& PE12;
-   extern qb50::GPIOPin& PE13;
-   extern qb50::GPIOPin& PE14;
-   extern qb50::GPIOPin& PE15;
 
 } /* qb50 */
 

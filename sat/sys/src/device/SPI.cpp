@@ -4,8 +4,7 @@
 #include "device/UART.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx.h>
-#undef RCC
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
@@ -261,24 +260,5 @@ SPI& SPI::_xfer( void )
 
 void SPI::isr( void )
 { ; }
-
-//  - - - - - - - - - - -  //
-//  T R A M P O L I N E S  //
-//  - - - - - - - - - - -  //
-
-#undef SPI1
-#undef SPI2
-#undef SPI3
-
-/*
-void SPI1_IRQHandler( void )
-{ qb50::SPI1.isr(); }
-
-void SPI2_IRQHandler( void )
-{ qb50::SPI2.isr(); }
-*/
-
-void SPI3_IRQHandler( void )
-{ qb50::SPI3.isr(); }
 
 /*EoF*/

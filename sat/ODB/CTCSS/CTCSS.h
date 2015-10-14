@@ -44,9 +44,6 @@ namespace qb50 {
 
     };
 
-    extern qb50::CTCSS ctcss;
-}
-
-
+} /* qb50 */
 
 #endif /* _QB50_CTCSS_H */

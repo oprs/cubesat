@@ -1,7 +1,9 @@
-#include"system/qb50.h"
+
+#include "system/qb50.h"
 #include "STRUCTURE.h"
 #include "ADCSCLASS.h"
-#include <stm32f4xx.h>
+
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 

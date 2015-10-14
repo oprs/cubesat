@@ -3,11 +3,7 @@
 #include "device/DMA.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx.h>
-
-#undef DMA1
-#undef DMA2
-#undef RCC
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 

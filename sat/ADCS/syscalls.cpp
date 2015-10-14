@@ -1,6 +1,7 @@
 
-#include "system/qb50.h"
-#include <stm32f4xx.h>
+#include "config.h"
+
+#include <safe_stm32f4xx.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>

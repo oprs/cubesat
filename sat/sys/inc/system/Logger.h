@@ -4,7 +4,6 @@
 
 #include "device/Syslog.h"
 
-
 #define LOG Syslog::LogLine( SYSLOG ).get()
 
 

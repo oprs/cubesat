@@ -1,6 +1,5 @@
 
-#include "system/qb50.h"
-#include <stdio.h>
+#include "config.h"
 
 using namespace qb50;
 
@@ -38,36 +37,49 @@ void Main_Thread( Thread *self){
 
     (void)self;
 
+    initDevices();
+    SYSLOG.enable();
+
+#if 0
+   createThread( "Thread 1", testThread1 );
+#else
+   createThread( "ADC Test Thread", TestThreads);
+   //createThread( "ODB Comm Up Thread", ODBCommUpThread);
+   createThread( "ODB Comm Down Thread", ODBCommDownThread);
+   //createThread( "Attitude Determination Thread", AttitudeDeterThread);
+   //createThread( "Attitude Control Thread", AttitudeControlThread);
+#endif
+
     for(;;){
             delay( 2000 );
-            (void)printf(" ------- Main Thread -------\r\n");
+            LOG << "------- Main Thread -------";
             switch (Current_state.LCR)
             {
                 case PING:
-                    (void)printf(" ------- ODB is pinging us -------\r\n");
+                    LOG << "------- ODB is pinging us -------";
                     break;
                 case MODE_ATT_DET:
-                    (void)printf(" ------- Attitude determination mode on -------\r\n");
+                    LOG << "------- Attitude determination mode on -------";
                     break;
                 case MODE_ATT_CON:
-                    (void)printf(" ------- Attitude Control Mode on -------\r\n");
+                    LOG << "------- Attitude Control Mode on -------";
                     break;
                 case ASK_ATT:
-                    (void)printf(" ------- ODB asks for attitude -------\r\n");
+                    LOG << "------- ODB asks for attitude -------";
                     break;
                 case ASK_MAG_RAW:
-                    (void)printf(" ------- ODB asks for raw mag data -------\r\n");
+                    LOG << "------- ODB asks for raw mag data -------";
                     break;
                 case ASK_SUN_RAW:
-                    (void)printf(" ------- ODB asks for sun data -------\r\n");
+                    LOG << "------- ODB asks for sun data -------";
                     for (int i = 0; i < 5; i++)
-                        (void)printf( "SUN Sensor 1: %u\r \n", Current_state.TADC.adc_temp[i]);
+                        LOG << "SUN Sensor 1: " << Current_state.TADC.adc_temp[i];
                     break;
                 case STOP:
-                    (void)printf(" ------- ODB asks to stop ADCS -------\r\n");
+                    LOG << "------- ODB asks to stop ADCS -------";
                     break;
                 default:
-                    (void)printf(" ------- ODB hasn't told us anything :( -------\r\n");
+                    LOG << "------- ODB hasn't told us anything :( -------";
             }
     }
 }
@@ -81,6 +93,17 @@ void initDevices( void )
     GPIOB.init();
     GPIOC.init();
     UART1.init();
+    SPI3.init();
+    SUN1.init();
+    SUN2.init();
+    SUN3.init();
+    SUN4.init();
+    SUN5.init();
+    SUN6.init();
+    SUN7.init();
+    SUN8.init();
+    SUN9.init();
+    FLASH0.init();
 /*
     UART2.init();
     DMA1.init();
@@ -114,17 +137,7 @@ int main( void )
 
    /* create worker threads */
 
-#if 1
-   createThread( "Thread 1", testThread1 );
-#else
-   createThread( "ADC Test Thread", TestThreads);
-   //createThread( "ODB Comm Up Thread", ODBCommUpThread);
-   createThread( "ODB Comm Down Thread", ODBCommDownThread);
-   //createThread( "Attitude Determination Thread", AttitudeDeterThread);
-   //createThread( "Attitude Control Thread", AttitudeControlThread);
    createThread( "Main Thread", Main_Thread);
-#endif
-
    run();
 
    /* never reached */

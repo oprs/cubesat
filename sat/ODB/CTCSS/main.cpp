@@ -1,5 +1,5 @@
 
-#include "system/qb50.h"
+#include "config.h"
 #include "CTCSS.h"
 #include "DECTONEHandler.h"
 #include <stdio.h>

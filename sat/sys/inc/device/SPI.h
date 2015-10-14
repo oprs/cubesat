@@ -55,10 +55,6 @@ namespace qb50 {
          GPIOPin::Alt    _alt;
    };
 
-   extern qb50::SPI SPI1;
-   extern qb50::SPI SPI2;
-   extern qb50::SPI SPI3;
-
 } /* qb50 */
 
 

@@ -1,9 +1,7 @@
 
 #include "device/NVIC.h"
 
-#include <stm32f4xx.h>
-
-#undef NVIC
+#include <safe_stm32f4xx.h>
 
 
 using namespace qb50;

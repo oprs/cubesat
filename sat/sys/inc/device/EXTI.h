@@ -56,7 +56,8 @@ namespace qb50 {
     };
 
     extern qb50::EXTI EXTI1;
-}
+
+} /* qb50 */
 
 
 extern "C" {

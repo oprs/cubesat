@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "CommandThread.h"
 #include "FormParser.h"
 #include "Parameters.h"

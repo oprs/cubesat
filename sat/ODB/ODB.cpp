@@ -1,21 +1,5 @@
 
-#include "system/qb50.h"
-
-#undef RCC
-#undef GPIOA
-#undef GPIOB
-#undef GPIOC
-#undef UART4
-#undef UART5
-#undef DMA1
-#undef DMA2
-#undef SPI1
-#undef SPI2
-#undef SPI3
-#undef ADC1
-#undef ADC2
-#undef ADC3
-#undef ADC4
+#include "config.h"
 
 using namespace qb50;
 
@@ -24,18 +8,18 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Satellite::Satellite( const char *name,
-                      GPIOPin& selPin,
-                      GPIOPin& asPin,
-                      GPIOPin& adPin )
-   : Device( name ),
+ODB::ODB( const char *name,
+          GPIOPin& selPin,
+          GPIOPin& asPin,
+          GPIOPin& adPin )
+   : _name( name ),
      _selPin( selPin ),
      _asPin( asPin ),
      _adPin( adPin )
 { ; }
 
 
-Satellite::~Satellite()
+ODB::~ODB()
 { ; }
 
 
@@ -43,7 +27,7 @@ Satellite::~Satellite()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-Satellite& Satellite::init( void )
+ODB& ODB::init( void )
 {
    SYSLOG.init();
    RCC.init();
@@ -79,11 +63,11 @@ Satellite& Satellite::init( void )
 
    switch( id() ) {
 
-      case Satellite::FR01:
+      case ODB::FR01:
          LOG << _name << ": ON0FR1 (X-CubeSat - Ecole Polytechnique)";
          break;
 
-      case Satellite::FR05:
+      case ODB::FR05:
          LOG << _name << ": ON0FR5 (SpaceCube - Mines ParisTech)";
          break;
 
@@ -95,47 +79,27 @@ Satellite& Satellite::init( void )
 }
 
 
-Satellite& Satellite::enable( bool silent )
-{
-   SYSLOG.enable( silent );
-   return *this;
-}
-
-
-Satellite& Satellite::disable( bool silent )
-{
-   (void)silent;
-/*
-   _selPin.disable();
-   _asPin.disable();
-   _adPin.disable();
-*/
-
-   return *this;
-}
-
-
-Satellite::SatSel Satellite::id( void )
+ODB::SatSel ODB::id( void )
 {
    return
-      _selPin.read() ? Satellite::FR01 : Satellite::FR05;
+      _selPin.read() ? ODB::FR01 : ODB::FR05;
 }
 
 
-Satellite::AntState Satellite::aState( void )
+ODB::AntState ODB::aState( void )
 {
    return
-      _asPin.read() ? Satellite::RETRACTED : Satellite::DEPLOYED;
+      _asPin.read() ? ODB::RETRACTED : ODB::DEPLOYED;
 }
 
 
-Satellite::AntState Satellite::aDeploy( void )
+ODB::AntState ODB::aDeploy( void )
 {
-   Satellite::AntState st;
+   ODB::AntState st;
 
-   if( aState() == Satellite::DEPLOYED ) {
+   if( aState() == ODB::DEPLOYED ) {
       LOG << "Antenna deployed";
-      return Satellite::DEPLOYED;
+      return ODB::DEPLOYED;
    }
 
    _adPin.on();
@@ -146,13 +110,13 @@ Satellite::AntState Satellite::aDeploy( void )
       delay( 4999 );
 
       st = aState();
-      if( st == Satellite::DEPLOYED )
+      if( st == ODB::DEPLOYED )
          break;
    }
 
    _adPin.off();
 
-   if( aState() == Satellite::DEPLOYED )
+   if( aState() == ODB::DEPLOYED )
       LOG << "Antenna deployed";
    else
       LOG << "Giving up on antenna deployment";

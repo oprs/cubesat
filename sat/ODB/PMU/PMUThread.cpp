@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "PMUThread.h"
 #include "system/Application.h"
 

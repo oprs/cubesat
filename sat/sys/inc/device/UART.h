@@ -139,13 +139,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::UART UART1;
-   extern qb50::UART UART2;
-   extern qb50::UART UART3;
-   extern qb50::UART UART4;
-   extern qb50::UART UART5;
-   extern qb50::UART UART6;
-
 } /* qb50 */
 
 

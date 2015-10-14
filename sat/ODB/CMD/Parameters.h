@@ -25,9 +25,7 @@ namespace qb50 {
 
    };
 
-    extern qb50::Parameters PARAMS;
-
-}
+} /* qb50 */
 
 
 #endif /*_QB50_PARAMETERS_H*/

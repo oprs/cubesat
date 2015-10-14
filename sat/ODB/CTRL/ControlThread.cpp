@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "ControlThread.h"
 #include "CMD/CommandThread.h"
 #include "PMU/PMUThread.h"
@@ -57,12 +58,12 @@ void ControlThread::run( void )
    Event *ev;
 
    SAT.init();
-   SAT.enable();
 
 //delay( 3000 );
 
-BKP.enable();
-CONF.enable();
+   SYSLOG.enable();
+   BKP.enable();
+   CONF.enable();
 
    LOG << "Waiting for 30mn...";
    delay( 5000 );

@@ -7,7 +7,7 @@
 
 #undef TIM
 
-namespace qb50{
+namespace qb50 {
 
    class TIMER : public BusDevice
    {
@@ -35,11 +35,9 @@ namespace qb50{
       GPIOPin::Alt _alt;
     };
 
-   extern qb50::TIMER TIMER1;
-   extern qb50::TIMER TIMER2;
-   extern qb50::TIMER TIMER8;
-}
+} /* qb50 */
 
-#endif
-/* TIMER_H_INCLUDED */
 
+#endif /*_QB50_SYS_DEVICE_TIMER_H*/
+
+/*EoF*/

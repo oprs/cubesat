@@ -25,9 +25,7 @@ namespace qb50 {
 
     };
 
-    extern qb50::DECTONEHandler dectone;
-
-}
+} /* qb50 */
 
 
 #endif /* _QB50_DECTONE_HANDLER_H */

@@ -22,9 +22,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::DMA DMA1;
-   extern qb50::DMA DMA2;
-
 } /* qb50 */
 
 

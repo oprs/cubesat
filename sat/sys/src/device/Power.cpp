@@ -3,9 +3,7 @@
 #include "device/Power.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx.h>
-#undef PWR
-#undef RCC
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 

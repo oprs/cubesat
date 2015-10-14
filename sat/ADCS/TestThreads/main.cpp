@@ -1,57 +1,35 @@
-#include <stdio.h>
-#include "system/qb50.h"
+
+#include "config.h"
 
 using namespace qb50;
 
-void testThreadADC(){
-    //Enable the GPIO Pins for ADC Functionality
-    SUN1.enable();
-    SUN2.enable();
-    SUN3.enable();
-    SUN4.enable();
-    SUN5.enable();
+void testThreadADC()
+{
+    int i;
 
-    for( ;; ){
-            (void)printf(" ------- ADC Test Thread -------\r\n");
-            uint16_t temp = 0;
-            (void)printf( "[DATA ADC]\r\n" );
+    ADC* adc[9] = { &SUN1, &SUN2, &SUN3, &SUN4, &SUN5, &SUN6, &SUN7, &SUN8, &SUN9 };
 
-            temp = SUN1.getValue_adc();
-            Current_state.TADC.adc_temp[0] = SUN1.getValue_adc();
+    for( i = 9 ; i < 9 ; ++i )
+        adc[i]->enable();
 
-            (void)printf( "SUN Sensor 1: %u\r \n", temp);
+    for( ;; ) {
+        LOG << "------- ADC Test Thread -------";
+        uint16_t temp = 0;
+        LOG << "[DATA ADC]";
 
-            temp = SUN2.getValue_adc();
-            Current_state.TADC.adc_temp[1] = SUN2.getValue_adc();
+        for( i = 0 ; i < 9 ; ++i ) {
+            temp = Current_state.TADC.adc_temp[0] = adc[i]->getValue_adc();
+            LOG << "SUN Sensor #" << (i+1) << ": " << temp;
+        }
 
-            (void)printf( "SUN Sensor 2: %u\r\n", temp);
-
-            temp = SUN3.getValue_adc();
-            Current_state.TADC.adc_temp[2] = SUN3.getValue_adc();
-
-            (void)printf( "SUN Sensor 3: %u\r\n", temp);
-
-            temp = SUN4.getValue_adc();
-            Current_state.TADC.adc_temp[3] = SUN4.getValue_adc();
-
-            (void)printf( "SUN Sensor 4: %u\r\n", temp);
-
-            temp = SUN5.getValue_adc();
-            Current_state.TADC.adc_temp[4] = SUN5.getValue_adc();
-
-            (void)printf( "SUN Sensor 5: %u\r\n", temp);
-
-            delay(2000);
+        delay(5000);
     }
-
 }
 
 void TestThreads( Thread *self)
 {
     (void)self;
-
     testThreadADC();
-
 }
 
 /*EoF*/

@@ -29,9 +29,8 @@ namespace qb50 {
 
    };
 
-   extern qb50::Transceiver RFTX;
-
 } /* qb50 */
+
 
 #endif /*_QB50_SYS_DEVICE_TRANSCEIVER_H*/
 

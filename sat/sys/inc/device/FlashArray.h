@@ -42,8 +42,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::FlashArray VFLASH;
-
 } /* qb50 */
 
 

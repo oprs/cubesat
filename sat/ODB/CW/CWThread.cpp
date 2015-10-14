@@ -1,4 +1,5 @@
 
+#include "config.h"
 #include "CWThread.h"
 #include "Morse.h"
 #include "system/Application.h"
@@ -25,7 +26,7 @@ CWThread::~CWThread()
 
 void CWThread::run( void )
 {
-   const char *id = SAT.id() == Satellite::FR01 ? "FR1" : "FR5";
+   const char *id = SAT.id() == ODB::FR01 ? "FR1" : "FR5";
 
    Morse cw( PB1 );
 

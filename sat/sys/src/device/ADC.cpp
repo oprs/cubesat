@@ -21,12 +21,12 @@ ADC::ADC(Bus& bus,
          const char *name,
          GPIOPin& pin,
          GPIOPin::Mode mode,
-         GPIOPin::Channel channel)
-      :BusDevice( bus, iobase, periph, name ), _pin( pin ), _mode( mode )
-      {
-          _numConv = 5;
-          _channel = channel;
-      }
+         ADC::Channel channel)
+   :BusDevice( bus, iobase, periph, name ), _pin( pin ), _mode( mode )
+{
+   _numConv = 5;
+   _channel = channel;
+}
 
 ADC::~ADC()
 { ; }
@@ -38,7 +38,7 @@ ADC::~ADC()
 
 ADC& ADC::init( void )
 {
-   LOG << _name << ": Internal ADC at " << bus.name;
+   LOG << _name << ": System ADC at " << bus.name << ", in: " << _pin.name();
    return *this;
 }
 

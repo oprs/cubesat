@@ -27,8 +27,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::ConfSlice CONF;
-
 } /* qb50 */
 
 

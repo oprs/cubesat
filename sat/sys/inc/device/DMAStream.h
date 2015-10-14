@@ -319,24 +319,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::DMAStream DMA1ST0;
-   extern qb50::DMAStream DMA1ST1;
-   extern qb50::DMAStream DMA1ST2;
-   extern qb50::DMAStream DMA1ST3;
-   extern qb50::DMAStream DMA1ST4;
-   extern qb50::DMAStream DMA1ST5;
-   extern qb50::DMAStream DMA1ST6;
-   extern qb50::DMAStream DMA1ST7;
-
-   extern qb50::DMAStream DMA2ST0;
-   extern qb50::DMAStream DMA2ST1;
-   extern qb50::DMAStream DMA2ST2;
-   extern qb50::DMAStream DMA2ST3;
-   extern qb50::DMAStream DMA2ST4;
-   extern qb50::DMAStream DMA2ST5;
-   extern qb50::DMAStream DMA2ST6;
-   extern qb50::DMAStream DMA2ST7;
-
 } /* qb50 */
 
 

@@ -2,6 +2,13 @@
 #include "device/PMU.h"
 #include "system/qb50.h"
 
+namespace qb50 { /* XXX just include odb.h, remove qb50.h */
+ extern qb50::MAX111x ADC1;
+ extern qb50::MAX111x ADC2;
+ extern qb50::MAX111x ADC3;
+ extern qb50::MAX111x ADC4;
+}
+
 using namespace qb50;
 
 

@@ -2,8 +2,7 @@
 #include "device/RstClk.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx.h>
-#undef RCC
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
@@ -31,7 +30,7 @@ RstClk& RstClk::init( void )
 {
    Clocks clk;
 
-   LOG << _name << ": Reset and Clock controller";
+   LOG << _name << ": System reset and clock controller";
 
    clocks( &clk );
 

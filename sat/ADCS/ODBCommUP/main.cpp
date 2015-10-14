@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "system/qb50.h"
+
+#include "config.h"
 
 using namespace qb50;
 
@@ -9,7 +9,7 @@ void ODBCommUpThread( Thread *self)
 
     for(;;){
             delay( 2000 );
-            (void)printf(" ------- ODB Communication (UP)  Thread -------\r\n");
+            LOG << "------- ODB Communication (UP)  Thread -------";
     }
 }
 

@@ -26,7 +26,6 @@
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"
 #include "device/Transceiver.h"
-#include "device/Satellite.h"
 
 #include "commun/State.h"
 #include "commun/Raw.h"

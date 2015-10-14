@@ -3,9 +3,7 @@
 #include "device/UART.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx.h>
-
-#undef RCC
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
@@ -330,30 +328,5 @@ void UART::isr( void )
    if( hpTask == pdTRUE )
       portEND_SWITCHING_ISR( hpTask );
 }
-
-
-/* trampolines */
-
-#undef UART4
-#undef UART5
-
-void USART1_IRQHandler( void )
-{ qb50::UART1.isr(); }
-
-void USART2_IRQHandler( void )
-{ qb50::UART2.isr(); }
-
-void USART3_IRQHandler( void )
-{ qb50::UART3.isr(); }
-/*
-void UART4_IRQHandler( void )
-{ qb50::UART4.isr(); }
-
-void UART5_IRQHandler( void )
-{ qb50::UART5.isr(); }
-*/
-void USART6_IRQHandler( void )
-{ qb50::UART6.isr(); }
-
 
 /*EoF*/

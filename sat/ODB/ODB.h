@@ -1,23 +1,21 @@
 
-#ifndef _QB50_SYS_DEVICE_SATELLITE_H
-#define _QB50_SYS_DEVICE_SATELLITE_H
+#ifndef _QB50_ODB_H
+#define _QB50_ODB_H
 
 #include "device/GPIOPin.h"
 
 
 namespace qb50 {
 
-   class Satellite : public Device
+   class ODB
    {
 
       public:
 
-         Satellite( const char *name, GPIOPin& selPin, GPIOPin& asPin, GPIOPin& adPin );
-         virtual ~Satellite();
+         ODB( const char *name, GPIOPin& selPin, GPIOPin& asPin, GPIOPin& adPin );
+         virtual ~ODB();
 
-         Satellite& init    ( void );
-         Satellite& enable  ( bool silent = false );
-         Satellite& disable ( bool silent = false );
+         ODB& init( void );
 
          enum SatSel {
             FR01 = 0, /* X-CubeSat (Polytechnique)   */
@@ -37,17 +35,16 @@ namespace qb50 {
 
       private:
 
+         const char *_name;
          GPIOPin&    _selPin; /* satellite selection (in) */
          GPIOPin&    _asPin;  /* antenna status      (in) */
          GPIOPin&    _adPin;  /* antenna deploy     (out) */
 
    };
 
-   extern qb50::Satellite SAT;
-
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_SATELLITE_H*/
+#endif /*_QB50_ODB_H*/
 
 /*EoF*/

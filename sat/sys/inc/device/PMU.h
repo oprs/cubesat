@@ -69,8 +69,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::PMU PMU0;
-
 } /*qb50*/
 
 #endif /*_QB50_SYS_DEVICE_PMU_H*/

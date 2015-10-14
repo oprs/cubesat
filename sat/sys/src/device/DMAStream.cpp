@@ -2,7 +2,7 @@
 #include "device/DMAStream.h"
 #include "system/qb50.h"
 
-#include <stm32f4xx.h>
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
@@ -212,60 +212,5 @@ void DMAStream::isr( void )
    if( hpTask == pdTRUE )
       portEND_SWITCHING_ISR( hpTask );
 }
-
-
-//  - - - - - - - - - - -  //
-//  T R A M P O L I N E S  //
-//  - - - - - - - - - - -  //
-
-/*
-void DMA1_Stream0_IRQHandler( void )
-{ qb50::DMA1ST0.isr(); }
-
-void DMA1_Stream1_IRQHandler( void )
-{ qb50::DMA1ST1.isr(); }
-*/
-void DMA1_Stream2_IRQHandler( void )
-{ qb50::DMA1ST2.isr(); }
-/*
-void DMA1_Stream3_IRQHandler( void )
-{ qb50::DMA1ST3.isr(); }
-
-void DMA1_Stream4_IRQHandler( void )
-{ qb50::DMA1ST4.isr(); }
-*/
-void DMA1_Stream5_IRQHandler( void )
-{ qb50::DMA1ST5.isr(); }
-/*
-void DMA1_Stream6_IRQHandler( void )
-{ qb50::DMA1ST6.isr(); }
-
-void DMA1_Stream7_IRQHandler( void )
-{ qb50::DMA1ST7.isr(); }
-
-void DMA2_Stream0_IRQHandler( void )
-{ qb50::DMA2ST0.isr(); }
-
-void DMA2_Stream1_IRQHandler( void )
-{ qb50::DMA2ST1.isr(); }
-
-void DMA2_Stream2_IRQHandler( void )
-{ qb50::DMA2ST2.isr(); }
-
-void DMA2_Stream3_IRQHandler( void )
-{ qb50::DMA2ST3.isr(); }
-
-void DMA2_Stream4_IRQHandler( void )
-{ qb50::DMA2ST4.isr(); }
-
-void DMA2_Stream5_IRQHandler( void )
-{ qb50::DMA2ST5.isr(); }
-
-void DMA2_Stream6_IRQHandler( void )
-{ qb50::DMA2ST6.isr(); }
-
-void DMA2_Stream7_IRQHandler( void )
-{ qb50::DMA2ST7.isr(); }
-*/
 
 /*EoF*/

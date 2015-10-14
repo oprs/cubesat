@@ -7,32 +7,26 @@
 
 namespace qb50 {
 
-	class GPIOPin;
+   class GPIOPin;
 
-	class GPIO : public BusDevice
-	{
-		public:
+   class GPIO : public BusDevice
+   {
+      public:
 
-			GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins );
-			~GPIO();
+         GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins );
+         ~GPIO();
 
-			GPIO& init    ( void );
-			GPIO& enable  ( bool silent = false );
-			GPIO& disable ( bool silent = false );
+         GPIO& init    ( void );
+         GPIO& enable  ( bool silent = false );
+         GPIO& disable ( bool silent = false );
 
-			unsigned id ( void ) const { return _id;   }
+         unsigned id ( void ) const { return _id;   }
 
-		private:
+      private:
 
-			const unsigned _id;
-			GPIOPin *_pins;
-	};
-
-	extern qb50::GPIO GPIOA;
-	extern qb50::GPIO GPIOB;
-	extern qb50::GPIO GPIOC;
-	extern qb50::GPIO GPIOD;
-	extern qb50::GPIO GPIOE;
+         const unsigned _id;
+         GPIOPin *_pins;
+   };
 
 } /* qb50 */
 

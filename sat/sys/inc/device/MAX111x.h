@@ -116,11 +116,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::MAX111x ADC1;
-   extern qb50::MAX111x ADC2;
-   extern qb50::MAX111x ADC3;
-   extern qb50::MAX111x ADC4;
-
 } /* qb50 */
 
 

@@ -42,8 +42,9 @@ namespace qb50 {
 
     };
 
-    extern qb50::AX25Out ax25;
-}
+} /* qb50 */
 
 
 #endif /*_QB50_SYS_AX25OUT_H*/
+
+/*EoF*/

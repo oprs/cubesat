@@ -33,8 +33,6 @@ namespace qb50 {
 
    };
 
-   extern qb50::FlashCache FCACHE;
-
 } /* qb50 */
 
 
