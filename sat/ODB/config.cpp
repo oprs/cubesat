@@ -196,71 +196,71 @@ namespace qb50 {
 //  A D C   C H A N N E L S  //
 //  - - - - - - - - - - - -  //
 
-   static ADCChannel ADC1_Channels[ 8 ] = {
-      ADCChannel( ADC1, MAX111x::CH0, "ADC1CH0", 4.404494 ), /* V4 */
-      ADCChannel( ADC1, MAX111x::CH1, "ADC1CH1", 0.266667 ), /* I4 */
-      ADCChannel( ADC1, MAX111x::CH2, "ADC1CH2", 2.0      ), /* T4 */
-      ADCChannel( ADC1, MAX111x::CH3, "ADC1CH3", 4.404494 ), /* V1 */
-      ADCChannel( ADC1, MAX111x::CH4, "ADC1CH4", 2.0      ), /* T1 */
-      ADCChannel( ADC1, MAX111x::CH5, "ADC1CH5", 0.266667 ), /* I1 */
-      ADCChannel( ADC1, MAX111x::CH6, "ADC1CH6", 0.2      ), /* T_Bat */
-      ADCChannel( ADC1, MAX111x::CH7, "ADC1CH7", 4.404494 )  /* V_Bat */
+   static MAX111x::Channel ADC1_Channels[ 8 ] = {
+      MAX111x::Channel( ADC1, "ADC1CH0", MAX111x::CH0 /*, 4.404494*/ ), /* V4 */
+      MAX111x::Channel( ADC1, "ADC1CH1", MAX111x::CH1 /*, 0.266667*/ ), /* I4 */
+      MAX111x::Channel( ADC1, "ADC1CH2", MAX111x::CH2 /*, 2.0     */ ), /* T4 */
+      MAX111x::Channel( ADC1, "ADC1CH3", MAX111x::CH3 /*, 4.404494*/ ), /* V1 */
+      MAX111x::Channel( ADC1, "ADC1CH4", MAX111x::CH4 /*, 2.0     */ ), /* T1 */
+      MAX111x::Channel( ADC1, "ADC1CH5", MAX111x::CH5 /*, 0.266667*/ ), /* I1 */
+      MAX111x::Channel( ADC1, "ADC1CH6", MAX111x::CH6 /*, 0.2     */ ), /* T_Bat */
+      MAX111x::Channel( ADC1, "ADC1CH7", MAX111x::CH7 /*, 4.404494*/ )  /* V_Bat */
    };
 
-   static ADCChannel ADC2_Channels[ 8 ] = {
-      ADCChannel( ADC2, MAX111x::CH0, "ADC2CH0", 4.404494 ), /* V2 */
-      ADCChannel( ADC2, MAX111x::CH1, "ADC2CH1", 2.0      ), /* T2 */
-      ADCChannel( ADC2, MAX111x::CH2, "ADC2CH2", 0.266667 ), /* I2 */
-      ADCChannel( ADC2, MAX111x::CH3, "ADC2CH3", 4.404494 ), /* V3 */
-      ADCChannel( ADC2, MAX111x::CH4, "ADC2CH4", 2.0      ), /* T3 */
-      ADCChannel( ADC2, MAX111x::CH5, "ADC2CH5", 0.266667 ), /* I3 */
-      ADCChannel( ADC2, MAX111x::CH6, "ADC2CH6", 0.2      ), /* I_surt */
-      ADCChannel( ADC2, MAX111x::CH7, "ADC2CH7", 0.0      )  /* not used */
+   static MAX111x::Channel ADC2_Channels[ 8 ] = {
+      MAX111x::Channel( ADC2, "ADC2CH0", MAX111x::CH0 /*, 4.404494*/ ), /* V2 */
+      MAX111x::Channel( ADC2, "ADC2CH1", MAX111x::CH1 /*, 2.0     */ ), /* T2 */
+      MAX111x::Channel( ADC2, "ADC2CH2", MAX111x::CH2 /*, 0.266667*/ ), /* I2 */
+      MAX111x::Channel( ADC2, "ADC2CH3", MAX111x::CH3 /*, 4.404494*/ ), /* V3 */
+      MAX111x::Channel( ADC2, "ADC2CH4", MAX111x::CH4 /*, 2.0     */ ), /* T3 */
+      MAX111x::Channel( ADC2, "ADC2CH5", MAX111x::CH5 /*, 0.266667*/ ), /* I3 */
+      MAX111x::Channel( ADC2, "ADC2CH6", MAX111x::CH6 /*, 0.2     */ ), /* I_surt */
+      MAX111x::Channel( ADC2, "ADC2CH7", MAX111x::CH7 /*, 0.0     */ )  /* not used */
    };
 
-   static ADCChannel ADC3_Channels[ 8 ] = {
-      ADCChannel( ADC3, MAX111x::CH0, "ADC3CH0", 0.17     ), /* I_ADCS */
-      ADCChannel( ADC3, MAX111x::CH1, "ADC3CH1", 1.0      ), /* T_ARM_ODB */
-      ADCChannel( ADC3, MAX111x::CH2, "ADC3CH2", 0.053333 ), /* I_RX */
-      ADCChannel( ADC3, MAX111x::CH3, "ADC3CH3", 1.0      ), /* RSSI */
-      ADCChannel( ADC3, MAX111x::CH4, "ADC3CH4", 0.4      ), /* I_TX */
-      ADCChannel( ADC3, MAX111x::CH5, "ADC3CH5", 1.0      ), /* P_TX (mW) */
-      ADCChannel( ADC3, MAX111x::CH6, "ADC3CH6", 1.0      ), /* P_PA (mW) */
-      ADCChannel( ADC3, MAX111x::CH7, "ADC3CH7", 0.2      )  /* T_PA */
+   static MAX111x::Channel ADC3_Channels[ 8 ] = {
+      MAX111x::Channel( ADC3, "ADC3CH0", MAX111x::CH0 /*, 0.17    */ ), /* I_ADCS */
+      MAX111x::Channel( ADC3, "ADC3CH1", MAX111x::CH1 /*, 1.0     */ ), /* T_ARM_ODB */
+      MAX111x::Channel( ADC3, "ADC3CH2", MAX111x::CH2 /*, 0.053333*/ ), /* I_RX */
+      MAX111x::Channel( ADC3, "ADC3CH3", MAX111x::CH3 /*, 1.0     */ ), /* RSSI */
+      MAX111x::Channel( ADC3, "ADC3CH4", MAX111x::CH4 /*, 0.4     */ ), /* I_TX */
+      MAX111x::Channel( ADC3, "ADC3CH5", MAX111x::CH5 /*, 1.0     */ ), /* P_TX (mW) */
+      MAX111x::Channel( ADC3, "ADC3CH6", MAX111x::CH6 /*, 1.0     */ ), /* P_PA (mW) */
+      MAX111x::Channel( ADC3, "ADC3CH7", MAX111x::CH7 /*, 0.2     */ )  /* T_PA */
    };
 
-   static ADCChannel ADC4_Channels[ 8 ] = {
-      ADCChannel( ADC4, MAX111x::CH0, "ADC4CH0", 0.0      ), /* not used (I_ADCS) */
-      ADCChannel( ADC4, MAX111x::CH1, "ADC4CH1", 0.24     ), /* I_GPS */
-      ADCChannel( ADC4, MAX111x::CH2, "ADC4CH2", 0.0      ), /* not used */
-      ADCChannel( ADC4, MAX111x::CH3, "ADC4CH3", 0.026667 ), /* I_3V3_FIPEX */
-      ADCChannel( ADC4, MAX111x::CH4, "ADC4CH4", 2.0      ), /* V_3V3_FIPEX */
-      ADCChannel( ADC4, MAX111x::CH5, "ADC4CH5", 0.2424   ), /* I_5V_FIPEX */
-      ADCChannel( ADC4, MAX111x::CH6, "ADC4CH6", 4.404494 ), /* V_5V_FIPEX */
-      ADCChannel( ADC4, MAX111x::CH7, "ADC4CH7", 1.0      )  /* SU_TH_G0 */
+   static MAX111x::Channel ADC4_Channels[ 8 ] = {
+      MAX111x::Channel( ADC4, "ADC4CH0", MAX111x::CH0 /*, 0.0     */ ), /* not used (I_ADCS) */
+      MAX111x::Channel( ADC4, "ADC4CH1", MAX111x::CH1 /*, 0.24    */ ), /* I_GPS */
+      MAX111x::Channel( ADC4, "ADC4CH2", MAX111x::CH2 /*, 0.0     */ ), /* not used */
+      MAX111x::Channel( ADC4, "ADC4CH3", MAX111x::CH3 /*, 0.026667*/ ), /* I_3V3_FIPEX */
+      MAX111x::Channel( ADC4, "ADC4CH4", MAX111x::CH4 /*, 2.0     */ ), /* V_3V3_FIPEX */
+      MAX111x::Channel( ADC4, "ADC4CH5", MAX111x::CH5 /*, 0.2424  */ ), /* I_5V_FIPEX */
+      MAX111x::Channel( ADC4, "ADC4CH6", MAX111x::CH6 /*, 4.404494*/ ), /* V_5V_FIPEX */
+      MAX111x::Channel( ADC4, "ADC4CH7", MAX111x::CH7 /*, 1.0     */ )  /* SU_TH_G0 */
    };
 
    /* aliases */
 
-   ADCChannel& ADC1CH0 = ADC1_Channels[ 0 ];  ADCChannel& ADC1CH1 = ADC1_Channels[ 1 ];
-   ADCChannel& ADC1CH2 = ADC1_Channels[ 2 ];  ADCChannel& ADC1CH3 = ADC1_Channels[ 3 ];
-   ADCChannel& ADC1CH4 = ADC1_Channels[ 4 ];  ADCChannel& ADC1CH5 = ADC1_Channels[ 5 ];
-   ADCChannel& ADC1CH6 = ADC1_Channels[ 6 ];  ADCChannel& ADC1CH7 = ADC1_Channels[ 7 ];
+   MAX111x::Channel& ADC1CH0 = ADC1_Channels[ 0 ];  MAX111x::Channel& ADC1CH1 = ADC1_Channels[ 1 ];
+   MAX111x::Channel& ADC1CH2 = ADC1_Channels[ 2 ];  MAX111x::Channel& ADC1CH3 = ADC1_Channels[ 3 ];
+   MAX111x::Channel& ADC1CH4 = ADC1_Channels[ 4 ];  MAX111x::Channel& ADC1CH5 = ADC1_Channels[ 5 ];
+   MAX111x::Channel& ADC1CH6 = ADC1_Channels[ 6 ];  MAX111x::Channel& ADC1CH7 = ADC1_Channels[ 7 ];
 
-   ADCChannel& ADC2CH0 = ADC2_Channels[ 0 ];  ADCChannel& ADC2CH1 = ADC2_Channels[ 1 ];
-   ADCChannel& ADC2CH2 = ADC2_Channels[ 2 ];  ADCChannel& ADC2CH3 = ADC2_Channels[ 3 ];
-   ADCChannel& ADC2CH4 = ADC2_Channels[ 4 ];  ADCChannel& ADC2CH5 = ADC2_Channels[ 5 ];
-   ADCChannel& ADC2CH6 = ADC2_Channels[ 6 ];  ADCChannel& ADC2CH7 = ADC2_Channels[ 7 ];
+   MAX111x::Channel& ADC2CH0 = ADC2_Channels[ 0 ];  MAX111x::Channel& ADC2CH1 = ADC2_Channels[ 1 ];
+   MAX111x::Channel& ADC2CH2 = ADC2_Channels[ 2 ];  MAX111x::Channel& ADC2CH3 = ADC2_Channels[ 3 ];
+   MAX111x::Channel& ADC2CH4 = ADC2_Channels[ 4 ];  MAX111x::Channel& ADC2CH5 = ADC2_Channels[ 5 ];
+   MAX111x::Channel& ADC2CH6 = ADC2_Channels[ 6 ];  MAX111x::Channel& ADC2CH7 = ADC2_Channels[ 7 ];
 
-   ADCChannel& ADC3CH0 = ADC3_Channels[ 0 ];  ADCChannel& ADC3CH1 = ADC3_Channels[ 1 ];
-   ADCChannel& ADC3CH2 = ADC3_Channels[ 2 ];  ADCChannel& ADC3CH3 = ADC3_Channels[ 3 ];
-   ADCChannel& ADC3CH4 = ADC3_Channels[ 4 ];  ADCChannel& ADC3CH5 = ADC3_Channels[ 5 ];
-   ADCChannel& ADC3CH6 = ADC3_Channels[ 6 ];  ADCChannel& ADC3CH7 = ADC3_Channels[ 7 ];
+   MAX111x::Channel& ADC3CH0 = ADC3_Channels[ 0 ];  MAX111x::Channel& ADC3CH1 = ADC3_Channels[ 1 ];
+   MAX111x::Channel& ADC3CH2 = ADC3_Channels[ 2 ];  MAX111x::Channel& ADC3CH3 = ADC3_Channels[ 3 ];
+   MAX111x::Channel& ADC3CH4 = ADC3_Channels[ 4 ];  MAX111x::Channel& ADC3CH5 = ADC3_Channels[ 5 ];
+   MAX111x::Channel& ADC3CH6 = ADC3_Channels[ 6 ];  MAX111x::Channel& ADC3CH7 = ADC3_Channels[ 7 ];
 
-   ADCChannel& ADC4CH0 = ADC4_Channels[ 0 ];  ADCChannel& ADC4CH1 = ADC4_Channels[ 1 ];
-   ADCChannel& ADC4CH2 = ADC4_Channels[ 2 ];  ADCChannel& ADC4CH3 = ADC4_Channels[ 3 ];
-   ADCChannel& ADC4CH4 = ADC4_Channels[ 4 ];  ADCChannel& ADC4CH5 = ADC4_Channels[ 5 ];
-   ADCChannel& ADC4CH6 = ADC4_Channels[ 6 ];  ADCChannel& ADC4CH7 = ADC4_Channels[ 7 ];
+   MAX111x::Channel& ADC4CH0 = ADC4_Channels[ 0 ];  MAX111x::Channel& ADC4CH1 = ADC4_Channels[ 1 ];
+   MAX111x::Channel& ADC4CH2 = ADC4_Channels[ 2 ];  MAX111x::Channel& ADC4CH3 = ADC4_Channels[ 3 ];
+   MAX111x::Channel& ADC4CH4 = ADC4_Channels[ 4 ];  MAX111x::Channel& ADC4CH5 = ADC4_Channels[ 5 ];
+   MAX111x::Channel& ADC4CH6 = ADC4_Channels[ 6 ];  MAX111x::Channel& ADC4CH7 = ADC4_Channels[ 7 ];
 
 //  - - - - - - - - - - - - -  //
 //  P O W E R   M A N A G E R  //

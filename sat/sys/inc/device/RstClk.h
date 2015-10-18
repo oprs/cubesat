@@ -2,7 +2,7 @@
 #ifndef _QB50_SYS_DEVICE_RSTCLK_H
 #define _QB50_SYS_DEVICE_RSTCLK_H
 
-#include "BusDevice.h"
+#include "BusSlave.h"
 
 
 namespace qb50 {
@@ -97,8 +97,8 @@ namespace qb50 {
          ~RstClk();
 
          RstClk&  init    ( void );
-         RstClk&  enable  ( BusDevice *dev, bool silent = false );
-         RstClk&  disable ( BusDevice *dev, bool silent = false );
+         RstClk&  enable  ( BusSlave *dev, bool silent = false );
+         RstClk&  disable ( BusSlave *dev, bool silent = false );
 
          RstClk&  clocks  ( Clocks *clk );
          uint32_t freq    ( Bus& bus );

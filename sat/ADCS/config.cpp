@@ -184,64 +184,56 @@ namespace qb50 {
 //  A D C   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    pin  Mode */
-   ADC GS1_1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS1_1", PB1, GPIOPin::ANALOG, ADC::CH9  );
-   ADC GS1_2( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS1_2", PB0, GPIOPin::ANALOG, ADC::CH8  );
-   ADC GS2_1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS2_1", PC5, GPIOPin::ANALOG, ADC::CH15 );
-   ADC GS2_2( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS2_2", PC4, GPIOPin::ANALOG, ADC::CH14 );
-   ADC GS3_1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS3_1", PA4, GPIOPin::ANALOG, ADC::CH4  );
-   ADC GS3_2( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS3_2", PC3, GPIOPin::ANALOG, ADC::CH13 );
-   ADC GS4_1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS4_1", PC0, GPIOPin::ANALOG, ADC::CH10 );
-   ADC GS4_2( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS4_2", PC1, GPIOPin::ANALOG, ADC::CH11 );
-   ADC GS5  ( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "GS5",   PC2, GPIOPin::ANALOG, ADC::CH12 );
-/*
-   ADC SUN6( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "SUN6", PC2, GPIOPin::ANALOG, GPIOPin::PC2 );
-   ADC SUN7( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "SUN7", PC3, GPIOPin::ANALOG, GPIOPin::PC3 );
-   ADC SUN8( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "SUN8", PC4, GPIOPin::ANALOG, GPIOPin::PC4 );
-   ADC SUN9( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "SUN9", PA4, GPIOPin::ANALOG, GPIOPin::PA4 );
-*/
+   STM32_ADC ADC1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "ADC1" );
 
-   ADC& SUN1 = GS1_1;
-   ADC& SUN2 = GS1_2;
-   ADC& SUN3 = GS2_1;
-   ADC& SUN4 = GS2_2;
-   ADC& SUN5 = GS3_1;
-   ADC& SUN6 = GS3_2;
-   ADC& SUN7 = GS4_1;
-   ADC& SUN8 = GS4_2;
-   ADC& SUN9 = GS5;
+//  - - - - - - - - - - - -  //
+//  A D C   C H A N N E L S  //
+//  - - - - - - - - - - - -  //
+
+   /*                       adc   name    channel#         pin */
+   STM32_ADC::Channel SUN1( ADC1, "SUN1", STM32_ADC::CH9,  PB1 );
+   STM32_ADC::Channel SUN2( ADC1, "SUN2", STM32_ADC::CH8,  PB0 );
+   STM32_ADC::Channel SUN3( ADC1, "SUN3", STM32_ADC::CH15, PC5 );
+   STM32_ADC::Channel SUN4( ADC1, "SUN4", STM32_ADC::CH14, PC4 );
+   STM32_ADC::Channel SUN5( ADC1, "SUN5", STM32_ADC::CH4,  PA4 );
+   STM32_ADC::Channel SUN6( ADC1, "SUN6", STM32_ADC::CH13, PC3 );
+   STM32_ADC::Channel SUN7( ADC1, "SUN7", STM32_ADC::CH10, PC0 );
+   STM32_ADC::Channel SUN8( ADC1, "SUN8", STM32_ADC::CH11, PC1 );
+   STM32_ADC::Channel SUN9( ADC1, "SUN9", STM32_ADC::CH12, PC2 );
+
+   /* aliases */
+
+   STM32_ADC::Channel& GS1_1 = SUN1;
+   STM32_ADC::Channel& GS1_2 = SUN2;
+   STM32_ADC::Channel& GS2_1 = SUN3;
+   STM32_ADC::Channel& GS2_2 = SUN4;
+   STM32_ADC::Channel& GS3_1 = SUN5;
+   STM32_ADC::Channel& GS3_2 = SUN6;
+   STM32_ADC::Channel& GS4_1 = SUN7;
+   STM32_ADC::Channel& GS4_2 = SUN8;
+   STM32_ADC::Channel& GS5   = SUN9;
 
 //  - - - - - - - - - - - - - - -  //
 //  T I M   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
-    /*        bus   iobase     periph               pin    Mode */
-//    TIMER TIMER1( APB2, TIM1_BASE, RstClk::APB2Periph_TIM1, PB13,  GPIOPin::AF1);
-//    TIMER TIMER2( APB1, TIM2_BASE, RstClk::APB1Periph_TIM2, PB11,  GPIOPin::AF1);
+
+   /*            bus   iobase     periph                   pin    Mode */
+ //TIMER TIMER1( APB2, TIM1_BASE, RstClk::APB2Periph_TIM1, PB13,  GPIOPin::AF1);
+ //TIMER TIMER2( APB1, TIM2_BASE, RstClk::APB1Periph_TIM2, PB11,  GPIOPin::AF1);
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
 //  - - - - - - - - - - - - - -  //
 
    /*              SPI   name     csPin */
-   A25Lxxx FLASH0( SPI3, "FLASH0", PA15 );  /* CS6 - mémoire soft    */
-
-//  - - - - - - - - - - -  //
-//  O N B O A R D   A D C  //
-//  - - - - - - - - - - -  //
-
-   /*              SPI  csPin */
-   //MAX111x maxADC( SPI3, "ADC1", PA4 ); /* CS1 - ADC carte energie */
-   //MAX111x maxADC( SPI3, "ADC2", PA5 ); /* CS2 - ADC carte energie */
-   //MAX111x maxADC( SPI3, "ADC3", PA6 ); /* CS3 - ADC carte ODB     */
-   //MAX111x maxADC( SPI3, "ADC4", PC4 ); /* CS4 - ADC carte FiPEX   */
+   A25Lxxx FLASH0( SPI3, "FLASH0", PA15 );
 
 //  - - - - - - - - - - -  //
 //        S T A T E        //
 //  - - - - - - - - - - -  //
 
     Sat_state Current_state;
-
-    Sat_raw Current_raw;
+    Sat_raw   Current_raw;
 
 } /* qb50 */
 

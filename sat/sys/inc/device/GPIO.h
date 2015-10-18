@@ -2,14 +2,14 @@
 #ifndef _QB50_SYS_GPIO_H
 #define _QB50_SYS_GPIO_H
 
-#include "BusDevice.h"
-#include "Bus.h"
+#include "Device.h"
+#include "BusSlave.h"
 
 namespace qb50 {
 
    class GPIOPin;
 
-   class GPIO : public BusDevice
+   class GPIO : public Device, public BusSlave
    {
       public:
 

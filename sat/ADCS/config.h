@@ -23,7 +23,6 @@
 #include "device/ConfSlice.h"
 #include "device/ADC.h"
 #include "device/MAX111x.h"
-#include "device/ADCChannel.h"
 #include "device/AX25Out.h"
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"
@@ -150,15 +149,33 @@ namespace qb50 {
 //  A D C   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   extern qb50::ADC& SUN1;
-   extern qb50::ADC& SUN2;
-   extern qb50::ADC& SUN3;
-   extern qb50::ADC& SUN4;
-   extern qb50::ADC& SUN5;
-   extern qb50::ADC& SUN6;
-   extern qb50::ADC& SUN7;
-   extern qb50::ADC& SUN8;
-   extern qb50::ADC& SUN9;
+   extern qb50::STM32_ADC ADC1;
+
+//  - - - - - - - - - - - -  //
+//  A D C   C H A N N E L S  //
+//  - - - - - - - - - - - -  //
+
+   extern qb50::STM32_ADC::Channel SUN1;
+   extern qb50::STM32_ADC::Channel SUN2;
+   extern qb50::STM32_ADC::Channel SUN3;
+   extern qb50::STM32_ADC::Channel SUN4;
+   extern qb50::STM32_ADC::Channel SUN5;
+   extern qb50::STM32_ADC::Channel SUN6;
+   extern qb50::STM32_ADC::Channel SUN7;
+   extern qb50::STM32_ADC::Channel SUN8;
+   extern qb50::STM32_ADC::Channel SUN9;
+
+   /* aliases */
+
+   extern qb50::STM32_ADC::Channel& GS1_1;
+   extern qb50::STM32_ADC::Channel& GS1_2;
+   extern qb50::STM32_ADC::Channel& GS2_1;
+   extern qb50::STM32_ADC::Channel& GS2_2;
+   extern qb50::STM32_ADC::Channel& GS3_1;
+   extern qb50::STM32_ADC::Channel& GS3_2;
+   extern qb50::STM32_ADC::Channel& GS4_1;
+   extern qb50::STM32_ADC::Channel& GS4_2;
+   extern qb50::STM32_ADC::Channel& GS5;
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

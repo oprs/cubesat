@@ -2,13 +2,14 @@
 #ifndef _QB50_SYS_DEVICE_DMA_H
 #define _QB50_SYS_DEVICE_DMA_H
 
+#include "Device.h"
+#include "BusSlave.h"
 #include "DMAStream.h"
-#include "BusDevice.h"
 
 
 namespace qb50 {
 
-   class DMA : public BusDevice
+   class DMA : public Device, public BusSlave
    {
 
       public:

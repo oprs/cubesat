@@ -19,7 +19,7 @@ TIMER::TIMER(Bus& bus,
              const char *name,
              GPIOPin& pin,
              GPIOPin::Alt alt)
-   : BusDevice( bus, iobase, periph, name ),
+   : Device( name ), BusSlave( bus, iobase, periph ),
      _pin( pin ), _alt( alt )
 { ; }
 

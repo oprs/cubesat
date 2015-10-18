@@ -1,35 +1,28 @@
 
-#include "device/RstClk.h"
 #include "device/ADC.h"
 #include "system/Logger.h"
 
-#include <stm32f4xx_adc.h>
-
-#undef ADC
-#undef RCC
-
 using namespace qb50;
+
+
+static void _trampoline( void *x );
 
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-ADC::ADC(Bus& bus,
-         const uint32_t iobase,
-         const uint32_t periph,
-         const char *name,
-         GPIOPin& pin,
-         GPIOPin::Mode mode,
-         ADC::Channel channel)
-   :BusDevice( bus, iobase, periph, name ), _pin( pin ), _mode( mode )
+ADC::ADC( const char *name )
+   : Device( name )
 {
-   _numConv = 5;
-   _channel = channel;
+   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
 }
 
+
 ADC::~ADC()
-{ ; }
+{
+   vQueueDelete( _ioQueue );
+}
 
 
 //  - - - - - - - - - - - - - -  //
@@ -38,39 +31,23 @@ ADC::~ADC()
 
 ADC& ADC::init( void )
 {
-   LOG << _name << ": System ADC at " << bus.name << ", in: " << _pin.name();
+   (void)xTaskCreate( _trampoline, _name, 384, this, configMAX_PRIORITIES - 1, &_ioTask );
+
+/*
+   LOG << _name << ": System UART controller at " << bus.name
+       << ", rx: " << _rxPin.name()
+       << ", tx: " << _txPin.name()
+       ;
+*/
+
    return *this;
 }
 
 
 ADC& ADC::enable( bool silent )
 {
-   if( _incRef() > 0 )
-      return *this;
-
-   ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-
-   _pin.enable( silent ).pullUp().mode( _mode );
-   RCC.enable( this, silent );
-
-   ADCx->CR1 = 0; //Set resolution for the ADC
-   uint32_t tmpreg = 0;
-   tmpreg = ADCx->CR2;
-   tmpreg &= ((uint32_t)0xC0FFF7FD);  //CR2_CLEAR_MASK
-   tmpreg |= 0 << 1;
-   ADCx->CR2 = tmpreg; //Sets the continuous conversion mode
-
-   tmpreg = ADCx->SQR1;
-
-   tmpreg &= ((uint32_t)0xFF0FFFFF); //SQR1_L_RESET
-
-   //This sets the number of conversions to perform
-   //Corresponds to the number of sun sensors on board
-   //
-   tmpreg |= (uint32_t)(_numConv-1) << 20;
-
-   ADCx->SQR1 = tmpreg;
-   ADCx->CR2 |= ADC_CR2_ADON;
+   IOReq_enable req( silent );
+   _ioctl( &req );
 
    return *this;
 }
@@ -78,32 +55,67 @@ ADC& ADC::enable( bool silent )
 
 ADC& ADC::disable( bool silent )
 {
-   if( _decRef() > 0 )
-      return *this;
-
-   ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-
-   ADCx->CR2 &= ~ADC_CR2_ADON;
-
-   RCC.disable( this, silent );
-   _pin.disable( silent );
+   IOReq_disable req( silent );
+   _ioctl( &req );
 
    return *this;
 }
 
 
-//Rather than modifying individual registers we just use the code written for the ADC using the stm32f4 peripheral library
-uint16_t ADC::getValue_adc()
+adcval_t ADC::read( Channel& ch )
 {
-   uint16_t adc_val = 0;
-   ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-   ADC_RegularChannelConfig(ADCx, _channel, 1, ADC_SampleTime_15Cycles);
-   ADC_SoftwareStartConv(ADCx);
-   //(void)ADC_ClearFlag(ADCx, ADC_FLAG_EOC);
+   IOReq_read req( ch );
+   _ioctl( &req );
 
-   while (ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET){;}
-   adc_val = ADC_GetConversionValue(ADCx);
-   return adc_val;
+   return req._rv;
+}
+
+
+adcval_t ADC::read( unsigned cid )
+{
+   return 0;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+static void _trampoline( void *x )
+{
+   ADC *self = (ADC*)x;
+   self->_run();
+   vTaskDelete( NULL );
+}
+
+
+void ADC::_ioctl( IOReq *req, TickType_t maxWait )
+{
+   (void)xQueueSend( _ioQueue, &req, maxWait );
+   (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+}
+
+
+void ADC::_run( void )
+{
+   IOReq *req;
+
+   for( ;; ) {
+      if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
+         continue;
+
+      _lock();
+
+      switch( req->_op ) {
+         case ENABLE:  _enable  (  (IOReq_enable*)req ); break;
+         case DISABLE: _disable ( (IOReq_disable*)req ); break;
+       //case RESET:   _reset   (   (IOReq_reset*)req ); break;
+         case READ:    _read    (    (IOReq_read*)req ); break;
+      }
+
+      _unlock();
+      (void)xTaskNotifyGive( req->_handle );
+   }
 }
 
 /*EoF*/

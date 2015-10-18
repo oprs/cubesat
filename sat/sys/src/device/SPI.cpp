@@ -21,7 +21,7 @@ SPI::SPI( Bus&           bus,
           SPIStream&     stMOSI,
           GPIOPin&       clkPin,
           GPIOPin::Alt   alt )
-   : BusDevice( bus, iobase, periph, name ),
+   : Device( name ), BusSlave( bus, iobase, periph ),
      _stMISO( stMISO ),
      _stMOSI( stMOSI ),
      _clkPin( clkPin ),

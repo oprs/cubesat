@@ -1,0 +1,19 @@
+
+* model: GPIOPin -> GPIO::Pin (same as ADC::Channel, also see DMAStream, SPIStream, etc..)
+* model: add new class Queue<type> (message queues)
+
+* feature: A25Lxxx low power mode
+* feature: IRQ/VIC registers
+* feature: Device::reset()
+* feature: FlashArray: address mask ( sn < _nSlaves )
+* feature: FlashMemory: mask page/sector address
+* feature: enable() / disable() should lock the device before calling incRef() / decRef()
+           -> all devices should be threaded (exceptions ?)
+
+* misc: find and hunt down C standard library headers
+
+
+DONE
+
+* model: BusDevice -> BusSlave (20151019)
+

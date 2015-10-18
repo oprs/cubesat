@@ -20,6 +20,8 @@ tags
 *.elf
 *.hex
 *.map
+# gcc diagnostics
+*.su
 # doc
 doc/html
 doc/latex

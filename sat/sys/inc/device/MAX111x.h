@@ -2,33 +2,25 @@
 #ifndef _QB50_SYS_DEVICE_MAX111X_H
 #define _QB50_SYS_DEVICE_MAX111X_H
 
-#include "Device.h"
+#include "device/ADC.h"
 #include "device/SPISlave.h"
-
-#include <task.h>
 
 
 namespace qb50 {
 
-   class MAX111x : public Device, public SPISlave
+   class MAX111x : public ADC, public SPISlave
    {
 
-      private:
+      protected:
 
          struct IOReq;
 
+
       public:
-
-         MAX111x( SPI& spi, const char *name, GPIOPin& csPin );
-         ~MAX111x();
-
-         MAX111x& init( void );
-
-         MAX111x& ioctl( IOReq *req, TickType_t maxWait = portMAX_DELAY );
 
          /* channel selection */
 
-         enum Channel {
+         enum ChId {
             CH0 = 0, /*!< channel 0 */
             CH1 = 4, /*!< channel 1 */
             CH2 = 1, /*!< channel 2 */
@@ -39,80 +31,34 @@ namespace qb50 {
             CH7 = 7  /*!< channel 7 */
          };
 
-         MAX111x& enable      ( bool silent = false );
-         MAX111x& disable     ( bool silent = false );
-         int      readChannel ( Channel sel );
-         int      readChannel ( int n );
-         void     readAll     ( void );
-
-         void run( void );
-
-      private:
-
-         xQueueHandle _ioQueue;
-         TaskHandle_t _ioTask;
-
-         enum IOCTL {
-            ENABLE  = 0,
-            DISABLE = 1,
-            RDCH    = 2,
-            RDALL   = 3
-         };
-
-         struct IOReq
+         struct Channel : public ADC::Channel
          {
-            IOCTL        _op;
-            TaskHandle_t _handle;
+            ChId _id;
 
-            IOReq( IOCTL op ) : _op( op )
-            { _handle = xTaskGetCurrentTaskHandle(); }
-
-            ~IOReq()
+            Channel( MAX111x& adc, const char *name, ChId id )
+            : ADC::Channel( adc, name ), _id( id )
             { ; }
+
+            virtual ~Channel()
+            { ; }
+
+            Channel& init    ( void );
+            Channel& enable  ( bool silent = false );
+            Channel& disable ( bool silent = false );
          };
 
-         struct IOReq_ENABLE : public IOReq
-         {
-            bool _silent;
+         MAX111x( SPI& spi, const char *name, GPIOPin& csPin );
+         ~MAX111x();
 
-            IOReq_ENABLE( bool silent )
-            : IOReq( ENABLE ), _silent( silent )
-            { ; }
-         };
+         MAX111x& init( void );
 
-         struct IOReq_DISABLE : public IOReq
-         {
-            bool _silent;
 
-            IOReq_DISABLE( bool silent )
-            : IOReq( DISABLE ), _silent( silent )
-            { ; }
-         };
+      protected:
 
-         struct IOReq_RDCH : public IOReq
-         {
-            Channel _ch;
-            uint8_t _raw;
-
-            IOReq_RDCH( Channel ch )
-            : IOReq( RDCH ), _ch( ch )
-            { ; }
-         };
-
-         struct IOReq_RDALL : public IOReq
-         {
-            uint8_t *_raw;
-
-            IOReq_RDALL() : IOReq( RDALL )
-            { ; }
-         };
-
-         /* operations */
-
-         void _enable  ( IOReq_ENABLE  *req );
-         void _disable ( IOReq_DISABLE *req );
-         void _RDCH    ( IOReq_RDCH    *req );
-         void _RDALL   ( IOReq_RDALL   *req );
+         void _enable  ( IOReq_enable  *req );
+         void _disable ( IOReq_disable *req );
+       //void _reset   ( IOReq_reset   *req );
+         void _read    ( IOReq_read    *req );
 
    };
 

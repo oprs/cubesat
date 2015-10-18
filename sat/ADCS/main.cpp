@@ -93,26 +93,8 @@ void initDevices( void )
     GPIOB.init();
     GPIOC.init();
     UART1.init();
-    SPI3.init();
-    SUN1.init();
-    SUN2.init();
-    SUN3.init();
-    SUN4.init();
-    SUN5.init();
-    SUN6.init();
-    SUN7.init();
-    SUN8.init();
-    SUN9.init();
+    ADC1.init();
     FLASH0.init();
-/*
-    UART2.init();
-    DMA1.init();
-    DMA2.init();
-    SPI1.init();
-    SPI2.init();
-    SPI3.init();
-    FLASH0.init();
-*/
 }
 
 int main( void )

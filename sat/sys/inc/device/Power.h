@@ -2,12 +2,13 @@
 #ifndef _QB50_SYS_DEVICE_POWER_H
 #define _QB50_SYS_DEVICE_POWER_H
 
-#include "BusDevice.h"
+#include "Device.h"
+#include "BusSlave.h"
 
 
 namespace qb50 {
 
-   class Power : public BusDevice
+   class Power : public Device, public BusSlave
    {
 
       public:

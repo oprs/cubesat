@@ -43,7 +43,7 @@ RstClk& RstClk::init( void )
 }
 
 
-RstClk& RstClk::enable( BusDevice *dev, bool silent )
+RstClk& RstClk::enable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -57,14 +57,14 @@ RstClk& RstClk::enable( BusDevice *dev, bool silent )
 
    };
 
-   if( !silent )
-      LOG << _name << ": " << dev->name() << " enabled at " << dev->bus.name;
+ //if( !silent )
+ //   LOG << _name << ": " << dev->name() << " enabled at " << dev->bus.name;
 
    return *this;
 }
 
 
-RstClk& RstClk::disable( BusDevice *dev, bool silent )
+RstClk& RstClk::disable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -78,8 +78,8 @@ RstClk& RstClk::disable( BusDevice *dev, bool silent )
 
    };
 
-   if( !silent )
-      LOG << _name << ": " << dev->name() << " disabled";
+ //if( !silent )
+ //   LOG << _name << ": " << dev->name() << " disabled";
 
    return *this;
 }

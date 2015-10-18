@@ -10,8 +10,13 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-GPIO::GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins )
-   : BusDevice( bus, iobase, periph, name ), _id( id ), _pins( pins )
+GPIO::GPIO( Bus& bus,
+            const uint32_t iobase,
+            const uint32_t periph,
+            const unsigned id,
+            const char *name,
+            GPIOPin *pins )
+   : Device( name ), BusSlave( bus, iobase, periph ), _id( id ), _pins( pins )
 { ; }
 
 

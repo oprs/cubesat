@@ -2,14 +2,15 @@
 #ifndef _QB50_SYS_DEVICE_SPI_H
 #define _QB50_SYS_DEVICE_SPI_H
 
-#include "BusDevice.h"
+#include "Device.h"
+#include "BusSlave.h"
 #include "GPIOPin.h"
 #include "SPIStream.h"
 
 
 namespace qb50 {
 
-   class SPI : public BusDevice
+   class SPI : public Device, public BusSlave
    {
       public:
 

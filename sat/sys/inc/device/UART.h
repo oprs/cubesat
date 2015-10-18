@@ -2,7 +2,8 @@
 #ifndef _QB50_SYS_DEVICE_UART_H
 #define _QB50_SYS_DEVICE_UART_H
 
-#include "BusDevice.h"
+#include "Device.h"
+#include "BusSlave.h"
 #include "GPIOPin.h"
 #include "NVIC.h"
 #include "FIFO.hpp"
@@ -12,7 +13,7 @@
 
 namespace qb50 {
 
-   class UART : public BusDevice
+   class UART : public Device, public BusSlave
    {
 
       private:

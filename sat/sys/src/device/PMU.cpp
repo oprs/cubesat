@@ -73,10 +73,10 @@ PMU& PMU::update( int ns )
 
    for( i = 0 ; i < ns ; ++i ) {
       for( n = 0 ; n < 8 ; ++n ) {
-         v[ n      ] += ADC1.readChannel( n );
-         v[ n + 8  ] += ADC2.readChannel( n );
-         v[ n + 16 ] += ADC3.readChannel( n );
-         v[ n + 24 ] += ADC4.readChannel( n );
+         v[ n      ] += ADC1.read( n );
+         v[ n + 8  ] += ADC2.read( n );
+         v[ n + 16 ] += ADC3.read( n );
+         v[ n + 24 ] += ADC4.read( n );
       }
    }
 

@@ -15,7 +15,7 @@ Backup::Backup( Bus& bus,
                 const uint32_t iobase,
                 const uint32_t periph,
                 const char    *name )
-   : BusDevice( bus, iobase, periph, name )
+   : Device( name ), BusSlave( bus, iobase, periph )
 { ; }
 
 

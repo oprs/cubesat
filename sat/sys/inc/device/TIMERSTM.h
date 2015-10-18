@@ -1,7 +1,8 @@
 #ifndef _QB50_SYS_DEVICE_TIMER_H
 #define _QB50_SYS_DEVICE_TIMER_H
 
-#include "BusDevice.h"
+#include "Device.h"
+#include "BusSlave.h"
 #include "GPIOPin.h"
 #include "NVIC.h"
 
@@ -9,7 +10,7 @@
 
 namespace qb50 {
 
-   class TIMER : public BusDevice
+   class TIMER : public Device, public BusSlave
    {
    public:
 

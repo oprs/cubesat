@@ -2,12 +2,13 @@
 #ifndef _QB50_SYS_DEVICE_BACKUP_H
 #define _QB50_SYS_DEVICE_BACKUP_H
 
-#include "BusDevice.h"
+#include "Device.h"
+#include "BusSlave.h"
 
 
 namespace qb50 {
 
-   class Backup : public BusDevice
+   class Backup : public Device, public BusSlave
    {
 
       public:

@@ -23,7 +23,7 @@ UART::UART( Bus& bus,
             GPIOPin&       txPin,
             const uint32_t IRQn,
             GPIOPin::Alt   alt )
-   : BusDevice( bus, iobase, periph, name ),
+   : Device( name ), BusSlave( bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),
      _rxPin ( rxPin ),
