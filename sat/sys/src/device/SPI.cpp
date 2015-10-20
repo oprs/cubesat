@@ -138,16 +138,16 @@ SPI& SPI::xfer( const void *src, void *dst, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     dst     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::INCR        )
-                    .direction (DMAStream::P2M         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::INCR      )
+                    .direction (DMA::Stream::P2M       );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     src     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::INCR        )
-                    .direction (DMAStream::M2P         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::INCR      )
+                    .direction (DMA::Stream::M2P       );
 
    return _xfer();
 }
@@ -161,16 +161,16 @@ SPI& SPI::write( const void *src, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)   &dummy    )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::FIXED       )
-                    .direction (DMAStream::P2M         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::FIXED     )
+                    .direction (DMA::Stream::P2M       );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     src     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::INCR        )
-                    .direction (DMAStream::M2P         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::INCR      )
+                    .direction (DMA::Stream::M2P       );
 
    return _xfer();
 }
@@ -184,16 +184,16 @@ SPI& SPI::read( void *dst, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     dst     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::INCR        )
-                    .direction (DMAStream::P2M         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::INCR      )
+                    .direction (DMA::Stream::P2M       );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)   &dummy    )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  (DMAStream::FIXED       )
-                    .mIncMode  (DMAStream::FIXED       )
-                    .direction (DMAStream::M2P         );
+                    .pIncMode  (DMA::Stream::FIXED     )
+                    .mIncMode  (DMA::Stream::FIXED     )
+                    .direction (DMA::Stream::M2P       );
 
    return _xfer();
 }

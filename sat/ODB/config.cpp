@@ -60,8 +60,8 @@ namespace qb50 {
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   DMAStream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
-   DMAStream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+   DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
+   DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -157,8 +157,8 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPIStream SPI3_MISO( DMA1ST2, DMAStream::CH0, "SPI3MISO", PB4, GPIO::Pin::SPI3 );
-   SPIStream SPI3_MOSI( DMA1ST5, DMAStream::CH0, "SPI3MOSI", PB5, GPIO::Pin::SPI3 );
+   SPIStream SPI3_MISO( DMA1ST2, DMA::Stream::CH0, "SPI3MISO", PB4, GPIO::Pin::SPI3 );
+   SPIStream SPI3_MOSI( DMA1ST5, DMA::Stream::CH0, "SPI3MOSI", PB5, GPIO::Pin::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

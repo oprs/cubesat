@@ -48,23 +48,23 @@ namespace qb50 {
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   DMAStream DMA1ST0( DMA1, DMA1_Stream0_BASE, DMA1_Stream0_IRQn, "DMA1ST0", 0x00 );
-   DMAStream DMA1ST1( DMA1, DMA1_Stream1_BASE, DMA1_Stream1_IRQn, "DMA1ST1", 0x06 );
-   DMAStream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
-   DMAStream DMA1ST3( DMA1, DMA1_Stream3_BASE, DMA1_Stream3_IRQn, "DMA1ST3", 0x16 );
-   DMAStream DMA1ST4( DMA1, DMA1_Stream4_BASE, DMA1_Stream4_IRQn, "DMA1ST4", 0x20 );
-   DMAStream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
-   DMAStream DMA1ST6( DMA1, DMA1_Stream6_BASE, DMA1_Stream6_IRQn, "DMA1ST6", 0x30 );
-   DMAStream DMA1ST7( DMA1, DMA1_Stream7_BASE, DMA1_Stream7_IRQn, "DMA1ST7", 0x36 );
+   DMA::Stream DMA1ST0( DMA1, DMA1_Stream0_BASE, DMA1_Stream0_IRQn, "DMA1ST0", 0x00 );
+   DMA::Stream DMA1ST1( DMA1, DMA1_Stream1_BASE, DMA1_Stream1_IRQn, "DMA1ST1", 0x06 );
+   DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
+   DMA::Stream DMA1ST3( DMA1, DMA1_Stream3_BASE, DMA1_Stream3_IRQn, "DMA1ST3", 0x16 );
+   DMA::Stream DMA1ST4( DMA1, DMA1_Stream4_BASE, DMA1_Stream4_IRQn, "DMA1ST4", 0x20 );
+   DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+   DMA::Stream DMA1ST6( DMA1, DMA1_Stream6_BASE, DMA1_Stream6_IRQn, "DMA1ST6", 0x30 );
+   DMA::Stream DMA1ST7( DMA1, DMA1_Stream7_BASE, DMA1_Stream7_IRQn, "DMA1ST7", 0x36 );
 
-   DMAStream DMA2ST0( DMA2, DMA2_Stream0_BASE, DMA2_Stream0_IRQn, "DMA2ST0", 0x00 );
-   DMAStream DMA2ST1( DMA2, DMA2_Stream1_BASE, DMA2_Stream1_IRQn, "DMA2ST1", 0x06 );
-   DMAStream DMA2ST2( DMA2, DMA2_Stream2_BASE, DMA2_Stream2_IRQn, "DMA2ST2", 0x10 );
-   DMAStream DMA2ST3( DMA2, DMA2_Stream3_BASE, DMA2_Stream3_IRQn, "DMA2ST3", 0x16 );
-   DMAStream DMA2ST4( DMA2, DMA2_Stream4_BASE, DMA2_Stream4_IRQn, "DMA2ST4", 0x20 );
-   DMAStream DMA2ST5( DMA2, DMA2_Stream5_BASE, DMA2_Stream5_IRQn, "DMA2ST5", 0x26 );
-   DMAStream DMA2ST6( DMA2, DMA2_Stream6_BASE, DMA2_Stream6_IRQn, "DMA2ST6", 0x30 );
-   DMAStream DMA2ST7( DMA2, DMA2_Stream7_BASE, DMA2_Stream7_IRQn, "DMA2ST7", 0x36 );
+   DMA::Stream DMA2ST0( DMA2, DMA2_Stream0_BASE, DMA2_Stream0_IRQn, "DMA2ST0", 0x00 );
+   DMA::Stream DMA2ST1( DMA2, DMA2_Stream1_BASE, DMA2_Stream1_IRQn, "DMA2ST1", 0x06 );
+   DMA::Stream DMA2ST2( DMA2, DMA2_Stream2_BASE, DMA2_Stream2_IRQn, "DMA2ST2", 0x10 );
+   DMA::Stream DMA2ST3( DMA2, DMA2_Stream3_BASE, DMA2_Stream3_IRQn, "DMA2ST3", 0x16 );
+   DMA::Stream DMA2ST4( DMA2, DMA2_Stream4_BASE, DMA2_Stream4_IRQn, "DMA2ST4", 0x20 );
+   DMA::Stream DMA2ST5( DMA2, DMA2_Stream5_BASE, DMA2_Stream5_IRQn, "DMA2ST5", 0x26 );
+   DMA::Stream DMA2ST6( DMA2, DMA2_Stream6_BASE, DMA2_Stream6_IRQn, "DMA2ST6", 0x30 );
+   DMA::Stream DMA2ST7( DMA2, DMA2_Stream7_BASE, DMA2_Stream7_IRQn, "DMA2ST7", 0x36 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -162,14 +162,14 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPIStream SPI1_MISO( DMA2ST0, DMAStream::CH3, "SPI1MISO", PA6,  GPIO::Pin::SPI1 );
-   SPIStream SPI1_MOSI( DMA2ST3, DMAStream::CH3, "SPI1MOSI", PA7,  GPIO::Pin::SPI1 );
+   SPIStream SPI1_MISO( DMA2ST0, DMA::Stream::CH3, "SPI1MISO", PA6,  GPIO::Pin::SPI1 );
+   SPIStream SPI1_MOSI( DMA2ST3, DMA::Stream::CH3, "SPI1MOSI", PA7,  GPIO::Pin::SPI1 );
 
-   SPIStream SPI2_MISO( DMA1ST3, DMAStream::CH0, "SPI2MISO", PB14, GPIO::Pin::SPI2 );
-   SPIStream SPI2_MOSI( DMA1ST4, DMAStream::CH0, "SPI2MOSI", PB15, GPIO::Pin::SPI2 );
+   SPIStream SPI2_MISO( DMA1ST3, DMA::Stream::CH0, "SPI2MISO", PB14, GPIO::Pin::SPI2 );
+   SPIStream SPI2_MOSI( DMA1ST4, DMA::Stream::CH0, "SPI2MOSI", PB15, GPIO::Pin::SPI2 );
 
-   SPIStream SPI3_MISO( DMA1ST2, DMAStream::CH0, "SPI3MISO", PB4,  GPIO::Pin::SPI3 );
-   SPIStream SPI3_MOSI( DMA1ST5, DMAStream::CH0, "SPI3MOSI", PB5,  GPIO::Pin::SPI3 );
+   SPIStream SPI3_MISO( DMA1ST2, DMA::Stream::CH0, "SPI3MISO", PB4,  GPIO::Pin::SPI3 );
+   SPIStream SPI3_MOSI( DMA1ST5, DMA::Stream::CH0, "SPI3MOSI", PB5,  GPIO::Pin::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

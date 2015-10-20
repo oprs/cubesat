@@ -3,7 +3,7 @@
 #define _QB50_SYS_DEVICE_SPI_STREAM_H
 
 #include "GPIO.h"
-#include "DMAStream.h"
+#include "DMA.h"
 
 
 namespace qb50 {
@@ -14,11 +14,11 @@ namespace qb50 {
 
       public:
 
-         SPIStream( DMAStream&         dmaStream,
-                    DMAStream::Channel dmaChannel,
-                    const char        *name,
-                    GPIO::Pin&         pin,
-                    GPIO::Pin::Alt     alt );
+         SPIStream( DMA::Stream&         dmaStream,
+                    DMA::Stream::Channel dmaChannel,
+                    const char          *name,
+                    GPIO::Pin&           pin,
+                    GPIO::Pin::Alt       alt );
 
          ~SPIStream();
 
@@ -26,8 +26,8 @@ namespace qb50 {
          SPIStream& enable  ( bool silent = false );
          SPIStream& disable ( bool silent = false );
 
-         DMAStream&           dmaStream;
-         DMAStream::Channel   dmaChannel;
+         DMA::Stream&         dmaStream;
+         DMA::Stream::Channel dmaChannel;
          GPIO::Pin&           _pin;
          GPIO::Pin::Alt       _alt;
    };

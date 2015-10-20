@@ -12,7 +12,7 @@ namespace qb50 {
    {
       public:
 
-         #include "GPIO_Pin.h"
+         #include "_GPIO_Pin.h"
 
          GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, Pin *pins );
          ~GPIO();

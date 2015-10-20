@@ -8,11 +8,11 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPIStream::SPIStream( DMAStream&         dmaStream,
-                      DMAStream::Channel dmaChannel,
-                      const char        *name,
-                      GPIO::Pin&         pin,
-                      GPIO::Pin::Alt     alt )
+SPIStream::SPIStream( DMA::Stream&         dmaStream,
+                      DMA::Stream::Channel dmaChannel,
+                      const char          *name,
+                      GPIO::Pin&           pin,
+                      GPIO::Pin::Alt       alt )
    : Device( name ),
      dmaStream( dmaStream ),
      dmaChannel( dmaChannel ),

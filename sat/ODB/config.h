@@ -43,8 +43,8 @@ namespace qb50 {
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   extern qb50::DMAStream DMA1ST2;
-   extern qb50::DMAStream DMA1ST5;
+   extern qb50::DMA::Stream DMA1ST2;
+   extern qb50::DMA::Stream DMA1ST5;
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //

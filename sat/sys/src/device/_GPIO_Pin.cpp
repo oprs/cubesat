@@ -1,7 +1,5 @@
 
 #include "device/GPIO.h"
-#include "system/Logger.h"
-
 #include <safe_stm32f4xx.h>
 
 using namespace qb50;
@@ -26,7 +24,6 @@ GPIO::Pin::~Pin()
 
 GPIO::Pin& GPIO::Pin::init( void )
 {
-   //LOG << _name << ": GPIO pin at " << _gpio.name();
    return *this;
 }
 
