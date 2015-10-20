@@ -15,6 +15,8 @@ namespace qb50 {
       TLE      tle;            //!< latest TLE known to the satellite
     //MTT      mtt;            //!< mode-thread table
     //STT      stt;            //!< state-transition table
+      uint32_t wHead;          //!< head of the WOD chain
+      uint32_t wTail;          //!< tail of the WOD chain
 
    };
 

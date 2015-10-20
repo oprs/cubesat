@@ -52,7 +52,7 @@ ODB& ODB::init( void )
    PMU0.init();
    VFLASH.init();
    CONF.init();
- //WODEX.init();
+ //WDB.init();
    RFTX.init();
 
    _selPin.enable().in().noPull();

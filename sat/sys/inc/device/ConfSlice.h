@@ -19,6 +19,9 @@ namespace qb50 {
          ConfSlice& enable  ( bool silent = false );
          ConfSlice& disable ( bool silent = false );
 
+         uint8_t *addr( void )
+         { return _x; }
+
          virtual ConfSlice& sync( void );
 
       protected:

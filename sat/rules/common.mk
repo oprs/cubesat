@@ -15,7 +15,8 @@ CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)
 
 ifdef DEBUG
- CFLAGS += -g -O0 -DDEBUG -fstack-usage
+#CFLAGS += -g -O0 -DDEBUG -fstack-usage
+ CFLAGS += -g -O0 -DDEBUG
 else
  CFLAGS += -Os
 endif

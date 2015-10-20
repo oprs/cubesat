@@ -11,7 +11,7 @@ namespace qb50 {
 	extern Thread  *registerThread( Thread *t );
 	extern void     run( void );
 	extern void     delay( unsigned ms );
-	extern unsigned ticks( void );
+	extern uint32_t ticks( void );
 	extern void     hexdump( const void *addr, unsigned len );
 
 } /* qb50 */

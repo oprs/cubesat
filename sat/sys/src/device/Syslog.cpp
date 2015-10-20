@@ -60,7 +60,7 @@ std::ostringstream& Syslog::LogLine::get( void )
     * Let's just stick with snprintf() and stdio.
     */
 
-   (void)snprintf( x, sizeof( x ), "[% 9.3f] ", (float)ts / 1000 );
+   (void)snprintf( x, sizeof( x ), "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
    _os << x;
 
    return _os;

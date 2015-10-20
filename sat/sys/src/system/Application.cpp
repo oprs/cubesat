@@ -158,9 +158,9 @@ void delay( unsigned ms )
 }
 
 
-unsigned ticks( void )
+uint32_t ticks( void )
 {
-   unsigned t = (unsigned)::xTaskGetTickCount();
+   uint32_t t = (uint32_t)::xTaskGetTickCount();
    return( t / portTICK_RATE_MS );
 }
 
