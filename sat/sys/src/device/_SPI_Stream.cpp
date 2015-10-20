@@ -1,5 +1,5 @@
 
-#include "device/SPIStream.h"
+#include "device/SPI.h"
 
 using namespace qb50;
 
@@ -8,11 +8,11 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPIStream::SPIStream( DMA::Stream&         dmaStream,
-                      DMA::Stream::Channel dmaChannel,
-                      const char          *name,
-                      GPIO::Pin&           pin,
-                      GPIO::Pin::Alt       alt )
+SPI::Stream::Stream( DMA::Stream&         dmaStream,
+                     DMA::Stream::Channel dmaChannel,
+                     const char          *name,
+                     GPIO::Pin&           pin,
+                     GPIO::Pin::Alt       alt )
    : Device( name ),
      dmaStream( dmaStream ),
      dmaChannel( dmaChannel ),
@@ -21,7 +21,7 @@ SPIStream::SPIStream( DMA::Stream&         dmaStream,
 { ; }
 
 
-SPIStream::~SPIStream()
+SPI::Stream::~Stream()
 { ; }
 
 
@@ -29,14 +29,14 @@ SPIStream::~SPIStream()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-SPIStream& SPIStream::init( void )
+SPI::Stream& SPI::Stream::init( void )
 {
    _pin.enable().pullUp().alt( _alt );
    return *this;
 }
 
 
-SPIStream& SPIStream::enable( bool silent )
+SPI::Stream& SPI::Stream::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -48,7 +48,7 @@ SPIStream& SPIStream::enable( bool silent )
 }
 
 
-SPIStream& SPIStream::disable( bool silent )
+SPI::Stream& SPI::Stream::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -58,5 +58,4 @@ SPIStream& SPIStream::disable( bool silent )
    return *this;
 }
 
-#include "system/Logger.h"
 /*EoF*/

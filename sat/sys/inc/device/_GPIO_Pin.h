@@ -2,8 +2,6 @@
 #ifndef _QB50_SYS_GPIO_PIN_H
 #define _QB50_SYS_GPIO_PIN_H
 
-#include "Device.h"
-
 
 class Pin : public Device
 {

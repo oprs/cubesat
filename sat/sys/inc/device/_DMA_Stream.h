@@ -2,10 +2,6 @@
 #ifndef _QB50_SYS_DEVICE_DMA_STREAM_H
 #define _QB50_SYS_DEVICE_DMA_STREAM_H
 
-#include "Device.h"
-
-#include <stdint.h>
-
 
 class Stream : public Device
 {
@@ -52,14 +48,6 @@ class Stream : public Device
 
       inline Stream& mBurst( Burst sel )
       { return _updateCR( sel, 0x03, 23 ); }
-
-      /**
-       * Sélectionne le mode burst utilisé pour les transferts mémoire/périphérique
-       *
-       * @param sel Mode à utiliser
-       *
-       * @return Une self-reference sur cette instance.
-       */
 
       inline Stream& pBurst( Burst sel )
       { return _updateCR( sel, 0x03, 21 ); }

@@ -5,21 +5,24 @@
 #include "Device.h"
 #include "BusSlave.h"
 #include "GPIO.h"
-#include "SPIStream.h"
+#include "DMA.h"
 
 
 namespace qb50 {
 
    class SPI : public Device, public BusSlave
    {
+
       public:
+
+         #include "_SPI_Stream.h"
 
          SPI( Bus&           bus,
               const uint32_t iobase,
               const uint32_t periph,
               const char*    name,
-              SPIStream&     stMISO,
-              SPIStream&     stMOSI,
+              Stream&        stMISO,
+              Stream&        stMOSI,
               GPIO::Pin&     clkPin,
               GPIO::Pin::Alt alt
          );
@@ -46,14 +49,16 @@ namespace qb50 {
 
          void isr     ( void );
 
+
       private:
 
          SPI& _xfer   ( void );
 
-         SPIStream&      _stMISO;
-         SPIStream&      _stMOSI;
-         GPIO::Pin&      _clkPin;
-         GPIO::Pin::Alt  _alt;
+         Stream&        _stMISO;
+         Stream&        _stMOSI;
+         GPIO::Pin&     _clkPin;
+         GPIO::Pin::Alt _alt;
+
    };
 
 } /* qb50 */

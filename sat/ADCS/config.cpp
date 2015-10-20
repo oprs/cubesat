@@ -162,14 +162,14 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPIStream SPI1_MISO( DMA2ST0, DMA::Stream::CH3, "SPI1MISO", PA6,  GPIO::Pin::SPI1 );
-   SPIStream SPI1_MOSI( DMA2ST3, DMA::Stream::CH3, "SPI1MOSI", PA7,  GPIO::Pin::SPI1 );
+   SPI::Stream SPI1_MISO( DMA2ST0, DMA::Stream::CH3, "SPI1MISO", PA6,  GPIO::Pin::SPI1 );
+   SPI::Stream SPI1_MOSI( DMA2ST3, DMA::Stream::CH3, "SPI1MOSI", PA7,  GPIO::Pin::SPI1 );
 
-   SPIStream SPI2_MISO( DMA1ST3, DMA::Stream::CH0, "SPI2MISO", PB14, GPIO::Pin::SPI2 );
-   SPIStream SPI2_MOSI( DMA1ST4, DMA::Stream::CH0, "SPI2MOSI", PB15, GPIO::Pin::SPI2 );
+   SPI::Stream SPI2_MISO( DMA1ST3, DMA::Stream::CH0, "SPI2MISO", PB14, GPIO::Pin::SPI2 );
+   SPI::Stream SPI2_MOSI( DMA1ST4, DMA::Stream::CH0, "SPI2MOSI", PB15, GPIO::Pin::SPI2 );
 
-   SPIStream SPI3_MISO( DMA1ST2, DMA::Stream::CH0, "SPI3MISO", PB4,  GPIO::Pin::SPI3 );
-   SPIStream SPI3_MOSI( DMA1ST5, DMA::Stream::CH0, "SPI3MOSI", PB5,  GPIO::Pin::SPI3 );
+   SPI::Stream SPI3_MISO( DMA1ST2, DMA::Stream::CH0, "SPI3MISO", PB4,  GPIO::Pin::SPI3 );
+   SPI::Stream SPI3_MOSI( DMA1ST5, DMA::Stream::CH0, "SPI3MOSI", PB5,  GPIO::Pin::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
