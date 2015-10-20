@@ -13,12 +13,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-TIMER::TIMER(Bus& bus,
-             const uint32_t iobase,
-             const uint32_t periph,
-             const char *name,
-             GPIO::Pin& pin,
-             GPIO::Pin::Alt alt)
+TIMER::TIMER( Bus&           bus,
+              const uint32_t iobase,
+              const uint32_t periph,
+              const char    *name,
+              GPIO::Pin&     pin,
+              GPIO::Alt      alt )
    : Device( name ), BusSlave( bus, iobase, periph ),
      _pin( pin ), _alt( alt )
 { ; }

@@ -22,7 +22,7 @@ UART::UART( Bus& bus,
             GPIO::Pin&     rxPin,
             GPIO::Pin&     txPin,
             const uint32_t IRQn,
-            GPIO::Pin::Alt alt )
+            GPIO::Alt      alt )
    : Device( name ), BusSlave( bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),

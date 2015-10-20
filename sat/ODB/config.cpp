@@ -143,10 +143,10 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - -  //
 
    /*          bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
-   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::Pin::UART1 );
-   UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::Pin::UART2 );
-   UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::Pin::UART3 );
-   UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::Pin::UART6 );
+   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::UART1 );
+   UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
+   UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
+   UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -157,15 +157,15 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   SPI::Stream SPI3_MISO( DMA1ST2, DMA::Stream::CH0, "SPI3MISO", PB4, GPIO::Pin::SPI3 );
-   SPI::Stream SPI3_MOSI( DMA1ST5, DMA::Stream::CH0, "SPI3MOSI", PB5, GPIO::Pin::SPI3 );
+   SPI::Stream SPI3_MISO( DMA1ST2, DMA::CH0, "SPI3MISO", PB4, GPIO::SPI3 );
+   SPI::Stream SPI3_MOSI( DMA1ST5, DMA::CH0, "SPI3MOSI", PB5, GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
    /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. function */
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::Pin::SPI3 );
+   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

@@ -13,6 +13,74 @@ namespace qb50 {
 
       public:
 
+         /* channel selection */
+
+         enum Channel {
+            CH0      = 0, /*!< channel 0 */
+            CH1      = 1, /*!< channel 1 */
+            CH2      = 2, /*!< channel 2 */
+            CH3      = 3, /*!< channel 3 */
+            CH4      = 4, /*!< channel 4 */
+            CH5      = 5, /*!< channel 5 */
+            CH6      = 6, /*!< channel 6 */
+            CH7      = 7  /*!< channel 7 */
+         };
+
+         /* burst transfer configuration */
+
+         enum Burst {
+            SINGLE   = 0, /*!< single transfer               */
+            INCR4    = 1, /*!< incremental burst of  4 beats */
+            INCR8    = 2, /*!< incremental burst of  8 beats */
+            INCR16   = 3  /*!< incremental burst of 16 beats */
+         };
+
+         /* current target */
+
+         enum Target {
+            MEM0 = 0, /*!< target memory is memory 0 */
+            MEM1 = 1  /*!< target memory is memory 1 */
+         };
+
+        /* priority level */
+
+         enum Priority {
+            LOW      = 0, /*!< low priority       */
+            MEDIUM   = 1, /*!< medium priority    */
+            HIGH     = 2, /*!< high priority      */
+            VERYHIGH = 3  /*!< very high priority */
+         };
+
+         /* memory/peripheral data size */
+
+         enum DataSize {
+            BYTE     = 0, /*!< byte (8-bit)   */
+            SHORT    = 1, /*!< short (16-bit) */
+            WORD     = 2  /*!< word (32-bit)  */
+         };
+
+         /* address increment mode */
+
+         enum IncMode {
+            FIXED    = 0, /*!< address pointer is fixed */
+            INCR     = 1  /*!< address pointer is incremented after each transfer */
+         };
+
+         /* circular mode */
+
+         enum Mode {
+            NORMAL   = 0, /*!< circular mode disabled */
+            CIRCULAR = 1  /*!< circular mode enabled  */
+         };
+
+         /* transfer direction */
+
+         enum Direction {
+            P2M      = 0, /*!< peripheral to memory */
+            M2P      = 1, /*!< memory to peripheral */
+            M2M      = 2  /*!< memory to memory     */
+         };
+
          #include "_DMA_Stream.h"
 
          DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name );

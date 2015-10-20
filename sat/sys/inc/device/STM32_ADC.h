@@ -61,8 +61,8 @@ namespace qb50{
 
       protected:
 
-         GPIO::Pin::Alt _alt;
-         uint8_t        _numConv;
+         GPIO::Alt _alt;
+         uint8_t   _numConv;
 
          void _enable  ( IOReq_enable  *req );
          void _disable ( IOReq_disable *req );

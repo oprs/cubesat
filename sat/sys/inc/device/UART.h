@@ -29,7 +29,7 @@ namespace qb50 {
                GPIO::Pin&     rxPin,
                GPIO::Pin&     txPin,
                const uint32_t IRQn,
-               GPIO::Pin::Alt alt
+               GPIO::Alt      alt
          );
 
          ~UART();
@@ -65,7 +65,7 @@ namespace qb50 {
          GPIO::Pin&       _rxPin;
          GPIO::Pin&       _txPin;
          const uint32_t   _IRQn;
-         GPIO::Pin::Alt   _alt;
+         GPIO::Alt        _alt;
 
          /* IOCTLs */
 

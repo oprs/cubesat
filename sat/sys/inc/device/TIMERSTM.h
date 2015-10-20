@@ -20,7 +20,7 @@ namespace qb50 {
          const uint32_t periph,
          const char *name,
          GPIO::Pin& pin,
-         GPIO::Pin::Alt mode
+         GPIO::Alt  mode
       );
 
       //Destructor
@@ -32,8 +32,8 @@ namespace qb50 {
 
    private:
 
-      GPIO::Pin&     _pin;
-      GPIO::Pin::Alt _alt;
+      GPIO::Pin& _pin;
+      GPIO::Alt  _alt;
     };
 
 } /* qb50 */

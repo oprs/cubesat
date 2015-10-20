@@ -48,7 +48,7 @@ STM32_ADC::Channel::enable( bool silent )
       return *this;
 
    _pin.enable( silent ).pullUp()
-       .mode( GPIO::Pin::ANALOG );
+       .mode( GPIO::ANALOG );
 
  //_adc.enable( silent )
    STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );

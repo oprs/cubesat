@@ -24,7 +24,7 @@ namespace qb50 {
               Stream&        stMISO,
               Stream&        stMOSI,
               GPIO::Pin&     clkPin,
-              GPIO::Pin::Alt alt
+              GPIO::Alt      alt
          );
 
          ~SPI();
@@ -57,7 +57,7 @@ namespace qb50 {
          Stream&        _stMISO;
          Stream&        _stMOSI;
          GPIO::Pin&     _clkPin;
-         GPIO::Pin::Alt _alt;
+         GPIO::Alt      _alt;
 
    };
 
