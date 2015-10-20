@@ -1,6 +1,4 @@
 
-* model: DMAStream -> DMA::Stream
-* model: SPIStream -> SPI::Stream
 * model: add new class Queue<type> (message queues)
 
 * feature: A25Lxxx low power mode
@@ -18,4 +16,6 @@ DONE
 
 * 20151019 - model: BusDevice -> BusSlave
 * 20151020 - model: GPIOPin -> GPIO::Pin
+* 20151020 - model: DMAStream -> DMA::Stream
+* 20151020 - model: SPIStream -> SPI::Stream
 
