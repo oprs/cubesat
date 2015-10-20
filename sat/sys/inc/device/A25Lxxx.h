@@ -19,7 +19,7 @@ namespace qb50 {
 
       public:
 
-         A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin );
+         A25Lxxx( SPI& spi, const char *name, GPIO::Pin& csPin );
          ~A25Lxxx();
 
          void run( void );

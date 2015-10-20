@@ -11,8 +11,8 @@ using namespace qb50;
 SPIStream::SPIStream( DMAStream&         dmaStream,
                       DMAStream::Channel dmaChannel,
                       const char        *name,
-                      GPIOPin&           pin,
-                      GPIOPin::Alt       alt )
+                      GPIO::Pin&         pin,
+                      GPIO::Pin::Alt     alt )
    : Device( name ),
      dmaStream( dmaStream ),
      dmaChannel( dmaChannel ),
@@ -58,4 +58,5 @@ SPIStream& SPIStream::disable( bool silent )
    return *this;
 }
 
+#include "system/Logger.h"
 /*EoF*/

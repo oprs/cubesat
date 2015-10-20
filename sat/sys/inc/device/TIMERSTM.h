@@ -3,7 +3,7 @@
 
 #include "Device.h"
 #include "BusSlave.h"
-#include "GPIOPin.h"
+#include "GPIO.h"
 #include "NVIC.h"
 
 #undef TIM
@@ -19,8 +19,8 @@ namespace qb50 {
          const uint32_t iobase,
          const uint32_t periph,
          const char *name,
-         GPIOPin& pin,
-         GPIOPin::Alt mode
+         GPIO::Pin& pin,
+         GPIO::Pin::Alt mode
       );
 
       //Destructor
@@ -32,8 +32,8 @@ namespace qb50 {
 
    private:
 
-      GPIOPin&     _pin;
-      GPIOPin::Alt _alt;
+      GPIO::Pin&     _pin;
+      GPIO::Pin::Alt _alt;
     };
 
 } /* qb50 */

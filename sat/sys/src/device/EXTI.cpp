@@ -1,7 +1,7 @@
 
 #include "device/EXTI.h"
 #include "device/NVIC.h"
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 
 #include <stm32f4xx.h> /* XXX */
 
@@ -24,7 +24,7 @@ EXTI::~EXTI()
 }
 
 
-void EXTI::registerHandler( GPIOPin& pin, EXTIHandler *handler, Edge edge )
+void EXTI::registerHandler( GPIO::Pin& pin, EXTIHandler *handler, Edge edge )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 

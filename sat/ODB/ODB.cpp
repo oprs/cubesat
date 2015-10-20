@@ -9,9 +9,9 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 ODB::ODB( const char *name,
-          GPIOPin& selPin,
-          GPIOPin& asPin,
-          GPIOPin& adPin )
+          GPIO::Pin& selPin,
+          GPIO::Pin& asPin,
+          GPIO::Pin& adPin )
    : _name( name ),
      _selPin( selPin ),
      _asPin( asPin ),

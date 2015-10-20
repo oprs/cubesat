@@ -4,7 +4,7 @@
 
 #include "Device.h"
 #include "BusSlave.h"
-#include "GPIOPin.h"
+#include "GPIO.h"
 #include "SPIStream.h"
 
 
@@ -20,8 +20,8 @@ namespace qb50 {
               const char*    name,
               SPIStream&     stMISO,
               SPIStream&     stMOSI,
-              GPIOPin&       clkPin,
-              GPIOPin::Alt   alt
+              GPIO::Pin&     clkPin,
+              GPIO::Pin::Alt alt
          );
 
          ~SPI();
@@ -52,8 +52,8 @@ namespace qb50 {
 
          SPIStream&      _stMISO;
          SPIStream&      _stMOSI;
-         GPIOPin&        _clkPin;
-         GPIOPin::Alt    _alt;
+         GPIO::Pin&      _clkPin;
+         GPIO::Pin::Alt  _alt;
    };
 
 } /* qb50 */

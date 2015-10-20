@@ -1,5 +1,6 @@
 
-* model: GPIOPin -> GPIO::Pin (same as ADC::Channel, also see DMAStream, SPIStream, etc..)
+* model: DMAStream -> DMA::Stream
+* model: SPIStream -> SPI::Stream
 * model: add new class Queue<type> (message queues)
 
 * feature: A25Lxxx low power mode
@@ -15,5 +16,6 @@
 
 DONE
 
-* model: BusDevice -> BusSlave (20151019)
+* 20151019 - model: BusDevice -> BusSlave
+* 20151020 - model: GPIOPin -> GPIO::Pin
 

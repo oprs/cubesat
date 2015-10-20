@@ -1,5 +1,6 @@
 
 #include "Morse.h"
+#include "system/qb50.h"
 
 using namespace qb50;
 
@@ -38,7 +39,7 @@ static const uint32_t bits[ 128 ] = {
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Morse::Morse( GPIOPin& pin )
+Morse::Morse( GPIO::Pin& pin )
    : _pin( pin )
 { ; }
 

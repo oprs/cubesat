@@ -4,7 +4,7 @@
 
 #include "Device.h"
 #include "BusSlave.h"
-#include "GPIOPin.h"
+#include "GPIO.h"
 #include "NVIC.h"
 #include "FIFO.hpp"
 
@@ -26,10 +26,10 @@ namespace qb50 {
                const uint32_t iobase,
                const uint32_t periph,
                const char    *name,
-               GPIOPin&       rxPin,
-               GPIOPin&       txPin,
+               GPIO::Pin&     rxPin,
+               GPIO::Pin&     txPin,
                const uint32_t IRQn,
-               GPIOPin::Alt   alt
+               GPIO::Pin::Alt alt
          );
 
          ~UART();
@@ -62,10 +62,10 @@ namespace qb50 {
          FIFO<uint8_t>    _rxFIFO;  /**< receiver FIFO (input)        */
          FIFO<uint8_t>    _txFIFO;  /**< transmitter FIFO (output)    */
 
-         GPIOPin&         _rxPin;
-         GPIOPin&         _txPin;
+         GPIO::Pin&       _rxPin;
+         GPIO::Pin&       _txPin;
          const uint32_t   _IRQn;
-         GPIOPin::Alt     _alt;
+         GPIO::Pin::Alt   _alt;
 
          /* IOCTLs */
 

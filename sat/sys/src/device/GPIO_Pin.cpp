@@ -1,5 +1,5 @@
 
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 #include "system/Logger.h"
 
 #include <safe_stm32f4xx.h>
@@ -11,12 +11,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-GPIOPin::GPIOPin( GPIO& gpio, const unsigned id, const char* name, const uint16_t mask )
+GPIO::Pin::Pin( GPIO& gpio, const unsigned id, const char* name, const uint16_t mask )
    : Device( name ), _gpio( gpio ), _id( id ), _mask( mask )
 { ; }
 
 
-GPIOPin::~GPIOPin()
+GPIO::Pin::~Pin()
 { ; }
 
 
@@ -24,14 +24,14 @@ GPIOPin::~GPIOPin()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-GPIOPin& GPIOPin::init( void )
+GPIO::Pin& GPIO::Pin::init( void )
 {
    //LOG << _name << ": GPIO pin at " << _gpio.name();
    return *this;
 }
 
 
-GPIOPin& GPIOPin::enable( bool silent )
+GPIO::Pin& GPIO::Pin::enable( bool silent )
 {
    if( _incRef() == 0 )
       _gpio.enable( silent );
@@ -40,7 +40,7 @@ GPIOPin& GPIOPin::enable( bool silent )
 }
 
 
-GPIOPin& GPIOPin::disable( bool silent )
+GPIO::Pin& GPIO::Pin::disable( bool silent )
 {
    if( _decRef() == 0 )
       _gpio.disable( silent );
@@ -49,7 +49,7 @@ GPIOPin& GPIOPin::disable( bool silent )
 }
 
 
-GPIOPin& GPIOPin::on( void )
+GPIO::Pin& GPIO::Pin::on( void )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    GPIOx->BSRRL = (uint16_t)( _mask & 0xffff );
@@ -58,7 +58,7 @@ GPIOPin& GPIOPin::on( void )
 }
 
 
-GPIOPin& GPIOPin::off( void )
+GPIO::Pin& GPIO::Pin::off( void )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    GPIOx->BSRRH = (uint16_t)( _mask & 0xffff );
@@ -67,7 +67,7 @@ GPIOPin& GPIOPin::off( void )
 }
 
 
-GPIOPin& GPIOPin::toggle( void )
+GPIO::Pin& GPIO::Pin::toggle( void )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    GPIOx->ODR ^= (uint16_t)( _mask & 0xffff );
@@ -76,14 +76,14 @@ GPIOPin& GPIOPin::toggle( void )
 }
 
 
-bool GPIOPin::read( void )
+bool GPIO::Pin::read( void )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    return ( GPIOx->IDR & _mask ) != 0;
 }
 
 
-GPIOPin& GPIOPin::mode( Mode mode )
+GPIO::Pin& GPIO::Pin::mode( Mode mode )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;
@@ -98,7 +98,7 @@ GPIOPin& GPIOPin::mode( Mode mode )
 }
 
 
-GPIOPin& GPIOPin::alt( Alt alt )
+GPIO::Pin& GPIO::Pin::alt( Alt alt )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;
@@ -115,7 +115,7 @@ GPIOPin& GPIOPin::alt( Alt alt )
 }
 
 
-GPIOPin& GPIOPin::oSpeed( OSpeed speed )
+GPIO::Pin& GPIO::Pin::oSpeed( OSpeed speed )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;
@@ -130,7 +130,7 @@ GPIOPin& GPIOPin::oSpeed( OSpeed speed )
 }
 
 
-GPIOPin& GPIOPin::oType( OType type )
+GPIO::Pin& GPIO::Pin::oType( OType type )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;
@@ -145,7 +145,7 @@ GPIOPin& GPIOPin::oType( OType type )
 }
 
 
-GPIOPin& GPIOPin::PuPd( PullUpDn pud )
+GPIO::Pin& GPIO::Pin::PuPd( PullUpDn pud )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;
    register uint32_t tmp32;

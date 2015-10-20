@@ -19,10 +19,10 @@ UART::UART( Bus& bus,
             const uint32_t iobase,
             const uint32_t periph,
             const char    *name,
-            GPIOPin&       rxPin,
-            GPIOPin&       txPin,
+            GPIO::Pin&     rxPin,
+            GPIO::Pin&     txPin,
             const uint32_t IRQn,
-            GPIOPin::Alt   alt )
+            GPIO::Pin::Alt alt )
    : Device( name ), BusSlave( bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),

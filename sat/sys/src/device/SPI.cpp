@@ -19,8 +19,8 @@ SPI::SPI( Bus&           bus,
           const char    *name,
           SPIStream&     stMISO,
           SPIStream&     stMOSI,
-          GPIOPin&       clkPin,
-          GPIOPin::Alt   alt )
+          GPIO::Pin&     clkPin,
+          GPIO::Pin::Alt alt )
    : Device( name ), BusSlave( bus, iobase, periph ),
      _stMISO( stMISO ),
      _stMOSI( stMOSI ),

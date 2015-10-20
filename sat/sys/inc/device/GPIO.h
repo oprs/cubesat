@@ -5,15 +5,16 @@
 #include "Device.h"
 #include "BusSlave.h"
 
-namespace qb50 {
 
-   class GPIOPin;
+namespace qb50 {
 
    class GPIO : public Device, public BusSlave
    {
       public:
 
-         GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, GPIOPin *pins );
+         #include "GPIO_Pin.h"
+
+         GPIO( Bus& bus, const uint32_t iobase, const uint32_t periph, const unsigned id, const char *name, Pin *pins );
          ~GPIO();
 
          GPIO& init    ( void );
@@ -25,7 +26,7 @@ namespace qb50 {
       private:
 
          const unsigned _id;
-         GPIOPin *_pins;
+         Pin *_pins;
    };
 
 } /* qb50 */

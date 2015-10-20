@@ -2,7 +2,6 @@
 #ifndef _QB50_SYS_AX25OUT_H
 #define _QB50_SYS_AX25OUT_H
 
-#include "device/GPIOPin.h"
 #include "Device.h"
 #include "device/EXTI.h"
 #include "device/NRZI.h"

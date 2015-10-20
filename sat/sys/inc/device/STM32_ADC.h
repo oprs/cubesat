@@ -4,7 +4,7 @@
 
 #include "device/ADC.h"
 #include "device/BusSlave.h"
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 
 //Over-ride macros defined by CMSIS
 #undef ADC
@@ -33,10 +33,10 @@ namespace qb50{
 
          struct Channel : public ADC::Channel
          {
-            ChId     _id;
-            GPIOPin &_pin;
+            ChId       _id;
+            GPIO::Pin &_pin;
 
-            Channel( STM32_ADC& adc, const char *name, ChId id, GPIOPin& pin )
+            Channel( STM32_ADC& adc, const char *name, ChId id, GPIO::Pin& pin )
             : ADC::Channel( adc, name ), _id( id ), _pin( pin )
             { ; }
 
@@ -61,8 +61,8 @@ namespace qb50{
 
       protected:
 
-         GPIOPin::Alt _alt;
-         uint8_t      _numConv;
+         GPIO::Pin::Alt _alt;
+         uint8_t        _numConv;
 
          void _enable  ( IOReq_enable  *req );
          void _disable ( IOReq_disable *req );

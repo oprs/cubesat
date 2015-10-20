@@ -9,7 +9,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-MAX111x::MAX111x( SPI& spi, const char *name, GPIOPin& csPin )
+MAX111x::MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin )
    : ADC( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 {
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));

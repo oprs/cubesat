@@ -15,7 +15,7 @@ GPIO::GPIO( Bus& bus,
             const uint32_t periph,
             const unsigned id,
             const char *name,
-            GPIOPin *pins )
+            Pin *pins )
    : Device( name ), BusSlave( bus, iobase, periph ), _id( id ), _pins( pins )
 { ; }
 

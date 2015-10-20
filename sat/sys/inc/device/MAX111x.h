@@ -47,7 +47,7 @@ namespace qb50 {
             Channel& disable ( bool silent = false );
          };
 
-         MAX111x( SPI& spi, const char *name, GPIOPin& csPin );
+         MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin );
          ~MAX111x();
 
          MAX111x& init( void );

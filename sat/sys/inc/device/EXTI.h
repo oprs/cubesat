@@ -2,7 +2,7 @@
 #ifndef _QB50_SYS_EXTI_H
 #define _QB50_SYS_EXTI_H
 
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 #include "device/FIFO.hpp"
 #include "Device.h"
 
@@ -34,8 +34,8 @@ namespace qb50 {
                 RISING = 0, FALLING = 1, BOTH = 2
             };
 
-            //void trigged( GPIOPin &Pin );
-            void registerHandler( GPIOPin &Pin, EXTIHandler *handler, Edge edge = RISING );
+            //void trigged( GPIO::Pin &Pin );
+            void registerHandler( GPIO::Pin &Pin, EXTIHandler *handler, Edge edge = RISING );
             void isr( EXTIn i );
 
 

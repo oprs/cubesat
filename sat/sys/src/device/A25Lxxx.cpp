@@ -57,7 +57,7 @@ static void _trampoline( void *x );
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIOPin& csPin )
+A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIO::Pin& csPin )
    : FlashMemory( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 {
    _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));

@@ -9,7 +9,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPISlave::SPISlave( SPI& spi, GPIOPin& csPin, SelectMode csMode )
+SPISlave::SPISlave( SPI& spi, GPIO::Pin& csPin, SelectMode csMode )
    : _spi( spi ), _csPin( csPin ), _csMode( csMode )
 { ; }
 

@@ -10,7 +10,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Transceiver::Transceiver( const char *name, GPIOPin& enTXPin, GPIOPin& enPAPin )
+Transceiver::Transceiver( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin )
    : Device( name ), _enTXPin( enTXPin ), _enPAPin( enPAPin )
 { ; }
 

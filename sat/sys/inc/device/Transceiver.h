@@ -3,7 +3,7 @@
 #define _QB50_SYS_DEVICE_TRANSCEIVER_H
 
 #include "Device.h"
-#include "GPIOPin.h"
+#include "GPIO.h"
 
 
 namespace qb50 {
@@ -13,7 +13,7 @@ namespace qb50 {
 
       public:
 
-         Transceiver( const char *name, GPIOPin& enTXPin, GPIOPin& enPAPin );
+         Transceiver( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin );
 
          ~Transceiver();
 
@@ -24,8 +24,8 @@ namespace qb50 {
 
       private:
 
-         GPIOPin& _enTXPin;
-         GPIOPin& _enPAPin;
+         GPIO::Pin& _enTXPin;
+         GPIO::Pin& _enPAPin;
 
    };
 

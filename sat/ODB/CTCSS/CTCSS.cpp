@@ -5,7 +5,7 @@
 #include "DECTONEHandler.h"
 #include "device/MAX111x.h"
 #include "device/EXTI.h"
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 
 using namespace qb50;
 
@@ -24,7 +24,7 @@ using namespace qb50;
 
 
 
-CTCSS::CTCSS( GPIOPin& txPin, GPIOPin& paPin ): _txPin(txPin), _paPin(paPin)
+CTCSS::CTCSS( GPIO::Pin& txPin, GPIO::Pin& paPin ): _txPin(txPin), _paPin(paPin)
 {
     //initialisation temperature commande PA14
     temp_PA14[0] = 73;

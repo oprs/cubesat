@@ -2,7 +2,7 @@
 #ifndef _QB50_SYS_DEVICE_SPI_STREAM_H
 #define _QB50_SYS_DEVICE_SPI_STREAM_H
 
-#include "GPIOPin.h"
+#include "GPIO.h"
 #include "DMAStream.h"
 
 
@@ -17,8 +17,8 @@ namespace qb50 {
          SPIStream( DMAStream&         dmaStream,
                     DMAStream::Channel dmaChannel,
                     const char        *name,
-                    GPIOPin&           pin,
-                    GPIOPin::Alt       alt );
+                    GPIO::Pin&         pin,
+                    GPIO::Pin::Alt     alt );
 
          ~SPIStream();
 
@@ -28,8 +28,8 @@ namespace qb50 {
 
          DMAStream&           dmaStream;
          DMAStream::Channel   dmaChannel;
-         GPIOPin&             _pin;
-         GPIOPin::Alt         _alt;
+         GPIO::Pin&           _pin;
+         GPIO::Pin::Alt       _alt;
    };
 
    void DMA1_Stream0_IRQHandler( void );

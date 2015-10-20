@@ -3,7 +3,7 @@
 #define _QB50_SYS_SLAVE_SPI_SLAVE_H
 
 #include "device/SPI.h"
-#include "device/GPIOPin.h"
+#include "device/GPIO.h"
 
 
 namespace qb50 {
@@ -18,7 +18,7 @@ namespace qb50 {
             ActiveHigh = 1
          };
 
-         SPISlave( SPI& spi, GPIOPin& csPin, SelectMode csMode );
+         SPISlave( SPI& spi, GPIO::Pin& csPin, SelectMode csMode );
          virtual ~SPISlave();
 
          SPISlave& init( void );
@@ -26,7 +26,7 @@ namespace qb50 {
       protected:
 
          SPI&       _spi;
-         GPIOPin&   _csPin;
+         GPIO::Pin& _csPin;
          SelectMode _csMode;
 
          void _select   ( void );

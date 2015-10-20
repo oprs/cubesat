@@ -6,39 +6,6 @@
 #include "CMD/Parameters.h"
 #include "ODB.h"
 
-/*
-#include "Bus.h"
-#include "device/Syslog.h"
-#include "device/NVIC.h"
-#include "device/EXTI.h"
-#include "device/RstClk.h"
-#include "device/Power.h"
-#include "device/Backup.h"
-#include "device/PMU.h"
-#include "device/DMA.h"
-#include "device/DMAStream.h"
-#include "device/SPI.h"
-#include "device/GPIO.h"
-#include "device/UART.h"
-#include "device/A25Lxxx.h"
-#include "device/FlashArray.h"
-#include "device/ConfSlice.h"
-#include "device/ADC.h"
-#include "device/MAX111x.h"
-#include "device/ADCChannel.h"
-#include "device/AX25Out.h"
-#include "device/NRZI.h"
-#include "device/FIFO.hpp"
-#include "device/Transceiver.h"
-
-#include "commun/State.h"
-#include "commun/Raw.h"
-
-#include "system/Application.h"
-#include "system/UserLock.h"
-#include "system/Logger.h"
-#include "system/Event.h"
-*/
 
 namespace qb50 {
 
@@ -83,32 +50,32 @@ namespace qb50 {
 //  G P I O   P I N S  //
 //  - - - - - - - - -  //
 
-   extern qb50::GPIOPin& PA0;   extern qb50::GPIOPin& PA1;
-   extern qb50::GPIOPin& PA2;   extern qb50::GPIOPin& PA3;
-   extern qb50::GPIOPin& PA4;   extern qb50::GPIOPin& PA5;
-   extern qb50::GPIOPin& PA6;   extern qb50::GPIOPin& PA7;
-   extern qb50::GPIOPin& PA8;   extern qb50::GPIOPin& PA9;
-   extern qb50::GPIOPin& PA10;  extern qb50::GPIOPin& PA11;
-   extern qb50::GPIOPin& PA12;  extern qb50::GPIOPin& PA13;
-   extern qb50::GPIOPin& PA14;  extern qb50::GPIOPin& PA15;
+   extern qb50::GPIO::Pin& PA0;   extern qb50::GPIO::Pin& PA1;
+   extern qb50::GPIO::Pin& PA2;   extern qb50::GPIO::Pin& PA3;
+   extern qb50::GPIO::Pin& PA4;   extern qb50::GPIO::Pin& PA5;
+   extern qb50::GPIO::Pin& PA6;   extern qb50::GPIO::Pin& PA7;
+   extern qb50::GPIO::Pin& PA8;   extern qb50::GPIO::Pin& PA9;
+   extern qb50::GPIO::Pin& PA10;  extern qb50::GPIO::Pin& PA11;
+   extern qb50::GPIO::Pin& PA12;  extern qb50::GPIO::Pin& PA13;
+   extern qb50::GPIO::Pin& PA14;  extern qb50::GPIO::Pin& PA15;
 
-   extern qb50::GPIOPin& PB0;   extern qb50::GPIOPin& PB1;
-   extern qb50::GPIOPin& PB2;   extern qb50::GPIOPin& PB3;
-   extern qb50::GPIOPin& PB4;   extern qb50::GPIOPin& PB5;
-   extern qb50::GPIOPin& PB6;   extern qb50::GPIOPin& PB7;
-   extern qb50::GPIOPin& PB8;   extern qb50::GPIOPin& PB9;
-   extern qb50::GPIOPin& PB10;  extern qb50::GPIOPin& PB11;
-   extern qb50::GPIOPin& PB12;  extern qb50::GPIOPin& PB13;
-   extern qb50::GPIOPin& PB14;  extern qb50::GPIOPin& PB15;
+   extern qb50::GPIO::Pin& PB0;   extern qb50::GPIO::Pin& PB1;
+   extern qb50::GPIO::Pin& PB2;   extern qb50::GPIO::Pin& PB3;
+   extern qb50::GPIO::Pin& PB4;   extern qb50::GPIO::Pin& PB5;
+   extern qb50::GPIO::Pin& PB6;   extern qb50::GPIO::Pin& PB7;
+   extern qb50::GPIO::Pin& PB8;   extern qb50::GPIO::Pin& PB9;
+   extern qb50::GPIO::Pin& PB10;  extern qb50::GPIO::Pin& PB11;
+   extern qb50::GPIO::Pin& PB12;  extern qb50::GPIO::Pin& PB13;
+   extern qb50::GPIO::Pin& PB14;  extern qb50::GPIO::Pin& PB15;
 
-   extern qb50::GPIOPin& PC0;   extern qb50::GPIOPin& PC1;
-   extern qb50::GPIOPin& PC2;   extern qb50::GPIOPin& PC3;
-   extern qb50::GPIOPin& PC4;   extern qb50::GPIOPin& PC5;
-   extern qb50::GPIOPin& PC6;   extern qb50::GPIOPin& PC7;
-   extern qb50::GPIOPin& PC8;   extern qb50::GPIOPin& PC9;
-   extern qb50::GPIOPin& PC10;  extern qb50::GPIOPin& PC11;
-   extern qb50::GPIOPin& PC12;  extern qb50::GPIOPin& PC13;
-   extern qb50::GPIOPin& PC14;  extern qb50::GPIOPin& PC15;
+   extern qb50::GPIO::Pin& PC0;   extern qb50::GPIO::Pin& PC1;
+   extern qb50::GPIO::Pin& PC2;   extern qb50::GPIO::Pin& PC3;
+   extern qb50::GPIO::Pin& PC4;   extern qb50::GPIO::Pin& PC5;
+   extern qb50::GPIO::Pin& PC6;   extern qb50::GPIO::Pin& PC7;
+   extern qb50::GPIO::Pin& PC8;   extern qb50::GPIO::Pin& PC9;
+   extern qb50::GPIO::Pin& PC10;  extern qb50::GPIO::Pin& PC11;
+   extern qb50::GPIO::Pin& PC12;  extern qb50::GPIO::Pin& PC13;
+   extern qb50::GPIO::Pin& PC14;  extern qb50::GPIO::Pin& PC15;
 
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //

@@ -17,8 +17,8 @@ TIMER::TIMER(Bus& bus,
              const uint32_t iobase,
              const uint32_t periph,
              const char *name,
-             GPIOPin& pin,
-             GPIOPin::Alt alt)
+             GPIO::Pin& pin,
+             GPIO::Pin::Alt alt)
    : Device( name ), BusSlave( bus, iobase, periph ),
      _pin( pin ), _alt( alt )
 { ; }

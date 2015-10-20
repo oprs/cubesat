@@ -2,7 +2,7 @@
 #ifndef _QB50_CW_MORSE_H
 #define _QB50_CW_MORSE_H
 
-#include "system/qb50.h"
+#include "device/GPIO.h"
 
 
 namespace qb50 {
@@ -12,7 +12,7 @@ class Morse
 
    public:
 
-      Morse( GPIOPin& pin );
+      Morse( GPIO::Pin& pin );
       ~Morse();
 
       void writeChar( char c );
@@ -20,7 +20,7 @@ class Morse
 
    private:
 
-      GPIOPin& _pin;
+      GPIO::Pin& _pin;
 
 };
 
