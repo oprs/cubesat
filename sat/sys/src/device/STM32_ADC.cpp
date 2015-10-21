@@ -29,51 +29,6 @@ STM32_ADC::~STM32_ADC()
 { ; }
 
 
-//  - - - - - - - - - - - - - - -  //
-//  C H A N N E L   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-STM32_ADC::Channel&
-STM32_ADC::Channel::init( void )
-{
- //_adc.init();
-   return *this;
-}
-
-
-STM32_ADC::Channel&
-STM32_ADC::Channel::enable( bool silent )
-{
-   if( _incRef() > 0 )
-      return *this;
-
-   _pin.enable( silent ).pullUp()
-       .mode( GPIO::ANALOG );
-
- //_adc.enable( silent )
-   STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
-   adc.enable( silent );
-
-   return *this;
-}
-
-
-STM32_ADC::Channel&
-STM32_ADC::Channel::disable( bool silent )
-{
-   if( _decRef() > 0 )
-      return *this;
-
- //_adc.disable( silent )
-   STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
-   adc.disable( silent );
-
-   _pin.disable( silent );
-
-   return *this;
-}
-
-
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
@@ -142,21 +97,6 @@ void STM32_ADC::_disable( IOReq_disable *req )
       LOG << _name << ": disabled";
 }
 
-#if 0
-//Rather than modifying individual registers we just use the code written for the ADC using the stm32f4 peripheral library
-adcval_t STM32_ADC::getValue_adc()
-{
-   adcval_t adc_val = 0;
-   ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-   ADC_RegularChannelConfig(ADCx, 0, 1, ADC_SampleTime_15Cycles);
-   ADC_SoftwareStartConv(ADCx);
-   //(void)ADC_ClearFlag(ADCx, ADC_FLAG_EOC);
-
-   while (ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET){;}
-   adc_val = ADC_GetConversionValue(ADCx);
-   return adc_val;
-}
-#endif
 
 void STM32_ADC::_read( IOReq_read *req )
 {

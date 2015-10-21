@@ -19,24 +19,7 @@ namespace qb50 {
 
       public:
 
-         struct Channel : public Device
-         {
-            ADC& _adc;
-
-            Channel( ADC& adc, const char *name )
-            : Device( name ), _adc( adc )
-            { ; }
-
-            virtual ~Channel()
-            { ; }
-
-            virtual Channel& init    ( void )                = 0;
-            virtual Channel& enable  ( bool silent = false ) = 0;
-            virtual Channel& disable ( bool silent = false ) = 0;
-
-            inline adcval_t read( void ) __attribute__(( always_inline ))
-            { return _adc.read( *this ); }
-         };
+         #include "_ADC_Channel.h"
 
          ADC( const char *name );
          virtual ~ADC();

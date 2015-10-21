@@ -31,22 +31,7 @@ namespace qb50{
             CH18 = 0x12,
          };
 
-         struct Channel : public ADC::Channel
-         {
-            ChId       _id;
-            GPIO::Pin &_pin;
-
-            Channel( STM32_ADC& adc, const char *name, ChId id, GPIO::Pin& pin )
-            : ADC::Channel( adc, name ), _id( id ), _pin( pin )
-            { ; }
-
-            virtual ~Channel()
-            { ; }
-
-            Channel& init    ( void );
-            Channel& enable  ( bool silent = false );
-            Channel& disable ( bool silent = false );
-         };
+         #include "_STM32_ADC_Channel.h"
 
          STM32_ADC( Bus& bus,
                     const uint32_t iobase,
