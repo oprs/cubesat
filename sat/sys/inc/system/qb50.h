@@ -21,6 +21,7 @@
 #include "device/ADC.h"
 #include "device/STM32_ADC.h"
 #include "device/MAX111x.h"
+#include "device/L3GD20.h"
 #include "device/AX25Out.h"
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"
