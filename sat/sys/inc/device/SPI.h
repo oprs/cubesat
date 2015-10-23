@@ -17,6 +17,17 @@ namespace qb50 {
 
          #include "_SPI_Stream.h"
 
+         enum ClkDiv {
+            DIV2   = 0,
+            DIV4   = 1,
+            DIV8   = 2,
+            DIV16  = 3,
+            DIV32  = 4,
+            DIV64  = 5,
+            DIV128 = 6,
+            DIV256 = 7
+         };
+
          SPI( Bus&           bus,
               const uint32_t iobase,
               const uint32_t periph,
@@ -24,7 +35,8 @@ namespace qb50 {
               Stream&        stMISO,
               Stream&        stMOSI,
               GPIO::Pin&     clkPin,
-              GPIO::Alt      alt
+              GPIO::Alt      alt,
+              ClkDiv         div
          );
 
          ~SPI();
@@ -58,6 +70,7 @@ namespace qb50 {
          Stream&        _stMOSI;
          GPIO::Pin&     _clkPin;
          GPIO::Alt      _alt;
+         ClkDiv         _div;
 
    };
 

@@ -20,12 +20,14 @@ SPI::SPI( Bus&           bus,
           Stream&        stMISO,
           Stream&        stMOSI,
           GPIO::Pin&     clkPin,
-          GPIO::Alt      alt )
+          GPIO::Alt      alt,
+          SPI::ClkDiv    div )
    : Device( name ), BusSlave( bus, iobase, periph ),
      _stMISO( stMISO ),
      _stMOSI( stMOSI ),
      _clkPin( clkPin ),
-     _alt( alt )
+     _alt( alt ),
+     _div( div )
 { ; }
 
 
@@ -69,7 +71,7 @@ SPI& SPI::enable( bool silent )
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
    SPIx->CR1 = SPI_CR1_MSTR  /* device is master      */
-             | 0x5 << 3      /* baud rate control     */
+             | _div << 3     /* baud rate control     */
              | SPI_CR1_SSI   /* internal slave select */
              | SPI_CR1_SSM   /* software slave mgmt.  */
              ;

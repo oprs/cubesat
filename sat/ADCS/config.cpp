@@ -175,10 +175,10 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    rx stream  tx stream  clk   alt. function */
-   SPI SPI1( APB2, SPI1_BASE, RstClk::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIO::SPI1 );
-   SPI SPI2( APB1, SPI2_BASE, RstClk::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIO::SPI2 );
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIO::SPI3 );
+   /*        bus   iobase     periph                   name    rx stream  tx stream  clk   alt. func.  clk. div */
+   SPI SPI1( APB2, SPI1_BASE, RstClk::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIO::SPI1, SPI::DIV16 );
+   SPI SPI2( APB1, SPI2_BASE, RstClk::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIO::SPI2, SPI::DIV16 );
+   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIO::SPI3, SPI::DIV16 );
 
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //

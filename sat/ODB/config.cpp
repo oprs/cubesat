@@ -164,8 +164,8 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. function */
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3 );
+   /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. func.  clk. div */
+   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3, SPI::DIV16 );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
