@@ -1,6 +1,6 @@
 
-#ifndef _QB50_SYS_DEVICE_MAX111X_H
-#define _QB50_SYS_DEVICE_MAX111X_H
+#ifndef _QB50_SYS_DEVICE_MAX111x_H
+#define _QB50_SYS_DEVICE_MAX111x_H
 
 #include "device/ADC.h"
 #include "device/SPISlave.h"
@@ -31,22 +31,7 @@ namespace qb50 {
             CH7 = 7  /*!< channel 7 */
          };
 
-         /* XXX #include "_MAX111x_Channel.h" */
-         struct Channel : public ADC::Channel
-         {
-            ChId _id;
-
-            Channel( MAX111x& adc, const char *name, ChId id )
-            : ADC::Channel( adc, name ), _id( id )
-            { ; }
-
-            virtual ~Channel()
-            { ; }
-
-            Channel& init    ( void );
-            Channel& enable  ( bool silent = false );
-            Channel& disable ( bool silent = false );
-         };
+         #include "_MAX111x_Channel.h"
 
          MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin );
          ~MAX111x();
@@ -62,6 +47,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_MAX111X_H*/
+#endif /*_QB50_SYS_DEVICE_MAX111x_H*/
 
 /*EoF*/

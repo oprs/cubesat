@@ -5,14 +5,8 @@
 
 using namespace qb50;
 
-#define ADC_DIRECT 1
 
-#ifdef ADC_DIRECT
-   #define NS 1
-#else
-   #define NS 4
-#endif
-#define COEF( x ) ( (float)x / NS )
+#define COEF( x ) ( (float)x )
 
 
 //  - - - - - - - - -  //
@@ -34,12 +28,6 @@ PMUThread::~PMUThread()
 
 void PMUThread::run( void )
 {
-#ifdef ADC_DIRECT
-   ;
-#else
-   PMU0.enable();
-#endif
-
  //uint8_t channels[ 32 ];
 
    unsigned vbat, tbat,      // tension + temperature batterie
@@ -51,12 +39,6 @@ void PMUThread::run( void )
 
    for( ;; ) {
 
-#ifdef ADC_DIRECT
-   ;
-#else
-      PMU0.update( NS );
-#endif
-
       /*
        * R26 = 2.67K, R8 = 9.09K
        *
@@ -65,11 +47,7 @@ void PMUThread::run( void )
        *    = vbat * 35.235952
        */
 
-#ifdef ADC_DIRECT
       vbat = ADC1CH7.read();
-#else
-      vbat = PMU0.get( PMU::V_BAT );
-#endif
       LOG << "VBAT: " << vbat << " (" << 35.235952 * COEF( vbat ) << "mV)";
 
 
@@ -81,13 +59,9 @@ void PMUThread::run( void )
        *    = tbat * 1.6
        */
 
-#ifdef ADC_DIRECT
       tbat = ADC1CH6.read();
-#else
-      tbat = PMU0.get( PMU::T_BAT );
-#endif
-      dK = 1.6 * COEF( tbat );
-      dC = dK - 273.15;
+      dK   = 1.6 * COEF( tbat );
+      dC   = dK - 273.15;
       LOG << "TBAT: " << tbat << " (" << dK << "K|" << dC << "C)";
 
 
@@ -99,11 +73,7 @@ void PMUThread::run( void )
        *    = irx * 0.32
        */
 
-#ifdef ADC_DIRECT
       irx = ADC3CH2.read();
-#else
-      irx = PMU0.get( PMU::I_RX );
-#endif
       LOG << " IRX: " << irx << " (" << 0.32 * COEF( irx ) << "mA)";
 
 
@@ -121,11 +91,7 @@ void PMUThread::run( void )
        *    = itx * 3.2
        */
 
-#ifdef ADC_DIRECT
       itx = ADC3CH4.read();
-#else
-      itx = PMU0.get( PMU::I_TX );
-#endif
       LOG << " ITX: " << itx << " (" << 3.2 * COEF( itx ) << "mA)";
 
 
@@ -137,29 +103,15 @@ void PMUThread::run( void )
        *    = i[1-4] * 32 / 15
        */
 
-#ifdef ADC_DIRECT
       i1 = ADC1CH5.read();
       i2 = ADC2CH2.read();
       i3 = ADC2CH5.read();
       i4 = ADC1CH1.read();
-#else
-      i1 = PMU0.get( PMU::I1 );
-      i2 = PMU0.get( PMU::I2 );
-      i3 = PMU0.get( PMU::I3 );
-      i4 = PMU0.get( PMU::I4 );
-#endif
 
-#ifdef ADC_DIRECT
       v1 = ADC1CH3.read();
       v2 = ADC2CH0.read();
       v3 = ADC2CH3.read();
       v4 = ADC1CH0.read();
-#else
-      v1 = PMU0.get( PMU::V1 );
-      v2 = PMU0.get( PMU::V2 );
-      v3 = PMU0.get( PMU::V3 );
-      v4 = PMU0.get( PMU::V4 );
-#endif
 
       LOG << "  I1: " << i1 << " (" << 32.0 * COEF( i1 ) / 15.0 << "mA)"
           << ", V1: " << v1 << " (" << 35.235952 * COEF( v1 ) << "mV)";
