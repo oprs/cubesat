@@ -1,5 +1,9 @@
 
+* model: ADC should be an interface, not a device
+* model: see if SPI slaves really need to be threaded (just rely on the SPI lock ?)
+* model: MAX111x::Channel
 * model: add new class Queue<type> (message queues)
+* model: implement a full init chain (no ref. count)
 
 * feature: A25Lxxx low power mode
 * feature: IRQ/VIC registers
@@ -7,15 +11,18 @@
 * feature: FlashArray: address mask ( sn < _nSlaves )
 * feature: FlashMemory: mask page/sector address
 * feature: enable() / disable() should lock the device before calling incRef() / decRef()
-           -> all devices should be threaded (exceptions ?)
+    * should all devices be threaded ?
+    * would it be enough to just suspend the scheduler during incRef() / decRef() ?
+      -> in that case, could an interrupt cause a context switch anyway, while the scheduler is suspended ?
+      -> see FreeRTOS sources / ask the FreeRTOS guys
 
 * misc: find and hunt down C standard library headers
 
 
 DONE
 
-* 20151019 - model: BusDevice -> BusSlave
-* 20151020 - model: GPIOPin -> GPIO::Pin
-* 20151020 - model: DMAStream -> DMA::Stream
 * 20151020 - model: SPIStream -> SPI::Stream
+* 20151020 - model: DMAStream -> DMA::Stream
+* 20151020 - model: GPIOPin -> GPIO::Pin
+* 20151019 - model: BusDevice -> BusSlave
 

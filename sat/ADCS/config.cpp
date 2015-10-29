@@ -146,7 +146,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - -  //
 
    /*          bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
-   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PA10, PA9,  USART1_IRQn, GPIO::UART1 );
+   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PA10, PB6,  USART1_IRQn, GPIO::UART1 );
    UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
    UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
    UART UART4( APB1, UART4_BASE,  RstClk::APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIO::UART4 );

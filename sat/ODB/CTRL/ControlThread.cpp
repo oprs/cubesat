@@ -69,6 +69,8 @@ void ControlThread::run( void )
    delay( 5000 );
    LOG << "Done waiting";
 
+PC13.enable().out().on();
+
    //SAT.aDeploy();
 
    _tv[ 0 ] = registerThread( new CommandThread() );
