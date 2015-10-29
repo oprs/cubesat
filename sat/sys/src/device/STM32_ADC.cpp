@@ -35,25 +35,18 @@ STM32_ADC::~STM32_ADC()
 
 STM32_ADC& STM32_ADC::init( void )
 {
-   ADC::init();
    LOG << _name << ": STM32 ADC at " << bus.name;
 
    return *this;
 }
 
 
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-void STM32_ADC::_enable( IOReq_enable *req )
+STM32_ADC& STM32_ADC::enable( bool silent )
 {
    if( _incRef() > 0 )
-      return;
+      return *this;
 
-   (void)req;
-
-   RCC.enable( this, req->_silent );
+   RCC.enable( this, silent );
 
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
@@ -76,39 +69,44 @@ void STM32_ADC::_enable( IOReq_enable *req )
    ADCx->SQR1 = tmpreg;
    ADCx->CR2 |= ADC_CR2_ADON;
 
-   if( !req->_silent )
+   if( !silent )
       LOG << _name << ": enabled";
+
+   return *this;
 }
 
 
-void STM32_ADC::_disable( IOReq_disable *req )
+STM32_ADC& STM32_ADC::disable( bool silent )
 {
    if( _decRef() > 0 )
-      return;
-
-   (void)req;
+      return *this;
 
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
    ADCx->CR2 &= ~ADC_CR2_ADON;
 
-   RCC.disable( this, req->_silent );
+   RCC.disable( this, silent );
 
-   if( !req->_silent )
+   if( !silent )
       LOG << _name << ": disabled";
+
+   return *this;
 }
 
 
-void STM32_ADC::_read( IOReq_read *req )
+adcval_t STM32_ADC::read( ADC::Channel& ch )
 {
-   STM32_ADC::Channel& ch = static_cast<STM32_ADC::Channel&>( req->_ch );
+   STM32_ADC::Channel& stmCh = static_cast<STM32_ADC::Channel&>( ch );
 
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
-   ADC_RegularChannelConfig(ADCx, ch._id, 1, ADC_SampleTime_15Cycles);
+   ADC_RegularChannelConfig(ADCx, stmCh._id, 1, ADC_SampleTime_15Cycles);
    ADC_SoftwareStartConv(ADCx);
    //(void)ADC_ClearFlag(ADCx, ADC_FLAG_EOC);
 
-   while (ADC_GetFlagStatus(ADCx, ADC_FLAG_EOC) == RESET){;}
-   req->_rv = ADC_GetConversionValue(ADCx);
+   while( ADC_GetFlagStatus( ADCx, ADC_FLAG_EOC ) == RESET ) /* XXX meh... use interrupts */
+      ;
+
+   return
+      ADC_GetConversionValue( ADCx );
 }
 
 /*EoF*/

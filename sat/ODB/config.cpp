@@ -262,12 +262,6 @@ namespace qb50 {
    MAX111x::Channel& ADC4CH4 = ADC4_Channels[ 4 ];  MAX111x::Channel& ADC4CH5 = ADC4_Channels[ 5 ];
    MAX111x::Channel& ADC4CH6 = ADC4_Channels[ 6 ];  MAX111x::Channel& ADC4CH7 = ADC4_Channels[ 7 ];
 
-//  - - - - - - - - - - - - -  //
-//  P O W E R   M A N A G E R  //
-//  - - - - - - - - - - - - -  //
-
-   PMU PMU0( "PMU0" ); /* XXX thread */
-
 //  - - - - - - - - - - -  //
 //  T R A N S C E I V E R  //
 //  - - - - - - - - - - -  //

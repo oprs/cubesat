@@ -50,8 +50,6 @@ static const uint8_t RDSR2Cmd[] = { 0x35, 0xff };
 static const uint8_t WRENCmd[]  = { 0x06 };
 static const uint8_t WRDICmd[]  = { 0x04 };
 
-static void _trampoline( void *x );
-
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -59,15 +57,11 @@ static void _trampoline( void *x );
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIO::Pin& csPin )
    : FlashMemory( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
-{
-   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
-}
+{ ; }
 
 
 A25Lxxx::~A25Lxxx()
-{
-   vQueueDelete( _ioQueue );
-}
+{ ; }
 
 
 //  - - - - - - - - - - - - - -  //
@@ -84,13 +78,11 @@ A25Lxxx& A25Lxxx::init( void )
     * in order to read its identification ID */
 
    _spi.grab();
-   IOReq_ENABLE re( true );
-   _enable( &re ); /* be silent */
+   enable( true /* be quiet */ );
 
    _RDID( &rdid );
 
-   IOReq_DISABLE rd( true );
-   _disable( &rd ); /* be silent */
+   disable( true /* be quiet */ );
    _spi.release();
 
    /* display ID infos */
@@ -120,80 +112,97 @@ A25Lxxx& A25Lxxx::init( void )
                         << _geo.pps << " pages * "
                         << _geo.bpp << " bytes";
 
-   (void)xTaskCreate( _trampoline, _name, 768, this, configMAX_PRIORITIES - 1, &_ioTask );
-
-   return *this;
-}
-
-
-A25Lxxx& A25Lxxx::ioctl( IOReq *req, TickType_t maxWait )
-{
-   (void)xQueueSend( _ioQueue, &req, maxWait );
-   (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::enable( bool silent )
 {
-   IOReq_ENABLE req( silent );
-   (void)ioctl( &req );
+   if( _incRef() > 0 )
+      return *this;
+
+   _spi.enable( silent );
+
+   if( !silent )
+      LOG << _name << ": enabled";
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::disable( bool silent )
 {
-   IOReq_DISABLE req( silent );
-   (void)ioctl( &req );
+   if( _decRef() > 0 )
+      return *this;
+
+   _spi.disable( silent );
+
+   if( !silent )
+      LOG << _name << ": disabled";
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::pageRead( uint32_t addr, void *x )
 {
-   IOReq_READ req( addr, x );
-   (void)ioctl( &req );
+   _READ( addr, x );
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::pageWrite( uint32_t addr, const void *x )
 {
-   IOReq_PP req( addr, x );
-   (void)ioctl( &req );
+   _WREN();
+   _PP( addr, x );
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::sectorErase( uint32_t addr )
 {
-   IOReq_SE req( addr );
-   (void)ioctl( &req );
+   _WREN();
+   _SE( addr );
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::sectorRead( uint32_t addr, void *x )
 {
-   IOReq_SR req( addr, x );
-   (void)ioctl( &req );
+   uint8_t *dst = (uint8_t*)x;
+
+   for( int i = 0 ; i < _geo.pps ; ++i ) {
+      (void)_READ( addr, dst );
+      dst  += _geo.bpp;
+      addr += _geo.bpp;
+   }
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::sectorWrite( uint32_t addr, const void *x )
 {
-   IOReq_SW req( addr, x );
-   (void)ioctl( &req );
+   const uint8_t *src = (const uint8_t*)x;
+
+   _WREN();
+   _SE( addr );
+
+   for( int i = 0 ; i < _geo.pps ; ++i ) {
+      _WREN();
+      _PP( addr, src );
+      src  += _geo.bpp;
+      addr += _geo.bpp;
+   }
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::blockErase( uint32_t addr )
 {
-   IOReq_BE req( addr );
-   (void)ioctl( &req );
+   _WREN();
+   _BE( addr );
    return *this;
 }
 
@@ -201,121 +210,6 @@ A25Lxxx& A25Lxxx::blockErase( uint32_t addr )
 //  - - - - - - - - - - - - - - -  //
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
-
-static void _trampoline( void *x )
-{
-   A25Lxxx *self = (A25Lxxx*)x;
-   self->run();
-   vTaskDelete( NULL );
-}
-
-
-void A25Lxxx::run( void )
-{
-   IOReq *req;
-
-   for( ;; ) {
-      if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
-         continue;
-
-      _spi.grab();
-
-      switch( req->_op ) {
-         case ENABLE:  _enable      (  (IOReq_ENABLE*)req ); break;
-         case DISABLE: _disable     ( (IOReq_DISABLE*)req ); break;
-         case READ:    _pageRead    (    (IOReq_READ*)req ); break;
-         case SE:      _sectorErase (      (IOReq_SE*)req ); break;
-         case SR:      _sectorRead  (      (IOReq_SR*)req ); break;
-         case SW:      _sectorWrite (      (IOReq_SW*)req ); break;
-         case BE:      _blockErase  (      (IOReq_BE*)req ); break;
-         case PP:      _pageWrite   (      (IOReq_PP*)req ); break;
-      }
-
-      _spi.release();
-
-      (void)xTaskNotifyGive( req->_handle );
-   }
-}
-
-
-void A25Lxxx::_enable( IOReq_ENABLE *req )
-{
-   if( _incRef() > 0 )
-      return;
-
-   _spi.enable( req->_silent );
-
-   if( !req->_silent )
-      LOG << _name << ": enabled";
-}
-
-
-void A25Lxxx::_disable( IOReq_DISABLE *req )
-{
-   if( _decRef() > 0 )
-      return;
-
-   _spi.disable( req->_silent );
-
-   if( !req->_silent )
-      LOG << _name << ": disabled";
-}
-
-
-void A25Lxxx::_pageWrite( IOReq_PP *req )
-{
-   _WREN();
-   _PP( req->_addr, req->_x );
-}
-
-
-void A25Lxxx::_pageRead( IOReq_READ *req )
-{ _READ( req->_addr, req->_x ); }
-
-
-void A25Lxxx::_sectorErase( IOReq_SE *req )
-{
-   _WREN();
-   _SE( req->_addr );
-}
-
-
-void A25Lxxx::_sectorRead( IOReq_SR *req )
-{
-   uint8_t *x    = (uint8_t*)req->_x;
-   uint32_t addr = req->_addr;
-
-   for( int i = 0 ; i < _geo.pps ; ++i ) {
-      _READ( addr, x );
-      x    += _geo.bpp;
-      addr += _geo.bpp;
-   }
-}
-
-
-void A25Lxxx::_sectorWrite( IOReq_SW *req )
-{
-   const uint8_t *x = (const uint8_t*)req->_x;
-   uint32_t addr    = req->_addr;
-
-   _WREN();
-   _SE( req->_addr );
-
-   for( int i = 0 ; i < _geo.pps ; ++i ) {
-      _WREN();
-      _PP( addr, x );
-      x    += _geo.bpp;
-      addr += _geo.bpp;
-   }
-}
-
-
-void A25Lxxx::_blockErase( IOReq_BE *req )
-{
-   _WREN();
-   _BE( req->_addr );
-}
-
 
 void A25Lxxx::_RDID( RDIDResp *rdid )
 {

@@ -8,9 +8,6 @@
 using namespace qb50;
 
 
-static void _trampoline( void *x );
-
-
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -33,13 +30,11 @@ UART::UART( Bus& bus,
 {
    _isrRXNE = xSemaphoreCreateBinary();
    _isrTXE  = xSemaphoreCreateBinary();
-   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
 }
 
 
 UART::~UART()
 {
-   vQueueDelete( _ioQueue );
    vSemaphoreDelete( _isrTXE );
    vSemaphoreDelete( _isrRXNE );
 }
@@ -51,8 +46,6 @@ UART::~UART()
 
 UART& UART::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, 512, this, configMAX_PRIORITIES - 1, &_ioTask );
-
    LOG << _name << ": System UART controller at " << bus.name
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
@@ -62,149 +55,52 @@ UART& UART::init( void )
 }
 
 
-UART& UART::ioctl( IOReq *req, TickType_t maxWait )
-{
-   (void)xQueueSend( _ioQueue, &req, maxWait );
-   (void)ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
-   return *this;
-}
-
-
 UART& UART::enable( bool silent )
 {
-   (void)silent; /*XXX*/
-   IOReq req( ENABLE );
-   return ioctl( &req );
-}
-
-
-UART& UART::disable( bool silent )
-{
-   (void)silent; /*XXX*/
-   IOReq req( DISABLE );
-   return ioctl( &req );
-}
-
-
-size_t UART::read( void *x, size_t len )
-{
-   IOReq_read req( x, len );
-   (void)ioctl( &req );
-   return req._len;
-}
-
-
-size_t UART::readLine( void *x, size_t len )
-{
-   IOReq_readLine req( x, len );
-   (void)ioctl( &req );
-   return req._len;
-}
-
-
-size_t UART::write( const void *x, size_t len )
-{
-   IOReq_write req( x, len );
-   (void)ioctl( &req );
-   return req._len;
-}
-
-
-UART& UART::baudRate( unsigned rate )
-{
-   IOReq_baudRate req( rate );
-   return ioctl( &req );
-}
-
-
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-static void _trampoline( void *x )
-{
-   UART *self = (UART*)x;
-   self->run();
-   vTaskDelete( NULL );
-}
-
-
-void UART::run( void )
-{
-   IOReq *req;
-
-   for( ;; ) {
-      if( xQueueReceive( _ioQueue, &req, portMAX_DELAY ) != pdPASS )
-         continue;
-
-      _lock();
-
-      switch( req->_op ) {
-         case ENABLE:   _enable   (                  req ); break;
-         case DISABLE:  _disable  (                  req ); break;
-         case READ:     _read     (     (IOReq_read*)req ); break;
-         case READLINE: _readLine ( (IOReq_readLine*)req ); break;
-         case WRITE:    _write    (    (IOReq_write*)req ); break;
-         case BAUDRATE: _baudRate ( (IOReq_baudRate*)req ); break;
-      }
-
-      _unlock();
-      (void)xTaskNotifyGive( req->_handle );
-   }
-}
-
-
-void UART::_enable( IOReq *req )
-{
-   (void)req;
-
    if( _incRef() > 0 )
-      return;
+      return *this;
 
    _rxPin.enable().pullUp().alt( _alt );
    _txPin.enable().pullUp().alt( _alt );
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
-   RCC.enable( this );
+   RCC.enable( this, silent );
 
    USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
    USARTx->CR2 = 0;
    USARTx->CR3 = 0;
 
-   {
-      IOReq_baudRate req( 9600 );
-      _baudRate( &req );
-   }
+   baudRate( 9600 );
 
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    IRQ.enable( _IRQn );
+
+   return *this;
 }
 
 
-void UART::_disable( IOReq *req )
+UART& UART::disable( bool silent )
 {
-   (void)req;
-
    if( _decRef() > 0 )
-      return;
+      return *this;
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
    IRQ.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-   RCC.disable( this );
+   RCC.disable( this, silent );
 
    _txPin.disable();
    _rxPin.disable();
+
+   return *this;
 }
 
 
-void UART::_read( IOReq_read *req )
+size_t UART::read( void *x, size_t len )
 {
-   uint8_t *x = (uint8_t*)req->_x;
-   size_t len = req->_len;
-   size_t   n = 0;
+   size_t n = 0;
 
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
@@ -215,14 +111,12 @@ void UART::_read( IOReq_read *req )
       ((uint8_t*)x)[ n++ ] = _rxFIFO.pull();
    }
 
-   req->_len = n;
+   return n;
 }
 
 
-void UART::_readLine( IOReq_readLine *req )
+size_t UART::readLine( void *x, size_t len )
 {
-   uint8_t *x = (uint8_t*)req->_x;
-   size_t len = req->_len;
    uint8_t ch = 0x00;
    size_t   n = 0;
 
@@ -249,16 +143,14 @@ void UART::_readLine( IOReq_readLine *req )
       ch = _rxFIFO.pull();
    }
 
-   req->_len = n;
+   return n;
 }
 
 
-void UART::_write( IOReq_write *req )
+size_t UART::write( const void *x, size_t len )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
-   const uint8_t *x = (const uint8_t*)req->_x;
-   size_t len = req->_len;
    size_t n = 0;
 
    while( n < len ) {
@@ -270,11 +162,11 @@ void UART::_write( IOReq_write *req )
    }
    USARTx->CR1 |= USART_CR1_TXEIE;
 
-   req->_len = n;
+   return n;
 }
 
 
-void UART::_baudRate( IOReq_baudRate *req )
+UART& UART::baudRate( unsigned rate )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -283,7 +175,7 @@ void UART::_baudRate( IOReq_baudRate *req )
 
    /* assuming oversampling by 16 (CR1.OVER8 = 0) */
 
-   idiv   = ( 25 * RCC.freq( bus )) / ( 4 * req->_rate );
+   idiv   = ( 25 * RCC.freq( bus )) / ( 4 * rate );
    tmp32  = idiv / 100;
    fdiv   = idiv - ( 100 * tmp32 );
    tmp32  = tmp32 << 4;
@@ -291,7 +183,9 @@ void UART::_baudRate( IOReq_baudRate *req )
 
    USARTx->BRR = (uint16_t)tmp32;
 
-   LOG << _name << ": Baud rate set to " << req->_rate;
+   LOG << _name << ": Baud rate set to " << rate;
+
+   return *this;
 }
 
 

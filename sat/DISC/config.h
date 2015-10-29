@@ -98,6 +98,13 @@ namespace qb50 {
 
    extern qb50::SPI SPI3;
 
+//  - - - - - - - - -  //
+//  G Y R O S C O P E  //
+//  - - - - - - - - -  //
+
+   extern qb50::L3GD20 MEMS0;
+   extern qb50::L3GD20 MEMS1;
+
 } /* qb50 */
 
 

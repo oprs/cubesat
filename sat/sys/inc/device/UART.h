@@ -38,8 +38,6 @@ namespace qb50 {
          UART& enable   ( bool silent = false );
          UART& disable  ( bool silent = false );
 
-         UART& ioctl    ( IOReq *req, TickType_t maxWait = portMAX_DELAY );
-
          /* synchronous read */
          size_t read    (       void *x, size_t len );
          size_t readLine(       void *x, size_t len );
@@ -56,9 +54,6 @@ namespace qb50 {
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
          xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
 
-         xQueueHandle     _ioQueue;
-         TaskHandle_t     _ioTask;
-
          FIFO<uint8_t>    _rxFIFO;  /**< receiver FIFO (input)        */
          FIFO<uint8_t>    _txFIFO;  /**< transmitter FIFO (output)    */
 
@@ -66,77 +61,6 @@ namespace qb50 {
          GPIO::Pin&       _txPin;
          const uint32_t   _IRQn;
          GPIO::Alt        _alt;
-
-         /* IOCTLs */
-
-         enum IOCTL {
-            ENABLE   = 0,
-            DISABLE  = 1,
-            READ     = 2,
-            READLINE = 3,
-            WRITE    = 4,
-            BAUDRATE = 5
-         };
-
-         struct IOReq
-         {
-            IOCTL        _op;
-            TaskHandle_t _handle;
-
-            IOReq( IOCTL op ) : _op( op )
-            { _handle = xTaskGetCurrentTaskHandle(); }
-
-            ~IOReq()
-            { ; }
-         };
-
-         struct IOReq_read : public IOReq
-         {
-            void  *_x;
-            size_t _len;
-
-            IOReq_read( void *x, size_t len )
-            : IOReq( READ ), _x( x ), _len( len )
-            { ; }
-         };
-
-         struct IOReq_readLine : public IOReq
-         {
-            void  *_x;
-            size_t _len;
-
-            IOReq_readLine( void *x, size_t len )
-            : IOReq( READLINE ), _x( x ), _len( len )
-            { ; }
-         };
-
-         struct IOReq_write : public IOReq
-         {
-            const void *_x;
-            size_t    _len;
-
-            IOReq_write( const void *x, size_t len )
-            : IOReq( WRITE ), _x( x ), _len( len )
-            { ; }
-         };
-
-         struct IOReq_baudRate : public IOReq
-         {
-            unsigned _rate;
-
-            IOReq_baudRate( unsigned rate )
-            : IOReq( BAUDRATE ), _rate( rate )
-            { ; }
-         };
-
-         /* operations */
-
-         void _enable   ( IOReq          *req );
-         void _disable  ( IOReq          *req );
-         void _read     ( IOReq_read     *req );
-         void _readLine ( IOReq_readLine *req );
-         void _write    ( IOReq_write    *req );
-         void _baudRate ( IOReq_baudRate *req );
 
    };
 

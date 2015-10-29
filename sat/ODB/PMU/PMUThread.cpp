@@ -34,7 +34,11 @@ PMUThread::~PMUThread()
 
 void PMUThread::run( void )
 {
+#ifdef ADC_DIRECT
+   ;
+#else
    PMU0.enable();
+#endif
 
  //uint8_t channels[ 32 ];
 
@@ -47,7 +51,11 @@ void PMUThread::run( void )
 
    for( ;; ) {
 
+#ifdef ADC_DIRECT
+   ;
+#else
       PMU0.update( NS );
+#endif
 
       /*
        * R26 = 2.67K, R8 = 9.09K
@@ -58,7 +66,7 @@ void PMUThread::run( void )
        */
 
 #ifdef ADC_DIRECT
-      vbat = ADC1.read( MAX111x::CH7 );
+      vbat = ADC1CH7.read();
 #else
       vbat = PMU0.get( PMU::V_BAT );
 #endif
@@ -74,7 +82,7 @@ void PMUThread::run( void )
        */
 
 #ifdef ADC_DIRECT
-      tbat = ADC1.read( MAX111x::CH6 );
+      tbat = ADC1CH6.read();
 #else
       tbat = PMU0.get( PMU::T_BAT );
 #endif
@@ -92,7 +100,7 @@ void PMUThread::run( void )
        */
 
 #ifdef ADC_DIRECT
-      irx = ADC3.read( MAX111x::CH2 );
+      irx = ADC3CH2.read();
 #else
       irx = PMU0.get( PMU::I_RX );
 #endif
@@ -114,7 +122,7 @@ void PMUThread::run( void )
        */
 
 #ifdef ADC_DIRECT
-      itx = ADC3.read( MAX111x::CH4 );
+      itx = ADC3CH4.read();
 #else
       itx = PMU0.get( PMU::I_TX );
 #endif
@@ -130,10 +138,10 @@ void PMUThread::run( void )
        */
 
 #ifdef ADC_DIRECT
-      i1 = ADC1.read( MAX111x::CH5 );
-      i2 = ADC2.read( MAX111x::CH2 );
-      i3 = ADC2.read( MAX111x::CH5 );
-      i4 = ADC1.read( MAX111x::CH1 );
+      i1 = ADC1CH5.read();
+      i2 = ADC2CH2.read();
+      i3 = ADC2CH5.read();
+      i4 = ADC1CH1.read();
 #else
       i1 = PMU0.get( PMU::I1 );
       i2 = PMU0.get( PMU::I2 );
@@ -142,10 +150,10 @@ void PMUThread::run( void )
 #endif
 
 #ifdef ADC_DIRECT
-      v1 = ADC1.read( MAX111x::CH3 );
-      v2 = ADC2.read( MAX111x::CH0 );
-      v3 = ADC2.read( MAX111x::CH3 );
-      v4 = ADC1.read( MAX111x::CH0 );
+      v1 = ADC1CH3.read();
+      v2 = ADC2CH0.read();
+      v3 = ADC2CH3.read();
+      v4 = ADC1CH0.read();
 #else
       v1 = PMU0.get( PMU::V1 );
       v2 = PMU0.get( PMU::V2 );

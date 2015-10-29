@@ -40,9 +40,6 @@ namespace qb50 {
 
       private:
 
-         xQueueHandle _ioQueue;
-         TaskHandle_t _ioTask;
-
          /* type definition for A25Lxxx chips */
 
          struct A25LChip {
@@ -84,115 +81,7 @@ namespace qb50 {
             uint8_t sr;      /*!< status register */
          } __attribute__(( packed ));
 
-         /* IOCTLs */
-
-         enum IOCTL {
-            ENABLE  = 0,
-            DISABLE = 1,
-            READ    = 2,
-            SE      = 3,
-            SR      = 4,
-            SW      = 5,
-            BE      = 6,
-            PP      = 7
-         };
-
-         struct IOReq
-         {
-            IOCTL        _op;
-            TaskHandle_t _handle;
-
-            IOReq( IOCTL op ) : _op( op )
-            { _handle = xTaskGetCurrentTaskHandle(); }
-
-            ~IOReq()
-            { ; }
-         };
-
-         struct IOReq_ENABLE : public IOReq
-         {
-            bool _silent;
-
-            IOReq_ENABLE( bool silent )
-            : IOReq( ENABLE ), _silent( silent )
-            { ; }
-         };
-
-         struct IOReq_DISABLE : public IOReq
-         {
-            bool _silent;
-
-            IOReq_DISABLE( bool silent )
-            : IOReq( DISABLE ), _silent( silent )
-            { ; }
-         };
-
-         struct IOReq_READ : public IOReq
-         {
-            uint32_t _addr;
-            void    *_x;
-
-            IOReq_READ( uint32_t addr, void *x )
-            : IOReq( READ ), _addr( addr ), _x( x )
-            { ; }
-         };
-
-         struct IOReq_SE : public IOReq
-         {
-            uint32_t _addr;
-
-            IOReq_SE( uint32_t addr ) : IOReq( SE ), _addr( addr )
-            { ; }
-         };
-
-         struct IOReq_SR : public IOReq
-         {
-            uint32_t _addr;
-            void    *_x;
-
-            IOReq_SR( uint32_t addr, void *x )
-            : IOReq( SR ), _addr( addr ), _x( x )
-            { ; }
-         };
-
-         struct IOReq_SW : public IOReq
-         {
-            uint32_t    _addr;
-            const void *_x;
-
-            IOReq_SW( uint32_t addr, const void *x )
-            : IOReq( SW ), _addr( addr ), _x( x )
-            { ; }
-         };
-
-         struct IOReq_BE : public IOReq
-         {
-            uint32_t _addr;
-
-            IOReq_BE( uint32_t addr ) : IOReq( BE ), _addr( addr )
-            { ; }
-         };
-
-         struct IOReq_PP : public IOReq
-         {
-            uint32_t    _addr;
-            const void *_x;
-
-            IOReq_PP( uint32_t addr, const void *x )
-            : IOReq( PP ), _addr( addr ), _x( x )
-            { ; }
-         };
-
          /* operations */
-
-         void _enable      ( IOReq_ENABLE  *req );
-         void _disable     ( IOReq_DISABLE *req );
-         void _pageWrite   ( IOReq_PP      *req );
-         void _pageRead    ( IOReq_READ    *req );
-         void _sectorErase ( IOReq_SE      *req );
-         void _sectorRead  ( IOReq_SR      *req );
-         void _sectorWrite ( IOReq_SW      *req );
-         void _blockErase  ( IOReq_BE      *req );
 
          void _SE   ( uint32_t addr );
          void _BE   ( uint32_t addr  );

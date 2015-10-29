@@ -164,8 +164,15 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. function */
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3 );
+   /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. func.  fPCLK. div */
+   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3, SPI::DIV16 );
+
+//  - - - - - - - - -  //
+//  G Y R O S C O P E  //
+//  - - - - - - - - -  //
+
+   L3GD20 MEMS0( SPI3, "MEMS0", PC8,  L3GD20::R250DPS );
+   L3GD20 MEMS1( SPI3, "MEMS1", PC10, L3GD20::R250DPS );
 
 } /* qb50 */
 

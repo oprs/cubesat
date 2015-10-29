@@ -49,7 +49,6 @@ ODB& ODB::init( void )
    ADC2.init();
    ADC3.init();
    ADC4.init();
-   PMU0.init();
    VFLASH.init();
    CONF.init();
  //WDB.init();

@@ -31,6 +31,7 @@ namespace qb50 {
             CH7 = 7  /*!< channel 7 */
          };
 
+         /* XXX #include "_MAX111x_Channel.h" */
          struct Channel : public ADC::Channel
          {
             ChId _id;
@@ -50,15 +51,11 @@ namespace qb50 {
          MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin );
          ~MAX111x();
 
-         MAX111x& init( void );
-
-
-      protected:
-
-         void _enable  ( IOReq_enable  *req );
-         void _disable ( IOReq_disable *req );
-       //void _reset   ( IOReq_reset   *req );
-         void _read    ( IOReq_read    *req );
+         MAX111x& init    ( void );
+       //MAX111x& reset   ( void );
+         MAX111x& enable  ( bool silent = false );
+         MAX111x& disable ( bool silent = false );
+         adcval_t read    ( ADC::Channel& ch );
 
    };
 

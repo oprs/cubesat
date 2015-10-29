@@ -11,13 +11,11 @@ using namespace qb50;
 
 MAX111x::MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin )
    : ADC( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
-{
-   _ioQueue = xQueueCreate( 1, sizeof( IOReq* ));
-}
+{ ; }
 
 
 MAX111x::~MAX111x()
-{ vQueueDelete( _ioQueue ); }
+{ ; }
 
 
 //  - - - - - - - - - - - - - - -  //
@@ -67,7 +65,6 @@ MAX111x::Channel::disable( bool silent )
 MAX111x& MAX111x::init( void )
 {
    (void)SPISlave::init();
-   (void)ADC::init();
 
    LOG << _name << ": Onboard MAX111x serial ADC at " << _spi.name()
        << ", cs: " << _csPin.name();
@@ -76,49 +73,50 @@ MAX111x& MAX111x::init( void )
 }
 
 
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-void MAX111x::_enable( IOReq_enable *req )
+MAX111x& MAX111x::enable( bool silent )
 {
    if( _incRef() > 0 )
-      return;
+      return *this;
 
-   _spi.enable( req->_silent );
+   _spi.enable( silent );
 
-   if( !req->_silent )
+   if( !silent )
       LOG << _name << ": enabled";
+
+   return *this;
 }
 
 
-void MAX111x::_disable( IOReq_disable *req )
+MAX111x& MAX111x::disable( bool silent )
 {
    if( _decRef() > 0 )
-      return;
+      return *this;
 
-   _spi.disable( req->_silent );
+   _spi.disable( silent );
 
-   if( !req->_silent )
+   if( !silent )
       LOG << _name << ": disabled";
+
+   return *this;
 }
 
 
-void MAX111x::_read( IOReq_read *req )
+adcval_t MAX111x::read( ADC::Channel& ch )
 {
-   MAX111x::Channel& ch = static_cast<MAX111x::Channel&>( req->_ch );
+   MAX111x::Channel& maxCh = static_cast<MAX111x::Channel&>( ch );
 
    uint8_t ConvCmd[ 4 ];
    uint8_t ConvRes[ 4 ];
 
    ConvCmd[ 0 ] = 0x00;
-   ConvCmd[ 1 ] = 0x8f | (( ch._id & 0x07 ) << 4 ) ;
+   ConvCmd[ 1 ] = 0x8f | (( maxCh._id & 0x07 ) << 4 ) ;
    ConvCmd[ 2 ] = 0x00;
    ConvCmd[ 3 ] = 0x00;
 
    _spi.pollXfer( ConvCmd, ConvRes, sizeof( ConvCmd ));
 
-   req->_rv = (( ConvRes[2] << 8 ) | ConvRes[3] ) >> 6;
+   return
+      (( ConvRes[2] << 8 ) | ConvRes[3] ) >> 6;
 }
 
 /*EoF*/

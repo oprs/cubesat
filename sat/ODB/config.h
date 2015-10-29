@@ -144,12 +144,6 @@ namespace qb50 {
 
    extern qb50::ConfSlice CONF;
 
-//  - - - - - - - - - - - - -  //
-//  P O W E R   M A N A G E R  //
-//  - - - - - - - - - - - - -  //
-
-   extern qb50::PMU PMU0;
-
 //  - - - - - - - - - - -  //
 //  T R A N S C E I V E R  //
 //  - - - - - - - - - - -  //

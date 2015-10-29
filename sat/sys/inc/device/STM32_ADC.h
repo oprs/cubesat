@@ -41,18 +41,17 @@ namespace qb50{
 
          ~STM32_ADC();
 
-         STM32_ADC& init( void );
+         STM32_ADC& init    ( void );
+       //STM32_ADC& reset   ( void );
+         STM32_ADC& enable  ( bool silent = false );
+         STM32_ADC& disable ( bool silent = false );
+         adcval_t   read    ( ADC::Channel& ch );
 
 
       protected:
 
          GPIO::Alt _alt;
          uint8_t   _numConv;
-
-         void _enable  ( IOReq_enable  *req );
-         void _disable ( IOReq_disable *req );
-       //void _reset   ( IOReq_reset   *req );
-         void _read    ( IOReq_read    *req );
 
    };
 
