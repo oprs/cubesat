@@ -1,11 +1,9 @@
 
 #include "device/EXTI.h"
-#include "device/NVIC.h"
+#include "device/STM32_NVIC.h"
 #include "device/GPIO.h"
 
-#include <stm32f4xx.h> /* XXX */
-
-#undef EXTI
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
@@ -53,14 +51,17 @@ void EXTI::registerHandler( GPIO::Pin& pin, EXTIHandler *handler, Edge edge )
 
     /* XXX enable clock for SYSCFG */
 
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+    RCC_TypeDef    *RCCx    = (    RCC_TypeDef* )RCC_BASE;
+    SYSCFG_TypeDef *SYSCFGx = ( SYSCFG_TypeDef* )SYSCFG_BASE;
+
+    RCCx->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
     /* setup the external interrupt */
 
-    tmp32  = SYSCFG->EXTICR[ pinHi ];
+    tmp32  = SYSCFGx->EXTICR[ pinHi ];
     tmp32 &= ~( 0x000f << ( 4 * pinLo ));
     tmp32 |=    portId << ( 4 * pinLo );
-    SYSCFG->EXTICR[ pinHi ] = tmp32;
+    SYSCFGx->EXTICR[ pinHi ] = tmp32;
 
     uint32_t exti_mask = 0x0001 << pinId;
 
@@ -89,13 +90,13 @@ void EXTI::registerHandler( GPIO::Pin& pin, EXTIHandler *handler, Edge edge )
 
     /* XXX - NVIC IRQ channel configuration*/
 
-    IRQ.enable( EXTI0_IRQn     );
-    IRQ.enable( EXTI1_IRQn     );
-    IRQ.enable( EXTI2_IRQn     );
-    IRQ.enable( EXTI3_IRQn     );
-    IRQ.enable( EXTI4_IRQn     );
-    IRQ.enable( EXTI9_5_IRQn   );
-    IRQ.enable( EXTI15_10_IRQn );
+    NVIC.enable( EXTI0_IRQn     );
+    NVIC.enable( EXTI1_IRQn     );
+    NVIC.enable( EXTI2_IRQn     );
+    NVIC.enable( EXTI3_IRQn     );
+    NVIC.enable( EXTI4_IRQn     );
+    NVIC.enable( EXTI9_5_IRQn   );
+    NVIC.enable( EXTI15_10_IRQn );
 
 }
 

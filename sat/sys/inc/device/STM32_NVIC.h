@@ -1,18 +1,18 @@
 
-#ifndef _QB50_SYS_DEVICE_NVIC_H
-#define _QB50_SYS_DEVICE_NVIC_H
+#ifndef _QB50_SYS_DEVICE_STM32_NVIC_H
+#define _QB50_SYS_DEVICE_STM32_NVIC_H
 
 #include <stdint.h>
 
 
 namespace qb50 {
 
-   class NVIC
+   class STM32_NVIC
    {
       public:
 
-         NVIC();
-         ~NVIC();
+         STM32_NVIC();
+         ~STM32_NVIC();
 
          enum Priority {
             IPR0 = 0, IPR1,  IPR2,  IPR3,
@@ -26,11 +26,11 @@ namespace qb50 {
          void disable ( uint32_t IRQn );
    };
 
-   extern qb50::NVIC IRQ;
+   extern qb50::STM32_NVIC NVIC;
 
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_NVIC_H*/
+#endif /*_QB50_SYS_DEVICE_STM32_NVIC_H*/
 
 /*EoF*/

@@ -4,7 +4,7 @@
 #include "Device.h"
 #include "BusSlave.h"
 #include "GPIO.h"
-#include "NVIC.h"
+#include "STM32_NVIC.h"
 
 #undef TIM
 

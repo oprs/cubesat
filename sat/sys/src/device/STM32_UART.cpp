@@ -1,6 +1,6 @@
 
 #include "device/STM32_RCC.h"
-#include "device/NVIC.h"
+#include "device/STM32_NVIC.h"
 #include "device/STM32_UART.h"
 #include "system/Logger.h"
 
@@ -75,7 +75,7 @@ STM32_UART& STM32_UART::enable( bool silent )
    baudRate( 9600 );
 
    USARTx->CR1 |= ( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-   IRQ.enable( _IRQn );
+   NVIC.enable( _IRQn );
 
    return *this;
 }
@@ -88,7 +88,7 @@ STM32_UART& STM32_UART::disable( bool silent )
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
-   IRQ.disable( _IRQn );
+   NVIC.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    RCC.disable( this, silent );
 

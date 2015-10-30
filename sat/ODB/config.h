@@ -25,7 +25,7 @@ namespace qb50 {
 //  I N T E R R U P T   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - -  //
 
-   extern qb50::NVIC IRQ;
+   extern qb50::STM32_NVIC NVIC;
 
 //  - - - - - - - - - - -  //
 //  B A C K U P   S R A M  //

@@ -1,5 +1,5 @@
 
-#include "device/NVIC.h"
+#include "device/STM32_NVIC.h"
 
 #include <safe_stm32f4xx.h>
 
@@ -11,7 +11,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-NVIC::NVIC()
+STM32_NVIC::STM32_NVIC()
 {
 	/*
 	 * See the STM32F4 Programming Manual sec. 4.4.5,
@@ -28,7 +28,7 @@ NVIC::NVIC()
 }
 
 
-NVIC::~NVIC()
+STM32_NVIC::~STM32_NVIC()
 { ; }
 
 
@@ -36,26 +36,26 @@ NVIC::~NVIC()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void NVIC::enable( uint32_t IRQn, Priority sel )
+void STM32_NVIC::enable( uint32_t IRQn, Priority sel )
 {
-	NVIC_Type *NVICx = (NVIC_Type*)NVIC_BASE;
+	NVIC_Type *STM32_NVICx = (NVIC_Type*)NVIC_BASE;
 
-	NVICx->IP[ IRQn ] = sel << 4;
-	NVICx->ISER[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
+	STM32_NVICx->IP[ IRQn ] = sel << 4;
+	STM32_NVICx->ISER[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
 	//clear( IRQn );
 }
 
 
-void NVIC::disable( uint32_t IRQn )
+void STM32_NVIC::disable( uint32_t IRQn )
 {
 	(void)IRQn; /* XXX */
 }
 
 
-void NVIC::clear( uint32_t IRQn )
+void STM32_NVIC::clear( uint32_t IRQn )
 {
-	NVIC_Type *NVICx = (NVIC_Type*)NVIC_BASE;
-	NVICx->ICPR[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
+	NVIC_Type *STM32_NVICx = (NVIC_Type*)NVIC_BASE;
+	STM32_NVICx->ICPR[ IRQn >> 0x05 ] = 0x01 << ( IRQn & 0x1f );
 }
 
 /*EoF*/

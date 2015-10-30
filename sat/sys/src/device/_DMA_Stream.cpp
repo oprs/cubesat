@@ -45,7 +45,7 @@ DMA::Stream& DMA::Stream::enable( bool silent )
 
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
-   IRQ.enable( _IRQn );
+   NVIC.enable( _IRQn );
    _dma.enable( silent );
 
    /* reset the stream */
@@ -72,7 +72,7 @@ DMA::Stream& DMA::Stream::disable( bool silent )
       return *this;
 
    _dma.disable( silent ); /* _dma.refcount */
-   IRQ.disable( _IRQn );
+   NVIC.disable( _IRQn );
 
    return *this;
 }

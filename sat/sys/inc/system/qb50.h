@@ -5,7 +5,7 @@
 
 #include "Bus.h"
 #include "device/Syslog.h"
-#include "device/NVIC.h"
+#include "device/STM32_NVIC.h"
 #include "device/EXTI.h"
 #include "device/STM32_RCC.h"
 #include "device/Power.h"
