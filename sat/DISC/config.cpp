@@ -142,11 +142,11 @@ namespace qb50 {
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
-   UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::UART1 );
-   UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
-   UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
-   UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
+   /*                bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
+   STM32_UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::UART1 );
+   STM32_UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
+   STM32_UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
+   STM32_UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //

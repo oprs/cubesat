@@ -87,10 +87,10 @@ namespace qb50 {
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   extern qb50::UART UART1;
-   extern qb50::UART UART2;
-   extern qb50::UART UART3;
-   extern qb50::UART UART6;
+   extern qb50::STM32_UART UART1;
+   extern qb50::STM32_UART UART2;
+   extern qb50::STM32_UART UART3;
+   extern qb50::STM32_UART UART6;
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

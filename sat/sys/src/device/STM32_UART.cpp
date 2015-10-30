@@ -1,6 +1,7 @@
 
 #include "device/RstClk.h"
-#include "device/UART.h"
+#include "device/NVIC.h"
+#include "device/STM32_UART.h"
 #include "system/Logger.h"
 
 #include <safe_stm32f4xx.h>
@@ -12,7 +13,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-UART::UART( Bus& bus,
+STM32_UART::STM32_UART( Bus& bus,
             const uint32_t iobase,
             const uint32_t periph,
             const char    *name,
@@ -20,7 +21,7 @@ UART::UART( Bus& bus,
             GPIO::Pin&     txPin,
             const uint32_t IRQn,
             GPIO::Alt      alt )
-   : Device( name ), BusSlave( bus, iobase, periph ),
+   : UART( name ), BusSlave( bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),
      _rxPin ( rxPin ),
@@ -33,7 +34,7 @@ UART::UART( Bus& bus,
 }
 
 
-UART::~UART()
+STM32_UART::~STM32_UART()
 {
    vSemaphoreDelete( _isrTXE );
    vSemaphoreDelete( _isrRXNE );
@@ -44,9 +45,9 @@ UART::~UART()
 //  P U B L I C   I N T E R F A C E  //
 //  - - - - - - - - - - - - - - - -  //
 
-UART& UART::init( void )
+STM32_UART& STM32_UART::init( void )
 {
-   LOG << _name << ": System UART controller at " << bus.name
+   LOG << _name << ": STM32 UART controller at " << bus.name
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
        ;
@@ -55,7 +56,7 @@ UART& UART::init( void )
 }
 
 
-UART& UART::enable( bool silent )
+STM32_UART& STM32_UART::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -80,7 +81,7 @@ UART& UART::enable( bool silent )
 }
 
 
-UART& UART::disable( bool silent )
+STM32_UART& STM32_UART::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -98,7 +99,7 @@ UART& UART::disable( bool silent )
 }
 
 
-size_t UART::read( void *x, size_t len )
+size_t STM32_UART::read( void *x, size_t len )
 {
    size_t n = 0;
 
@@ -115,7 +116,7 @@ size_t UART::read( void *x, size_t len )
 }
 
 
-size_t UART::readLine( void *x, size_t len )
+size_t STM32_UART::readLine( void *x, size_t len )
 {
    uint8_t ch = 0x00;
    size_t   n = 0;
@@ -147,7 +148,7 @@ size_t UART::readLine( void *x, size_t len )
 }
 
 
-size_t UART::write( const void *x, size_t len )
+size_t STM32_UART::write( const void *x, size_t len )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -166,7 +167,7 @@ size_t UART::write( const void *x, size_t len )
 }
 
 
-UART& UART::baudRate( unsigned rate )
+STM32_UART& STM32_UART::baudRate( unsigned rate )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -193,7 +194,7 @@ UART& UART::baudRate( unsigned rate )
 //  I S R   H A N D L E R S  //
 //  - - - - - - - - - - - -  //
 
-void UART::isr( void )
+void STM32_UART::isr( void )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
    portBASE_TYPE hpTask  = pdFALSE;

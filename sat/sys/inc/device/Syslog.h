@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <task.h>
 
 
 #define LOG Syslog::LogLine( SYSLOG ).get()

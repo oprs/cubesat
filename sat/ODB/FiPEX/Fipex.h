@@ -174,8 +174,8 @@ class CFIPEX
 {
 	private:
 		//CSerialPort *m_serialPort;
-		UART _uart;
-		bool m_status;
+		UART& _uart;
+		bool  m_status;
 
 	public:
 

@@ -14,6 +14,7 @@
 #include "device/SPI.h"
 #include "device/GPIO.h"
 #include "device/UART.h"
+#include "device/STM32_UART.h"
 #include "device/A25Lxxx.h"
 #include "device/FlashArray.h"
 #include "device/ConfSlice.h"
