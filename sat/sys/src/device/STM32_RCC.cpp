@@ -1,5 +1,5 @@
 
-#include "device/RstClk.h"
+#include "device/STM32_RCC.h"
 #include "system/Logger.h"
 
 #include <safe_stm32f4xx.h>
@@ -7,18 +7,18 @@
 using namespace qb50;
 
 
-uint8_t RstClk::pv[ 16 ] = { 0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9 };
+uint8_t STM32_RCC::pv[ 16 ] = { 0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9 };
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-RstClk::RstClk( const uint32_t iobase, const char *name )
+STM32_RCC::STM32_RCC( const uint32_t iobase, const char *name )
    : _iobase( iobase ), _name( name )
 { ; }
 
 
-RstClk::~RstClk()
+STM32_RCC::~STM32_RCC()
 { ; }
 
 
@@ -26,7 +26,7 @@ RstClk::~RstClk()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-RstClk& RstClk::init( void )
+STM32_RCC& STM32_RCC::init( void )
 {
    Clocks clk;
 
@@ -43,7 +43,7 @@ RstClk& RstClk::init( void )
 }
 
 
-RstClk& RstClk::enable( BusSlave *dev, bool silent )
+STM32_RCC& STM32_RCC::enable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -64,7 +64,7 @@ RstClk& RstClk::enable( BusSlave *dev, bool silent )
 }
 
 
-RstClk& RstClk::disable( BusSlave *dev, bool silent )
+STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -85,7 +85,7 @@ RstClk& RstClk::disable( BusSlave *dev, bool silent )
 }
 
 
-RstClk& RstClk::clocks( Clocks *clk )
+STM32_RCC& STM32_RCC::clocks( Clocks *clk )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -138,7 +138,7 @@ RstClk& RstClk::clocks( Clocks *clk )
 };
 
 
-uint32_t RstClk::freq( Bus &bus )
+uint32_t STM32_RCC::freq( Bus &bus )
 {
    Clocks clk;
    clocks( &clk );

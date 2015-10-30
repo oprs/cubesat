@@ -28,7 +28,7 @@ namespace qb50 {
 //  R E S E T / C L O C K   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - - - -  //
 
-   RstClk RCC( RCC_BASE, "RCC" );
+   STM32_RCC RCC( RCC_BASE, "RCC" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
@@ -41,20 +41,20 @@ namespace qb50 {
 //  P O W E R   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - -  //
 
-   Power PWR( APB1, PWR_BASE, RstClk::APB1Periph_PWR, "PWR" );
+   Power PWR( APB1, PWR_BASE, STM32_RCC::APB1Periph_PWR, "PWR" );
 
 //  - - - - - - - - - - -  //
 //  B A C K U P   S R A M  //
 //  - - - - - - - - - - -  //
 
-   STM32_BKPSRAM BKP( AHB1, BKPSRAM_BASE, RstClk::AHB1Periph_BKPSRAM, "BKP" );
+   STM32_BKPSRAM BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKPSRAM, "BKP" );
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                name */
-   DMA DMA1( AHB1, DMA1_BASE, RstClk::AHB1Periph_DMA1, "DMA1" );
+   /*        bus   iobase     periph                      name */
+   DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
@@ -133,20 +133,20 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase      periph                id  name     pins */
-   GPIO GPIOA( AHB1, GPIOA_BASE, RstClk::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
-   GPIO GPIOB( AHB1, GPIOB_BASE, RstClk::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
-   GPIO GPIOC( AHB1, GPIOC_BASE, RstClk::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
+   /*          bus   iobase      periph                      id  name     pins */
+   GPIO GPIOA( AHB1, GPIOA_BASE, STM32_RCC::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
+   GPIO GPIOB( AHB1, GPIOB_BASE, STM32_RCC::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
+   GPIO GPIOC( AHB1, GPIOC_BASE, STM32_RCC::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*                bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
-   STM32_UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::UART1 );
-   STM32_UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
-   STM32_UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
-   STM32_UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
+   /*                bus   iobase       periph                        name    rxPin txPin  IRQ number   alt. function */
+   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, GPIO::UART1 );
+   STM32_UART UART2( APB1, USART2_BASE, STM32_RCC::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
+   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
+   STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -164,8 +164,8 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    rx stream  tx stream  clk  alt. func.  clk. div */
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3, SPI::DIV16 );
+   /*        bus   iobase     periph                      name    rx stream  tx stream  clk  alt. func.  clk. div */
+   SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3, SPI::DIV16 );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

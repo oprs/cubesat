@@ -17,7 +17,7 @@ namespace qb50 {
 //  R E S E T / C L O C K   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - - - -  //
 
-   extern qb50::RstClk RCC;
+   extern qb50::STM32_RCC RCC;
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //

@@ -28,7 +28,7 @@ namespace qb50 {
 //  R E S E T / C L O C K   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - - - -  //
 
-   RstClk RCC( RCC_BASE, "RCC" );
+   STM32_RCC RCC( RCC_BASE, "RCC" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
@@ -40,9 +40,9 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name */
-   DMA DMA1( AHB1, DMA1_BASE, RstClk::AHB1Periph_DMA1, "DMA1" );
-   DMA DMA2( AHB1, DMA1_BASE, RstClk::AHB1Periph_DMA2, "DAM2" );
+   /*        bus   iobase     periph                      name */
+   DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
+   DMA DMA2( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA2, "DAM2" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
@@ -136,22 +136,22 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase      periph                   id  name     pins */
-   GPIO GPIOA( AHB1, GPIOA_BASE, RstClk::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
-   GPIO GPIOB( AHB1, GPIOB_BASE, RstClk::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
-   GPIO GPIOC( AHB1, GPIOC_BASE, RstClk::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
+   /*          bus   iobase      periph                      id  name     pins */
+   GPIO GPIOA( AHB1, GPIOA_BASE, STM32_RCC::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
+   GPIO GPIOB( AHB1, GPIOB_BASE, STM32_RCC::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
+   GPIO GPIOC( AHB1, GPIOC_BASE, STM32_RCC::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*                bus   iobase       periph                     name    rxPin txPin  IRQ number   alt. function */
-   STM32_UART UART1( APB2, USART1_BASE, RstClk::APB2Periph_USART1, "UART1", PA10, PB6,  USART1_IRQn, GPIO::UART1 );
-   STM32_UART UART2( APB1, USART2_BASE, RstClk::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
-   STM32_UART UART3( APB1, USART3_BASE, RstClk::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
-   STM32_UART UART4( APB1, UART4_BASE,  RstClk::APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIO::UART4 );
- //STM32_UART UART5( APB1, UART5_BASE,  RstClk::APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  GPIO::UART5 );
-   STM32_UART UART6( APB2, USART6_BASE, RstClk::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
+   /*                bus   iobase       periph                        name    rxPin txPin  IRQ number   alt. function */
+   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PA10, PB6,  USART1_IRQn, GPIO::UART1 );
+   STM32_UART UART2( APB1, USART2_BASE, STM32_RCC::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, GPIO::UART2 );
+   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, GPIO::UART3 );
+   STM32_UART UART4( APB1, UART4_BASE,  STM32_RCC::APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  GPIO::UART4 );
+ //STM32_UART UART5( APB1, UART5_BASE,  STM32_RCC::APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  GPIO::UART5 );
+   STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -175,16 +175,16 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                   name    rx stream  tx stream  clk   alt. func.  clk. div */
-   SPI SPI1( APB2, SPI1_BASE, RstClk::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIO::SPI1, SPI::DIV16 );
-   SPI SPI2( APB1, SPI2_BASE, RstClk::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIO::SPI2, SPI::DIV16 );
-   SPI SPI3( APB1, SPI3_BASE, RstClk::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIO::SPI3, SPI::DIV16 );
+   /*        bus   iobase     periph                      name    rx stream  tx stream  clk   alt. func.  clk. div */
+   SPI SPI1( APB2, SPI1_BASE, STM32_RCC::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  GPIO::SPI1, SPI::DIV16 );
+   SPI SPI2( APB1, SPI2_BASE, STM32_RCC::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, GPIO::SPI2, SPI::DIV16 );
+   SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  GPIO::SPI3, SPI::DIV16 );
 
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   STM32_ADC ADC1( APB2, ADC1_BASE, RstClk::APB2Periph_ADC1, "ADC1" );
+   STM32_ADC ADC1( APB2, ADC1_BASE, STM32_RCC::APB2Periph_ADC1, "ADC1" );
 
 //  - - - - - - - - - - - -  //
 //  A D C   C H A N N E L S  //
@@ -217,9 +217,9 @@ namespace qb50 {
 //  T I M   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*            bus   iobase     periph                   pin   Mode */
- //TIMER TIMER1( APB2, TIM1_BASE, RstClk::APB2Periph_TIM1, PB13, GPIO::AF1);
- //TIMER TIMER2( APB1, TIM2_BASE, RstClk::APB1Periph_TIM2, PB11, GPIO::AF1);
+   /*            bus   iobase     periph                      pin   Mode */
+ //TIMER TIMER1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, PB13, GPIO::AF1);
+ //TIMER TIMER2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, PB11, GPIO::AF1);
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

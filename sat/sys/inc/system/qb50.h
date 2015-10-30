@@ -7,7 +7,7 @@
 #include "device/Syslog.h"
 #include "device/NVIC.h"
 #include "device/EXTI.h"
-#include "device/RstClk.h"
+#include "device/STM32_RCC.h"
 #include "device/Power.h"
 #include "device/STM32_BKPSRAM.h"
 #include "device/DMA.h"

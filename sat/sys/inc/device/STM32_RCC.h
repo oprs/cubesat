@@ -1,13 +1,13 @@
 
-#ifndef _QB50_SYS_DEVICE_RSTCLK_H
-#define _QB50_SYS_DEVICE_RSTCLK_H
+#ifndef _QB50_SYS_DEVICE_STM32_RCC_H
+#define _QB50_SYS_DEVICE_STM32_RCC_H
 
 #include "BusSlave.h"
 
 
 namespace qb50 {
 
-   class RstClk
+   class STM32_RCC
    {
 
       public:
@@ -93,15 +93,15 @@ namespace qb50 {
 
          static uint8_t pv[ 16 ];
 
-         RstClk( const uint32_t iobase, const char *name );
-         ~RstClk();
+         STM32_RCC( const uint32_t iobase, const char *name );
+         ~STM32_RCC();
 
-         RstClk&  init    ( void );
-         RstClk&  enable  ( BusSlave *dev, bool silent = false );
-         RstClk&  disable ( BusSlave *dev, bool silent = false );
+         STM32_RCC&  init    ( void );
+         STM32_RCC&  enable  ( BusSlave *dev, bool silent = false );
+         STM32_RCC&  disable ( BusSlave *dev, bool silent = false );
 
-         RstClk&  clocks  ( Clocks *clk );
-         uint32_t freq    ( Bus& bus );
+         STM32_RCC&  clocks  ( Clocks *clk );
+         uint32_t    freq    ( Bus& bus );
 
       protected:
 
@@ -116,11 +116,11 @@ namespace qb50 {
 
    };
 
-   extern qb50::RstClk RCC;
+   extern qb50::STM32_RCC RCC;
 
 }
 
 
-#endif /*_QB50_SYS_DEVICE_RSTCLK_H*/
+#endif /*_QB50_SYS_DEVICE_STM32_RCC_H*/
 
 /*EoF*/
