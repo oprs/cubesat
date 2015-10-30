@@ -1,5 +1,5 @@
 
-#include "device/EXTI.h"
+#include "device/STM32_EXTI.h"
 #include "device/STM32_NVIC.h"
 #include "device/GPIO.h"
 
@@ -8,21 +8,21 @@
 using namespace qb50;
 
 
-EXTI::EXTI()
+STM32_EXTI::STM32_EXTI()
 {
     for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (EXTIHandler*)0;
+        _extiHandler[i] = (STM32_EXTIHandler*)0;
 }
 
 
-EXTI::~EXTI()
+STM32_EXTI::~STM32_EXTI()
 {
     for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (EXTIHandler*)0;
+        _extiHandler[i] = (STM32_EXTIHandler*)0;
 }
 
 
-void EXTI::registerHandler( GPIO::Pin& pin, EXTIHandler *handler, Edge edge )
+void STM32_EXTI::registerHandler( GPIO::Pin& pin, STM32_EXTIHandler *handler, Edge edge )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -105,9 +105,9 @@ void EXTI::registerHandler( GPIO::Pin& pin, EXTIHandler *handler, Edge edge )
 //  I S R   H A N D L E R S  //
 //  - - - - - - - - - - - -  //
 
-void EXTI::isr( EXTIn i )
+void STM32_EXTI::isr( EXTIn i )
 {
-    EXTIHandler *handler = _extiHandler[ i ];
+    STM32_EXTIHandler *handler = _extiHandler[ i ];
     if( handler != 0 )
         handler->handle( i );
 }
@@ -124,7 +124,7 @@ void EXTI0_IRQHandler( void )
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
     EXTIx->PR |= EXTI_PR_PR0;
-    qb50::EXTI1.isr( EXTI::EXTI0 );
+    qb50::EXTI.isr( STM32_EXTI::EXTI0 );
 }
 
 /* EXTI1_IRQHandler */
@@ -134,7 +134,7 @@ void EXTI1_IRQHandler( void )
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
     EXTIx->PR |= EXTI_PR_PR1;
-    qb50::EXTI1.isr( EXTI::EXTI1 );
+    qb50::EXTI.isr( STM32_EXTI::EXTI1 );
 }
 
 /* EXTI2_IRQHandler */
@@ -144,7 +144,7 @@ void EXTI2_IRQHandler( void )
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
     EXTIx->PR |= EXTI_PR_PR2;
-    qb50::EXTI1.isr( EXTI::EXTI2 );
+    qb50::EXTI.isr( STM32_EXTI::EXTI2 );
 }
 
 /* EXTI3_IRQHandler */
@@ -154,7 +154,7 @@ void EXTI3_IRQHandler( void )
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
     EXTIx->PR |= EXTI_PR_PR3;
-    qb50::EXTI1.isr( EXTI::EXTI3 );
+    qb50::EXTI.isr( STM32_EXTI::EXTI3 );
 }
 
 /* EXTI4_IRQHandler */
@@ -164,7 +164,7 @@ void EXTI4_IRQHandler( void )
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
     EXTIx->PR |= EXTI_PR_PR4;
-    qb50::EXTI1.isr( EXTI::EXTI4 );
+    qb50::EXTI.isr( STM32_EXTI::EXTI4 );
 }
 
 /* EXTI9_5_IRQHandler */
@@ -176,31 +176,31 @@ void EXTI9_5_IRQHandler( void )
     if( EXTIx->PR & EXTI_PR_PR5 )
     {
          EXTIx->PR |= EXTI_PR_PR5;
-         qb50::EXTI1.isr( EXTI::EXTI5 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI5 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR6 )
     {
          EXTIx->PR |= EXTI_PR_PR6;
-         qb50::EXTI1.isr( EXTI::EXTI6 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI6 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR7 )
     {
          EXTIx->PR |= EXTI_PR_PR7;
-         qb50::EXTI1.isr( EXTI::EXTI7 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI7 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR8 )
     {
          EXTIx->PR |= EXTI_PR_PR8;
-         qb50::EXTI1.isr( EXTI::EXTI8 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI8 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR9 )
     {
          EXTIx->PR |= EXTI_PR_PR9;
-         qb50::EXTI1.isr( EXTI::EXTI9 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI9 );
     }
 
 }
@@ -214,37 +214,39 @@ void EXTI15_10_IRQHandler( void )
     if( EXTIx->PR & EXTI_PR_PR10 )
     {
          EXTIx->PR |= EXTI_PR_PR10;
-         qb50::EXTI1.isr( EXTI::EXTI10 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI10 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR11 )
     {
          EXTIx->PR |= EXTI_PR_PR11;
-         qb50::EXTI1.isr( EXTI::EXTI11 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI11 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR12 )
     {
          EXTIx->PR |= EXTI_PR_PR12;
-         qb50::EXTI1.isr( EXTI::EXTI12 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI12 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR13 )
     {
          EXTIx->PR |= EXTI_PR_PR13;
-         qb50::EXTI1.isr( EXTI::EXTI13 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI13 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR14 )
     {
          EXTIx->PR |= EXTI_PR_PR14;
-         qb50::EXTI1.isr( EXTI::EXTI14 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI14 );
     }
 
     if( EXTIx->PR & EXTI_PR_PR15 )
     {
          EXTIx->PR |= EXTI_PR_PR15;
-         qb50::EXTI1.isr( EXTI::EXTI15 );
+         qb50::EXTI.isr( STM32_EXTI::EXTI15 );
     }
 
 }
+
+/*EoF*/

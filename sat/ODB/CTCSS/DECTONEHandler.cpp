@@ -19,7 +19,7 @@ DECTONEHandler::~DECTONEHandler()
 }
 
 
-void DECTONEHandler::handle( EXTI::EXTIn )
+void DECTONEHandler::handle( STM32_EXTI::EXTIn )
 {
     portBASE_TYPE ph = pdFAIL;
 

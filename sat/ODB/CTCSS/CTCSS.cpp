@@ -4,7 +4,7 @@
 #include "CTCSS.h"
 #include "DECTONEHandler.h"
 #include "device/MAX111x.h"
-#include "device/EXTI.h"
+#include "device/STM32_EXTI.h"
 #include "device/GPIO.h"
 
 using namespace qb50;
@@ -48,10 +48,10 @@ CTCSS::CTCSS( GPIO::Pin& txPin, GPIO::Pin& paPin ): _txPin(txPin), _paPin(paPin)
     _ctcssFall = xSemaphoreCreateMutex();
 
     _handleFall = new DECTONEHandler( _ctcssFall );
-    EXTI1.registerHandler( PA8, _handleFall, EXTI::FALLING );
+    EXTI.registerHandler( PA8, _handleFall, STM32_EXTI::FALLING );
 
     _handleRise = new DECTONEHandler( _ctcssRise );
-    EXTI1.registerHandler( PA8, _handleRise, EXTI::RISING );
+    EXTI.registerHandler( PA8, _handleRise, STM32_EXTI::RISING );
 
 
 }

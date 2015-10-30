@@ -3,7 +3,7 @@
 #define _QB50_SYS_AX25OUT_H
 
 #include "Device.h"
-#include "device/EXTI.h"
+#include "device/STM32_EXTI.h"
 #include "device/NRZI.h"
 
 #undef FIFO

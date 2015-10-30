@@ -35,7 +35,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - - - - - -  //
 
    STM32_NVIC NVIC;
-   EXTI EXTI1;
+   STM32_EXTI EXTI;
 
 //  - - - - - - - - - - - - - - - -  //
 //  P O W E R   C O N T R O L L E R  //

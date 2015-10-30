@@ -159,7 +159,7 @@ namespace qb50 {
    extern qb50::TIMER TIMER2;
    extern qb50::TIMER TIMER8;
 
-   extern qb50::EXTI EXTI1;
+   extern qb50::STM32_EXTI EXTI;
 */
 
 } /* qb50 */
