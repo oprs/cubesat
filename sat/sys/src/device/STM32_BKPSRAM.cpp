@@ -1,6 +1,6 @@
 
 #include "device/STM32_RCC.h"
-#include "device/Power.h"
+#include "device/STM32_PWR.h"
 #include "device/STM32_BKPSRAM.h"
 #include "system/Logger.h"
 

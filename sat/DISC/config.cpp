@@ -41,7 +41,7 @@ namespace qb50 {
 //  P O W E R   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - -  //
 
-   Power PWR( APB1, PWR_BASE, STM32_RCC::APB1Periph_PWR, "PWR" );
+   STM32_PWR PWR( APB1, PWR_BASE, STM32_RCC::APB1Periph_PWR, "PWR" );
 
 //  - - - - - - - - - - -  //
 //  B A C K U P   S R A M  //

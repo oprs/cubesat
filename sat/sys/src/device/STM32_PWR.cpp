@@ -1,6 +1,6 @@
 
 #include "device/STM32_RCC.h"
-#include "device/Power.h"
+#include "device/STM32_PWR.h"
 #include "system/Logger.h"
 
 #include <safe_stm32f4xx.h>
@@ -12,15 +12,15 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Power::Power( Bus& bus,
-              const uint32_t iobase,
-              const uint32_t periph,
-              const char    *name )
+STM32_PWR::STM32_PWR( Bus& bus,
+                      const uint32_t iobase,
+                      const uint32_t periph,
+                      const char    *name )
    : Device( name ), BusSlave( bus, iobase, periph )
 { ; }
 
 
-Power::~Power()
+STM32_PWR::~STM32_PWR()
 { ; }
 
 // RCC_AHB1PeriphClockCmd
@@ -40,14 +40,14 @@ Power::~Power()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-Power& Power::init( void )
+STM32_PWR& STM32_PWR::init( void )
 {
-   LOG << _name << ": Power Controller at " << bus.name;
+   LOG << _name << ": STM32_PWR Controller at " << bus.name;
    return *this;
 }
 
 
-Power& Power::enable( bool silent )
+STM32_PWR& STM32_PWR::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -57,7 +57,7 @@ Power& Power::enable( bool silent )
 }
 
 
-Power& Power::disable( bool silent )
+STM32_PWR& STM32_PWR::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -67,7 +67,7 @@ Power& Power::disable( bool silent )
 }
 
 
-Power& Power::enableBKPSRAM( void )
+STM32_PWR& STM32_PWR::enableBKPSRAM( void )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
@@ -79,7 +79,7 @@ Power& Power::enableBKPSRAM( void )
 }
 
 
-Power& Power::disableBKPSRAM( void )
+STM32_PWR& STM32_PWR::disableBKPSRAM( void )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
