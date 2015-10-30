@@ -31,7 +31,7 @@ namespace qb50 {
 //  B A C K U P   S R A M  //
 //  - - - - - - - - - - -  //
 
-   extern qb50::Backup BPK;
+   extern qb50::STM32_BKPSRAM BPK;
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
