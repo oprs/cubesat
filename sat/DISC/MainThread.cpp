@@ -47,8 +47,10 @@ void MainThread::initDevices( void )
  //SPI1.init();
  //SPI2.init();
    SPI3.init();
-   MEMS0.init();
- //MEMS1.init();
+   FLASH0.init();
+   FLASH1.init();
+   GYR0.init();
+ //MAG0.init();
 }
 
 
@@ -65,19 +67,22 @@ void MainThread::run( void )
 
    Gyro::vec3d v;
 
-   MEMS0.enable();
- //MEMS1.enable();
+   FLASH0.enable();
+   FLASH1.enable();
+
+   GYR0.enable();
+ //GYR1.enable();
 
    PC9.enable().out().on();
 
    delay( 250 ); // see AN4505, sec 2.4, table 5
 
-   MEMS0.calibrate();
- //MEMS1.calibrate();
+   GYR0.calibrate();
+ //GYR1.calibrate();
 
    for( ;; ) {
-      MEMS0.omega( v );
-    //MEMS1.omega( v );
+      GYR0.omega( v );
+    //GYR1.omega( v );
       LOG << v.xr << '\t' << v.yr << '\t' << v.zr;
       delay( 1000 );
    }

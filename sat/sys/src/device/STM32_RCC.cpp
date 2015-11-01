@@ -30,7 +30,7 @@ STM32_RCC& STM32_RCC::init( void )
 {
    Clocks clk;
 
-   LOG << _name << ": System reset and clock controller";
+   LOG << _name << ": STM32 reset and clock controller";
 
    clocks( &clk );
 

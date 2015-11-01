@@ -42,7 +42,7 @@ STM32_PWR::~STM32_PWR()
 
 STM32_PWR& STM32_PWR::init( void )
 {
-   LOG << _name << ": STM32_PWR Controller at " << bus.name;
+   LOG << _name << ": STM32 Power controller at " << bus.name;
    return *this;
 }
 

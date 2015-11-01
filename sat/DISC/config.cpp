@@ -167,12 +167,20 @@ namespace qb50 {
    /*        bus   iobase     periph                      name    rx stream  tx stream  clk  alt. func.  fPCLK. div */
    SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, GPIO::SPI3, SPI::DIV16 );
 
-//  - - - - - - - - -  //
-//  G Y R O S C O P E  //
-//  - - - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  O N B O A R D   M E M O R Y  //
+//  - - - - - - - - - - - - - -  //
 
-   L3GD20 MEMS0( SPI3, "MEMS0", PC8,  L3GD20::R250DPS );
-   L3GD20 MEMS1( SPI3, "MEMS1", PC10, L3GD20::R250DPS );
+   /*              SPI    name    csPin */
+   A25Lxxx FLASH0( SPI3, "FLASH0", PB6 );
+   A25Lxxx FLASH1( SPI3, "FLASH1", PB7 );
+
+//  - - - - - - - -  //
+//  G Y R O / M A G  //
+//  - - - - - - - -  //
+
+   L3GD20 GYR0( SPI3, "GYR0", PC8,  L3GD20::R250DPS );
+ //L3GD20 GYR1( SPI3, "GYR1", PC10, L3GD20::R250DPS );
 
 } /* qb50 */
 
