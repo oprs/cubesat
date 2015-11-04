@@ -30,7 +30,7 @@ GPIO::~GPIO()
 
 GPIO& GPIO::init( void )
 {
-   LOG << _name << ": System GPIO controller at " << bus.name;
+   LOG << _name << ": STM32F4xx GPIO controller at " << bus.name;
    return *this;
 }
 

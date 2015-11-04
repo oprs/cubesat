@@ -1,6 +1,6 @@
 
-#ifndef _QB50_FORM_PARSER_H
-#define _QB50_FORM_PARSER_H
+#ifndef _QB50_ODB_FORM_PARSER_H
+#define _QB50_ODB_FORM_PARSER_H
 
 #include "Form.h"
 
@@ -36,6 +36,6 @@ namespace qb50 {
 }
 
 
-#endif /*_QB50_FORM_H*/
+#endif /*_QB50_ODB_FORM_H*/
 
 /*EoF*/

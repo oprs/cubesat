@@ -32,6 +32,7 @@ ODB& ODB::init( void )
    SYSLOG.init();
    RCC.init();
    PWR.init();
+   RTC.init();
    BKP.init();
    DMA1.init();
  //DMA2.init();

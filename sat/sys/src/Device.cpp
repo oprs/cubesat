@@ -21,23 +21,28 @@ Device::~Device()
 }
 
 
-//  - - - - - - -  //
-//  M E T H O D S  //
-//  - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  P U B L I C   M E T H O D S  //
+//  - - - - - - - - - - - - - -  //
 
-Device& Device::_lock( void )
+Device& Device::lock( void )
 {
    (void)xSemaphoreTake( _devLock, portMAX_DELAY );
    return *this;
 }
 
 
-Device& Device::_unlock( void )
+Device& Device::unlock( void )
 {
    (void)xSemaphoreGive( _devLock );
    return *this;
 }
 
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
 
 unsigned Device::_incRef( void )
 { return _refCount++; }

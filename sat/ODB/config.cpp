@@ -1,6 +1,6 @@
 
 #include "config.h"
-#include <safe_stm32f4xx.h>
+#include <safe_stm32f4xx.h> // XXX OUT!
 
 
 namespace qb50 {
@@ -30,6 +30,12 @@ namespace qb50 {
 
    STM32_RCC RCC( RCC_BASE, "RCC" );
 
+//  - - - - - - - - - - - - - -  //
+//  R T C   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - -  //
+
+   STM32_RTC RTC( APB1, RTC_BASE, STM32_RCC::APB1Periph_RTC, "RTC" );
+
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - -  //
@@ -47,7 +53,7 @@ namespace qb50 {
 //  B A C K U P   S R A M  //
 //  - - - - - - - - - - -  //
 
-   STM32_BKPSRAM BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKPSRAM, "BKP" );
+   STM32_BKP BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKP, "BKP" );
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //

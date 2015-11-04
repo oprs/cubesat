@@ -23,14 +23,15 @@ namespace qb50 {
          virtual Device& enable  ( bool silent = false ) = 0;
          virtual Device& disable ( bool silent = false ) = 0;
 
+         virtual Device& lock    ( void );
+         virtual Device& unlock  ( void );
+
       protected:
 
          const char      *_name;     /**< device name               */
          unsigned         _refCount; /**< reference counter         */
          xSemaphoreHandle _devLock;  /**< global lock on the device */
 
-         Device&  _lock   ( void );
-         Device&  _unlock ( void );
          unsigned _incRef ( void );
          unsigned _decRef ( void );
 

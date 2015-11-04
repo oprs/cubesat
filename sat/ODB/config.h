@@ -3,7 +3,7 @@
 #define _QB50_ODB_CONFIG_H
 
 #include "system/qb50.h"
-#include "CMD/Parameters.h"
+#include "Parameters.h"
 #include "ODB.h"
 
 
@@ -21,6 +21,12 @@ namespace qb50 {
 
    extern qb50::STM32_RCC RCC;
 
+//  - - - - - - - - - - - - - -  //
+//  R T C   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - -  //
+
+   extern qb50::STM32_RTC RTC;
+
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - - - - - - - -  //
@@ -31,7 +37,7 @@ namespace qb50 {
 //  B A C K U P   S R A M  //
 //  - - - - - - - - - - -  //
 
-   extern qb50::STM32_BKPSRAM BPK;
+   extern qb50::STM32_BKP BPK;
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //

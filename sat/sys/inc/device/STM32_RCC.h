@@ -25,7 +25,7 @@ namespace qb50 {
          static const uint32_t AHB1Periph_FLITF        = 0x00008000;
          static const uint32_t AHB1Periph_SRAM1        = 0x00010000;
          static const uint32_t AHB1Periph_SRAM2        = 0x00020000;
-         static const uint32_t AHB1Periph_BKPSRAM      = 0x00040000;
+         static const uint32_t AHB1Periph_BKP          = 0x00040000;
          static const uint32_t AHB1Periph_CCMDATARAMEN = 0x00100000;
          static const uint32_t AHB1Periph_DMA1         = 0x00200000;
          static const uint32_t AHB1Periph_DMA2         = 0x00400000;
@@ -67,6 +67,8 @@ namespace qb50 {
          static const uint32_t APB1Periph_CAN2         = 0x04000000;
          static const uint32_t APB1Periph_PWR          = 0x10000000;
          static const uint32_t APB1Periph_DAC          = 0x20000000;
+         // only for consistency (RTC has no peripheral bits)
+         static const uint32_t APB1Periph_RTC          = 0x00000000;
 
          static const uint32_t APB2Periph_TIM1         = 0x00000001;
          static const uint32_t APB2Periph_TIM8         = 0x00000002;
@@ -99,6 +101,9 @@ namespace qb50 {
          STM32_RCC&  init    ( void );
          STM32_RCC&  enable  ( BusSlave *dev, bool silent = false );
          STM32_RCC&  disable ( BusSlave *dev, bool silent = false );
+
+         STM32_RCC&  enableRTC  ( uint32_t clkSrc );
+         STM32_RCC&  disableRTC ( void );
 
          STM32_RCC&  clocks  ( Clocks *clk );
          uint32_t    freq    ( Bus& bus );

@@ -1,7 +1,10 @@
 
 #include <iostream>
 #include <cmath>
+
+#include "config.h"
 #include "FormParser.h"
+#include "Parameters.h"
 
 using namespace qb50;
 
@@ -161,9 +164,19 @@ size_t FormParser::_parsePForm( PForm *fp, const uint8_t *x, size_t n )
 {
    size_t off = 0;
 
-   off += _parseInteger( fp->pnum, x,       n       );
-   off +=   _parseComma(           x + off, n - off ); /* XXX bof... */
-   off += _parseInteger( fp->pval, x + off, n - off );
+   long p, v;
+
+   off += _parseInteger( p, x,       n       );
+   off +=   _parseComma(    x + off, n - off ); /* XXX bof... */
+   off += _parseInteger( v, x + off, n - off );
+
+   fp->pid = PARAMS.check( p, v );
+
+   if( fp->pid == Parameters::PARAM_NONE ) {
+      fp->pval = 0;
+   } else {
+      fp->pval = v & _QB50_PVAL_MASK;
+   }
 
    return off;
 }

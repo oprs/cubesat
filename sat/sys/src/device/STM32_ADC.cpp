@@ -35,7 +35,7 @@ STM32_ADC::~STM32_ADC()
 
 STM32_ADC& STM32_ADC::init( void )
 {
-   LOG << _name << ": STM32 ADC at " << bus.name;
+   LOG << _name << ": STM32F4xx ADC at " << bus.name;
 
    return *this;
 }

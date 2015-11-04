@@ -1,9 +1,10 @@
 
 #include "config.h"
+
 #include "ControlThread.h"
-#include "CMD/CommandThread.h"
-#include "PMU/PMUThread.h"
-#include "CW/CWThread.h"
+#include "CommandThread.h"
+#include "PMUThread.h"
+#include "CWThread.h"
 
 using namespace qb50;
 
@@ -62,6 +63,7 @@ void ControlThread::run( void )
 //delay( 3000 );
 
    SYSLOG.enable();
+   RTC.enable();
    BKP.enable();
    CONF.enable();
 

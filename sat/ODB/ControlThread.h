@@ -1,6 +1,6 @@
 
-#ifndef _QB50_CONTROL_THREAD_H
-#define _QB50_CONTROL_THREAD_H
+#ifndef _QB50_ODB_CONTROL_THREAD_H
+#define _QB50_ODB_CONTROL_THREAD_H
 
 #include "system/qb50.h"
 
@@ -43,6 +43,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_CONTROL_THREAD_H*/
+#endif /*_QB50_ODB_CONTROL_THREAD_H*/
 
 /*EoF*/

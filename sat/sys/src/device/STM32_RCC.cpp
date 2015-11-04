@@ -30,7 +30,7 @@ STM32_RCC& STM32_RCC::init( void )
 {
    Clocks clk;
 
-   LOG << _name << ": STM32 reset and clock controller";
+   LOG << _name << ": STM32F4xx Reset and Clock controller";
 
    clocks( &clk );
 
@@ -46,6 +46,8 @@ STM32_RCC& STM32_RCC::init( void )
 STM32_RCC& STM32_RCC::enable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
+
+   (void)silent;
 
    switch( dev->bus.id ) {
 
@@ -68,6 +70,8 @@ STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
+   (void)silent;
+
    switch( dev->bus.id ) {
 
       case Bus::AHB1: RCCx->AHB1ENR &= ~dev->periph; break;
@@ -80,6 +84,27 @@ STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
 
  //if( !silent )
  //   LOG << _name << ": " << dev->name() << " disabled";
+
+   return *this;
+}
+
+
+STM32_RCC& STM32_RCC::enableRTC( uint32_t clkSrc )
+{
+   RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
+
+   RCCx->BDCR |= ( clkSrc & 0x00000fff );
+   RCCx->BDCR |= (uint32_t)0x00008000;
+
+   return *this;
+}
+
+
+STM32_RCC& STM32_RCC::disableRTC( void )
+{
+   RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
+
+   RCCx->BDCR &= ~(uint32_t)0x00008000;
 
    return *this;
 }

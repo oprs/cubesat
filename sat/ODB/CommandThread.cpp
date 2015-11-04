@@ -61,16 +61,19 @@ void CommandThread::run( void )
          case Form::FORM_TYPE_P:
          {
             PForm *pform = (PForm*)form;
-            try {
-               long was = PARAMS.get( pform->pnum );
-               if( pform->pval == was )
-                  LOG << "+ P" << pform->pnum << ',' << pform->pval << " (unchanged)";
-               else
-                  LOG << "+ P" << pform->pnum << ',' << pform->pval << " (was: " << was << ')';
-                  PARAMS.set( pform->pnum, pform->pval );
-            } catch( const char *e ) {
-               LOG << "- " << e;
+
+            if( pform->pid == Parameters::PARAM_NONE ) {
+               LOG << "- P" << pform->pid << " parameter out of bounds";
+               break;
             }
+
+            Parameters::pval_t old = PARAMS.set( pform->pid, pform->pval );
+
+            if( pform->pval == old )
+               LOG << "+ P" << pform->pid << ',' << pform->pval << " (unchanged)";
+            else
+               LOG << "+ P" << pform->pid << ',' << pform->pval << " (was: " << old << ')';
+
             break;
          }
 

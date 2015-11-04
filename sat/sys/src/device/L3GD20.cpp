@@ -82,9 +82,11 @@ L3GD20& L3GD20::enable( bool silent )
 
    _spi.enable( silent );
 
+   _spi.lock();
    _select();
    _spi.pollXfer( ENABLE_XYZ_Cmd, NULL, 2 );
    _deselect();
+   _spi.unlock();
 
    if( !silent )
       LOG << _name << " enabled";
@@ -98,9 +100,11 @@ L3GD20& L3GD20::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
+   _spi.lock();
    _select();
    _spi.pollXfer( DISABLE_XYZ_Cmd, NULL, 2 );
    _deselect();
+   _spi.unlock();
 
    _spi.disable( silent );
 
@@ -116,9 +120,11 @@ L3GD20& L3GD20::omega( vec3d& v )
    uint8_t res[ 8 ];
    float coef;
 
+   _spi.lock();
    _select();
    _spi.pollXfer( OMEGA_Cmd, res, 7 /*sizeof( OMEGA_Cmd )*/);
    _deselect();
+   _spi.unlock();
 
    int16_t xr = (uint16_t)res[1] | ( (uint16_t)res[2] << 8 );
    int16_t yr = (uint16_t)res[3] | ( (uint16_t)res[4] << 8 );
@@ -142,6 +148,7 @@ L3GD20& L3GD20::range( Range r )
 {
    uint8_t res[ 2 ];
 
+   _spi.lock();
    _select();
 
    switch( r ) {
@@ -161,6 +168,7 @@ L3GD20& L3GD20::range( Range r )
    }
 
    _deselect();
+   _spi.unlock();
 
    return *this;
 }
@@ -172,6 +180,8 @@ L3GD20& L3GD20::calibrate( void )
    uint8_t res[ 8 ];
 
    sum[ 0 ] = sum[ 1 ] = sum[ 2 ] = 0;
+
+   _spi.lock();
 
    for( int i = 0 ; i < 110 ; ++i ) {
 
@@ -187,6 +197,8 @@ L3GD20& L3GD20::calibrate( void )
          sum[ 2 ] += (int16_t)((uint16_t)res[5] | ((uint16_t)res[6] << 8 ));
       }
    }
+
+   _spi.unlock();
 
    _calX = sum[ 0 ] / 100;
    _calY = sum[ 1 ] / 100;
@@ -206,9 +218,11 @@ void L3GD20::_WHO_AM_I( uint8_t& id )
 {
    uint8_t res[ 2 ];
 
+   _spi.lock();
    _select();
    _spi.pollXfer( WHO_AM_I_Cmd, res, 2 /*sizeof( res )*/);
    _deselect();
+   _spi.unlock();
 
    id = res[1];
 }

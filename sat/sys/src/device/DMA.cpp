@@ -30,7 +30,7 @@ DMA::~DMA()
 
 DMA& DMA::init( void )
 {
-   LOG << _name << ": System DMA controller at " << bus.name;
+   LOG << _name << ": STM32F4xx DMA controller at " << bus.name;
    return *this;
 }
 

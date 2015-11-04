@@ -47,7 +47,7 @@ namespace qb50 {
 //  B A C K U P   S R A M  //
 //  - - - - - - - - - - -  //
 
-   STM32_BKPSRAM BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKPSRAM, "BKP" );
+   STM32_BKP BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKP, "BKP" );
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //

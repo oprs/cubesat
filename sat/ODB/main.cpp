@@ -1,6 +1,6 @@
 
 #include "system/qb50.h"
-#include "CTRL/ControlThread.h"
+#include "ControlThread.h"
 
 using namespace qb50;
 

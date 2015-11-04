@@ -42,7 +42,7 @@ STM32_PWR::~STM32_PWR()
 
 STM32_PWR& STM32_PWR::init( void )
 {
-   LOG << _name << ": STM32 Power controller at " << bus.name;
+   LOG << _name << ": STM32F4xx Power controller at " << bus.name;
    return *this;
 }
 
@@ -53,6 +53,10 @@ STM32_PWR& STM32_PWR::enable( bool silent )
       return *this;
 
    RCC.enable( this, silent );
+
+   if( !silent )
+      LOG << _name << ": enabled";
+
    return *this;
 }
 
@@ -63,14 +67,19 @@ STM32_PWR& STM32_PWR::disable( bool silent )
       return *this;
 
    RCC.disable( this, silent );
+
+   if( !silent )
+      LOG << _name << ": disabled";
+
    return *this;
 }
 
 
-STM32_PWR& STM32_PWR::enableBKPSRAM( void )
+STM32_PWR& STM32_PWR::enableBKP( void )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
+//PWR_BackupAccessCmd
    PWRx->CR  |=  PWR_CR_DBP;
    PWRx->CSR |=  PWR_CSR_BRE;
  //PWRx->CR  &= ~PWR_CR_DBP;
@@ -79,7 +88,7 @@ STM32_PWR& STM32_PWR::enableBKPSRAM( void )
 }
 
 
-STM32_PWR& STM32_PWR::disableBKPSRAM( void )
+STM32_PWR& STM32_PWR::disableBKP( void )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 

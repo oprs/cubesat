@@ -28,14 +28,12 @@ PMUThread::~PMUThread()
 
 void PMUThread::run( void )
 {
- //uint8_t channels[ 32 ];
-
    unsigned vbat, tbat,      // tension + temperature batterie
             irx, itx,        // courant global consommé
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
-   float dK, dC;        // degres (Kelvin/Celsius)
+   float dK, dC; // degres (Kelvin/Celsius)
 
    for( ;; ) {
 

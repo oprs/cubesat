@@ -77,13 +77,13 @@ A25Lxxx& A25Lxxx::init( void )
    /* temporarily (silently) enable the device
     * in order to read its identification ID */
 
-   _spi.grab();
+   _spi.lock();
    enable( true /* be quiet */ );
 
    _RDID( &rdid );
 
    disable( true /* be quiet */ );
-   _spi.release();
+   _spi.unlock();
 
    /* display ID infos */
 

@@ -73,7 +73,11 @@ adcval_t MAX111x::read( ADC::Channel& ch )
    ConvCmd[ 2 ] = 0x00;
    ConvCmd[ 3 ] = 0x00;
 
+   _spi.lock();
+   _select();
    _spi.pollXfer( ConvCmd, ConvRes, sizeof( ConvCmd ));
+   _deselect();
+   _spi.unlock();
 
    return
       (( ConvRes[2] << 8 ) | ConvRes[3] ) >> 6;

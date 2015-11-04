@@ -47,7 +47,7 @@ STM32_UART::~STM32_UART()
 
 STM32_UART& STM32_UART::init( void )
 {
-   LOG << _name << ": STM32 UART controller at " << bus.name
+   LOG << _name << ": STM32F4xx UART controller at " << bus.name
        << ", rx: " << _rxPin.name()
        << ", tx: " << _txPin.name()
        ;

@@ -46,7 +46,7 @@ SPI& SPI::init( void )
    _stMISO.init();
    _stMOSI.init();
 
-   LOG << _name << ": System SPI controller at " << bus.name
+   LOG << _name << ": STM32F4xx SPI controller at " << bus.name
        << ", clk: " << _clkPin.name()
        << ", miso: " << _stMISO._pin.name()
        << ", mosi: " << _stMOSI._pin.name()
@@ -97,20 +97,6 @@ SPI& SPI::disable( bool silent )
    _stMOSI.disable( silent );
    _stMISO.disable( silent );
 
-   return *this;
-}
-
-
-SPI& SPI::grab( void )
-{
-   _lock();
-   return *this;
-}
-
-
-SPI& SPI::release( void )
-{
-   _unlock();
    return *this;
 }
 

@@ -25,8 +25,8 @@ namespace qb50 {
          STM32_PWR& enable  ( bool silent = false );
          STM32_PWR& disable ( bool silent = false );
 
-         STM32_PWR& enableBKPSRAM  ( void );
-         STM32_PWR& disableBKPSRAM ( void );
+         STM32_PWR& enableBKP  ( void );
+         STM32_PWR& disableBKP ( void );
 
    };
 
