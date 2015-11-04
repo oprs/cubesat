@@ -2,8 +2,8 @@
 #include "WodStore.h"
 #include "device/ConfSlice.h"
 #include "system/Logger.h"
-#include "ODBConfig.h"
-#include "config.h"
+#include "Config.h"
+#include "devices.h"
 
 using namespace qb50;
 
@@ -62,10 +62,12 @@ WodStore& WodStore::disable( bool silent )
 
 WodStore& WodStore::clear( void )
 {
-   ODBConfig *conf = (ODBConfig*)CONF.addr();
+#if 0
+   Config *conf = (Config*)CONF.addr();
 
    conf->wHead = 0;
    conf->wTail = 0;
+#endif
 
    return *this;
 }
@@ -77,7 +79,8 @@ WodStore& WodStore::clear( void )
 
 WodStore::Entry* WodStore::last( void )
 {
-   ODBConfig *conf = (ODBConfig*)CONF.addr();
+#if 0
+   Config *conf = (Config*)CONF.addr();
 
    uint32_t base = conf->wTail & ( _mem.sectorSize() - 1 );
 
@@ -87,12 +90,16 @@ WodStore::Entry* WodStore::last( void )
    }
 
    return (WodStore::Entry*)( _sec.x + conf->wTail - base );
+#endif
+
+   return (WodStore::Entry*)0;
 }
 
 
 WodStore& WodStore::write( WodStore::Entry *e )
 {
-   ODBConfig *conf = (ODBConfig*)CONF.addr();
+#if 0
+   Config *conf = (Config*)CONF.addr();
 
    if( !INCACHE( conf->wTail + size( e ))) {
       ;
@@ -103,6 +110,7 @@ WodStore& WodStore::write( WodStore::Entry *e )
    (void)read( &le );
    if( conf->wTail + size( e ))
 */
+#endif
 
    return *this;
 }

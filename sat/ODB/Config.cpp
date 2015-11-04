@@ -1,10 +1,14 @@
 
-#include "Parameters.h"
+#include "Config.h"
+#include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
 
-const Parameters::definition Parameters::defs[ _QB50_NPARAMS ] = {
+Config qb50::CONF; // global config object
+
+
+const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
    /* params[ 0 .. 15 ]       min max def                               min max def */
    { PARAM_NONE,               0,  0,  0 },  { PARAM_CW_CYCLE_TX,        0, 10,  4 },
@@ -53,11 +57,11 @@ const Parameters::definition Parameters::defs[ _QB50_NPARAMS ] = {
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Parameters::Parameters()
+Config::Config()
 { ; }
 
 
-Parameters::~Parameters()
+Config::~Config()
 { ; }
 
 
@@ -65,9 +69,30 @@ Parameters::~Parameters()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-Parameters::pid_t Parameters::check( long p, long v )
+uint16_t Config::reset( void )
 {
-   const Parameters::definition *def;
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   return ++st->nReset;
+}
+
+
+void Config::clear( void )
+{
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   for( int i = 0 ; i < _QB50_NPARAMS ; ++i )
+      st->pv[ i ] = defs[ i ].def;
+
+   st->nReset = 0;
+   st->wHead  = 0;
+   st->wTail  = 0;
+}
+
+
+Config::pid_t Config::chkParam( long p, long v )
+{
+   const Config::definition *def;
 
    if(( p < 0 ) || ( p >= _QB50_NPARAMS ))
       return PARAM_NONE;
@@ -81,18 +106,22 @@ Parameters::pid_t Parameters::check( long p, long v )
 }
 
 
-Parameters::pval_t Parameters::set( Parameters::pid_t pid, Parameters::pval_t pval )
+Config::pval_t Config::setParam( Config::pid_t pid, Config::pval_t pval )
 {
-   Parameters::pval_t old = pv[ pid ];
-   pv[ pid ] = pval;
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   Config::pval_t old = st->pv[ pid ];
+   st->pv[ pid ] = pval;
 
    return old;
 }
 
 
-Parameters::pval_t Parameters::get( Parameters::pid_t pid )
+Config::pval_t Config::getParam( Config::pid_t pid )
 {
-   return pv[ pid ];
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   return st->pv[ pid ];
 }
 
 /*EoF*/

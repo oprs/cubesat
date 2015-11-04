@@ -2,7 +2,7 @@
 #ifndef _QB50_FORM_H
 #define _QB50_FORM_H
 
-#include "Parameters.h"
+#include "Config.h"
 #include "system/Event.h"
 
 #include <cstdint>
@@ -58,8 +58,8 @@ namespace qb50 {
 
    struct PForm : public Form
    {
-      Parameters::pid_t  pid;
-      Parameters::pval_t pval;
+      Config::pid_t  pid;
+      Config::pval_t pval;
 
       PForm() : Form( FORM_TYPE_P )
       { ; }

@@ -14,7 +14,7 @@ uint8_t STM32_RCC::pv[ 16 ] = { 0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9 }
 //  - - - - - - - - -  //
 
 STM32_RCC::STM32_RCC( const uint32_t iobase, const char *name )
-   : _iobase( iobase ), _name( name )
+   : _iobase( iobase ), _name( name ), _csr( 0 )
 { ; }
 
 
@@ -28,6 +28,8 @@ STM32_RCC::~STM32_RCC()
 
 STM32_RCC& STM32_RCC::init( void )
 {
+   RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
+
    Clocks clk;
 
    LOG << _name << ": STM32F4xx Reset and Clock controller";
@@ -38,6 +40,11 @@ STM32_RCC& STM32_RCC::init( void )
                 << ", HCLK: "   << clk.HCLKFreq   / ( 1000 * 1000 ) << "MHz"
                 << ", PCLK1: "  << clk.PCLK1Freq  / ( 1000 * 1000 ) << "MHz"
                 << ", PCLK2: "  << clk.PCLK2Freq  / ( 1000 * 1000 ) << "MHz";
+
+   _csr = RCCx->CSR;
+   RCCx->CSR |= 0x01000000; // clear reset flag
+
+   LOG << _name << ": Reset flags: 0x" << std::hex << (( _csr & 0xfe000000 ) >> 25 );
 
    return *this;
 }
@@ -181,6 +188,19 @@ uint32_t STM32_RCC::freq( Bus &bus )
    }
 
    return rv;
+}
+
+
+bool STM32_RCC::isPwrOn( void )
+{
+   RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
+
+#if 1
+   return
+      (( RCCx->CSR & 0x04000000 ) == 1 );
+#else
+   return true;
+#endif
 }
 
 /*EoF*/

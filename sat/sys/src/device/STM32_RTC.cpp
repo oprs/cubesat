@@ -31,30 +31,10 @@ STM32_RTC::~STM32_RTC()
 
 STM32_RTC& STM32_RTC::init( void )
 {
+#if 0
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
 
-   LOG << _name << ": STM32F4xx Real-Time Clock controller at " << bus.name;
-
    lock();
-
-// RTC_ReadBackupRegister
-//RTC_BKP_DR19
-//#define RTC_BKP_DR19                      ((uint32_t)0x00000013)^M
-
-/*
-  *          ===================================================================
-  *                                   Backup Domain Access
-  *          ===================================================================
-  *          After reset, the backup domain (RTC registers, RTC backup data
-  *          registers and backup SRAM) is protected against possible unwanted
-  *          write accesses.
-  *          To enable access to the RTC Domain and RTC registers, proceed as follows:
-  *            - Enable the Power Controller (PWR) APB1 interface clock using the
-  *              RCC_APB1PeriphClockCmd() function.
-  *            - Enable access to RTC domain using the PWR_BackupAccessCmd() function.
-  *            - Select the RTC clock source using the RCC_RTCCLKConfig() function.
-  *            - Enable RTC Clock using the RCC_RTCCLKCmd() function.
-*/
 
    PWR.enable( false );          // enable the power controller
    PWR.enableBKP();              // enable access to backup domain
@@ -69,6 +49,9 @@ STM32_RTC& STM32_RTC::init( void )
    RTCx->WPR = 0x00;
 
    unlock();
+#endif
+
+   LOG << _name << ": STM32F4xx Real-Time Clock controller at " << bus.name;
 
    return *this;
 }
@@ -128,8 +111,6 @@ void STM32_RTC::_enterInit( void )
       LOG << _name << ": initializing RTC (hardware reset)";
       RTCx->ISR = (uint32_t)0xffffffff;
 
-//RTC_EnterInitMode
-//RTC_INIT_MASK
       for( int cnt = 0 ; cnt < 10000 ; ++cnt ) {
          if(( RTCx->ISR & RTC_ISR_INITF ) != 0 )
             break;
@@ -146,20 +127,9 @@ void STM32_RTC::_enterInit( void )
 }
 
 
-/**
-  * @brief  Exits the RTC Initialization mode.
-  * @note   When the initialization sequence is complete, the calendar restarts
-  *         counting after 4 RTCCLK cycles.
-  * @note   The RTC Initialization mode is write protected, use the
-  *         RTC_WriteProtectionCmd(DISABLE) before calling this function.
-  * @param  None
-  * @retval None
-  */
-
 void STM32_RTC::_exitInit( void )
 {
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
-   /* Exit Initialization mode */
    RTCx->ISR &= (uint32_t)~RTC_ISR_INIT;
 }
 

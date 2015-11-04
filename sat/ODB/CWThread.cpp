@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 #include "CWThread.h"
 #include "Morse.h"
 #include "system/Application.h"

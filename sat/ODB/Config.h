@@ -1,7 +1,8 @@
 
-#ifndef _QB50_ODB_PARAMETERS_H
-#define _QB50_ODB_PARAMETERS_H
+#ifndef _QB50_ODB_CONFIG_H
+#define _QB50_ODB_CONFIG_H
 
+#include "TLE.h"
 #include <cstdint>
 
 
@@ -11,7 +12,7 @@
 
 namespace qb50 {
 
-   class Parameters
+   class Config
    {
 
       public:
@@ -44,27 +45,38 @@ namespace qb50 {
             const pval_t def;  /* default value */
          };
 
-         static const pid_t bounds[ _QB50_NPARAMS ];
          static const definition defs[ _QB50_NPARAMS ];
 
-         Parameters();
-         virtual ~Parameters();
+         Config();
+         virtual ~Config();
 
-         pid_t  check ( long p, long v );
-
-         pval_t set   ( pid_t pid, pval_t pval );
-         pval_t get   ( pid_t pid );
+         void     clear    ( void );
+         uint16_t reset    ( void );
+         pid_t    chkParam ( long p, long v );
+         pval_t   getParam ( pid_t pid );
+         pval_t   setParam ( pid_t pid, pval_t pval );
 
 
       private:
 
-         pval_t pv[ _QB50_NPARAMS ];
+         struct _Store
+         {
+            pval_t   pv[ _QB50_NPARAMS ];  /* parameters                        */
+            uint16_t nReset;               /* reset counter                     */
+            TLE      tle;                  /* latest TLE known to the satellite */
+          //MTT      mtt;                  /* mode-thread table                 */
+          //STT      stt;                  /* state-transition table            */
+            uint32_t wHead;                /* head of the WOD chain             */
+            uint32_t wTail;                /* tail of the WOD chain             */
+         };
 
    };
+
+   extern qb50::Config CONF;
 
 } /* qb50 */
 
 
-#endif /*_QB50_ODB_PARAMETERS_H*/
+#endif /*_QB50_ODB_CONFIG_H*/
 
 /*EoF*/

@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 #include "CTCSS.h"
 #include "DECTONEHandler.h"
 #include <stdio.h>

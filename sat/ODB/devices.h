@@ -1,9 +1,8 @@
 
-#ifndef _QB50_ODB_CONFIG_H
-#define _QB50_ODB_CONFIG_H
+#ifndef _QB50_ODB_DEVICES_H
+#define _QB50_ODB_DEVICES_H
 
 #include "system/qb50.h"
-#include "Parameters.h"
 #include "ODB.h"
 
 
@@ -148,19 +147,11 @@ namespace qb50 {
 
    extern qb50::FlashArray VFLASH;
 
-   extern qb50::ConfSlice CONF;
-
 //  - - - - - - - - - - -  //
 //  T R A N S C E I V E R  //
 //  - - - - - - - - - - -  //
 
    extern qb50::Transceiver RFTX;
-
-//  - - - - - - - - - -  //
-//  P A R A M E T E R S  //
-//  - - - - - - - - - -  //
-
-   extern qb50::Parameters PARAMS;
 
 //  - - -  //
 //  O D B  //
@@ -171,6 +162,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_ODB_CONFIG_H*/
+#endif /*_QB50_ODB_DEVICES_H*/
 
 /*EoF*/

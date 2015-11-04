@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 #include <safe_stm32f4xx.h> // XXX OUT!
 
 
@@ -185,9 +185,6 @@ namespace qb50 {
 
    FlashArray VFLASH( "VFLASH", 2, VFLASH_Memories );
 
-   ConfSlice  CONF( "CONF",  VFLASH, 0,    1 );
- //Slice     WODEX( "WODEX", VFLASH, 1, 2047 );
-
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
@@ -279,12 +276,6 @@ namespace qb50 {
 //  - - - - -  //
 
    //AX25Out ax25( PC9, PC8 );
-
-//  - - - - - - - - - -  //
-//  P A R A M E T E R S  //
-//  - - - - - - - - - -  //
-
-   Parameters PARAMS;
 
 //  - - -  //
 //  O D B  //

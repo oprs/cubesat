@@ -1,8 +1,8 @@
 
-#include "config.h"
+#include "devices.h"
 #include "CommandThread.h"
 #include "FormParser.h"
-#include "Parameters.h"
+#include "Config.h"
 
 using namespace qb50;
 
@@ -62,12 +62,12 @@ void CommandThread::run( void )
          {
             PForm *pform = (PForm*)form;
 
-            if( pform->pid == Parameters::PARAM_NONE ) {
+            if( pform->pid == Config::PARAM_NONE ) {
                LOG << "- P" << pform->pid << " parameter out of bounds";
                break;
             }
 
-            Parameters::pval_t old = PARAMS.set( pform->pid, pform->pval );
+            Config::pval_t old = CONF.setParam( pform->pid, pform->pval );
 
             if( pform->pval == old )
                LOG << "+ P" << pform->pid << ',' << pform->pval << " (unchanged)";

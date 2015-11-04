@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 
 using namespace qb50;
 
@@ -51,7 +51,6 @@ ODB& ODB::init( void )
    ADC3.init();
    ADC4.init();
    VFLASH.init();
-   CONF.init();
  //WDB.init();
    RFTX.init();
 

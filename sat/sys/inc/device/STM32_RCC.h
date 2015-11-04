@@ -107,6 +107,7 @@ namespace qb50 {
 
          STM32_RCC&  clocks  ( Clocks *clk );
          uint32_t    freq    ( Bus& bus );
+         bool        isPwrOn ( void );
 
       protected:
 
@@ -118,6 +119,8 @@ namespace qb50 {
 
          const uint32_t _iobase;
          const char    *_name;
+
+         uint32_t       _csr;
 
    };
 

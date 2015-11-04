@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 #include "PMUThread.h"
 #include "system/Application.h"
 

@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 
 #include <safe_stm32f4xx.h>
 #include <sys/types.h>

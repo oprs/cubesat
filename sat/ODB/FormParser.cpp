@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cmath>
 
-#include "config.h"
+#include "devices.h"
 #include "FormParser.h"
-#include "Parameters.h"
+#include "Config.h"
 
 using namespace qb50;
 
@@ -170,9 +170,9 @@ size_t FormParser::_parsePForm( PForm *fp, const uint8_t *x, size_t n )
    off +=   _parseComma(    x + off, n - off ); /* XXX bof... */
    off += _parseInteger( v, x + off, n - off );
 
-   fp->pid = PARAMS.check( p, v );
+   fp->pid = CONF.chkParam( p, v );
 
-   if( fp->pid == Parameters::PARAM_NONE ) {
+   if( fp->pid == Config::PARAM_NONE ) {
       fp->pval = 0;
    } else {
       fp->pval = v & _QB50_PVAL_MASK;

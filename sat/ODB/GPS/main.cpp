@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 
 using namespace qb50;
 

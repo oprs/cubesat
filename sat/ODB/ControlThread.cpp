@@ -1,5 +1,5 @@
 
-#include "config.h"
+#include "devices.h"
 
 #include "ControlThread.h"
 #include "CommandThread.h"
@@ -63,9 +63,17 @@ void ControlThread::run( void )
 //delay( 3000 );
 
    SYSLOG.enable();
-   RTC.enable();
+ //RTC.enable();
    BKP.enable();
-   CONF.enable();
+ //CONF.enable();
+   VFLASH.enable();
+
+   if( RCC.isPwrOn() ) {
+      LOG << "POWER ON - loading default configuration";
+      CONF.clear();
+   }
+
+   LOG << "Reset count: " << CONF.reset();
 
    LOG << "Waiting for 30mn...";
    delay( 5000 );
