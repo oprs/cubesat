@@ -7,9 +7,10 @@ namespace qb50 {
 
    class Thread
    {
+
       public:
 
-         Thread( const char *name, int prio );
+         Thread( const char *name, int prio, bool suspended = false );
          ~Thread();
 
                  void suspend   ( void );
@@ -26,6 +27,13 @@ namespace qb50 {
          void       *handle;
          unsigned    priority;
          unsigned    stackDepth;
+
+      protected:
+
+         bool _suspended;
+
+         void _wait( void );
+
    };
 
 } /* qb50 */

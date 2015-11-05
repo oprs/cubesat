@@ -13,7 +13,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Thread::Thread( const char *name, int prio )
+Thread::Thread( const char *name, int prio, bool suspended )
+   : _suspended( suspended )
 {
    this->name       = name == NULL ? "(generic thread)" : name;
    this->priority   = prio;
@@ -29,21 +30,22 @@ Thread::~Thread()
 }
 
 
-//  - - - - - - -  //
-//  M E T H O D S  //
-//  - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  P U B L I C   M E T H O D S  //
+//  - - - - - - - - - - - - - -  //
 
 void Thread::suspend( void )
 {
-   vTaskSuspend( (TaskHandle_t)handle );
-   onSuspend();
+   _suspended = true;
 }
 
 
 void Thread::resume( void )
 {
-   onResume();
-   vTaskResume( (TaskHandle_t)handle );
+   if( _suspended ) {
+      _suspended = false;
+      (void)xTaskNotifyGive( (TaskHandle_t)handle );
+   }
 }
 
 /* handlers */
@@ -58,13 +60,29 @@ void Thread::onExit( void )
 
 void Thread::onSuspend( void )
 {
-   LOG << "Suspending thread [" << name << ']';
+   LOG << '[' << name << "] suspended";
 }
 
 
 void Thread::onResume( void )
 {
-   LOG << "Resuming thread [" << name << ']';
+   LOG << '[' << name << "] resuming";
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+void Thread::_wait( void )
+{
+   while( _suspended ) {
+      onSuspend();
+    //LOG << name << " suspended";
+      ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+    //LOG << name << " resuming";
+      onResume();
+   }
 }
 
 /*EoF*/

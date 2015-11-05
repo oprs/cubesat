@@ -10,22 +10,30 @@ namespace qb50 {
 
       public:
 
-         enum EventType {
-            BAT_HIGH = 0,
-            BAT_LOW  = 1,
-            FORM     = 2
+         enum event_t {
+            GENERIC    = 0,  /* generic event                    */
+            AD_SUCCESS = 1,  /* antenna deployment (success)     */
+            AD_FAILURE = 2,  /* antenna deployment (failure)     */
+            VBAT_HIGH  = 3,  /* V_Bat crossed the high threshold */
+            VBAT_LOW   = 4,  /* V_Bat crossed the low threshold  */
+            FORM       = 5   /* command (form) from the ground   */
          };
 
-         Event( EventType type );
+         static const char *events[];
+
+         Event( event_t type );
          ~Event();
 
-         EventType type( void ) const
+         event_t type( void ) const
          { return _type; }
+
+         const char *name( void )
+         { return Event::events[ _type ]; }
 
 
       protected:
 
-         EventType _type;
+         event_t _type;
 
    };
 

@@ -53,21 +53,45 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 };
 
 
+const char *Config::modes[ _QB50_NMODES ] = {
+   "INIT", "CW", "STDBY", "WODEX", "TELEM", "FIPEX", "FM", "POWER"
+};
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
 Config::Config()
-{ ; }
+{
+   _lock = xSemaphoreCreateMutex();
+}
 
 
 Config::~Config()
-{ ; }
+{
+   vSemaphoreDelete( _lock );
+}
 
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
+
+
+Config& Config::lock( void )
+{
+   (void)xSemaphoreTake( _lock, portMAX_DELAY );
+   return *this;
+}
+
+
+Config& Config::unlock( void )
+{
+   (void)xSemaphoreGive( _lock );
+   return *this;
+}
+
 
 uint16_t Config::reset( void )
 {
@@ -79,16 +103,25 @@ uint16_t Config::reset( void )
 
 void Config::clear( void )
 {
+   lock();
+
    _Store *st = (_Store*)BKPSRAM_BASE;
 
    for( int i = 0 ; i < _QB50_NPARAMS ; ++i )
       st->pv[ i ] = defs[ i ].def;
 
    st->nReset = 0;
+   st->mode   = Config::INIT;
    st->wHead  = 0;
    st->wTail  = 0;
+
+   unlock();
 }
 
+
+//  - - - - - - - - - -  //
+//  P A R A M E T E R S  //
+//  - - - - - - - - - -  //
 
 Config::pid_t Config::chkParam( long p, long v )
 {
@@ -108,10 +141,14 @@ Config::pid_t Config::chkParam( long p, long v )
 
 Config::pval_t Config::setParam( Config::pid_t pid, Config::pval_t pval )
 {
+   lock();
+
    _Store *st = (_Store*)BKPSRAM_BASE;
 
    Config::pval_t old = st->pv[ pid ];
    st->pv[ pid ] = pval;
+
+   unlock();
 
    return old;
 }
@@ -120,8 +157,81 @@ Config::pval_t Config::setParam( Config::pid_t pid, Config::pval_t pval )
 Config::pval_t Config::getParam( Config::pid_t pid )
 {
    _Store *st = (_Store*)BKPSRAM_BASE;
-
    return st->pv[ pid ];
+}
+
+
+//  - - - - -  //
+//  W O D E X  //
+//  - - - - -  //
+
+uint32_t Config::wHead( void )
+{
+   _Store *st = (_Store*)BKPSRAM_BASE;
+   return st->wHead;
+}
+
+
+uint32_t Config::wHead( uint32_t addr )
+{
+   lock();
+
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   uint32_t old = st->wHead;
+   st->wHead = addr;
+
+   unlock();
+
+   return old;
+}
+
+
+uint32_t Config::wTail( void )
+{
+   _Store *st = (_Store*)BKPSRAM_BASE;
+   return st->wTail;
+}
+
+
+uint32_t Config::wTail( uint32_t addr )
+{
+   lock();
+
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   uint32_t old = st->wTail;
+   st->wTail = addr;
+
+   unlock();
+
+   return old;
+}
+
+
+//  - - - - -  //
+//  M O D E S  //
+//  - - - - -  //
+
+Config::mode_t Config::mode( void )
+{
+   _Store *st = (_Store*)BKPSRAM_BASE;
+   return st->mode;
+}
+
+
+Config::mode_t Config::mode( Config::mode_t mode )
+{
+   lock();
+
+   _Store *st = (_Store*)BKPSRAM_BASE;
+
+   Config::mode_t old = st->mode;
+   st->mode = mode;
+
+   unlock();
+
+   return old;
 }
 
 /*EoF*/

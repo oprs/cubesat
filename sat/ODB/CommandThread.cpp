@@ -15,7 +15,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 CommandThread::CommandThread()
-   : Thread( "Command Handler", 1 )
+   : Thread( "Command Handler", 1, true  )
 { ; }
 
 
@@ -34,12 +34,17 @@ void CommandThread::run( void )
    UART2.enable(); /* XXX UART6 */
 
    for( ;; ) {
+
+      _wait();
+
       try {
          form = _parseLine( UART2 /* XXX UART6 */ );
       } catch( const char *e ) {
          LOG << "Exception: " << e;
          continue;
       }
+
+      _wait();
 
       switch( form->formType ) {
          case Form::FORM_TYPE_C:
@@ -108,6 +113,8 @@ void CommandThread::run( void )
          default:
             ;
       }
+
+      delete form;
    }
 }
 

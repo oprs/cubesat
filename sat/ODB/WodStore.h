@@ -25,8 +25,8 @@ namespace qb50 {
             uint32_t _prev:28;
             uint32_t _time;
 
-            Entry( EntryType type, uint32_t prev, uint32_t time )
-            : _type( type ), _prev( prev ), _time( time )
+            Entry( EntryType type, uint32_t time )
+            : _type( type ), _prev( 0 ), _time( time )
             { ; }
 
             ~Entry()
@@ -38,7 +38,7 @@ namespace qb50 {
             uint16_t _flags;
             uint8_t  _adc[32];
 
-            PlainEntry( uint32_t prev, uint32_t time ) : Entry( PLAIN, prev, time )
+            PlainEntry( uint32_t time ) : Entry( PLAIN, time )
             { ; }
 
             ~PlainEntry()
@@ -47,14 +47,14 @@ namespace qb50 {
 
          struct FipexEntry : public Entry
          {
-            FipexEntry( uint32_t prev, uint32_t time ) : Entry( FIPEX, prev, time )
+            FipexEntry( uint32_t time ) : Entry( FIPEX, time )
             { ; }
 
             ~FipexEntry()
             { ; }
          };
 
-         WodStore( const char *name, FlashMemory& mem );
+         WodStore( const char *name, FlashMemory &mem );
          ~WodStore();
 
          WodStore& init    ( void );
@@ -63,7 +63,7 @@ namespace qb50 {
 
          WodStore& clear   ( void );
          WodStore& write   ( Entry *e );
-         Entry    *last    ( void );
+         Entry    *read    ( uint32_t addr );
          uint32_t  size    ( Entry *e );
 
       protected:
@@ -75,13 +75,17 @@ namespace qb50 {
             uint32_t size;  // sector size
          };
 
-         FlashMemory& _mem;
+         uint32_t _nsaddr ( uint32_t addr );
 
-         Sector _sec; /* current sector */
+         FlashMemory& _mem;
+         const char  *_name;
+
+         Sector _rCache; /* read cache  */
+         Sector _wCache; /* write cache */
 
    };
 
-   extern qb50::WodStore WDB;
+   extern qb50::WodStore WOD;
 
 } /*qb50*/
 

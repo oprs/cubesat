@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "PMUThread.h"
+#include "Config.h"
 #include "system/Application.h"
 
 using namespace qb50;
@@ -14,7 +15,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 PMUThread::PMUThread()
-   : Thread( "Power Monitor", 1 )
+   : Thread( "Power Monitor", 1, true )
 { ; }
 
 
@@ -33,14 +34,18 @@ void PMUThread::run( void )
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
-   ADC1.enable();
-   ADC2.enable();
-   ADC3.enable();
-   ADC4.enable();
+   unsigned dt;
+
+   ADC1.enable( true );
+   ADC2.enable( true );
+   ADC3.enable( true );
+   ADC4.enable( true );
 
    float dK, dC; // degres (Kelvin/Celsius)
 
    for( ;; ) {
+
+      _wait(); // wait if suspended
 
       /*
        * R26 = 2.67K, R8 = 9.09K
@@ -128,7 +133,15 @@ void PMUThread::run( void )
       LOG << "  I4: " << i4 << " (" << 32.0 * COEF( i4 ) / 15.0 << "mA)"
           << ", V4: " << v4 << " (" << 35.235952 * COEF( v4 ) << "mV)";
 
-      delay( 30 * 1000 );
+
+      dt = CONF.getParam( Config::PARAM_WODEX_CYCLE_TX );
+      if( dt == 0 ) {
+         dt = 30 * 1000;
+      } else {
+         dt = ( 30 * 1000 ) / ( 1 << ( dt - 1 ));
+      }
+
+      delay( dt );
    }
 }
 

@@ -5,7 +5,11 @@
 #include "TLE.h"
 #include <cstdint>
 
+#include <FreeRTOS.h>
+#include <semphr.h>
 
+
+#define _QB50_NMODES     8
 #define _QB50_NPARAMS   64
 #define _QB50_PVAL_MASK 0xffff
 
@@ -16,6 +20,10 @@ namespace qb50 {
    {
 
       public:
+
+         //  - - - - - - - - - -  //
+         //  P A R A M E T E R S  //
+         //  - - - - - - - - - -  //
 
          enum pid_t {
             PARAM_NONE              = 0,
@@ -47,22 +55,65 @@ namespace qb50 {
 
          static const definition defs[ _QB50_NPARAMS ];
 
-         Config();
-         virtual ~Config();
-
-         void     clear    ( void );
-         uint16_t reset    ( void );
          pid_t    chkParam ( long p, long v );
          pval_t   getParam ( pid_t pid );
          pval_t   setParam ( pid_t pid, pval_t pval );
 
+         //  - - - - -  //
+         //  M O D E S  //
+         //  - - - - -  //
+
+         enum Mode {
+            INIT  = 0,
+            CW    = 1,
+            STDBY = 2,
+            WODEX = 3,
+            TELEM = 4,
+            FIPEX = 5,
+            FM    = 6,
+            POWER = 7
+         };
+
+         static const char *modes[ _QB50_NMODES ];
+
+         typedef uint32_t mode_t;
+
+         mode_t mode ( void );
+         mode_t mode ( mode_t mode );
+
+         //  - - - - -  //
+         //  W O D E X  //
+         //  - - - - -  //
+
+         uint32_t wHead    ( void );
+         uint32_t wHead    ( uint32_t addr );
+
+         uint32_t wTail    ( void );
+         uint32_t wTail    ( uint32_t addr );
+
+         //  - - - - - - -  //
+         //  M E T H O D S  //
+         //  - - - - - - -  //
+
+         Config();
+         virtual ~Config();
+
+         Config&  lock     ( void );
+         Config&  unlock   ( void );
+
+         void     clear    ( void );
+         uint16_t reset    ( void );
+
 
       private:
+
+         xSemaphoreHandle _lock;
 
          struct _Store
          {
             pval_t   pv[ _QB50_NPARAMS ];  /* parameters                        */
             uint16_t nReset;               /* reset counter                     */
+            mode_t   mode;                 /* current mode                      */
             TLE      tle;                  /* latest TLE known to the satellite */
           //MTT      mtt;                  /* mode-thread table                 */
           //STT      stt;                  /* state-transition table            */

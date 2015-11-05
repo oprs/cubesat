@@ -2,6 +2,7 @@
 #include "devices.h"
 #include "CWThread.h"
 #include "Morse.h"
+#include "Config.h"
 #include "system/Application.h"
 
 using namespace qb50;
@@ -12,7 +13,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 CWThread::CWThread()
-   : Thread( "CW Transmitter", 1 )
+   : Thread( "CW Transmitter", 1, true )
 { ; }
 
 
@@ -27,13 +28,20 @@ CWThread::~CWThread()
 void CWThread::run( void )
 {
    const char *id = SAT.id() == ODB::FR01 ? "FR1" : "FR5";
+   unsigned dt;
 
    Morse cw( PB1 );
 
    for( ;; ) {
+      _wait();  // wait if suspended
+
       LOG << name << " - " << id;
       cw.write( id );
-      delay( 30 * 1000 );
+
+      dt = CONF.getParam( Config::PARAM_CW_CYCLE_TX );
+      dt = ( 10 + 5 * dt ) * 1000;
+
+      delay( dt );
    }
 }
 

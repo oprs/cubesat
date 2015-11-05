@@ -139,7 +139,7 @@ namespace qb50 {
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*          bus   iobase      periph                      id  name     pins */
+   /*                bus   iobase      periph                      id  name     pins */
    STM32_GPIO GPIOA( AHB1, GPIOA_BASE, STM32_RCC::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
    STM32_GPIO GPIOB( AHB1, GPIOB_BASE, STM32_RCC::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
    STM32_GPIO GPIOC( AHB1, GPIOC_BASE, STM32_RCC::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
@@ -148,11 +148,37 @@ namespace qb50 {
 //  U A R T   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   /*                bus   iobase       periph                        name    rxPin txPin  IRQ number   alt. function */
-   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PB7,  PB6,  USART1_IRQn, STM32_GPIO::UART1 );
-   STM32_UART UART2( APB1, USART2_BASE, STM32_RCC::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, STM32_GPIO::UART2 );
-   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, STM32_GPIO::UART3 );
-   STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, STM32_GPIO::UART6 );
+                  /* bus   iobase       periph                        name */
+   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1",
+                     PB7,               /* rx pin        */
+                     PB6,               /* tx pin        */
+                     USART1_IRQn,       /* IRQ number    */
+                     STM32_GPIO::UART1  /* alt. function */
+   );
+
+                  /* bus   iobase       periph                        name */
+   STM32_UART UART2( APB1, USART2_BASE, STM32_RCC::APB1Periph_USART2, "UART2",
+                     PA3,               /* rx pin        */
+                     PA2,               /* tx pin        */
+                     USART2_IRQn,       /* IRQ number    */
+                     STM32_GPIO::UART2  /* alt. function */
+   );
+
+                  /* bus   iobase       periph                        name */
+   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3",
+                     PB11,              /* rx pin        */
+                     PB10,              /* tx pin        */
+                     USART3_IRQn,       /* IRQ number    */
+                     STM32_GPIO::UART3  /* alt. function */
+   );
+
+                   /* bus   iobase       periph                        name */
+   STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6",
+                     PC7,               /* rx pin        */
+                     PC6,               /* tx pin        */
+                     USART6_IRQn,       /* IRQ number    */
+                     STM32_GPIO::UART6  /* alt. function */
+   );
 
 //  - - - - - - - - - - -  //
 //  S P I   S T R E A M S  //
@@ -170,8 +196,14 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*              bus   iobase     periph                      name    rx stream  tx stream  clk  alt. func.        clk. div */
-   STM32_SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3, STM32_GPIO::SPI3, STM32_SPI::DIV16 );
+   /*              bus   iobase     periph                      name */
+   STM32_SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3",
+                   SPI3_MISO,         /* rx stream      */
+                   SPI3_MOSI,         /* tx stream      */
+                   PB3,               /* clock pin      */
+                   STM32_GPIO::SPI3,  /* alt. function  */
+                   STM32_SPI::DIV16   /* clock division */
+   );
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

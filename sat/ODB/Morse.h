@@ -7,22 +7,23 @@
 
 namespace qb50 {
 
-class Morse
-{
+   class Morse
+   {
 
-   public:
+      public:
 
-      Morse( GPIO::Pin& pin );
-      ~Morse();
+         Morse( GPIO::Pin& pin );
+         ~Morse();
 
-      void writeChar( char c );
-      void write( const char *x );
+         void writeChar( char c );
+         void write( const char *x );
 
-   private:
 
-      GPIO::Pin& _pin;
+      private:
 
-};
+         GPIO::Pin& _pin;
+
+   };
 
 }
 

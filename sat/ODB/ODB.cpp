@@ -60,20 +60,6 @@ ODB& ODB::init( void )
 
    LOG << _name << ": AMSAT-F micro-satellite";
 
-   switch( id() ) {
-
-      case ODB::FR01:
-         LOG << _name << ": ON0FR1 (X-CubeSat - Ecole Polytechnique)";
-         break;
-
-      case ODB::FR05:
-         LOG << _name << ": ON0FR5 (SpaceCube - Mines ParisTech)";
-         break;
-
-      default:
-         ;
-   }
-
    return *this;
 }
 
@@ -97,7 +83,7 @@ ODB::AntState ODB::aDeploy( void )
    ODB::AntState st;
 
    if( aState() == ODB::DEPLOYED ) {
-      LOG << "Antenna deployed";
+      LOG << "Antenna already deployed";
       return ODB::DEPLOYED;
    }
 
@@ -115,7 +101,7 @@ ODB::AntState ODB::aDeploy( void )
 
    _adPin.off();
 
-   if( aState() == ODB::DEPLOYED )
+   if( st == ODB::DEPLOYED )
       LOG << "Antenna deployed";
    else
       LOG << "Giving up on antenna deployment";
