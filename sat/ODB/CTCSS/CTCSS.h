@@ -6,7 +6,7 @@
 
 #include "system/qb50.h"
 #include "DECTONEHandler.h"
-#include "device/GPIO.h"
+#include "STM32/STM32_GPIO.h"
 
 #define T_PA_MAX 75
 #define T_PA_MIN 60
@@ -20,7 +20,7 @@ namespace qb50 {
     {
         public:
 
-            CTCSS( GPIO::Pin& txPin, GPIO::Pin& paPin );
+            CTCSS( STM32_GPIO::Pin& txPin, STM32_GPIO::Pin& paPin );
             ~CTCSS();
 
             CTCSS& enable( void );
@@ -30,8 +30,8 @@ namespace qb50 {
 
         private:
 
-            GPIO::Pin& _txPin;
-            GPIO::Pin& _paPin;
+            STM32_GPIO::Pin& _txPin;
+            STM32_GPIO::Pin& _paPin;
 
             DECTONEHandler *_handleRise;
             DECTONEHandler *_handleFall;

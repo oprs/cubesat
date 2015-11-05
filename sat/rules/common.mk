@@ -29,8 +29,10 @@ RTOS_CFLAGS  = -I$(SATDIR)/sys/FreeRTOS/include
 RTOS_CFLAGS += -I$(SATDIR)/sys/FreeRTOS/portable/$(ARCH)
 
 APP_CFLAGS   = $(ARCH_CFLAGS) $(RTOS_CFLAGS)
-APP_CFLAGS  += -I$(SATDIR)/sys/inc
-APP_CFLAGS  += -I$(SATDIR)/sys/inc/system
+APP_CFLAGS  += -I$(SATDIR)
+APP_CFLAGS  += -I$(SATDIR)/sys
+APP_CFLAGS  += -I$(SATDIR)/sys/system
+APP_CFLAGS  += -I$(SATDIR)/sys/device
 
 $(SUBDIRS):
 	@$(MAKE) -C $@ TOPDIR=$(TOPDIR) ARCH=$(ARCH)

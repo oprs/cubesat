@@ -33,6 +33,11 @@ void PMUThread::run( void )
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
+   ADC1.enable();
+   ADC2.enable();
+   ADC3.enable();
+   ADC4.enable();
+
    float dK, dC; // degres (Kelvin/Celsius)
 
    for( ;; ) {

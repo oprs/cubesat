@@ -2,7 +2,7 @@
 #ifndef _QB50_ODB_H
 #define _QB50_ODB_H
 
-#include "device/GPIO.h"
+#include "STM32/STM32_GPIO.h"
 
 
 namespace qb50 {
@@ -12,7 +12,7 @@ namespace qb50 {
 
       public:
 
-         ODB( const char *name, GPIO::Pin& selPin, GPIO::Pin& asPin, GPIO::Pin& adPin );
+         ODB( const char *name, STM32_GPIO::Pin& selPin, STM32_GPIO::Pin& asPin, STM32_GPIO::Pin& adPin );
          virtual ~ODB();
 
          ODB& init( void );
@@ -35,10 +35,10 @@ namespace qb50 {
 
       private:
 
-         const char *_name;
-         GPIO::Pin&  _selPin; /* satellite selection (in) */
-         GPIO::Pin&  _asPin;  /* antenna status      (in) */
-         GPIO::Pin&  _adPin;  /* antenna deploy     (out) */
+         const char       *_name;
+         STM32_GPIO::Pin&  _selPin; /* satellite selection (in) */
+         STM32_GPIO::Pin&  _asPin;  /* antenna status      (in) */
+         STM32_GPIO::Pin&  _adPin;  /* antenna deploy     (out) */
 
    };
 

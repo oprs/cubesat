@@ -14,20 +14,19 @@ OBJ_RTOS = \
    $(patsubst %cpp,%o,$(wildcard ./sys/*.cpp))
 
 OBJ_DEVICE = \
-   $(patsubst %cpp,%o,$(wildcard ./src/*.cpp)) \
-   $(patsubst %c,%o,$(wildcard ./src/device/*.c)) \
-   $(patsubst %cpp,%o,$(wildcard ./src/device/*.cpp))
+   $(patsubst %cpp,%o,$(wildcard ./device/*.cpp)) \
+   $(patsubst %cpp,%o,$(wildcard ./device/*/*.cpp))
 
 OBJ_SYSTEM = \
-   $(patsubst %c,%o,$(wildcard ./src/system/*.c)) \
-   $(patsubst %cpp,%o,$(wildcard ./src/system/*.cpp))
+   $(patsubst %c,%o,$(wildcard ./system/*.c)) \
+   $(patsubst %cpp,%o,$(wildcard ./system/*.cpp))
 
 OBJFILES = $(OBJ_ARCH) $(OBJ_RTOS) $(OBJ_DEVICE) $(OBJ_SYSTEM)
 
 $(OBJ_ARCH):   CFLAGS += $(ARCH_CFLAGS)
 $(OBJ_RTOS):   CFLAGS += -I./inc $(RTOS_CFLAGS)
-$(OBJ_DEVICE): CFLAGS += -I. -I./inc $(ARCH_CFLAGS) $(RTOS_CFLAGS)
-$(OBJ_SYSTEM): CFLAGS += -I. -I./inc $(ARCH_CFLAGS) $(RTOS_CFLAGS)
+$(OBJ_DEVICE): CFLAGS += -I. -I./device $(ARCH_CFLAGS) $(RTOS_CFLAGS)
+$(OBJ_SYSTEM): CFLAGS += -I. -I./device $(ARCH_CFLAGS) $(RTOS_CFLAGS)
 
 default: $(ARCHIVE)
 

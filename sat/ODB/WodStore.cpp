@@ -1,6 +1,5 @@
 
 #include "WodStore.h"
-#include "device/ConfSlice.h"
 #include "system/Logger.h"
 #include "Config.h"
 #include "devices.h"

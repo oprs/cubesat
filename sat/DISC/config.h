@@ -48,40 +48,40 @@ namespace qb50 {
 //  G P I O   P I N S  //
 //  - - - - - - - - -  //
 
-   extern qb50::GPIO::Pin& PA0;   extern qb50::GPIO::Pin& PA1;
-   extern qb50::GPIO::Pin& PA2;   extern qb50::GPIO::Pin& PA3;
-   extern qb50::GPIO::Pin& PA4;   extern qb50::GPIO::Pin& PA5;
-   extern qb50::GPIO::Pin& PA6;   extern qb50::GPIO::Pin& PA7;
-   extern qb50::GPIO::Pin& PA8;   extern qb50::GPIO::Pin& PA9;
-   extern qb50::GPIO::Pin& PA10;  extern qb50::GPIO::Pin& PA11;
-   extern qb50::GPIO::Pin& PA12;  extern qb50::GPIO::Pin& PA13;
-   extern qb50::GPIO::Pin& PA14;  extern qb50::GPIO::Pin& PA15;
+   extern qb50::STM32_GPIO::Pin& PA0;   extern qb50::STM32_GPIO::Pin& PA1;
+   extern qb50::STM32_GPIO::Pin& PA2;   extern qb50::STM32_GPIO::Pin& PA3;
+   extern qb50::STM32_GPIO::Pin& PA4;   extern qb50::STM32_GPIO::Pin& PA5;
+   extern qb50::STM32_GPIO::Pin& PA6;   extern qb50::STM32_GPIO::Pin& PA7;
+   extern qb50::STM32_GPIO::Pin& PA8;   extern qb50::STM32_GPIO::Pin& PA9;
+   extern qb50::STM32_GPIO::Pin& PA10;  extern qb50::STM32_GPIO::Pin& PA11;
+   extern qb50::STM32_GPIO::Pin& PA12;  extern qb50::STM32_GPIO::Pin& PA13;
+   extern qb50::STM32_GPIO::Pin& PA14;  extern qb50::STM32_GPIO::Pin& PA15;
 
-   extern qb50::GPIO::Pin& PB0;   extern qb50::GPIO::Pin& PB1;
-   extern qb50::GPIO::Pin& PB2;   extern qb50::GPIO::Pin& PB3;
-   extern qb50::GPIO::Pin& PB4;   extern qb50::GPIO::Pin& PB5;
-   extern qb50::GPIO::Pin& PB6;   extern qb50::GPIO::Pin& PB7;
-   extern qb50::GPIO::Pin& PB8;   extern qb50::GPIO::Pin& PB9;
-   extern qb50::GPIO::Pin& PB10;  extern qb50::GPIO::Pin& PB11;
-   extern qb50::GPIO::Pin& PB12;  extern qb50::GPIO::Pin& PB13;
-   extern qb50::GPIO::Pin& PB14;  extern qb50::GPIO::Pin& PB15;
+   extern qb50::STM32_GPIO::Pin& PB0;   extern qb50::STM32_GPIO::Pin& PB1;
+   extern qb50::STM32_GPIO::Pin& PB2;   extern qb50::STM32_GPIO::Pin& PB3;
+   extern qb50::STM32_GPIO::Pin& PB4;   extern qb50::STM32_GPIO::Pin& PB5;
+   extern qb50::STM32_GPIO::Pin& PB6;   extern qb50::STM32_GPIO::Pin& PB7;
+   extern qb50::STM32_GPIO::Pin& PB8;   extern qb50::STM32_GPIO::Pin& PB9;
+   extern qb50::STM32_GPIO::Pin& PB10;  extern qb50::STM32_GPIO::Pin& PB11;
+   extern qb50::STM32_GPIO::Pin& PB12;  extern qb50::STM32_GPIO::Pin& PB13;
+   extern qb50::STM32_GPIO::Pin& PB14;  extern qb50::STM32_GPIO::Pin& PB15;
 
-   extern qb50::GPIO::Pin& PC0;   extern qb50::GPIO::Pin& PC1;
-   extern qb50::GPIO::Pin& PC2;   extern qb50::GPIO::Pin& PC3;
-   extern qb50::GPIO::Pin& PC4;   extern qb50::GPIO::Pin& PC5;
-   extern qb50::GPIO::Pin& PC6;   extern qb50::GPIO::Pin& PC7;
-   extern qb50::GPIO::Pin& PC8;   extern qb50::GPIO::Pin& PC9;
-   extern qb50::GPIO::Pin& PC10;  extern qb50::GPIO::Pin& PC11;
-   extern qb50::GPIO::Pin& PC12;  extern qb50::GPIO::Pin& PC13;
-   extern qb50::GPIO::Pin& PC14;  extern qb50::GPIO::Pin& PC15;
+   extern qb50::STM32_GPIO::Pin& PC0;   extern qb50::STM32_GPIO::Pin& PC1;
+   extern qb50::STM32_GPIO::Pin& PC2;   extern qb50::STM32_GPIO::Pin& PC3;
+   extern qb50::STM32_GPIO::Pin& PC4;   extern qb50::STM32_GPIO::Pin& PC5;
+   extern qb50::STM32_GPIO::Pin& PC6;   extern qb50::STM32_GPIO::Pin& PC7;
+   extern qb50::STM32_GPIO::Pin& PC8;   extern qb50::STM32_GPIO::Pin& PC9;
+   extern qb50::STM32_GPIO::Pin& PC10;  extern qb50::STM32_GPIO::Pin& PC11;
+   extern qb50::STM32_GPIO::Pin& PC12;  extern qb50::STM32_GPIO::Pin& PC13;
+   extern qb50::STM32_GPIO::Pin& PC14;  extern qb50::STM32_GPIO::Pin& PC15;
 
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
 
-   extern qb50::GPIO GPIOA;
-   extern qb50::GPIO GPIOB;
-   extern qb50::GPIO GPIOC;
+   extern qb50::STM32_GPIO GPIOA;
+   extern qb50::STM32_GPIO GPIOB;
+   extern qb50::STM32_GPIO GPIOC;
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
@@ -96,7 +96,7 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   extern qb50::SPI SPI3;
+   extern qb50::STM32_SPI SPI3;
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

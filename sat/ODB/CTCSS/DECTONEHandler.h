@@ -5,7 +5,7 @@
 #include <semphr.h>
 #undef EXTI
 
-#include "device/STM32_EXTI.h"
+#include "STM32/STM32_EXTI.h"
 
 
 namespace qb50 {

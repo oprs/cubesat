@@ -3,9 +3,7 @@
 
 #include "CTCSS.h"
 #include "DECTONEHandler.h"
-#include "device/MAX111x.h"
-#include "device/STM32_EXTI.h"
-#include "device/GPIO.h"
+#include "STM32/STM32_EXTI.h"
 
 using namespace qb50;
 
@@ -24,7 +22,7 @@ using namespace qb50;
 
 
 
-CTCSS::CTCSS( GPIO::Pin& txPin, GPIO::Pin& paPin ): _txPin(txPin), _paPin(paPin)
+CTCSS::CTCSS( STM32_GPIO::Pin& txPin, STM32_GPIO::Pin& paPin ): _txPin(txPin), _paPin(paPin)
 {
     //initialisation temperature commande PA14
     temp_PA14[0] = 73;

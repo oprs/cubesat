@@ -21,7 +21,7 @@ $(SUB_ALL):
 	@$(MAKE) -C $@ SATDIR=$(SATDIR) ARCH=$(ARCH)
 
 check:
-	$(CHECK) -I. -I$(SATDIR)/sys/inc -I$(SATDIR)/sys/inc/device -I$(SATDIR)/sys/inc/system ./sys/src ./app
+	$(CHECK) -I. -I$(SATDIR)/sys -I$(SATDIR)/sys/device -I$(SATDIR)/sys/system ./sys/src ./app
 
 clean: $(SUB_CLN)
 

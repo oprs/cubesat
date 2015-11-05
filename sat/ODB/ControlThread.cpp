@@ -66,7 +66,6 @@ void ControlThread::run( void )
  //RTC.enable();
    BKP.enable();
  //CONF.enable();
-   VFLASH.enable();
 
    if( RCC.isPwrOn() ) {
       LOG << "POWER ON - loading default configuration";

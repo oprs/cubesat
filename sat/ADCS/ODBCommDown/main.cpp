@@ -1,5 +1,6 @@
 
 #include "config.h"
+#include "common/State.h"
 
 using namespace qb50;
 
