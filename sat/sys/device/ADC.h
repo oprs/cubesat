@@ -3,7 +3,6 @@
 #define _QB50_SYS_DEVICE_ADC_H
 
 #include "Device.h"
-#include <task.h>
 
 
 namespace qb50 {

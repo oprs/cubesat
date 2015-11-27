@@ -1,19 +1,19 @@
 
-#ifndef _QB50_ODB_PMU_THREAD_H
-#define _QB50_ODB_PMU_THREAD_H
+#ifndef _QB50_ODB_ADCS_THREAD_H
+#define _QB50_ODB_ADCS_THREAD_H
 
 #include "system/qb50.h"
 
 
 namespace qb50 {
 
-   class PMUThread : public Thread
+   class ADCSThread : public Thread
    {
 
       public:
 
-         PMUThread();
-         ~PMUThread();
+         ADCSThread();
+         ~ADCSThread();
 
          void run( void );
 
@@ -28,6 +28,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_ODB_PMU_THREAD_H*/
+#endif /*_QB50_ODB_ADCS_THREAD_H*/
 
 /*EoF*/

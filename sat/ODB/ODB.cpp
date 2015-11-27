@@ -80,10 +80,9 @@ ODB::AntState ODB::aState( void )
 
 ODB::AntState ODB::aDeploy( void )
 {
-   ODB::AntState st;
+   ODB::AntState st = ODB::RETRACTED;
 
    if( aState() == ODB::DEPLOYED ) {
-      LOG << "Antenna already deployed";
       return ODB::DEPLOYED;
    }
 
@@ -108,6 +107,5 @@ ODB::AntState ODB::aDeploy( void )
 
    return st;
 }
-
 
 /*EoF*/

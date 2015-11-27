@@ -4,8 +4,9 @@
 #include "ControlThread.h"
 #include "InitThread.h"
 #include "CommandThread.h"
-#include "PMUThread.h"
 #include "CWThread.h"
+#include "GPSThread.h"
+#include "PMUThread.h"
 #include "WodStore.h"
 
 using namespace qb50;
@@ -15,23 +16,23 @@ QueueHandle_t evQueue;
 
 
 uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
-         /* +--------------- CTCSSThread
-            | +------------- TelemThread
-            | | +----------- PMUThread
-            | | | +--------- FiPEXThread
-            | | | | +------- GPSThread
-            | | | | | +----- CWThread
-            | | | | | | +--- CommandThread
-            | | | | | | | +- InitThread
-            | | | | | | | |          */
-   0x03, /* 0 0 0 0 0 0 1 1 - INIT   */
-   0x26, /* 0 0 1 0 0 1 1 0 - CW     */
-   0x02, /* 0 0 ? 0 0 0 1 0 - STDBY  */
-   0x22, /* 0 0 1 0 0 0 1 0 - WODEX  */
-   0x62, /* 0 1 1 0 0 0 1 0 - TELEM  */
-   0x32, /* 0 0 1 1 0 0 1 0 - FiPEX  */
-   0xa2, /* 1 0 1 0 0 0 1 0 - FM     */
-   0x22, /* 0 0 1 0 0 0 1 0 - POWER  */
+  /* +------------ CTCSSThread
+     |+----------- TelemThread
+     ||+---------- PMUThread
+     |||+--------- FiPEXThread
+     ||||+-------- GPSThread
+     |||||+------- WODEXThread
+     ||||||+------ CWThread
+     |||||||+----- InitThread
+     |||||||| */
+   0b00000001, /* 0x01 - INIT  */
+   0b00100010, /* 0x22 - CW    */
+   0b00000000, /* 0x00 - STDBY */
+   0b00100100, /* 0x12 - WODEX */
+   0b01100000, /* 0x60 - TELEM */
+   0b00110000, /* 0x30 - FiPEX */
+   0b10100000, /* 0xa0 - FM    */
+   0b00100000  /* 0x20 - POWER */
 };
 
 
@@ -103,16 +104,20 @@ void ControlThread::run( void )
          ;
    }
 
+   /* command thread is always running */
+
+   (void)registerThread( new CommandThread() );
+
    /* create threads (suspended state) */
 
-   _tv[ 0 ] = registerThread( new InitThread() );
-   _tv[ 1 ] = registerThread( new CommandThread() );
-   _tv[ 2 ] = registerThread( new CWThread() );
- //_tv[ 3 ] = registerThread( new GPSThread() );
- //_tv[ 4 ] = registerThread( new FiPEXThread() );
-   _tv[ 5 ] = registerThread( new PMUThread() );
- //_tv[ 6 ] = registerThread( new TelemThread() );
- //_tv[ 7 ] = registerThread( new CTCSSThread() );
+   _tv[ 0 ] = registerThread( new InitThread()    );
+   _tv[ 1 ] = registerThread( new CWThread()      );
+ //_tv[ 2 ] = registerThread( new WODEXThread()   );
+   _tv[ 3 ] = registerThread( new GPSThread()     );
+ //_tv[ 4 ] = registerThread( new FiPEXThread()   );
+   _tv[ 5 ] = registerThread( new PMUThread()     );
+ //_tv[ 6 ] = registerThread( new TelemThread()   );
+ //_tv[ 7 ] = registerThread( new CTCSSThread()   );
 
    delay( 100 );
 
@@ -131,7 +136,7 @@ void ControlThread::run( void )
    _switchModes( mode );
 
    // ADCS
-   // PC13.enable().out().on();
+   // PC13.enable().out().off();
 
    for( ;; ) {
       xQueueReceive( evQueue, &ev, portMAX_DELAY );
@@ -179,6 +184,8 @@ void ControlThread::run( void )
          std::cout << "\r\n";
       }
 */
+      mode = CONF.mode();
+
       delete ev;
    }
 }
@@ -200,6 +207,9 @@ void ControlThread::_switchModes( Config::mode_t target )
       }
       tmp <<= 1;
    }
+
+   _ctb = _mt[ target ];
+   CONF.mode( target );
 
    LOG << "-------- [ " << Config::modes[ target ] << " ] --------";
 }

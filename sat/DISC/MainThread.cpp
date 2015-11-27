@@ -8,6 +8,8 @@ using namespace qb50;
 
 static void test( Thread *self )
 {
+   (void)self;
+
    for( ;; ) {
       LOG << "still alive...";
       delay( 2000 );

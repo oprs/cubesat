@@ -33,6 +33,7 @@ void CWThread::run( void )
    Morse cw( PB1 );
 
    for( ;; ) {
+
       _wait();  // wait if suspended
 
       LOG << name << " - " << id;

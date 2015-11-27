@@ -14,10 +14,10 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
    { PARAM_NONE,               0,  0,  0 },  { PARAM_CW_CYCLE_TX,        0, 10,  4 },
    { PARAM_WODEX_CYCLE_TX,     1,  3,  1 },  { PARAM_FIPEX_SCRIPT_N,     1,  7,  1 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_ADCS_CYCLE_MEAS,    1,  4,  1 },
-   { PARAM_GPS_CYCLE_ON,       1,  5,  2 },  { PARAM_BAT_V_LOW,          1,  7,  7 },
+   { PARAM_GPS_CYCLE_ON,       1,  5,  2 },  { PARAM_VBAT_LOW,           1,  7,  7 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,  4,  2 },
    { PARAM_ADCS_CYCLE_CTRL,    0, 24,  0 },  { PARAM_FM_CYCLE_ON,        1, 96, 16 },
-   { PARAM_BAT_V_HIGH,         1,  5,  1 },  { PARAM_NONE,               0,  0,  0 },
+   { PARAM_VBAT_HIGH,          1,  5,  1 },  { PARAM_NONE,               0,  0,  0 },
    { PARAM_PA_TEMP_HIGH,       0,  7,  1 },  { PARAM_PA_TEMP_LOW,        0,  5,  4 },
 
    /* params[ 16 .. 31 ]      min max def                               min max def */

@@ -33,12 +33,12 @@ namespace qb50 {
           //UNUSED                  = 4,
             PARAM_ADCS_CYCLE_MEAS   = 5,
             PARAM_GPS_CYCLE_ON      = 6,
-            PARAM_BAT_V_LOW         = 7,
+            PARAM_VBAT_LOW          = 7,
           //UNUSED                  = 8,
             PARAM_FM_WODEX_CYCLE_TX = 9,
             PARAM_ADCS_CYCLE_CTRL   = 10,
             PARAM_FM_CYCLE_ON       = 11,
-            PARAM_BAT_V_HIGH        = 12,
+            PARAM_VBAT_HIGH         = 12,
           //UNUSED                  = 13,
             PARAM_PA_TEMP_HIGH      = 14,
             PARAM_PA_TEMP_LOW       = 15
@@ -70,8 +70,9 @@ namespace qb50 {
             WODEX = 3,
             TELEM = 4,
             FIPEX = 5,
-            FM    = 6,
-            POWER = 7
+            GPS   = 6,
+            FM    = 7,
+            POWER = 8
          };
 
          static const char *modes[ _QB50_NMODES ];
