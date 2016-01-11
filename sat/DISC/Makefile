@@ -10,7 +10,7 @@ OBJFILES = \
 
 OBJFILES := $(patsubst %cpp,%o,$(OBJFILES))
 
-TARGETS = DISC.hex DISC.elf
+TARGETS = DISC.hex DISC.bin DISC.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
 CFLAGS += -fdata-sections -ffunction-sections
@@ -21,15 +21,19 @@ LDFLAGS += -Wl,-gc-sections
 LDFLAGS += -specs=nosys.specs
 LDFLAGS += -L$(SATDIR)/sys/ -lsystem
 
+default: $(TARGETS)
+
 DISC.hex: DISC.elf
 	@echo " [HEX] $@"
 	$(QUIET) $(CP) -O ihex $< $@
 
+DISC.bin: DISC.elf
+	@echo " [HEX] $@"
+	$(QUIET) $(CP) -O binary $< $@
+
 DISC.elf: $(OBJFILES)
 	@echo " [ELF] $@"
 	$(QUIET) $(CXX) $(MCUFLAGS) -o $@ $^ $(LDFLAGS)
-
-default: $(OBJFILES)
 
 clean:
 	$(RM) $(TARGETS) $(OBJFILES)

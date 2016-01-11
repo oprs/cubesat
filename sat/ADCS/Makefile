@@ -10,7 +10,7 @@ OBJFILES = \
    $(patsubst %c,%o,$(wildcard ./lib/armadillo/src/*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./lib/armadillo/src/*.cpp))
 
-TARGETS = ADCS.hex ADCS.elf
+TARGETS = ADCS.hex ADCS.bin ADCS.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
 CFLAGS += -I./lib/armadillo/include
@@ -22,15 +22,19 @@ LDFLAGS += -Wl,-gc-sections
 LDFLAGS += -specs=nosys.specs
 LDFLAGS += -L$(SATDIR)/sys/ -lsystem
 
+default: $(TARGETS)
+
 ADCS.hex: ADCS.elf
 	@echo " [HEX] $@"
 	$(QUIET) $(CP) -O ihex $< $@
 
+ADCS.bin: ADCS.elf
+	@echo " [BIN] $@"
+	$(QUIET) $(CP) -O binary $< $@
+
 ADCS.elf: $(OBJFILES)
 	@echo " [ELF] $@"
 	$(QUIET) $(CXX) $(MCUFLAGS) -o $@ $^ $(LDFLAGS)
-
-default: $(OBJFILES)
 
 clean:
 	$(RM) $(TARGETS) $(OBJFILES)

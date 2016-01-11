@@ -19,6 +19,22 @@ clean:
 tags:
 	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
-
 .PHONY: sat doc check clean tags
+
+
+# Code::Blocks targets
+
+Release:
+	@$(MAKE) sat
+
+Debug:
+	@$(MAKE) sat DEBUG=1
+
+cleanRelease:
+	@$(MAKE) clean
+
+cleanDebug:
+	@$(MAKE) clean
+
+.PHONY: Release Debug cleanRelease cleanDebug
 

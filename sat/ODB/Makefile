@@ -10,7 +10,7 @@ OBJFILES = \
 
 OBJFILES := $(patsubst %cpp,%o,$(OBJFILES))
 
-TARGETS = ODB.hex ODB.elf
+TARGETS = ODB.hex ODB.bin ODB.elf
 
 CFLAGS += -I. $(APP_CFLAGS)
 CFLAGS += -fdata-sections -ffunction-sections
@@ -21,15 +21,19 @@ LDFLAGS += -Wl,-gc-sections
 LDFLAGS += -specs=nosys.specs
 LDFLAGS += -L$(SATDIR)/sys/ -lsystem
 
+default: $(TARGETS)
+
 ODB.hex: ODB.elf
 	@echo " [HEX] $@"
 	$(QUIET) $(CP) -O ihex $< $@
 
+ODB.bin: ODB.elf
+	@echo " [BIN] $@"
+	$(QUIET) $(CP) -O binary $< $@
+
 ODB.elf: $(OBJFILES)
 	@echo " [ELF] $@"
 	$(QUIET) $(CXX) $(MCUFLAGS) -o $@ $^ $(LDFLAGS)
-
-default: $(OBJFILES)
 
 clean:
 	$(RM) $(TARGETS) $(OBJFILES)
