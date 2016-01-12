@@ -10,6 +10,7 @@ include $(SATDIR)/rules/arch-$(ARCH).mk
 RM     := rm -f
 CHECK  := cppcheck --enable=all
 #CHECK  := cppcheck --force --enable=warning,style
+FLASH  := st-flash
 
 CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)

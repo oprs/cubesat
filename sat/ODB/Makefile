@@ -38,7 +38,10 @@ ODB.elf: $(OBJFILES)
 clean:
 	$(RM) $(TARGETS) $(OBJFILES)
 
-.PHONY: $(TARGETS) default clean
+flash: ODB.bin
+	$(FLASH) write $< 0x08000000
+
+.PHONY: default clean flash
 
 include $(SATDIR)/rules/common.mk
 

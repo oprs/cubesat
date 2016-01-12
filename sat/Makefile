@@ -28,6 +28,15 @@ clean: $(SUB_CLN)
 $(SUB_CLN): %.clean:
 	@$(MAKE) -C $* SATDIR=$(SATDIR) ARCH=$(ARCH) clean
 
+flashODB: $(SUB_ODB)
+	@$(MAKE) -C $(SUB_ODB) flash
+
+flashADCS: $(SUB_ADCS)
+	@$(MAKE) -C $(SUB_ADCS) flash
+
+flashDISC: $(SUB_DISC)
+	@$(MAKE) -C $(SUB_DISC) flash
+
 doc:
 	doxygen $(SATDIR)/rules/Doxyfile
 
@@ -35,4 +44,3 @@ doc:
 .PHONY: all check clean doc $(SUB_ALL)
 
 include $(SATDIR)/rules/common.mk
-

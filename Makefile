@@ -19,7 +19,11 @@ clean:
 tags:
 	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
+flashODB flashADCS flashDISC:
+	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) $@
+
 .PHONY: sat doc check clean tags
+.PHONY: flashODB flashADCS flashDISC
 
 
 # Code::Blocks targets
