@@ -2,45 +2,47 @@
 ARCH   ?= stm32f4
 SATDIR ?= $(TOPDIR)/sat
 
-SUB_SYS  = $(SATDIR)/sys
-SUB_ODB  = $(SATDIR)/ODB
-SUB_ADCS = $(SATDIR)/ADCS
-SUB_DISC = $(SATDIR)/DISC
-SUB_ALL  = $(SUB_SYS) $(SUB_ODB) $(SUB_ADCS) $(SUB_DISC)
-SUB_CLN  = $(addsuffix .clean,$(SUB_ALL))
+default: ODB ADCS DISC
 
-all: $(SUB_ODB) $(SUB_ADCS) $(SUB_DISC)
+ODB ADCS DISC: sys
+	@$(MAKE) -C $(SATDIR)/$@ SATDIR=$(SATDIR)
 
-$(SUB_ODB): $(SUB_SYS)
-
-$(SUB_ADCS): $(SUB_SYS)
-
-$(SUB_DISC): $(SUB_SYS)
-
-$(SUB_ALL):
-	@$(MAKE) -C $@ SATDIR=$(SATDIR) ARCH=$(ARCH)
+sys:
+	@$(MAKE) -C $(SATDIR)/$@ SATDIR=$(SATDIR) ARCH=$(ARCH)
 
 check:
 	$(CHECK) -I. -I$(SATDIR)/sys -I$(SATDIR)/sys/device -I$(SATDIR)/sys/system ./sys/src ./app
 
-clean: $(SUB_CLN)
+clean: cleanODB cleanADCS cleanDISC
 
-$(SUB_CLN): %.clean:
-	@$(MAKE) -C $* SATDIR=$(SATDIR) ARCH=$(ARCH) clean
+flashODB: ODB
+	@$(MAKE) -C $(SATDIR)/ODB flash
 
-flashODB: $(SUB_ODB)
-	@$(MAKE) -C $(SUB_ODB) flash
+flashADCS: ADCS
+	@$(MAKE) -C $(SATDIR)/ADCS flash
 
-flashADCS: $(SUB_ADCS)
-	@$(MAKE) -C $(SUB_ADCS) flash
+flashDISC: DISC
+	@$(MAKE) -C $(SATDIR)/DISC flash
 
-flashDISC: $(SUB_DISC)
-	@$(MAKE) -C $(SUB_DISC) flash
+cleanODB: cleanSys
+	@$(MAKE) -C $(SATDIR)/ODB SATDIR=$(SATDIR) clean
+
+cleanADCS: cleanSys
+	@$(MAKE) -C $(SATDIR)/ADCS SATDIR=$(SATDIR) clean
+
+cleanDISC: cleanSys
+	@$(MAKE) -C $(SATDIR)/DISC SATDIR=$(SATDIR) clean
+
+cleanSys:
+	@$(MAKE) -C $(SATDIR)/sys SATDIR=$(SATDIR) ARCH=$(ARCH) clean
 
 doc:
 	doxygen $(SATDIR)/rules/Doxyfile
 
 
-.PHONY: all check clean doc $(SUB_ALL)
+.PHONY: default check clean doc
+.PHONY: sys ODB ADCS DISC
+.PHONY: flashODB flashADCS flashDISC
+.PHONY: cleanODB cleanADCS cleanDISC
 
 include $(SATDIR)/rules/common.mk

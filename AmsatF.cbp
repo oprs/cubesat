@@ -6,585 +6,1410 @@
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile $target" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile clean$target" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+		</MakeCommands>
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/AmsatF" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
-				<Option type="1" />
+			<Target title="ADCS">
+				<Option type="4" />
 				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-g" />
-				</Compiler>
 			</Target>
-			<Target title="Release">
-				<Option output="bin/Release/AmsatF" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
-				<Option type="1" />
+			<Target title="ODB">
+				<Option type="4" />
 				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-O2" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="sat/ADCS/AttitudeControl/main.cpp" />
-		<Unit filename="sat/ADCS/AttitudeDetermination/main.cpp" />
-		<Unit filename="sat/ADCS/ODBCommDown/main.cpp" />
-		<Unit filename="sat/ADCS/ODBCommUP/main.cpp" />
-		<Unit filename="sat/ADCS/TestThreads/main.cpp" />
-		<Unit filename="sat/ADCS/config.cpp" />
-		<Unit filename="sat/ADCS/config.h" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/BaseCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/BaseCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Base_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Base_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Col_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Col_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Cube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Cube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GenCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GenCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Gen_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Gen_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GlueCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GlueCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Glue_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Glue_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Mat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Mat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/OpCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/OpCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Op_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Op_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Proxy.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/ProxyCube.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Row_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Row_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeMat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeMat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpBase_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpBase_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpCol_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpCol_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpGlue_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpGlue_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_iterators_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpOp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpOp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpProxy.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpRow_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpRow_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_iterators_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpValProxy_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpValProxy_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/access.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_boost.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_cmath.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_config.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_ostream_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_ostream_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng_cxx11.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng_cxx98.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_static_check.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_version.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arpack_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arpack_wrapper.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arrayops_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arrayops_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/atlas_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/atlas_wrapper.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/auxlib_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/auxlib_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/blas_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/blas_wrapper.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/compiler_setup.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/compiler_setup_post.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/cond_rel_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/cond_rel_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/config.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/constants.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/constants_compat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/debug.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagmat_proxy.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagview_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagview_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diskio_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diskio_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/distr_param.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlueCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlueCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlue_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlue_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOpCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOpCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eglue_core_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eglue_core_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_aux.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_core_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_core_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fft_engine.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/field_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/field_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_accu.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_all.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_any.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_as_scalar.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_chol.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_clamp.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cond.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_conv.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_conv_to.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cor.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cov.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cross.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cumsum.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_det.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_diagmat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_diagvec.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_dot.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_gen.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_pair.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_sym.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eigs_gen.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eigs_sym.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_elem.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eps.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_expmat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eye.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_fft.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_fft2.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_find.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_flip.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_hist.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_histc.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inplace_strans.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inplace_trans.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inv.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_join.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_kron.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_log_det.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_lu.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_max.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_mean.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_median.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_min.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_misc.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_n_unique.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_norm.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_norm_sparse.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_normalise.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_numel.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_ones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_pinv.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_princomp.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_prod.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_qr.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randg.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randi.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randn.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randu.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_rank.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_repmat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_reshape.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_resize.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_shuffle.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_size.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_solve.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sort.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sort_index.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_speye.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_spones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sprandn.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sprandu.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_stddev.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_strans.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sum.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_svd.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_syl_lyap.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_symmat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_toeplitz.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trace.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trans.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trig.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trimat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trunc_exp.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trunc_log.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_unique.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_var.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_vectorise.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_zeros.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/forward_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_conv_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_conv_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cor_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cor_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cov_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cov_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cross_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cross_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_hist_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_hist_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_histc_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_histc_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_join_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_join_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_kron_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_kron_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_max_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_max_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_min_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_min_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_mixed_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_mixed_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_relational_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_relational_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_solve_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_solve_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_times_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_times_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_toeplitz_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_toeplitz_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_diag_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_diag_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_misc_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_misc_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/hdf5_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/hdf5_misc.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/include_atlas.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/include_hdf5.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/injector_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/injector_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/lapack_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/lapack_wrapper.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/memory.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlueCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlueCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlue_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlue_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOpCube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOpCube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtSpOp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtSpOp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemm.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemm_mixed.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemv.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_herk.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_syrk.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_all_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_all_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_any_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_any_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_chol_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_chol_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_clamp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_clamp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cor_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cor_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cov_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cov_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cumsum_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cumsum_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cx_scalar_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cx_scalar_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagmat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagmat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagvec_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagvec_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dot_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dot_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dotext_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dotext_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_expmat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_expmat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_fft_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_fft_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_find_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_find_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_flip_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_flip_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_hist_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_hist_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_htrans_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_htrans_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_inv_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_inv_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_max_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_max_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_mean_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_mean_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_median_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_median_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_min_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_min_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_misc_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_misc_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_normalise_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_normalise_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_pinv_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_pinv_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_princomp_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_princomp_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_prod_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_prod_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_relational_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_relational_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_repmat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_repmat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_reshape_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_reshape_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_resize_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_resize_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_shuffle_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_shuffle_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sort_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sort_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_stddev_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_stddev_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_strans_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_strans_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sum_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sum_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_symmat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_symmat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_toeplitz_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_toeplitz_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_trimat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_trimat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_unique_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_unique_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_var_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_var_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_vectorise_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_vectorise_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_div.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_minus.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_plus.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_relational.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_schur.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_times.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_div.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_minus.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_ostream.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_plus.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_relational.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_schur.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_times.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/podarray_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/podarray_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/promote_type.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/restrictors.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_vec_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_vec_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/sp_auxlib_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/sp_auxlib_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/span.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_minus_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_minus_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_plus_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_plus_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_times_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_times_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_htrans_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_htrans_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_max_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_max_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_mean_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_mean_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_min_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_min_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_misc_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_misc_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_strans_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_strans_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_sum_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_sum_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_var_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_var_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/strip.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_cube_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_cube_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_each_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_each_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem1_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem1_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem2_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem2_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_field_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_field_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/traits.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_elem.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_elem_check.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_mat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_mat_fixed.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap_cube.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap_spmat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/upgrade_val.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/wall_clock_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/wall_clock_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xtrans_mat_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xtrans_mat_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xvec_htrans_bones.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xvec_htrans_meat.hpp" />
-		<Unit filename="sat/ADCS/lib/armadillo/src/wrapper.cpp" />
-		<Unit filename="sat/ADCS/main.cpp" />
-		<Unit filename="sat/ADCS/syscalls.cpp" />
-		<Unit filename="sat/DISC/MainThread.cpp" />
-		<Unit filename="sat/DISC/MainThread.h" />
-		<Unit filename="sat/DISC/config.cpp" />
-		<Unit filename="sat/DISC/config.h" />
-		<Unit filename="sat/DISC/main.cpp" />
-		<Unit filename="sat/DISC/syscalls.cpp" />
-		<Unit filename="sat/ODB/ADCSThread.cpp" />
-		<Unit filename="sat/ODB/ADCSThread.h" />
-		<Unit filename="sat/ODB/AX25/AX25.cpp" />
-		<Unit filename="sat/ODB/AX25/AX25.h" />
-		<Unit filename="sat/ODB/AX25/bitStuffing.cpp" />
-		<Unit filename="sat/ODB/AX25/bitStuffing.h" />
-		<Unit filename="sat/ODB/AX25/main.cpp" />
-		<Unit filename="sat/ODB/CTCSS/CTCSS.cpp" />
-		<Unit filename="sat/ODB/CTCSS/CTCSS.h" />
-		<Unit filename="sat/ODB/CTCSS/DECTONEHandler.cpp" />
-		<Unit filename="sat/ODB/CTCSS/DECTONEHandler.h" />
-		<Unit filename="sat/ODB/CTCSS/main.cpp" />
-		<Unit filename="sat/ODB/CWThread.cpp" />
-		<Unit filename="sat/ODB/CWThread.h" />
-		<Unit filename="sat/ODB/CommandThread.cpp" />
-		<Unit filename="sat/ODB/CommandThread.h" />
-		<Unit filename="sat/ODB/Config.cpp" />
-		<Unit filename="sat/ODB/Config.h" />
-		<Unit filename="sat/ODB/ControlThread.cpp" />
-		<Unit filename="sat/ODB/ControlThread.h" />
-		<Unit filename="sat/ODB/FiPEX/Fipex.cpp" />
-		<Unit filename="sat/ODB/FiPEX/Fipex.h" />
-		<Unit filename="sat/ODB/FiPEX/Script.cpp" />
-		<Unit filename="sat/ODB/FiPEX/Script.h" />
-		<Unit filename="sat/ODB/FiPEX/main.cpp" />
-		<Unit filename="sat/ODB/Form.h" />
-		<Unit filename="sat/ODB/FormParser.cpp" />
-		<Unit filename="sat/ODB/FormParser.h" />
-		<Unit filename="sat/ODB/GPSThread.cpp" />
-		<Unit filename="sat/ODB/GPSThread.h" />
-		<Unit filename="sat/ODB/InitThread.cpp" />
-		<Unit filename="sat/ODB/InitThread.h" />
-		<Unit filename="sat/ODB/Morse.cpp" />
-		<Unit filename="sat/ODB/Morse.h" />
-		<Unit filename="sat/ODB/ODB.cpp" />
-		<Unit filename="sat/ODB/ODB.h" />
-		<Unit filename="sat/ODB/PMUThread.cpp" />
-		<Unit filename="sat/ODB/PMUThread.h" />
-		<Unit filename="sat/ODB/WodStore.cpp" />
-		<Unit filename="sat/ODB/WodStore.h" />
-		<Unit filename="sat/ODB/devices.cpp" />
-		<Unit filename="sat/ODB/devices.h" />
-		<Unit filename="sat/ODB/main.cpp" />
-		<Unit filename="sat/ODB/syscalls.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Color.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Color.h" />
-		<Unit filename="sat/XTRUITES/Component/Component.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Component.h" />
-		<Unit filename="sat/XTRUITES/Component/ComponentCollection.cpp" />
-		<Unit filename="sat/XTRUITES/Component/ComponentCollection.h" />
-		<Unit filename="sat/XTRUITES/Component/Control/ListView.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Control/ListView.h" />
-		<Unit filename="sat/XTRUITES/Component/Control/NavigationLabel.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Control/NavigationLabel.h" />
-		<Unit filename="sat/XTRUITES/Component/Control/NavigationMenu.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Control/NavigationMenu.h" />
-		<Unit filename="sat/XTRUITES/Component/Control/TextBlock.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Control/TextBlock.h" />
-		<Unit filename="sat/XTRUITES/Component/Point.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Point.h" />
-		<Unit filename="sat/XTRUITES/Component/Rectangle.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Rectangle.h" />
-		<Unit filename="sat/XTRUITES/Component/Size.cpp" />
-		<Unit filename="sat/XTRUITES/Component/Size.h" />
-		<Unit filename="sat/XTRUITES/Container.cpp" />
-		<Unit filename="sat/XTRUITES/Container.h" />
-		<Unit filename="sat/XTRUITES/EscapeSequences.cpp" />
-		<Unit filename="sat/XTRUITES/EscapeSequences.h" />
-		<Unit filename="sat/XTRUITES/FIFO_InputKey.hpp" />
-		<Unit filename="sat/XTRUITES/OutputStream/OutputStream.cpp" />
-		<Unit filename="sat/XTRUITES/OutputStream/OutputStream.h" />
-		<Unit filename="sat/XTRUITES/OutputStream/OutputStreamChannel.cpp" />
-		<Unit filename="sat/XTRUITES/OutputStream/OutputStreamChannel.h" />
-		<Unit filename="sat/XTRUITES/OutputStream/config.cpp" />
-		<Unit filename="sat/XTRUITES/OutputStream/config.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/ADCPage.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/ADCPage.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Component/ADCChannelWatch.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Component/ADCChannelWatch.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Component/ADCWatch.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Component/ADCWatch.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/ConvFormula.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/ConvFormula.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/TestADCChannel.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/TestADCChannel.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/TestADCChip.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Resources/TestADCChip.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Test_ADC_Config.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/ADC/Test_ADC_Config.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/FlashLabel.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/FlashLabel.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/FlashWatch.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/FlashWatch.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/ItemSector.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/ItemSector.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/LabelBlock.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/LabelBlock.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/LabelSector.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/Component/LabelSector.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/FlashPage.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Flash/FlashPage.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Page.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Page.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/PageRepertory.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/PageRepertory.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/SystemPages/SystemPages.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/SystemPages/homePage.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/SystemPages/homePage.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/SystemPages/quitPage.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/SystemPages/quitPage.h" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Utilities/ColorPalette.cpp" />
-		<Unit filename="sat/XTRUITES/PageRepertory/Utilities/ColorPalette.h" />
-		<Unit filename="sat/XTRUITES/XTRUITES.h" />
-		<Unit filename="sat/XTRUITES/inc/FIFO.hpp" />
-		<Unit filename="sat/XTRUITES/inc/Lock.h" />
-		<Unit filename="sat/XTRUITES/inc/UserLock.cpp" />
-		<Unit filename="sat/XTRUITES/inc/UserLock.h" />
-		<Unit filename="sat/XTRUITES/main.cpp" />
-		<Unit filename="sat/XTRUITES/syscalls.cpp" />
-		<Unit filename="sat/XTRUITES/xtruites.cpp" />
-		<Unit filename="sat/common/ADCSCLASS.cpp" />
-		<Unit filename="sat/common/ADCSCLASS.h" />
-		<Unit filename="sat/common/Control_attitude.cpp" />
-		<Unit filename="sat/common/Control_attitude.h" />
-		<Unit filename="sat/common/Exception.h" />
-		<Unit filename="sat/common/Message.h" />
-		<Unit filename="sat/common/Raw.h" />
-		<Unit filename="sat/common/STRUCTURE.cpp" />
-		<Unit filename="sat/common/STRUCTURE.h" />
-		<Unit filename="sat/common/State.h" />
+		<Unit filename="sat/ADCS/AttitudeControl/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/AttitudeDetermination/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/ODBCommDown/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/ODBCommUP/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/TestThreads/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/config.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/config.h">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/BaseCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/BaseCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Base_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Base_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Col_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Col_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Cube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Cube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GenCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GenCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Gen_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Gen_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GlueCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/GlueCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Glue_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Glue_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Mat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Mat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/OpCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/OpCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Op_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Op_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Proxy.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/ProxyCube.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Row_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/Row_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeMat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SizeMat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpBase_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpBase_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpCol_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpCol_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpGlue_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpGlue_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_iterators_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpMat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpOp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpOp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpProxy.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpRow_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpRow_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_iterators_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpSubview_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpValProxy_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/SpValProxy_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/access.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_boost.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_cmath.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_config.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_ostream_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_ostream_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng_cxx11.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_rng_cxx98.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_static_check.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arma_version.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arpack_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arpack_wrapper.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arrayops_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/arrayops_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/atlas_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/atlas_wrapper.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/auxlib_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/auxlib_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/blas_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/blas_wrapper.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/compiler_setup.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/compiler_setup_post.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/cond_rel_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/cond_rel_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/config.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/constants.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/constants_compat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/debug.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagmat_proxy.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagview_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diagview_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diskio_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/diskio_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/distr_param.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlueCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlueCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlue_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eGlue_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOpCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOpCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eOp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eglue_core_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eglue_core_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_aux.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_core_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/eop_core_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fft_engine.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/field_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/field_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_accu.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_all.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_any.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_as_scalar.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_chol.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_clamp.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cond.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_conv.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_conv_to.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cor.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cov.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cross.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_cumsum.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_det.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_diagmat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_diagvec.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_dot.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_gen.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_pair.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eig_sym.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eigs_gen.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eigs_sym.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_elem.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eps.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_expmat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_eye.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_fft.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_fft2.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_find.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_flip.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_hist.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_histc.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inplace_strans.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inplace_trans.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_inv.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_join.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_kron.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_log_det.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_lu.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_max.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_mean.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_median.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_min.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_misc.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_n_unique.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_norm.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_norm_sparse.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_normalise.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_numel.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_ones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_pinv.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_princomp.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_prod.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_qr.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randg.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randi.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randn.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_randu.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_rank.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_repmat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_reshape.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_resize.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_shuffle.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_size.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_solve.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sort.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sort_index.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_speye.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_spones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sprandn.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sprandu.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_stddev.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_strans.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_sum.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_svd.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_syl_lyap.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_symmat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_toeplitz.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trace.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trans.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trig.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trimat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trunc_exp.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_trunc_log.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_unique.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_var.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_vectorise.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/fn_zeros.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/forward_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_conv_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_conv_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cor_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cor_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cov_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cov_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cross_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_cross_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_hist_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_hist_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_histc_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_histc_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_join_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_join_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_kron_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_kron_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_max_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_max_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_min_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_min_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_mixed_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_mixed_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_relational_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_relational_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_solve_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_solve_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_times_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_times_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_toeplitz_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/glue_toeplitz_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_diag_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_diag_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_misc_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/gmm_misc_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/hdf5_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/hdf5_misc.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/include_atlas.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/include_hdf5.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/injector_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/injector_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/lapack_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/lapack_wrapper.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/memory.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlueCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlueCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlue_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtGlue_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOpCube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOpCube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtOp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtSpOp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mtSpOp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemm.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemm_mixed.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_gemv.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_herk.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/mul_syrk.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_all_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_all_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_any_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_any_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_chol_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_chol_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_clamp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_clamp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cor_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cor_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cov_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cov_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cumsum_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cumsum_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cx_scalar_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_cx_scalar_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagmat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagmat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagvec_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_diagvec_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dot_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dot_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dotext_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_dotext_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_expmat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_expmat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_fft_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_fft_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_find_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_find_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_flip_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_flip_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_hist_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_hist_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_htrans_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_htrans_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_inv_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_inv_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_max_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_max_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_mean_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_mean_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_median_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_median_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_min_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_min_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_misc_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_misc_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_normalise_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_normalise_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_pinv_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_pinv_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_princomp_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_princomp_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_prod_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_prod_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_relational_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_relational_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_repmat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_repmat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_reshape_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_reshape_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_resize_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_resize_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_shuffle_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_shuffle_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sort_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sort_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_stddev_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_stddev_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_strans_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_strans_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sum_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_sum_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_symmat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_symmat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_toeplitz_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_toeplitz_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_trimat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_trimat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_unique_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_unique_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_var_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_var_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_vectorise_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/op_vectorise_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_div.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_minus.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_plus.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_relational.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_schur.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_cube_times.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_div.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_minus.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_ostream.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_plus.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_relational.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_schur.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/operator_times.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/podarray_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/podarray_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/promote_type.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/restrictors.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_vec_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/running_stat_vec_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/sp_auxlib_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/sp_auxlib_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/span.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_minus_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_minus_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_plus_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_plus_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_times_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spglue_times_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_htrans_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_htrans_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_max_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_max_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_mean_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_mean_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_min_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_min_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_misc_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_misc_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_strans_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_strans_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_sum_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_sum_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_var_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/spop_var_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/strip.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_cube_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_cube_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_each_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_each_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem1_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem1_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem2_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_elem2_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_field_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_field_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/subview_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/traits.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_elem.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_elem_check.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_mat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/typedef_mat_fixed.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap_cube.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/unwrap_spmat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/upgrade_val.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/wall_clock_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/wall_clock_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xtrans_mat_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xtrans_mat_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xvec_htrans_bones.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/include/armadillo_bits/xvec_htrans_meat.hpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/lib/armadillo/src/wrapper.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/main.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ADCS/syscalls.cpp">
+			<Option target="ADCS" />
+		</Unit>
+		<Unit filename="sat/ODB/ADCSThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/ADCSThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/AX25/AX25.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/AX25/AX25.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/AX25/bitStuffing.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/AX25/bitStuffing.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/AX25/main.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CTCSS/CTCSS.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CTCSS/CTCSS.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CTCSS/DECTONEHandler.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CTCSS/DECTONEHandler.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CTCSS/main.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CWThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CWThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CommandThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/CommandThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/Config.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/Config.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/ControlThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/ControlThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FiPEX/Fipex.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FiPEX/Fipex.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FiPEX/Script.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FiPEX/Script.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FiPEX/main.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/Form.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FormParser.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/FormParser.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/GPSThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/GPSThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/InitThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/InitThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/Morse.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/Morse.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/ODB.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/ODB.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/PMUThread.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/PMUThread.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/WodStore.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/WodStore.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/devices.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/devices.h">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/main.cpp">
+			<Option target="ODB" />
+		</Unit>
+		<Unit filename="sat/ODB/syscalls.cpp">
+			<Option target="ODB" />
+		</Unit>
 		<Unit filename="sat/sys/FreeRTOS/croutine.c">
 			<Option compilerVar="CC" />
 		</Unit>

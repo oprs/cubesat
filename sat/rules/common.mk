@@ -15,12 +15,8 @@ FLASH  := st-flash
 CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)
 
-ifdef DEBUG
-#CFLAGS += -g -O0 -DDEBUG -fstack-usage
- CFLAGS += -g -O0 -DDEBUG
-else
- CFLAGS += -Os
-endif
+CFLAGS += -g -O0 -DDEBUG
+#CFLAGS += -Os
 
 ifndef VERBOSE
  QUIET := @
