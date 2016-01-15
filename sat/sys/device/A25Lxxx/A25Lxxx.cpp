@@ -29,18 +29,19 @@ using namespace qb50;
 /* supported A25Lxxx chips */
 
 A25Lxxx::A25LChip A25Lxxx::chips[] = {
-  /* sig.    mask     part #     bpc  spb  pps  bpp */
-   { 0x3010, 0xffff, "A25L512",    1,  16,  16, 256 }, /* 512 Kbit */
-   { 0x3011, 0xffff, "A25L010",    2,  16,  16, 256 }, /*   1 Mbit */
-   { 0x3012, 0xffff, "A25L020",    4,  16,  16, 256 }, /*   2 Mbit */
-   { 0x3013, 0xffff, "A25L040",    8,  16,  16, 256 }, /*   4 Mbit */
-   { 0x3014, 0xffff, "A25L080",   16,  16,  16, 256 }, /*   8 Mbit */
-   { 0x3015, 0xffff, "A25L016",   32,  16,  16, 256 }, /*  16 Mbit */
-   { 0x4015, 0xffff, "A25LQ16",   32,  16,  16, 256 }, /*  16 Mbit */
-   { 0x3016, 0xffff, "A25L032",   64,  16,  16, 256 }, /*  32 Mbit */
-   { 0x4016, 0xffff, "A25LQ32A",  64,  16,  16, 256 }, /*  32 Mbit */
-   { 0x4017, 0xffff, "A25LQ64",  128,  16,  16, 256 }, /*  64 Mbit */
-   {      0,      0,  NULL,        0,   0,   0,   0 }
+  /* sig.    mask     part #            bpc  spb  pps  bpp */
+   { 0x3010, 0xffff, "AMIC A25L512",      1,  16,  16, 256 }, /* 512 Kbit */
+   { 0x3011, 0xffff, "AMIC A25L010",      2,  16,  16, 256 }, /*   1 Mbit */
+   { 0x3012, 0xffff, "AMIC A25L020",      4,  16,  16, 256 }, /*   2 Mbit */
+   { 0x3013, 0xffff, "AMIC A25L040",      8,  16,  16, 256 }, /*   4 Mbit */
+   { 0x3014, 0xffff, "AMIC A25L080",     16,  16,  16, 256 }, /*   8 Mbit */
+   { 0x3015, 0xffff, "AMIC A25L016",     32,  16,  16, 256 }, /*  16 Mbit */
+   { 0x4015, 0xffff, "AMIC A25LQ16",     32,  16,  16, 256 }, /*  16 Mbit */
+   { 0x3016, 0xffff, "AMIC A25L032",     64,  16,  16, 256 }, /*  32 Mbit */
+   { 0x4016, 0xffff, "AMIC A25LQ32A",    64,  16,  16, 256 }, /*  32 Mbit */
+   { 0x4017, 0xffff, "AMIC A25LQ64",    128,  16,  16, 256 }, /*  64 Mbit */
+   { 0xba17, 0xffff, "MICRON N25Q064A", 128,  16,  16, 256 }, /*  64 Mbit */
+   {      0,      0,  NULL,               0,   0,   0,   0 }
 };
 
 /* SPI commands */
@@ -97,6 +98,9 @@ A25Lxxx& A25Lxxx::init( void )
 
    if( chip->mask == 0 ) {
       LOG << _name << ": " RED( "unknown chip - using default" );
+      LOG << _name << ":   manID: 0x" << std::hex << (int)rdid.manId;
+      LOG << _name << ": memType: 0x" << std::hex << (int)rdid.memType;
+      LOG << _name << ":  memCap: 0x" << std::hex << (int)rdid.memCap << std::dec;
       chip = &chips[7];
    }
 
@@ -105,7 +109,7 @@ A25Lxxx& A25Lxxx::init( void )
    _geo.pps = chip->pps;
    _geo.bpp = chip->bpp;
 
-   LOG << _name << ": Onboard AMIC " << chip->name
+   LOG << _name << ": Onboard " << chip->name
        << " serial flash (" << ( chipSize() >> 17 ) << "Mbit)"
        << ", cs: " << _csPin.name();
 
