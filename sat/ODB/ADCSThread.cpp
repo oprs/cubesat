@@ -26,7 +26,7 @@ void ADCSThread::run( void )
 {
 	for( ;; ) {
 		delay( 2000 );
-		LOG << "--------[ ADCS ]--------";
+		kprintf( "--------[ ADCS ]--------\r\n" );
 	}
 }
 

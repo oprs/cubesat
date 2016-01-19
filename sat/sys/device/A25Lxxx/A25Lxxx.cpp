@@ -97,10 +97,10 @@ A25Lxxx& A25Lxxx::init( void )
       ++chip;
 
    if( chip->mask == 0 ) {
-      LOG << _name << ": " RED( "unknown chip - using default" );
-      LOG << _name << ":   manID: 0x" << std::hex << (int)rdid.manId;
-      LOG << _name << ": memType: 0x" << std::hex << (int)rdid.memType;
-      LOG << _name << ":  memCap: 0x" << std::hex << (int)rdid.memCap << std::dec;
+      kprintf( RED( "%s: unknown chip - defaulting to AMIC A25L032\r\n" ), _name );
+      kprintf( "%s:   manID: 0x%04x\r\n", _name, rdid.manId   );
+      kprintf( "%s: memType: 0x%04x\r\n", _name, rdid.memType );
+      kprintf( "%s:  memCap: 0x%04x\r\n", _name, rdid.memCap  );
       chip = &chips[7];
    }
 
@@ -109,14 +109,11 @@ A25Lxxx& A25Lxxx::init( void )
    _geo.pps = chip->pps;
    _geo.bpp = chip->bpp;
 
-   LOG << _name << ": Onboard " << chip->name
-       << " serial flash (" << ( chipSize() >> 17 ) << "Mbit)"
-       << ", cs: " << _csPin.name();
+   kprintf( "%s: Onboard %s serial flash (%luMbit), cs: %s\r\n",
+            _name, chip->name, ( chipSize() >> 17 ), _csPin.name() );
 
-   LOG << _name << ": " << _geo.bpc << " blocks * "
-                        << _geo.spb << " sectors * "
-                        << _geo.pps << " pages * "
-                        << _geo.bpp << " bytes";
+   kprintf( "%s: %lu blocks * %lu sectors * %lu pages * %lu bytes\r\n",
+            _name, _geo.bpc, _geo.spb, _geo.pps, _geo.bpp );
 
    return *this;
 }
@@ -129,8 +126,9 @@ A25Lxxx& A25Lxxx::enable( bool silent )
 
    _spi.enable( silent );
 
-   if( !silent )
-      LOG << _name << ": enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -143,8 +141,9 @@ A25Lxxx& A25Lxxx::disable( bool silent )
 
    _spi.disable( silent );
 
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -341,7 +340,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
       }
 
       if( n == A25Lxxx_HARD_LIMIT ) {
-         LOG << _name << ": " RED( "timeout in A25Lxxx::_WIPWait()" );
+         kprintf( RED( "%s: timeout in A25Lxxx::_WIPWait()" ) "\r\n", _name );
       }
    }
    _deselect();

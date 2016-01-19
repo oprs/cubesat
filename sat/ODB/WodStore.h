@@ -16,7 +16,7 @@ namespace qb50 {
 
          enum EntryType {
             NIL   = 0,
-            PLAIN = 1,
+            ADC   = 1,
             FIPEX = 2
          };
 
@@ -34,15 +34,15 @@ namespace qb50 {
             { ; }
          };
 
-         struct PlainEntry : public Entry
+         struct ADCEntry : public Entry
          {
             uint16_t _flags;
-            uint8_t  _adc[32];
+            uint8_t  _raw[32];
 
-            PlainEntry( uint32_t time ) : Entry( PLAIN, time )
+            ADCEntry( uint32_t time ) : Entry( ADC, time )
             { ; }
 
-            ~PlainEntry()
+            ~ADCEntry()
             { ; }
          };
 

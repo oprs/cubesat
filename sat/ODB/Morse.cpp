@@ -41,7 +41,9 @@ static const uint32_t bits[ 128 ] = {
 
 Morse::Morse( GPIO::Pin& pin )
    : _pin( pin )
-{ ; }
+{
+   _pin.out().off();
+}
 
 
 Morse::~Morse()

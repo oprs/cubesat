@@ -14,7 +14,7 @@ void ODBCommDownThread( Thread *self)
 
     for(;;){
             delay( 2000 );
-            LOG << "------- ODB Communication (DOWN)  Thread -------";
+            kprintf( "------- ODB Communication (DOWN) Thread -------\r\n" );
     }
 }
 

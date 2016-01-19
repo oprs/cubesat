@@ -51,9 +51,8 @@ L3GD20& L3GD20::init( void )
 
    (void)reset();
 
- //LOG << _name << ": Onboard L3GD20 MEMS motion sensor at " << _spi.name()
-   LOG << _name << ": Onboard L3GD20 MEMS motion sensor"
-       << ", cs: " << _csPin.name();
+   kprintf( "%s: Onboard L3GD20 MEMS motion sensor, cs: %s\r\n",
+            _name, _csPin.name() );
 
    return *this;
 }
@@ -66,7 +65,7 @@ L3GD20& L3GD20::reset( void )
    (void)enable( true );
 
    _WHO_AM_I( id  );
-   LOG << _name << ":  id: 0x" << std::hex << (int)id;
+   kprintf( "%s: id: 0x02x\r\n", _name, id );
 
    range( R250DPS );
 
@@ -89,8 +88,9 @@ L3GD20& L3GD20::enable( bool silent )
    _deselect();
    _spi.unlock();
 
-   if( !silent )
-      LOG << _name << " enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -109,8 +109,9 @@ L3GD20& L3GD20::disable( bool silent )
 
    _spi.disable( silent );
 
-   if( !silent )
-      LOG << _name << " disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -205,7 +206,7 @@ L3GD20& L3GD20::calibrate( void )
    _calY = sum[ 1 ] / 100;
    _calZ = sum[ 2 ] / 100;
 
-   LOG << _name << ": CAL [ " << _calX << ' ' << _calY << ' ' << _calZ << ' ' << " ]";
+   kprintf( "%s: CAL [ %d %d %d ]\r\n", _name, _calX, _calY, _calZ );
 
    return *this;
 }

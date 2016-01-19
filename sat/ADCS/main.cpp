@@ -12,28 +12,8 @@ extern void TestThreads                     ( Thread *self );  //Thread for test
 static void initDevices( void );
 
 
-void testThread1( Thread *self )  //Test Thread
-{
-    int cnt = 0;
-
-    (void)self;
-
-    initDevices();
-    SYSLOG.enable();
-
-    for( ;; ) {
-        LOG << "test: " << cnt;
-/*
-        (void)printf(" ------- Hello Test  Thread -------\r\n");
-        (void)printf( "hello: %p - %d\r\n", self, cnt );
-*/
-        ++cnt;
-        delay( 500 );
-    }
-}
-
 //Principal Thread for ADCS
-void Main_Thread( Thread *self){
+void Main_Thread( Thread *self ){
 
     (void)self;
 
@@ -52,34 +32,35 @@ void Main_Thread( Thread *self){
 
     for(;;){
             delay( 2000 );
-            LOG << "------- Main Thread -------";
+            kprintf( "------- Main Thread -------\r\n" );
             switch (Current_state.LCR)
             {
                 case PING:
-                    LOG << "------- ODB is pinging us -------";
+                    kprintf( "------- ODB is pinging us -------\r\n" );
                     break;
                 case MODE_ATT_DET:
-                    LOG << "------- Attitude determination mode on -------";
+                    kprintf( "------- Attitude determination mode on -------\r\n" );
                     break;
                 case MODE_ATT_CON:
-                    LOG << "------- Attitude Control Mode on -------";
+                    kprintf( "------- Attitude Control Mode on -------\r\n" );
                     break;
                 case ASK_ATT:
-                    LOG << "------- ODB asks for attitude -------";
+                    kprintf( "------- ODB asks for attitude -------\r\n" );
                     break;
                 case ASK_MAG_RAW:
-                    LOG << "------- ODB asks for raw mag data -------";
+                    kprintf( "------- ODB asks for raw mag data -------\r\n" );
                     break;
                 case ASK_SUN_RAW:
-                    LOG << "------- ODB asks for sun data -------";
-                    for (int i = 0; i < 5; i++)
-                        LOG << "SUN Sensor 1: " << Current_state.TADC.adc_temp[i];
+                    kprintf( "------- ODB asks for sun data -------\r\n" );
+                    for (int i = 0; i < 5; i++) {
+                        kprintf( "SUN Sensor 1: %d\r\n", Current_state.TADC.adc_temp[i] );
+                     }
                     break;
                 case STOP:
-                    LOG << "------- ODB asks to stop ADCS -------";
+                    kprintf( "------- ODB asks to stop ADCS -------\r\n" );
                     break;
                 default:
-                    LOG << "------- ODB hasn't told us anything :( -------";
+                    kprintf( "------- ODB hasn't told us anything :( -------\r\n" );
             }
     }
 }

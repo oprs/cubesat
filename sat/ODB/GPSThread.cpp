@@ -27,16 +27,22 @@ GPSThread::~GPSThread()
 
 void GPSThread::run( void )
 {
-	uint8_t c;
+	uint8_t *x = new uint8_t[ 128 ];
+	size_t n;
 
-	LOG << "GPSThread starting..." << std::flush;
+	kprintf( "GPSThread starting...\r\n" );
+	UART3.enable();
 
 	PC3.out().off(); /* ON_OFF_GPS */
 
 	for( ;; ) {
-		(void)UART3.read( &c, 1 );
-		(void)UART2.write( &c, 1 );
+		_wait();
+		n = UART3.readLine( x, 128 );
+		(void)UART6.write( x, n );
+		(void)UART6.write( "\r\n", 2 );
 	}
+
+	delete[] x;
 }
 
 /*EoF*/

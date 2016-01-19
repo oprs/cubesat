@@ -20,6 +20,8 @@ CFIPEX::~CFIPEX(void)
 	//delete m_serialPort;
 
 }
+
+
 bool CFIPEX::initialisation()	//testée et vérifiée le 15/01/15
 {
 	if(m_status)
@@ -29,6 +31,7 @@ bool CFIPEX::initialisation()	//testée et vérifiée le 15/01/15
 
 	return true;
 }
+
 
 bool CFIPEX::setOn()
 {
@@ -42,6 +45,7 @@ bool CFIPEX::setOn()
 	return true;
 }
 
+
 bool CFIPEX::setOff()
 {
 	if(m_status)
@@ -52,6 +56,7 @@ bool CFIPEX::setOff()
 
 	return true;
 }
+
 
 bool CFIPEX::getReponse(uint8_t &rspId, uint8_t data[], uint8_t &length)
 {
@@ -90,6 +95,7 @@ hexdump( trame, length+4 );
 
 }
 
+
 bool CFIPEX::sendCommand( uint8_t commandId, uint8_t length, uint8_t data[] )
 {
 	bool retour = false;
@@ -112,11 +118,13 @@ bool CFIPEX::sendCommand( uint8_t commandId, uint8_t length, uint8_t data[] )
 	return retour;
 }
 
+
 bool CFIPEX::stop()
 {
 	//GPIO_SetBits();
 	return true;
 }
+
 
 bool CFIPEX::ping(fipexError &error)	//testée et vérifiée le 15/01/15
 {
@@ -144,6 +152,7 @@ bool CFIPEX::ping(fipexError &error)	//testée et vérifiée le 15/01/15
 	}
 	return retour;
 }
+
 
 bool CFIPEX::getSuId(uint8_t &ID)
 {
@@ -179,6 +188,8 @@ bool CFIPEX::getSuId(uint8_t &ID)
 	}
 	return retour;
 }*/
+
+
 bool CFIPEX::setParameters(uint8_t data[],uint8_t length,fipexError &error)
 {
 	bool retour=false;
@@ -201,6 +212,8 @@ bool CFIPEX::setParameters(uint8_t data[],uint8_t length,fipexError &error)
 	return retour;
 ;
 }
+
+
 bool CFIPEX::getHousekeepingPacket(	houseKeepingData * data ) //testée et vérifiée le 19/01/2015
 {
 
@@ -334,6 +347,7 @@ bool CFIPEX::getHousekeepingPacket(	houseKeepingData * data ) //testée et vérifi
 	return retour;
 }
 
+
 bool CFIPEX::getScienceDataPacket(scienceDataPacket *recupSDP)
 {
 
@@ -427,6 +441,8 @@ bool CFIPEX::getScienceDataPacket(scienceDataPacket *recupSDP)
 	}
 	return retour;
 }
+
+
 bool CFIPEX::setStandbyMode()	//testée et vérifiée le 15/01/15
 {
 	bool retour=false;
@@ -443,6 +459,8 @@ bool CFIPEX::setStandbyMode()	//testée et vérifiée le 15/01/15
 	}
 	return retour;
 }
+
+
 bool CFIPEX::setHealthCheckMode()	//testée et vérifiée le 15/01/15
 {
 	bool retour=false;
@@ -459,6 +477,8 @@ bool CFIPEX::setHealthCheckMode()	//testée et vérifiée le 15/01/15
 	}
 	return retour;
 }
+
+
 bool CFIPEX::measure()	//testée et vérifiée le 15/01/15
 {
 	bool retour=false;
@@ -475,6 +495,8 @@ bool CFIPEX::measure()	//testée et vérifiée le 15/01/15
 	}
 	return retour;
 }
+
+
 bool CFIPEX::calibrate(uint8_t data[],uint8_t length)
 {
 	bool retour=false;
@@ -491,3 +513,5 @@ bool CFIPEX::calibrate(uint8_t data[],uint8_t length)
 	}
 	return retour;
 }
+
+/*EoF*/

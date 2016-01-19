@@ -35,7 +35,7 @@ STM32_ADC::~STM32_ADC()
 
 STM32_ADC& STM32_ADC::init( void )
 {
-   LOG << _name << ": STM32F4xx ADC at " << bus.name;
+   kprintf( "%s: STM32F4xx ADC at %s\r\n", _name, bus.name );
 
    return *this;
 }
@@ -69,8 +69,9 @@ STM32_ADC& STM32_ADC::enable( bool silent )
    ADCx->SQR1 = tmpreg;
    ADCx->CR2 |= ADC_CR2_ADON;
 
-   if( !silent )
-      LOG << _name << ": enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -86,8 +87,9 @@ STM32_ADC& STM32_ADC::disable( bool silent )
 
    RCC.disable( this, silent );
 
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }

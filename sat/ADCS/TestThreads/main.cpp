@@ -14,22 +14,23 @@ void testThreadADC()
         ch[i]->enable();
 
     for( ;; ) {
-        LOG << "------- ADC Test Thread -------";
-        LOG << "[DATA ADC]";
+        kprintf( "------- ADC Test Thread -------\r\n" );
+        kprintf( "[DATA ADC]\r\n" );
 
         for( i = 0 ; i < 9 ; ++i )
             Current_state.TADC.adc_temp[i] = ch[i]->read();
 
-        LOG << "SUN sensors: [ " << Current_state.TADC.adc_temp[0] << ", "
-                                 << Current_state.TADC.adc_temp[1] << ", "
-                                 << Current_state.TADC.adc_temp[2] << ", "
-                                 << Current_state.TADC.adc_temp[3] << ", "
-                                 << Current_state.TADC.adc_temp[4] << ", "
-                                 << Current_state.TADC.adc_temp[5] << ", "
-                                 << Current_state.TADC.adc_temp[6] << ", "
-                                 << Current_state.TADC.adc_temp[7] << ", "
-                                 << Current_state.TADC.adc_temp[8] << " ]"
-        ;
+        kprintf( "SUN sensors: [ %d, %d, %d, %d, %d, %d, %d, %d ]\r\n",
+                  Current_state.TADC.adc_temp[0],
+                  Current_state.TADC.adc_temp[1],
+                  Current_state.TADC.adc_temp[2],
+                  Current_state.TADC.adc_temp[3],
+                  Current_state.TADC.adc_temp[4],
+                  Current_state.TADC.adc_temp[5],
+                  Current_state.TADC.adc_temp[6],
+                  Current_state.TADC.adc_temp[7],
+                  Current_state.TADC.adc_temp[8]
+        );
 
         delay(5000);
     }

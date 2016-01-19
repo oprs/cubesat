@@ -30,7 +30,7 @@ STM32_DMA::~STM32_DMA()
 
 STM32_DMA& STM32_DMA::init( void )
 {
-   LOG << _name << ": STM32F4xx DMA controller at " << bus.name;
+   kprintf( "%s: STM32F4xx DMA controller at %s\r\n", _name, bus.name );
    return *this;
 }
 

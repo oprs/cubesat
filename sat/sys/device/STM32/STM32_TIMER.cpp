@@ -34,10 +34,7 @@ STM32_TIMER::~STM32_TIMER()
 
 STM32_TIMER& STM32_TIMER::init( void )
 {
-   LOG << _name << ": System timer controller at " << bus.name
-      //<< ", rx: " << _rxPin.name()
-      ;
-
+   kprintf( "%s: System timer controller at %s\r\n", _name, bus.name );
    return *this;
 }
 

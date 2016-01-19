@@ -65,7 +65,7 @@ ODB& ODB::init( void )
    _asPin.in().noPull();
    _adPin.out().off();
 
-   LOG << _name << ": AMSAT-F micro-satellite";
+   kprintf( "%s: AMSAT-F micro-satellite\r\n", _name );
 
    return *this;
 }
@@ -97,7 +97,7 @@ ODB::AntState ODB::aDeploy( void )
 
    for( int i = 0 ; i < 3 ; ++i )
    {
-      LOG << "Trying to deploy antenna (" << ( i + 1 ) << "/3)...";
+      kprintf( "Trying to deploy antenna (%d/3)...\r\n", ( i + 1 ));
       delay( 4999 );
 
       st = aState();
@@ -108,9 +108,9 @@ ODB::AntState ODB::aDeploy( void )
    _adPin.off();
 
    if( st == ODB::DEPLOYED )
-      LOG << "Antenna deployed";
+      kprintf( "Antenna deployed\r\n" );
    else
-      LOG << "Giving up on antenna deployment";
+      kprintf( "Giving up on antenna deployment\r\n" );
 
    return st;
 }

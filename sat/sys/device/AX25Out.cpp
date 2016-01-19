@@ -30,7 +30,7 @@ AX25Out::~AX25Out()
 
 AX25Out& AX25Out::init( void )
 {
-   LOG << _name << ": AX.25 Controller";
+   kprintf( "%s: AX.25 Controller\r\n", _name );
    return *this;
 }
 

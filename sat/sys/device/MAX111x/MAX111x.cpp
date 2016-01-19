@@ -26,8 +26,8 @@ MAX111x& MAX111x::init( void )
 {
    (void)SPISlave::init();
 
-   LOG << _name << ": Onboard MAX111x serial ADC"
-       << ", cs: " << _csPin.name();
+   kprintf( "%s: Onboard MAX111x serial ADC, cs: %s\r\n",
+            _name, _csPin.name() );
 
    return *this;
 }
@@ -40,8 +40,9 @@ MAX111x& MAX111x::enable( bool silent )
 
    _spi.enable( silent );
 
-   if( !silent )
-      LOG << _name << ": enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -54,8 +55,9 @@ MAX111x& MAX111x::disable( bool silent )
 
    _spi.disable( silent );
 
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }

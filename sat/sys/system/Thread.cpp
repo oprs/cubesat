@@ -60,13 +60,13 @@ void Thread::onExit( void )
 
 void Thread::onSuspend( void )
 {
-   LOG << '[' << name << "] suspended";
+   kprintf( "[%s] suspended\r\n", name );
 }
 
 
 void Thread::onResume( void )
 {
-   LOG << '[' << name << "] resuming";
+   kprintf( "[%s] resuming\r\n", name );
 }
 
 
@@ -78,9 +78,7 @@ void Thread::_wait( void )
 {
    while( _suspended ) {
       onSuspend();
-    //LOG << name << " suspended";
       ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
-    //LOG << name << " resuming";
       onResume();
    }
 }

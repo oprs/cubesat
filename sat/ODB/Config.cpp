@@ -54,7 +54,7 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
 
 const char *Config::modes[ _QB50_NMODES ] = {
-   "INIT", "CW", "STDBY", "WODEX", "TELEM", "FIPEX", "FM", "POWER"
+   "INIT", "CW", "STDBY", "WODEX", "TELEM", "FIPEX", "GPS", "FM", "POWER"
 };
 
 

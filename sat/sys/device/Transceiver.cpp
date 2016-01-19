@@ -25,12 +25,8 @@ Transceiver::~Transceiver()
 
 Transceiver& Transceiver::init( void )
 {
-   LOG << _name << ": AMSAT-F Radio Board (F6FAO)";
-/*
-       << ", enTX: " << _enTXPin.name()
-       << ", enPA: " << _enPAPin.name()
-       ;
-*/
+   kprintf( "%s: AMSAT-F Radio Board (F6FAO), enTX: %s, enPA: %s\r\n",
+            _name, _enTXPin.name(), _enPAPin.name() );
 
    _enTXPin.out().off();
    _enPAPin.out().off();
@@ -45,12 +41,16 @@ Transceiver& Transceiver::enable( bool silent )
       return *this;
 
    _enTXPin.on();
-   if( !silent ) LOG << _name << ": Waiting for 500ms...";
+   if( !silent ) {
+      kprintf( "%s: Waiting for 500ms...\r\n", _name );
+   }
 
    delay( 500 );
 
    _enPAPin.on();
-   if( !silent ) LOG << _name << ": Enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -64,7 +64,9 @@ Transceiver& Transceiver::disable( bool silent )
    _enPAPin.off();
    _enTXPin.off();
 
-   if( !silent ) LOG << _name << ": Disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }

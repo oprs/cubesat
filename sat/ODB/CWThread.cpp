@@ -61,7 +61,7 @@ void CWThread::run( void )
    char x[16];
    unsigned dt;
 
-   Morse cw( PB1 );
+   Morse cw( PC5 );
 
    for( unsigned i = 0 ;; ++i ) {
 
@@ -78,6 +78,7 @@ void CWThread::run( void )
       x[  8 ] = maCode( SAT.maIRx + SAT.maITx );
       x[  9 ] = maCode( SAT.maI[0] + SAT.maI[1] + SAT.maI[2] + SAT.maI[3] );
       x[ 10 ] = dcCode( SAT.dcBat );
+      x[ 11 ] = '\0';
 
 #if 0
       LOG << "SAT.mvBat: " << SAT.mvBat;
@@ -86,11 +87,12 @@ void CWThread::run( void )
       LOG << "SAT.dcBat: " << SAT.dcBat;
 #endif
 
+      /* XXX kprintf */
       if(( i % 5 ) == 0 ) {
-         LOG << name << " - " << x[0] << x[1] << x[2] << x[3] << x[4] << x[5] << x[6] << x[7] << x[8] << x[9] << x[10];
+         kprintf( "%s - %s\r\n", x );
          cw.write( x, 11 );
       } else {
-         LOG << name << " - "                         << x[3] << x[4] << x[5] << x[6] << x[7] << x[8] << x[9] << x[10];
+         kprintf( "%s - %s\r\n", x + 3 );
          cw.write( x + 3, 8 );
       }
 

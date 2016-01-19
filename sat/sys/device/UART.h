@@ -18,10 +18,11 @@ namespace qb50 {
          virtual ~UART()
          { ; }
 
-         virtual size_t read     (       void *x, size_t len ) = 0;
-         virtual size_t readLine (       void *x, size_t len ) = 0;
-         virtual size_t write    ( const void *x, size_t len ) = 0;
-         virtual UART&  baudRate ( unsigned rate )             = 0;
+         virtual size_t read     (       void *x, size_t len, int toms = -1 ) = 0;
+         virtual size_t readLine (       void *x, size_t len, int toms = -1 ) = 0;
+         virtual size_t write    ( const void *x, size_t len, int toms = -1 ) = 0;
+
+         virtual UART&  baudRate ( unsigned rate ) = 0;
 
    };
 

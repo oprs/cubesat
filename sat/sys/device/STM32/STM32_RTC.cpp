@@ -51,7 +51,7 @@ STM32_RTC& STM32_RTC::init( void )
    unlock();
 #endif
 
-   LOG << _name << ": STM32F4xx Real-Time Clock controller at " << bus.name;
+   kprintf( "%s: STM32F4xx Real-Time Clock controller at %s\r\n", _name, bus.name );
 
    return *this;
 }
@@ -70,8 +70,9 @@ STM32_RTC& STM32_RTC::enable( bool silent )
    RTCx->WPR = 0xca;
    RTCx->WPR = 0x53;
 
-   if( !silent )
-      LOG << _name << ": enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    unlock();
 
@@ -90,8 +91,9 @@ STM32_RTC& STM32_RTC::disable( bool silent )
 
    RTCx->WPR = 0x00;
 
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    unlock();
 
@@ -108,7 +110,7 @@ void STM32_RTC::_enterInit( void )
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
 
    if(( RTCx->ISR & RTC_ISR_INITF ) == 0 ) {
-      LOG << _name << ": initializing RTC (hardware reset)";
+      kprintf( "%s: initializing RTC (hardware reset)\r\n", _name );
       RTCx->ISR = (uint32_t)0xffffffff;
 
       for( int cnt = 0 ; cnt < 10000 ; ++cnt ) {
@@ -117,12 +119,12 @@ void STM32_RTC::_enterInit( void )
       }
 
       if(( RTCx->ISR & RTC_ISR_INITF ) != 0 ) {
-         LOG << _name << ": success";
+         kprintf( "%s: success\r\n", _name );
       } else {
-         LOG << _name << ": failure, ISR: " << RTCx->ISR;
+         kprintf( "%s: failure, ISR: 0x%08lx\r\n", _name, RTCx->ISR );
       }
    } else {
-      LOG << _name << ": already initialized (software reset)";
+      kprintf( "%s: already initialized (software reset)\r\n", _name );
    }
 }
 

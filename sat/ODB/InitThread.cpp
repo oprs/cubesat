@@ -36,9 +36,9 @@ void InitThread::run( void )
 
    delay( 100 );
 
-   LOG << "Waiting for 30mn...";
+   kprintf( "Waiting for 30mn...\r\n" );
    delay( 5000 );
-   LOG << "Done waiting";
+   kprintf( "Done waiting\r\n" );
 
    if( SAT.aDeploy() == ODB::DEPLOYED ) {
       ev = new Event( Event::AD_SUCCESS );

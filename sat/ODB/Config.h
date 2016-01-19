@@ -9,7 +9,7 @@
 #include <semphr.h>
 
 
-#define _QB50_NMODES     8
+#define _QB50_NMODES     9
 #define _QB50_NPARAMS   64
 #define _QB50_PVAL_MASK 0xffff
 

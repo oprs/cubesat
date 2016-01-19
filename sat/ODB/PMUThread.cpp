@@ -2,6 +2,7 @@
 #include "devices.h"
 #include "PMUThread.h"
 #include "Config.h"
+#include "WodStore.h"
 #include "system/Application.h"
 
 using namespace qb50;
@@ -38,6 +39,10 @@ void PMUThread::run( void )
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
+   uint16_t raw[ 32 ];       // 4 ADCs, 8 channels each
+
+ //unsigned dt;
+
    ADC1.enable( true );
    ADC2.enable( true );
    ADC3.enable( true );
@@ -47,7 +52,72 @@ void PMUThread::run( void )
 
    for( ;; ) {
 
+      int i;
+
       _wait(); // wait if suspended
+
+      /* read all the channels */
+
+      for( i = 0 ; i < 32 ; ++i )
+         raw[ i ] = 0;
+
+      for( i = 0 ; i < 4 ; ++i ) {
+
+         /* ADC1 */
+
+         raw[ 0] += ADC1CH0.read();
+         raw[ 1] += ADC1CH1.read();
+         raw[ 2] += ADC1CH2.read();
+         raw[ 3] += ADC1CH3.read();
+         raw[ 4] += ADC1CH4.read();
+         raw[ 5] += ADC1CH5.read();
+         raw[ 6] += ADC1CH6.read();
+         raw[ 7] += ADC1CH7.read();
+
+         /* ADC2 */
+
+         raw[ 8] += ADC2CH0.read();
+         raw[ 9] += ADC2CH1.read();
+         raw[10] += ADC2CH2.read();
+         raw[11] += ADC2CH3.read();
+         raw[12] += ADC2CH4.read();
+         raw[13] += ADC2CH5.read();
+         raw[14] += ADC2CH6.read();
+         raw[15] += ADC2CH7.read();
+
+         /* ADC3 */
+
+         raw[16] += ADC3CH0.read();
+         raw[17] += ADC3CH1.read();
+         raw[18] += ADC3CH2.read();
+         raw[19] += ADC3CH3.read();
+         raw[20] += ADC3CH4.read();
+         raw[21] += ADC3CH5.read();
+         raw[22] += ADC3CH6.read();
+         raw[23] += ADC3CH7.read();
+
+         /* ADC4 */
+
+         raw[24] += ADC4CH0.read();
+         raw[25] += ADC4CH1.read();
+         raw[26] += ADC4CH2.read();
+         raw[27] += ADC4CH3.read();
+         raw[28] += ADC4CH4.read();
+         raw[29] += ADC4CH5.read();
+         raw[30] += ADC4CH6.read();
+         raw[31] += ADC4CH7.read();
+
+      }
+
+      WodStore::ADCEntry *ae = new WodStore::ADCEntry( 0 );
+
+      for( i = 0 ; i < 32 ; ++i ) {
+         raw[ i ] >>= 2;
+         ae->_raw[ i ] = ( raw[ i ] & 0xff );
+      }
+
+      //WOD.write( ae );
+      delete ae;
 
       /*
        * R26 = 2.67K, R8 = 9.09K
@@ -57,7 +127,7 @@ void PMUThread::run( void )
        *    = vbat * 35.235952
        */
 
-      vbat = ADC1CH7.read();
+      vbat = raw[7]; /* ADC1CH7 */
 
 
       /*
@@ -68,7 +138,7 @@ void PMUThread::run( void )
        *    = tbat * 1.6
        */
 
-      tbat = ADC1CH6.read();
+      tbat = raw[6]; /* ADC1CH6 */
       dK   = 1.6 * COEF( tbat );
       dC   = dK - 273.15;
 
@@ -81,7 +151,7 @@ void PMUThread::run( void )
        *    = irx * 0.32
        */
 
-      irx = ADC3CH2.read();
+      irx = raw[18]; /* ADC3CH2 */
 
 
       /*
@@ -98,7 +168,7 @@ void PMUThread::run( void )
        *    = itx * 3.2
        */
 
-      itx = ADC3CH4.read();
+      itx = raw[19]; /* ADC3CH4 */
 
 
       /*
@@ -109,15 +179,15 @@ void PMUThread::run( void )
        *    = i[1-4] * 32 / 15
        */
 
-      i1 = ADC1CH5.read();
-      i2 = ADC2CH2.read();
-      i3 = ADC2CH5.read();
-      i4 = ADC1CH1.read();
+      i1 = raw[ 5]; /* ADC1CH5 */
+      i2 = raw[10]; /* ADC2CH2 */
+      i3 = raw[13]; /* ADC2CH5 */
+      i4 = raw[ 1]; /* ADC1CH1 */
 
-      v1 = ADC1CH3.read();
-      v2 = ADC2CH0.read();
-      v3 = ADC2CH3.read();
-      v4 = ADC1CH0.read();
+      v1 = raw[ 3]; /* ADC1CH3 */
+      v2 = raw[ 8]; /* ADC2CH0 */
+      v3 = raw[11]; /* ADC2CH3 */
+      v4 = raw[ 0]; /* ADC1CH0 */
 
 
       /* conversions */
@@ -137,8 +207,23 @@ void PMUThread::run( void )
       SAT.maIRx    = COEF(  irx ) * 0.32;
       SAT.maITx    = COEF(  itx ) * 3.20;
       SAT.mvBat    = COEF( vbat ) * 35.235952;
-
       SAT.dcBat    = dC;
+
+#if 0
+      unsigned i33, v33, i5, v5;
+
+      i33 = raw[27]; /* ADC4CH3 */
+      v33 = raw[28]; /* ADC4CH4 */
+      i5  = raw[29]; /* ADC4CH5 */
+      v5  = raw[30]; /* ADC4CH6 */
+
+      kprintf( "Fipex: i33: %u, v33: %umV, i5: %u, v5: %umV\r\n",
+               i33,
+               16 * v33,   // 2 * ( v33 / 256 ) * 2048
+               i5,
+               9408 * v5 / 909  // ((267+909)/909) * ( v5 / 256 ) * 2048
+      );
+#endif
 
 
       /* check battery voltage */

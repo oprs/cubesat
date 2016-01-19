@@ -2,9 +2,6 @@
 #include "device/Syslog.h"
 #include "system/Application.h"
 
-#include <cstdio>
-#include <cstring>
-
 using namespace qb50;
 
 
@@ -18,7 +15,7 @@ static void _trampoline( void *x );
 Syslog::Syslog( const char *name, UART& uart )
    : Device( name ), _uart( uart )
 {
-   _ioQueue = xQueueCreate( 64, sizeof( std::string* ));
+   _ioQueue = xQueueCreate( 64, sizeof( LogLine* ));
 }
 
 
@@ -28,15 +25,18 @@ Syslog::~Syslog()
 }
 
 
-Syslog::LogLine::LogLine( Syslog& log ) : _log( log )
-{ ; }
+Syslog::LogLine::LogLine()
+{
+   _x   = new char[ 128 ];
+   _len = 0;
+}
 
 
 Syslog::LogLine::~LogLine()
 {
-   _os << "\r\n" << std::flush;
-   (void)_log.write( new std::string( _os.str() ));
+   delete[] _x;
 }
+
 
 //  - - - - - - -  //
 //  M E T H O D S  //
@@ -44,39 +44,42 @@ Syslog::LogLine::~LogLine()
 
 Syslog& Syslog::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, 128, this, 1, &_ioTask );
+   (void)xTaskCreate( _trampoline, _name, /*128*/ 512, this, 1, &_ioTask );
    return *this;
 }
 
 
-std::ostringstream& Syslog::LogLine::get( void )
+Syslog& Syslog::printf( const char *fmt, ... )
 {
    unsigned ts = ticks();
-   char x[16];
 
-   /*
-    * I considered using stream manipulators here (std::setw(), etc...)
-    * but the resulting code turned out to be clumsy and slow.
-    * Let's just stick with snprintf() and stdio.
-    */
+   va_list ap;
+   va_start( ap, fmt );
 
-   (void)snprintf( x, sizeof( x ), "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
-   _os << x;
+   do {
+      LogLine *line = new LogLine();
+      size_t n;
 
-   return _os;
-}
+      n = snprintf( line->_x, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
+      if( n <= 0 ) { delete line; break; }
 
+      line->_len += n;
 
-Syslog& Syslog::write( std::string *sp )
-{
-   (void)xQueueSend( _ioQueue, &sp, 0 );
+      n = vsnprintf( line->_x + n, 128 - n - 1, fmt, ap );
+      if( n <= 0 ) { delete line; break; }
+
+      line->_len += n;
+      (void)xQueueSend( _ioQueue, &line, 0 );
+
+   } while( 0 );
+
    return *this;
 }
 
 
 Syslog& Syslog::enable( bool silent )
 {
-   //_uart.enable( silent );
+   //_uart.enable( silent ).baudRate( 115200 );
    return *this;
 }
 
@@ -102,18 +105,16 @@ static void _trampoline( void *x )
 
 void Syslog::run( void )
 {
-   std::string *sp;
+   LogLine *line;
 
    for( ;; ) {
-    if( xQueueReceive( _ioQueue, &sp, portMAX_DELAY ) != pdPASS )
+      if( xQueueReceive( _ioQueue, &line, portMAX_DELAY ) != pdPASS ) {
          continue;
+      }
 
-    //_lock();
-      (void)_uart.write( sp->data(), sp->size() );
-      delete sp;
-    //_unlock();
+      (void)_uart.write( line->_x, line->_len );
+      delete line;
    }
-
 }
 
 /*EoF*/

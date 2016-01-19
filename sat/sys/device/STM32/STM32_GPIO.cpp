@@ -30,7 +30,7 @@ STM32_GPIO::~STM32_GPIO()
 
 STM32_GPIO& STM32_GPIO::init( void )
 {
-   LOG << _name << ": STM32F4xx GPIO controller at " << bus.name;
+   kprintf( "%s: STM32F4xx GPIO controller at %s\r\n", _name, bus.name );
    return *this;
 }
 
@@ -40,6 +40,12 @@ STM32_GPIO& STM32_GPIO::enable( bool silent )
    if( _incRef() == 0 )
       RCC.enable( this, silent );
 
+/*
+   if( !silent ) {
+      kprintf( "%s enabled\r\n", _name );
+   }
+*/
+
    return *this;
 }
 
@@ -48,6 +54,12 @@ STM32_GPIO& STM32_GPIO::disable( bool silent )
 {
    if( _decRef() == 0 )
       RCC.disable( this, silent );
+
+/*
+   if( !silent ) {
+      kprintf( "%s disabled\r\n", _name );
+   }
+*/
 
    return *this;
 }

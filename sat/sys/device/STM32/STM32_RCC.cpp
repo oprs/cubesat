@@ -32,19 +32,22 @@ STM32_RCC& STM32_RCC::init( void )
 
    Clocks clk;
 
-   LOG << _name << ": STM32F4xx Reset and Clock controller";
+   kprintf( "%s: STM32F4xx Reset and Clock controller\r\n", _name );
 
    clocks( &clk );
 
-   LOG << _name << ": SYSCLK: " << clk.SYSCLKFreq / ( 1000 * 1000 ) << "MHz"
-                << ", HCLK: "   << clk.HCLKFreq   / ( 1000 * 1000 ) << "MHz"
-                << ", PCLK1: "  << clk.PCLK1Freq  / ( 1000 * 1000 ) << "MHz"
-                << ", PCLK2: "  << clk.PCLK2Freq  / ( 1000 * 1000 ) << "MHz";
+   kprintf( "%s: SYSCLK: %luMHz, HCLK: %luMHz, PCLK1: %luMHz, PCLK2: %luMHz\r\n",
+            _name,
+            clk.SYSCLKFreq / ( 1000 * 1000 ),
+            clk.HCLKFreq   / ( 1000 * 1000 ),
+            clk.PCLK1Freq  / ( 1000 * 1000 ),
+            clk.PCLK2Freq  / ( 1000 * 1000 )
+   );
 
    _csr = RCCx->CSR;
    RCCx->CSR |= 0x01000000; // clear reset flag
 
-   LOG << _name << ": Reset flags: 0x" << std::hex << (( _csr & 0xfe000000 ) >> 25 );
+   kprintf( "%s: Reset flags: 0x%02x\r\n", _name, (( _csr & 0xfe000000 ) >> 25 ));
 
    return *this;
 }
@@ -66,8 +69,11 @@ STM32_RCC& STM32_RCC::enable( BusSlave *dev, bool silent )
 
    };
 
- //if( !silent )
- //   LOG << _name << ": " << dev->name() << " enabled at " << dev->bus.name;
+/*
+   if( !silent ) {
+      kprintf( "%s: %s enabled at %s\r\n", _name, dev->name(), dev->bus.name );
+   }
+*/
 
    return *this;
 }
@@ -89,8 +95,11 @@ STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
 
    };
 
- //if( !silent )
- //   LOG << _name << ": " << dev->name() << " disabled";
+/*
+   if( !silent ) {
+      kprintf( "%s: %s disabled at %s\r\n", _name, dev->name(), dev->bus.name );
+   }
+*/
 
    return *this;
 }

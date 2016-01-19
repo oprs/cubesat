@@ -6,105 +6,103 @@
 #include "system/Application.h"
 
 
-#ifdef DEBUG
- #ifdef __cplusplus
-  extern "C" {
- #endif
+#ifdef __cplusplus
+extern "C" {
+#endif
 
- void vApplicationTickHook( void );
- void vApplicationIdleHook( void );
- void vApplicationMallocFailedHook( void );
- void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
- void HardFault_Handler( void ) __attribute__(( naked ));
- void hard_fault_handler_c( uint32_t *argv );
+void vApplicationTickHook( void );
+void vApplicationIdleHook( void );
+void vApplicationMallocFailedHook( void );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void HardFault_Handler( void ) __attribute__(( naked ));
+void hard_fault_handler_c( uint32_t *argv );
 
- #ifdef __cplusplus
-  }
- #endif
+#ifdef __cplusplus
+}
+#endif
 
- void vApplicationTickHook( void )
- { ; }
+void vApplicationTickHook( void )
+{ ; }
 
- void vApplicationIdleHook( void )
- { ; }
+void vApplicationIdleHook( void )
+{ ; }
 
- void vApplicationMallocFailedHook( void )
- { for( ;; ); }
+void vApplicationMallocFailedHook( void )
+{ for( ;; ); }
 
- void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
- {
-    (void)pxTask;
-    (void)pcTaskName;
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+{
+   (void)pxTask;
+   (void)pcTaskName;
 
-    for( ;; );
- }
+   for( ;; );
+}
 
 /*
- void HardFault_Handler( void )
- { for( ;; ); }
+void HardFault_Handler( void )
+{ for( ;; ); }
 */
 
 // From Joseph Yiu, minor edits by FVH
 // hard fault handler in C,
 // with stack frame location as input parameter
 // called from HardFault_Handler in file xxx.s
- void hard_fault_handler_c( uint32_t *argv )
- {
-  volatile uint32_t r0;
-  volatile uint32_t r1;
-  volatile uint32_t r2;
-  volatile uint32_t r3;
-  volatile uint32_t r12;
-  volatile uint32_t r14;
-  volatile uint32_t r15;
-  volatile uint32_t psr;
+void hard_fault_handler_c( uint32_t *argv )
+{
+ volatile uint32_t r0;
+ volatile uint32_t r1;
+ volatile uint32_t r2;
+ volatile uint32_t r3;
+ volatile uint32_t r12;
+ volatile uint32_t r14;
+ volatile uint32_t r15;
+ volatile uint32_t psr;
 
-  r0  = argv[0];
-  r1  = argv[1];
-  r2  = argv[2];
-  r3  = argv[3];
-  r12 = argv[4];
-  r14 = argv[5];
-  r15 = argv[6];
-  psr = argv[7];
+ r0  = argv[0];
+ r1  = argv[1];
+ r2  = argv[2];
+ r3  = argv[3];
+ r12 = argv[4];
+ r14 = argv[5];
+ r15 = argv[6];
+ psr = argv[7];
 
-  printf( "\r\n\r\n*** HARD FAULT HANDLER ***\r\n\r\n" );
+ printf( "\r\n\r\n*** HARD FAULT HANDLER ***\r\n\r\n" );
 
-  printf( "   R0: 0x%08lx\r\n", r0 );
-  printf( "   R1: 0x%08lx\r\n", r1 );
-  printf( "   R2: 0x%08lx\r\n", r2 );
-  printf( "   R3: 0x%08lx\r\n", r3 );
-  printf( "  R12: 0x%08lx\r\n", r12 );
-  printf( "  R14: 0x%08lx (LR - return address)\r\n", r14 );
-  printf( "  R15: 0x%08lx (PC - program counter)\r\n", r15 );
-  printf( "  PSR: 0x%08lx\r\n", psr );
-  printf( " BFAR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed38))));
-  printf( " CFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed28))));
-  printf( " HFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed2c))));
-  printf( " DFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed30))));
-  printf( " AFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed3c))));
+ printf( "   R0: 0x%08lx\r\n", r0 );
+ printf( "   R1: 0x%08lx\r\n", r1 );
+ printf( "   R2: 0x%08lx\r\n", r2 );
+ printf( "   R3: 0x%08lx\r\n", r3 );
+ printf( "  R12: 0x%08lx\r\n", r12 );
+ printf( "  R14: 0x%08lx (LR - return address)\r\n", r14 );
+ printf( "  R15: 0x%08lx (PC - program counter)\r\n", r15 );
+ printf( "  PSR: 0x%08lx\r\n", psr );
+ printf( " BFAR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed38))));
+ printf( " CFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed28))));
+ printf( " HFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed2c))));
+ printf( " DFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed30))));
+ printf( " AFSR: 0x%08lx\r\n", (*((volatile unsigned long *)(0xe000ed3c))));
 //printf( " SCB_SHCSR = %x\r\n", SCB->SHCSR );
 
-  printf( "\r\nSYSTEM HALTED\r\n" );
+ printf( "\r\nSYSTEM HALTED\r\n" );
 
-  for( ;; );
- }
+ for( ;; );
+}
 
- void HardFault_Handler( void )
- {
-    __asm volatile
-    (
-        " tst lr, #4                                         \n"
-        " ite eq                                             \n"
-        " mrseq r0, msp                                      \n"
-        " mrsne r0, psp                                      \n"
-        " ldr r1, [r0, #24]                                  \n"
-        " ldr r2, handler2_address_const                     \n"
-        " bx r2                                              \n"
-        " handler2_address_const: .word hard_fault_handler_c \n"
-    );
- }
-#endif /*DEBUG*/
+void HardFault_Handler( void )
+{
+   __asm volatile
+   (
+       " tst lr, #4                                         \n"
+       " ite eq                                             \n"
+       " mrseq r0, msp                                      \n"
+       " mrsne r0, psp                                      \n"
+       " ldr r1, [r0, #24]                                  \n"
+       " ldr r2, handler2_address_const                     \n"
+       " bx r2                                              \n"
+       " handler2_address_const: .word hard_fault_handler_c \n"
+   );
+}
 
 
 namespace qb50 {

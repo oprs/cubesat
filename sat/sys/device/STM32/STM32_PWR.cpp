@@ -42,7 +42,7 @@ STM32_PWR::~STM32_PWR()
 
 STM32_PWR& STM32_PWR::init( void )
 {
-   LOG << _name << ": STM32F4xx Power controller at " << bus.name;
+   kprintf( "%s: STM32F4xx Power controller at %s\r\n", _name, bus.name );
    return *this;
 }
 
@@ -54,8 +54,9 @@ STM32_PWR& STM32_PWR::enable( bool silent )
 
    RCC.enable( this, silent );
 
-   if( !silent )
-      LOG << _name << ": enabled";
+   if( !silent ) {
+      kprintf( "%s: enabled\r\n", _name );
+   }
 
    return *this;
 }
@@ -68,8 +69,9 @@ STM32_PWR& STM32_PWR::disable( bool silent )
 
    RCC.disable( this, silent );
 
-   if( !silent )
-      LOG << _name << ": disabled";
+   if( !silent ) {
+      kprintf( "%s: disabled\r\n", _name );
+   }
 
    return *this;
 }

@@ -47,10 +47,8 @@ STM32_UART::~STM32_UART()
 
 STM32_UART& STM32_UART::init( void )
 {
-   LOG << _name << ": STM32F4xx UART controller at " << bus.name
-       << ", rx: " << _rxPin.name()
-       << ", tx: " << _txPin.name()
-       ;
+   kprintf( "%s: STM32F4xx UART controller at %s, rx: %s, tx: %s\r\n",
+            _name, bus.name, _rxPin.name(), _txPin.name() );
 
    return *this;
 }
@@ -96,13 +94,15 @@ STM32_UART& STM32_UART::disable( bool silent )
 }
 
 
-size_t STM32_UART::read( void *x, size_t len )
+size_t STM32_UART::read( void *x, size_t len, int toms )
 {
    size_t n = 0;
 
+   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
+
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+         xSemaphoreTake( _isrRXNE, tk );
          continue;
       }
 
@@ -113,14 +113,16 @@ size_t STM32_UART::read( void *x, size_t len )
 }
 
 
-size_t STM32_UART::readLine( void *x, size_t len )
+size_t STM32_UART::readLine( void *x, size_t len, int toms )
 {
    uint8_t ch = 0x00;
    size_t   n = 0;
 
+   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
+
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+         xSemaphoreTake( _isrRXNE, tk );
          continue;
       }
 
@@ -134,7 +136,7 @@ size_t STM32_UART::readLine( void *x, size_t len )
 
    while( ch != 0x0d ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, portMAX_DELAY );
+         xSemaphoreTake( _isrRXNE, tk );
          continue;
       }
 
@@ -145,15 +147,17 @@ size_t STM32_UART::readLine( void *x, size_t len )
 }
 
 
-size_t STM32_UART::write( const void *x, size_t len )
+size_t STM32_UART::write( const void *x, size_t len, int toms )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
    size_t n = 0;
 
+   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
+
    while( n < len ) {
       if( _txFIFO.isFull() ) {
-         xSemaphoreTake( _isrTXE, portMAX_DELAY );
+         xSemaphoreTake( _isrTXE, tk );
          continue;
       }
       (void)_txFIFO.push( ((uint8_t*)x)[ n++ ] );
@@ -181,7 +185,7 @@ STM32_UART& STM32_UART::baudRate( unsigned rate )
 
    USARTx->BRR = (uint16_t)tmp32;
 
-   LOG << _name << ": Baud rate set to " << rate;
+   kprintf( "%s: Baud rate set to %u\r\n", _name, rate );
 
    return *this;
 }

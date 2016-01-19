@@ -16,7 +16,7 @@ static void test( Thread *self )
    (void)self;
 
    for( ;; ) {
-      LOG << "still alive...";
+      kprintf( "still alive...\r\n" );
       delay( 2000 );
    }
 }
@@ -81,7 +81,7 @@ void MainThread::run( void )
    UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
 
-   LOG << "STM32F4-Discovery board";
+   kprintf( "STM32F4-Discovery board\r\n" );
 
  //createThread( "test", test );
 
@@ -108,7 +108,7 @@ for( ;; ) {
    for( ;; ) {
       GYR0.omega( v );
     //GYR1.omega( v );
-      LOG << v.xr << '\t' << v.yr << '\t' << v.zr;
+      kprintf( "%d\t%d\t%d\r\n", v.xr, v.yr, v.zr );
       delay( 1000 );
    }
 }

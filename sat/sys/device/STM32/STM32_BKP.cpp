@@ -29,7 +29,7 @@ STM32_BKP::~STM32_BKP()
 
 STM32_BKP& STM32_BKP::init( void )
 {
-   LOG << _name << ": STM32F4xx Backup Domain controller at " << bus.name;
+   kprintf( "%s: STM32F4xx Backup Domain controller at %s\r\n", _name, bus.name );
 
    return *this;
 }

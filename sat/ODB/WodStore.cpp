@@ -49,6 +49,9 @@ WodStore& WodStore::enable( bool silent )
    _mem.enable( silent );
    unlock();
 
+kprintf( "wHead: 0x%08x\r\n", CONF.wHead() );
+kprintf( "wTail: 0x%08x\r\n", CONF.wTail() );
+
    return *this;
 }
 
@@ -124,6 +127,15 @@ WodStore& WodStore::write( WodStore::Entry *e )
    uint32_t wTail = CONF.wTail();
    uint32_t wNext = wTail + size( (WodStore::Entry*)wTail );
 
+/*
+LOG << "WodStore::Write( 0x" << std::hex << (unsigned)e << " ), size: " << std::dec << size( e );
+LOG << " - type: " << e->_type;
+LOG << " - wHead: 0x" << std::hex << wHead;
+LOG << " - wTail: 0x" << std::hex << wTail;
+LOG << " - _wCache.addr: 0x" << std::hex << _wCache.addr;
+LOG << " - wNext: 0x" << std::hex << wNext;
+*/
+
    if( !INCACHE( _wCache, wNext + size( e ))) {
 
       /*
@@ -131,12 +143,20 @@ WodStore& WodStore::write( WodStore::Entry *e )
        * -> flush the current sector and go for the next one
        */
 
+/*
+LOG << " - doesn't fit in cache, reading next sector";
+*/
+
       _mem.sectorErase( _wCache.addr );
       _mem.sectorWrite( _wCache.addr, _wCache.x );
 
       /* get the next sector */
 
       wNext = _nsaddr( _wCache.addr );
+
+/*
+LOG << " - wNext: 0x" << std::hex << wNext;
+*/
 
       if( wNext == wHead ) {
 
@@ -147,7 +167,14 @@ WodStore& WodStore::write( WodStore::Entry *e )
           *    The old data will be overwritten (need to make some room).
           */
 
+/*
+LOG << " - already some data there, moving wHead one sector further";
+*/
+
          wHead = CONF.wHead( _nsaddr( wHead ));
+/*
+LOG << " - wHead: 0x" << std::hex << wHead;
+*/
       }
    }
 
@@ -157,6 +184,10 @@ WodStore& WodStore::write( WodStore::Entry *e )
 
    uint32_t off = wNext & ( _mem.sectorSize() - 1 );
    (void)memcpy( _wCache.x + off, e, size( e ));
+
+/*
+LOG << " - off: 0x" << std::hex << off << std::dec;
+*/
 
    /* point wTail to the new entry */
 
@@ -173,9 +204,9 @@ uint32_t WodStore::size( WodStore::Entry *e )
    uint32_t rv;
 
    switch( e->_type ) {
-      case NIL:   rv = sizeof( WodStore::Entry      );
-      case PLAIN: rv = sizeof( WodStore::PlainEntry );
-      case FIPEX: rv = sizeof( WodStore::FipexEntry );
+      case NIL:   rv = sizeof( WodStore::Entry      ); break;
+      case ADC:   rv = sizeof( WodStore::ADCEntry   ); break;
+      case FIPEX: rv = sizeof( WodStore::FipexEntry ); break;
    }
 
    return rv;

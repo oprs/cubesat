@@ -53,11 +53,8 @@ STM32_SPI& STM32_SPI::init( void )
    _stMISO.init();
    _stMOSI.init();
 
-   LOG << _name << ": STM32F4xx SPI controller at " << bus.name
-       << ", clk: " << _clkPin.name()
-       << ", miso: " << _stMISO._pin.name()
-       << ", mosi: " << _stMOSI._pin.name()
-       ;
+   kprintf( "%s: STM32F4xx SPI controller at %s, clk: %s, miso: %s, mosi: %s\r\n",
+            _name, bus.name, _clkPin.name(), _stMISO._pin.name(), _stMOSI._pin.name() );
 
    return *this;
 }
@@ -222,7 +219,7 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         LOG << _name << ": " RED( "timeout in STM32_SPI::pollXfer()" );
+         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer()" ) "\r\n", _name );
          break;
       }
 
@@ -237,7 +234,7 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         LOG << _name << ": " RED( "timeout in STM32_SPI::pollXfer()" );
+         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer()" ) "\r\n", _name );
          break;
       }
 

@@ -10,7 +10,7 @@ void ODBCommUpThread( Thread *self)
 
     for(;;){
             delay( 2000 );
-            LOG << "------- ODB Communication (UP)  Thread -------";
+            kprintf( "------- ODB Communication (UP)  Thread -------\r\n" );
     }
 }
 

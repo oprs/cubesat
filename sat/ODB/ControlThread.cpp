@@ -7,10 +7,10 @@
 #include "CWThread.h"
 #include "GPSThread.h"
 #include "PMUThread.h"
+#include "FiPEX/FipexThread.h"
 #include "WodStore.h"
 
 using namespace qb50;
-
 
 QueueHandle_t evQueue;
 
@@ -25,14 +25,15 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
      ||||||+------ CWThread
      |||||||+----- InitThread
      |||||||| */
-   0b00000001, /* 0x01 - INIT  */
-   0b00100010, /* 0x22 - CW    */
-   0b00000000, /* 0x00 - STDBY */
-   0b00100100, /* 0x12 - WODEX */
-   0b01100000, /* 0x60 - TELEM */
-   0b00110000, /* 0x30 - FiPEX */
-   0b10100000, /* 0xa0 - FM    */
-   0b00100000  /* 0x20 - POWER */
+   0b00000001, /* mode INIT  */
+   0b00110000 /*0b00110010*/, /* mode CW    */
+   0b00000000, /* mode STDBY */
+   0b00110100, /* mode WODEX */
+   0b01100000, /* mode TELEM */
+   0b00110000, /* mode FiPEX */
+   0b00101000, /* mode GPS   */
+   0b10100000, /* mode FM    */
+   0b00100000  /* mode POWER */
 };
 
 
@@ -66,6 +67,8 @@ void ControlThread::run( void )
 {
    Event *ev;
 
+/* <INIT> */
+
    SAT.init();
    WOD.init();
 
@@ -86,33 +89,37 @@ PB1.out().on();
     */
 
    if( RCC.isPwrOn() ) {
-      LOG << "POWER ON - loading default configuration";
+      kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
    }
 
    /* increment the reset counter */
 
-   LOG << "Reset count: " << CONF.reset();
+   kprintf( "Reset count: %d\r\n", CONF.reset() );
 
    /* display satellite ID */
 
    switch( SAT.id() ) {
 
       case ODB::FR01:
-         LOG << "ON0FR1 (X-CubeSat - Ecole Polytechnique)";
+         kprintf( "ON0FR1 (X-CubeSat - Ecole Polytechnique)\r\n" );
          break;
 
       case ODB::FR05:
-         LOG << "ON0FR5 (SpaceCube - Mines ParisTech)";
+         kprintf( "ON0FR5 (SpaceCube - Mines ParisTech)\r\n" );
          break;
 
       default:
          ;
    }
 
+/* </INIT> */
+
+
    /* command thread is always running */
 
    (void)registerThread( new CommandThread() );
+
 
    /* create threads (suspended state) */
 
@@ -120,7 +127,7 @@ PB1.out().on();
    _tv[ 1 ] = registerThread( new CWThread()      );
  //_tv[ 2 ] = registerThread( new WODEXThread()   );
    _tv[ 3 ] = registerThread( new GPSThread()     );
- //_tv[ 4 ] = registerThread( new FiPEXThread()   );
+   _tv[ 4 ] = registerThread( new FipexThread()   );
    _tv[ 5 ] = registerThread( new PMUThread()     );
  //_tv[ 6 ] = registerThread( new TelemThread()   );
  //_tv[ 7 ] = registerThread( new CTCSSThread()   );
@@ -135,7 +142,7 @@ PB1.out().on();
       if( SAT.aState() != ODB::DEPLOYED ) {
          mode = Config::INIT;
       } else {
-         LOG << "Antenna already deployed, resuming previous mode";
+         kprintf( "Antenna already deployed, resuming previous mode\r\n" );
       }
    }
 
@@ -149,7 +156,7 @@ PB1.out().on();
       if( !ev ) continue;
 
       Event::event_t etype = ev->type();
-      LOG << "EVENT TYPE #" << etype << " - \033[1m" << ev->name() << "\033[0m";
+      kprintf( "\033[1mEVENT TYPE #%d - %s\033[0m\r\n", etype, ev->name() );
 
       switch( etype ) {
 
@@ -172,7 +179,7 @@ PB1.out().on();
 
             if( mode != Config::POWER ) {
 #if 1
-               LOG << RED( "Ignoring VBAT_LOW" );
+               kprintf( RED( "Ignoring VBAT_LOW" ) "\r\n" );
 #else
                _switchModes( Config::POWER );
 #endif
@@ -204,11 +211,11 @@ PB1.out().on();
 
 void ControlThread::_switchModes( Config::mode_t target )
 {
-   uint32_t ntb = _ctb ^ _mt[ target ];
+   uint32_t delta = _ctb ^ _mt[ target ];
    uint32_t tmp = 0x01;
 
    for( unsigned i = 0 ; i < _QB50_NTHREADS ; ++i ) {
-      if(( ntb & tmp ) != 0 ) {
+      if(( delta & tmp ) != 0 ) {
          if(( _ctb & tmp ) != 0 ) {
             _tv[ i ]->suspend();
          } else {
@@ -222,7 +229,7 @@ void ControlThread::_switchModes( Config::mode_t target )
    _ctb = _mt[ target ];
    CONF.mode( target );
 
-   LOG << "\033[7m-------- [ " << Config::modes[ target ] << " ] --------\033[0m";
+   kprintf( "\033[7m-------- [ %s ] --------\033[0m\r\n", Config::modes[ target ] );
 }
 
 

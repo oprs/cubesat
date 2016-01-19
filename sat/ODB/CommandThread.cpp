@@ -31,14 +31,14 @@ void CommandThread::run( void )
 {
    Form *form;
 
-   UART2.enable(); /* XXX UART6 */
+   UART6.enable(); /* XXX UART6 */
 
    for( ;; ) {
 
       try {
-         form = _parseLine( UART2 /* XXX UART6 */ );
+         form = _parseLine( UART6 /* XXX UART6 */ );
       } catch( const char *e ) {
-         LOG << "Exception: " << e;
+         kprintf( "Exception: %s\r\n", e );
          continue;
       }
 
@@ -55,7 +55,7 @@ void CommandThread::run( void )
 
             HForm *hform = (HForm*)form;
             (void)strftime( tmp, 32, "%a, %d %b %Y %T %Z", gmtime( &hform->tv.tv_sec ));
-            LOG << "+ H" << hform->tv.tv_sec << " [" << tmp << ']';
+            kprintf( "+ H %lu [%s]\r\n", hform->tv.tv_sec, tmp );
             break;
          }
 
@@ -64,16 +64,17 @@ void CommandThread::run( void )
             PForm *pform = (PForm*)form;
 
             if( pform->pid == Config::PARAM_NONE ) {
-               LOG << "- P" << pform->pid << " parameter out of bounds";
+               kprintf( "- P %d parameter out of bounds\r\n", pform->pid );
                break;
             }
 
             Config::pval_t old = CONF.setParam( pform->pid, pform->pval );
 
-            if( pform->pval == old )
-               LOG << "+ P" << pform->pid << ',' << pform->pval << " (unchanged)";
-            else
-               LOG << "+ P" << pform->pid << ',' << pform->pval << " (was: " << old << ')';
+            if( pform->pval == old ) {
+               kprintf( "+ P%d,%d (unchanged)\r\n", pform->pid, pform->pval );
+            } else {
+               kprintf( "+ P%d,%d (was: %d)\r\n", pform->pid, pform->pval, old );
+            }
 
             break;
          }
@@ -81,28 +82,28 @@ void CommandThread::run( void )
          case Form::FORM_TYPE_T1:
          {
             T1Form *t1form = (T1Form*)form;
-            LOG << "+ T1:";
-            LOG << "             Satellite number: " << t1form->sat;
-            LOG << "                   Epoch year: " << t1form->eyr;
-            LOG << "        Epoch day of the year: " << t1form->edy;
-            LOG << "      1st. derivative of mm/2: " << t1form->d1m;
-            LOG << "      2nd. derivative of mm/6: " << t1form->d2m;
-            LOG << "              BSTAR drag term: " << t1form->bdt;
+            kprintf( "+ T1:\r\n" );
+            kprintf( "             Satellite number: %l\r\n", t1form->sat );
+            kprintf( "                   Epoch year: %l\r\n", t1form->eyr );
+            kprintf( "        Epoch day of the year: %f\r\n", t1form->edy );
+            kprintf( "      1st. derivative of mm/2: %f\r\n", t1form->d1m );
+            kprintf( "      2nd. derivative of mm/6: %f\r\n", t1form->d2m );
+            kprintf( "              BSTAR drag term: %f\r\n", t1form->bdt );
             break;
          }
 
          case Form::FORM_TYPE_T2:
          {
             T2Form *t2form = (T2Form*)form;
-            LOG << "+ T2:\r\n";
-            LOG << "             Satellite number: " << t2form->sat;
-            LOG << "        Inclination (degrees): " << t2form->inc;
-            LOG << "            R.A.A.N (degrees): " << t2form->ran;
-            LOG << "                 Eccentricity: " << t2form->ecc;
-            LOG << "    Arg. of perigee (degrees): " << t2form->aop;
-            LOG << "       Mean anomaly (degrees): " << t2form->man;
-            LOG << "        Mean motion (rev/day): " << t2form->mmo;
-            LOG << "    Revolution number @ epoch: " << t2form->rev;
+            kprintf( "+ T2:\r\n" );
+            kprintf( "             Satellite number: %l\r\n", t2form->sat );
+            kprintf( "        Inclination (degrees): %f\r\n", t2form->inc );
+            kprintf( "            R.A.A.N (degrees): %f\r\n", t2form->ran );
+            kprintf( "                 Eccentricity: %f\r\n", t2form->ecc );
+            kprintf( "    Arg. of perigee (degrees): %f\r\n", t2form->aop );
+            kprintf( "       Mean anomaly (degrees): %f\r\n", t2form->man );
+            kprintf( "        Mean motion (rev/day): %f\r\n", t2form->mmo );
+            kprintf( "    Revolution number @ epoch: %l\r\n", t2form->rev );
             break;
          }
 
