@@ -140,14 +140,14 @@ void PMUThread::run( void )
 
       SAT.dcBat    = dC;
 
+
       /* check battery voltage */
 
-      float vobs = 35.235952 * COEF( v4 );
-      float vmin = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
-      float vmax = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
+      float mvMin = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
+      float mvMax = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
 
-      if( vobs <= vmax ) {
-         if( vobs <= vmin ) {
+      if( SAT.mvBat <= mvMax ) {
+         if( SAT.mvBat <= mvMin ) {
             if( _mode != LOW ) {
                Event *ev = new Event( Event::VBAT_LOW );
                xQueueSendToBack( evQueue, &ev, portMAX_DELAY );

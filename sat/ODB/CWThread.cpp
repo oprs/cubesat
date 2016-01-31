@@ -58,33 +58,41 @@ static char dcCode( int dc )
 
 void CWThread::run( void )
 {
-   char x[8];
+   char x[16];
    unsigned dt;
 
    Morse cw( PB1 );
 
-   for( ;; ) {
+   for( unsigned i = 0 ;; ++i ) {
 
       _wait();  // wait if suspended
 
-      x[0] = 'F';
-      x[1] = 'R';
-      x[2] = SAT.id() == ODB::FR01 ? '1' : '5';
-      x[3] = ' ';
-      x[4] = mvCode( SAT.mvBat );
-      x[5] = maCode( SAT.maIRx + SAT.maITx );
-      x[6] = maCode( SAT.maI[0] + SAT.maI[1] + SAT.maI[2] + SAT.maI[3] );
-      x[7] = dcCode( SAT.dcBat );
+      x[  0 ] = 'O';
+      x[  1 ] = 'N';
+      x[  2 ] = '0';
+      x[  3 ] = 'F';
+      x[  4 ] = 'R';
+      x[  5 ] = SAT.id() == ODB::FR01 ? '1' : '5';
+      x[  6 ] = ' ';
+      x[  7 ] = mvCode( SAT.mvBat );
+      x[  8 ] = maCode( SAT.maIRx + SAT.maITx );
+      x[  9 ] = maCode( SAT.maI[0] + SAT.maI[1] + SAT.maI[2] + SAT.maI[3] );
+      x[ 10 ] = dcCode( SAT.dcBat );
 
-#if 1
+#if 0
       LOG << "SAT.mvBat: " << SAT.mvBat;
       LOG << "SAT.maIRx: " << SAT.maIRx;
       LOG << "SAT.maITx: " << SAT.maITx;
       LOG << "SAT.dcBat: " << SAT.dcBat;
 #endif
-      LOG << name << " - " << x[0] << x[1] << x[2] << x[3] << x[4] << x[5] << x[6] << x[7];
 
-      cw.write( x, 8 );
+      if(( i % 5 ) == 0 ) {
+         LOG << name << " - " << x[0] << x[1] << x[2] << x[3] << x[4] << x[5] << x[6] << x[7] << x[8] << x[9] << x[10];
+         cw.write( x, 11 );
+      } else {
+         LOG << name << " - "                         << x[3] << x[4] << x[5] << x[6] << x[7] << x[8] << x[9] << x[10];
+         cw.write( x + 3, 8 );
+      }
 
       dt = CONF.getParam( Config::PARAM_CW_CYCLE_TX );
       dt = ( 10 + 5 * dt ) * 1000;
