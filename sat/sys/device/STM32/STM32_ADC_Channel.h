@@ -7,7 +7,7 @@
 #endif
 
 
-class Channel : public ADC::Channel
+class Channel : public Device, public ADC::Channel
 {
 
    public:

@@ -2,6 +2,7 @@
 #ifndef _QB50_SYS_DEVICE_A25LXXX_H
 #define _QB50_SYS_DEVICE_A25LXXX_H
 
+#include "Device.h"
 #include "FlashMemory.h"
 #include "SPISlave.h"
 
@@ -10,7 +11,7 @@
 
 namespace qb50 {
 
-   class A25Lxxx : public FlashMemory, public SPISlave
+   class A25Lxxx : public Device, public SPISlave, public FlashMemory
    {
 
       private:

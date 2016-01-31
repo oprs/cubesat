@@ -9,7 +9,7 @@ namespace qb50 {
 
    typedef uint16_t adcval_t;
 
-   class ADC : public Device
+   class ADC
    {
 
       protected:
@@ -20,17 +20,12 @@ namespace qb50 {
 
          #include "ADC_Channel.h"
 
-         ADC( const char *name )
-         : Device( name )
+         ADC()
          { ; }
 
          virtual ~ADC()
          { ; }
 
-         virtual ADC&     init    ( void         ) = 0;
-       //virtual ADC&     reset   ( void         ) = 0;
-         virtual ADC&     enable  ( bool silent  ) = 0;
-         virtual ADC&     disable ( bool silent  ) = 0;
          virtual adcval_t read    ( Channel& ch  ) = 0;
        //virtual adcval_t read    ( unsigned cid ) = 0;
 

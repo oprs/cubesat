@@ -7,21 +7,16 @@
 #endif
 
 
-class Stream : public Device
+class Stream
 {
 
    public:
 
-      Stream( const char *name )
-         : Device( name )
+      Stream()
       { ; }
 
       virtual ~Stream()
       { ; }
-
-      virtual Stream& init    ( void                ) = 0;
-      virtual Stream& enable  ( bool silent = false ) = 0;
-      virtual Stream& disable ( bool silent = false ) = 0;
 
 };
 

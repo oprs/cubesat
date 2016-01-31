@@ -3,6 +3,8 @@
 #include "system/Application.h"
 #include "system/Logger.h"
 
+#define A25Lxxx_HARD_LIMIT 1000
+
 using namespace qb50;
 
 /*
@@ -56,7 +58,7 @@ static const uint8_t WRDICmd[]  = { 0x04 };
 //  - - - - - - - - -  //
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIO::Pin& csPin )
-   : FlashMemory( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
+   : Device( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 { ; }
 
 
@@ -94,7 +96,7 @@ A25Lxxx& A25Lxxx::init( void )
       ++chip;
 
    if( chip->mask == 0 ) {
-      LOG << _name << ": unknown chip - defaulting to AMIC A25L032";
+      LOG << _name << ": unknown chip - using default";
       chip = &chips[7];
    }
 
@@ -104,8 +106,8 @@ A25Lxxx& A25Lxxx::init( void )
    _geo.bpp = chip->bpp;
 
    LOG << _name << ": Onboard AMIC " << chip->name
-       << " serial flash (" << ( chipSize() >> 17 ) << "Mbit) at "
-       << _spi.name() << ", cs: " << _csPin.name();
+       << " serial flash (" << ( chipSize() >> 17 ) << "Mbit)"
+       << ", cs: " << _csPin.name();
 
    LOG << _name << ": " << _geo.bpc << " blocks * "
                         << _geo.spb << " sectors * "
@@ -121,7 +123,7 @@ A25Lxxx& A25Lxxx::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+ //_spi.enable( silent );
 
    if( !silent )
       LOG << _name << ": enabled";
@@ -135,7 +137,7 @@ A25Lxxx& A25Lxxx::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   _spi.disable( silent );
+ //_spi.disable( silent );
 
    if( !silent )
       LOG << _name << ": disabled";
@@ -314,6 +316,8 @@ void A25Lxxx::_REMS( REMSResp *rems )
 void A25Lxxx::_WIPWait( unsigned ms )
 {
    RDSRResp rdsr;
+
+   int n;
    uint8_t rx;
    uint8_t tx = 0xff;
 
@@ -326,10 +330,15 @@ void A25Lxxx::_WIPWait( unsigned ms )
    _spi.pollXfer( RDSR1Cmd, &rdsr, sizeof( RDSR1Cmd ));
 
    if( rdsr.sr & 0x01 ) {
-      do {
+      for( n = 0 ; n < A25Lxxx_HARD_LIMIT ; ++n ) {
          if( ms > 0 ) delay( ms );
          _spi.pollXfer( &tx, &rx, 1 );
-      } while( rx & 0x01 ); // XXX hard limit
+         if( !( rx & 0x01 )) break;
+      }
+
+      if( n == A25Lxxx_HARD_LIMIT ) {
+         LOG << _name << ": timeout in A25Lxxx::_WIPWait()";
+      }
    }
    _deselect();
 }

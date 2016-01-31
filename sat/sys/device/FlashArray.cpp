@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 FlashArray::FlashArray( const char *name, const int nSlaves, FlashMemory *slaves[] )
-   : FlashMemory( name ), _nSlaves( nSlaves ), _slaves( slaves )
+   : Device( name ), _nSlaves( nSlaves ), _slaves( slaves )
 { ; }
 
 

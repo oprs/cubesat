@@ -35,7 +35,7 @@ bool CFIPEX::setOn()
 	if(m_status)
 	{
 		//GPIO_SetBits(GPIOB,GPIO_Pin_14);
-		PB14.enable().out();
+		PB14.out();
 		PB14.off();
 	}
 

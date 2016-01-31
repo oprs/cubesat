@@ -40,7 +40,7 @@ void STM32_EXTI::registerHandler( STM32_GPIO::Pin& pin, STM32_EXTIHandler *handl
 
     /* set pin as input */
 
-    pin.enable().in().noPull();
+    pin.in().noPull();
 /*
     if( edge == FALLING ) {
         pin.pullUp();

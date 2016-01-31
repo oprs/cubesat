@@ -25,13 +25,15 @@ Transceiver::~Transceiver()
 
 Transceiver& Transceiver::init( void )
 {
-   LOG << _name << ": AMSAT-F Radio Board (F6FAO)"
+   LOG << _name << ": AMSAT-F Radio Board (F6FAO)";
+/*
        << ", enTX: " << _enTXPin.name()
        << ", enPA: " << _enPAPin.name()
        ;
+*/
 
-   _enTXPin.enable().out().off();
-   _enPAPin.enable().out().off();
+   _enTXPin.out().off();
+   _enPAPin.out().off();
 
    return *this;
 }

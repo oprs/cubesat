@@ -5,12 +5,12 @@
 #include "SPI.h"
 #include "BusSlave.h"
 #include "STM32/STM32_GPIO.h"
-#include "STM32/DMA.h"
+#include "STM32/STM32_DMA.h"
 
 
 namespace qb50 {
 
-   class STM32_SPI : public SPI, public BusSlave
+   class STM32_SPI : public Device, public BusSlave, public SPI
    {
 
       public:
@@ -47,6 +47,9 @@ namespace qb50 {
 
          STM32_SPI& master   ( void );
          STM32_SPI& slave    ( void );
+
+         STM32_SPI& lock     ( void );
+         STM32_SPI& unlock   ( void );
 
          /* synchronous transfer */
 

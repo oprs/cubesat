@@ -25,9 +25,9 @@ SPISlave::~SPISlave()
 SPISlave& SPISlave::init( void )
 {
    if( _csMode == ActiveLow ) {
-      _csPin.enable().out().on();
+      _csPin.out().on();
    } else {
-      _csPin.enable().out().off();
+      _csPin.out().off();
    }
 
    return *this;

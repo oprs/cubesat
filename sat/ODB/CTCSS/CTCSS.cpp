@@ -65,8 +65,8 @@ CTCSS::~CTCSS()
 
 CTCSS& CTCSS::enable( void )
 {
-    _txPin.enable().out().off();
-    _paPin.enable().out().off();
+    _txPin.out().off();
+    _paPin.out().off();
 
     return *this;
 }

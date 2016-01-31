@@ -21,7 +21,7 @@ STM32_UART::STM32_UART( Bus&              bus,
                         STM32_GPIO::Pin&  txPin,
                         const uint32_t    IRQn,
                         STM32_GPIO::Alt   alt )
-   : UART( name ), BusSlave( bus, iobase, periph ),
+   : Device( name ), BusSlave( bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),
      _rxPin ( rxPin ),
@@ -61,8 +61,8 @@ STM32_UART& STM32_UART::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   _rxPin.enable().pullUp().alt( _alt );
-   _txPin.enable().pullUp().alt( _alt );
+   _rxPin.pullUp().alt( _alt );
+   _txPin.pullUp().alt( _alt );
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -91,9 +91,6 @@ STM32_UART& STM32_UART::disable( bool silent )
    NVIC.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
    RCC.disable( this, silent );
-
-   _txPin.disable();
-   _rxPin.disable();
 
    return *this;
 }

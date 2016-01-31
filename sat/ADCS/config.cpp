@@ -40,31 +40,31 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                      name */
-   DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
-   DMA DMA2( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA2, "DAM2" );
+   /*              bus   iobase     periph                      name */
+   STM32_DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
+   STM32_DMA DMA2( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA2, "DAM2" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   DMA::Stream DMA1ST0( DMA1, DMA1_Stream0_BASE, DMA1_Stream0_IRQn, "DMA1ST0", 0x00 );
-   DMA::Stream DMA1ST1( DMA1, DMA1_Stream1_BASE, DMA1_Stream1_IRQn, "DMA1ST1", 0x06 );
-   DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
-   DMA::Stream DMA1ST3( DMA1, DMA1_Stream3_BASE, DMA1_Stream3_IRQn, "DMA1ST3", 0x16 );
-   DMA::Stream DMA1ST4( DMA1, DMA1_Stream4_BASE, DMA1_Stream4_IRQn, "DMA1ST4", 0x20 );
-   DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
-   DMA::Stream DMA1ST6( DMA1, DMA1_Stream6_BASE, DMA1_Stream6_IRQn, "DMA1ST6", 0x30 );
-   DMA::Stream DMA1ST7( DMA1, DMA1_Stream7_BASE, DMA1_Stream7_IRQn, "DMA1ST7", 0x36 );
+   STM32_DMA::Stream DMA1ST0( DMA1, DMA1_Stream0_BASE, DMA1_Stream0_IRQn, "DMA1ST0", 0x00 );
+   STM32_DMA::Stream DMA1ST1( DMA1, DMA1_Stream1_BASE, DMA1_Stream1_IRQn, "DMA1ST1", 0x06 );
+   STM32_DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
+   STM32_DMA::Stream DMA1ST3( DMA1, DMA1_Stream3_BASE, DMA1_Stream3_IRQn, "DMA1ST3", 0x16 );
+   STM32_DMA::Stream DMA1ST4( DMA1, DMA1_Stream4_BASE, DMA1_Stream4_IRQn, "DMA1ST4", 0x20 );
+   STM32_DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+   STM32_DMA::Stream DMA1ST6( DMA1, DMA1_Stream6_BASE, DMA1_Stream6_IRQn, "DMA1ST6", 0x30 );
+   STM32_DMA::Stream DMA1ST7( DMA1, DMA1_Stream7_BASE, DMA1_Stream7_IRQn, "DMA1ST7", 0x36 );
 
-   DMA::Stream DMA2ST0( DMA2, DMA2_Stream0_BASE, DMA2_Stream0_IRQn, "DMA2ST0", 0x00 );
-   DMA::Stream DMA2ST1( DMA2, DMA2_Stream1_BASE, DMA2_Stream1_IRQn, "DMA2ST1", 0x06 );
-   DMA::Stream DMA2ST2( DMA2, DMA2_Stream2_BASE, DMA2_Stream2_IRQn, "DMA2ST2", 0x10 );
-   DMA::Stream DMA2ST3( DMA2, DMA2_Stream3_BASE, DMA2_Stream3_IRQn, "DMA2ST3", 0x16 );
-   DMA::Stream DMA2ST4( DMA2, DMA2_Stream4_BASE, DMA2_Stream4_IRQn, "DMA2ST4", 0x20 );
-   DMA::Stream DMA2ST5( DMA2, DMA2_Stream5_BASE, DMA2_Stream5_IRQn, "DMA2ST5", 0x26 );
-   DMA::Stream DMA2ST6( DMA2, DMA2_Stream6_BASE, DMA2_Stream6_IRQn, "DMA2ST6", 0x30 );
-   DMA::Stream DMA2ST7( DMA2, DMA2_Stream7_BASE, DMA2_Stream7_IRQn, "DMA2ST7", 0x36 );
+   STM32_DMA::Stream DMA2ST0( DMA2, DMA2_Stream0_BASE, DMA2_Stream0_IRQn, "DMA2ST0", 0x00 );
+   STM32_DMA::Stream DMA2ST1( DMA2, DMA2_Stream1_BASE, DMA2_Stream1_IRQn, "DMA2ST1", 0x06 );
+   STM32_DMA::Stream DMA2ST2( DMA2, DMA2_Stream2_BASE, DMA2_Stream2_IRQn, "DMA2ST2", 0x10 );
+   STM32_DMA::Stream DMA2ST3( DMA2, DMA2_Stream3_BASE, DMA2_Stream3_IRQn, "DMA2ST3", 0x16 );
+   STM32_DMA::Stream DMA2ST4( DMA2, DMA2_Stream4_BASE, DMA2_Stream4_IRQn, "DMA2ST4", 0x20 );
+   STM32_DMA::Stream DMA2ST5( DMA2, DMA2_Stream5_BASE, DMA2_Stream5_IRQn, "DMA2ST5", 0x26 );
+   STM32_DMA::Stream DMA2ST6( DMA2, DMA2_Stream6_BASE, DMA2_Stream6_IRQn, "DMA2ST6", 0x30 );
+   STM32_DMA::Stream DMA2ST7( DMA2, DMA2_Stream7_BASE, DMA2_Stream7_IRQn, "DMA2ST7", 0x36 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -158,18 +158,18 @@ namespace qb50 {
 //  - - - - - - - - - - -  //
 
    /*
-    *  See the STM32F4 reference manual for DMA stream/channel mappings,
+    *  See the STM32F4 reference manual for STM32_DMA stream/channel mappings,
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   STM32_SPI::Stream SPI1_MISO( DMA2ST0, DMA::CH3, "SPI1MISO", PA6,  STM32_GPIO::SPI1 );
-   STM32_SPI::Stream SPI1_MOSI( DMA2ST3, DMA::CH3, "SPI1MOSI", PA7,  STM32_GPIO::SPI1 );
+   STM32_SPI::Stream SPI1_MISO( DMA2ST0, STM32_DMA::CH3, "SPI1MISO", PA6,  STM32_GPIO::SPI1 );
+   STM32_SPI::Stream SPI1_MOSI( DMA2ST3, STM32_DMA::CH3, "SPI1MOSI", PA7,  STM32_GPIO::SPI1 );
 
-   STM32_SPI::Stream SPI2_MISO( DMA1ST3, DMA::CH0, "SPI2MISO", PB14, STM32_GPIO::SPI2 );
-   STM32_SPI::Stream SPI2_MOSI( DMA1ST4, DMA::CH0, "SPI2MOSI", PB15, STM32_GPIO::SPI2 );
+   STM32_SPI::Stream SPI2_MISO( DMA1ST3, STM32_DMA::CH0, "SPI2MISO", PB14, STM32_GPIO::SPI2 );
+   STM32_SPI::Stream SPI2_MOSI( DMA1ST4, STM32_DMA::CH0, "SPI2MOSI", PB15, STM32_GPIO::SPI2 );
 
-   STM32_SPI::Stream SPI3_MISO( DMA1ST2, DMA::CH0, "SPI3MISO", PB4,  STM32_GPIO::SPI3 );
-   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, DMA::CH0, "SPI3MOSI", PB5,  STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4,  STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5,  STM32_GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

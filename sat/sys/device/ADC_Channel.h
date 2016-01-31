@@ -7,23 +7,18 @@
 #endif
 
 
-class Channel : public Device
+class Channel
 {
 
    public:
 
       ADC& _adc;
 
-      Channel( ADC& adc, const char *name )
-      : Device( name ), _adc( adc )
+      Channel( ADC& adc ) : _adc( adc )
       { ; }
 
       virtual ~Channel()
       { ; }
-
-      virtual Channel& init    ( void )                = 0;
-      virtual Channel& enable  ( bool silent = false ) = 0;
-      virtual Channel& disable ( bool silent = false ) = 0;
 
       inline adcval_t read( void ) __attribute__(( always_inline ))
       { return _adc.read( *this ); }

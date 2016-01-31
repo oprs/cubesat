@@ -31,7 +31,7 @@ void GPSThread::run( void )
 
 	LOG << "GPSThread starting..." << std::flush;
 
-	PC3.enable().out().off(); /* ON_OFF_GPS */
+	PC3.out().off(); /* ON_OFF_GPS */
 
 	for( ;; ) {
 		(void)UART3.read( &c, 1 );

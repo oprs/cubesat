@@ -59,15 +59,15 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                      name */
-   DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
+   /*              bus   iobase     periph                      name */
+   STM32_DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
-   DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+   STM32_DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
+   STM32_DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -189,8 +189,8 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   STM32_SPI::Stream SPI3_MISO( DMA1ST2, DMA::CH0, "SPI3MISO", PB4, STM32_GPIO::SPI3 );
-   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, DMA::CH0, "SPI3MOSI", PB5, STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4, STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5, STM32_GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

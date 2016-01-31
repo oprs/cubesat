@@ -2,28 +2,26 @@
 #ifndef _QB50_SYS_DEVICE_SPI_H
 #define _QB50_SYS_DEVICE_SPI_H
 
-#include "Device.h"
+#include <cstddef>
 
 
 namespace qb50 {
 
-   class SPI : public Device
+   class SPI
    {
 
       public:
 
          #include "SPI_Stream.h"
 
-         SPI( const char* name )
-            : Device( name )
+         SPI()
          { ; }
 
          virtual ~SPI()
          { ; }
 
-         virtual SPI& init     ( void                ) = 0;
-         virtual SPI& enable   ( bool silent = false ) = 0;
-         virtual SPI& disable  ( bool silent = false ) = 0;
+         virtual SPI& lock   ( void ) = 0;
+         virtual SPI& unlock ( void ) = 0;
 
          /* synchronous transfer */
 

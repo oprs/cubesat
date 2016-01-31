@@ -7,13 +7,13 @@
 #endif
 
 
-class Stream : public SPI::Stream
+class Stream : public Device, public SPI::Stream
 {
 
    public:
 
-      Stream( DMA::Stream&       dmaStream,
-              DMA::Channel       dmaChannel,
+      Stream( STM32_DMA::Stream& dmaStream,
+              STM32_DMA::Channel dmaChannel,
               const char        *name,
               STM32_GPIO::Pin&   pin,
               STM32_GPIO::Alt    alt );
@@ -24,10 +24,10 @@ class Stream : public SPI::Stream
       Stream& enable  ( bool silent = false );
       Stream& disable ( bool silent = false );
 
-      DMA::Stream&      dmaStream;
-      DMA::Channel      dmaChannel;
-      STM32_GPIO::Pin& _pin;
-      STM32_GPIO::Alt  _alt;
+      STM32_DMA::Stream& dmaStream;
+      STM32_DMA::Channel dmaChannel;
+      STM32_GPIO::Pin&  _pin;
+      STM32_GPIO::Alt   _alt;
 
 };
 

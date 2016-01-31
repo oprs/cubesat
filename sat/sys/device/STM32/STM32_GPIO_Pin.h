@@ -15,10 +15,6 @@ class Pin : public GPIO::Pin
       Pin( STM32_GPIO& gpio, const unsigned id, const char *name, const uint16_t mask );
       ~Pin();
 
-      Pin& init   ( void );
-      Pin& enable ( bool silent = false );
-      Pin& disable( bool silent = false );
-
       Pin& on     ( void );
       Pin& off    ( void );
       Pin& toggle ( void );

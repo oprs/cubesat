@@ -53,15 +53,15 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                      name */
-   DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
+   /*              bus   iobase     periph                      name */
+   STM32_DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
-   DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+   STM32_DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
+   STM32_DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -100,6 +100,17 @@ namespace qb50 {
       STM32_GPIO::Pin( GPIOC, 14, "PC14", 0x4000 ),  STM32_GPIO::Pin( GPIOC, 15, "PC15", 0x8000 )
    };
 
+   static STM32_GPIO::Pin GPIOD_Pins[ 16 ] = {
+      STM32_GPIO::Pin( GPIOD,  0, "PD0",  0x0001 ),  STM32_GPIO::Pin( GPIOD,  1, "PD1",  0x0002 ),
+      STM32_GPIO::Pin( GPIOD,  2, "PD2",  0x0004 ),  STM32_GPIO::Pin( GPIOD,  3, "PD3",  0x0008 ),
+      STM32_GPIO::Pin( GPIOD,  4, "PD4",  0x0010 ),  STM32_GPIO::Pin( GPIOD,  5, "PD5",  0x0020 ),
+      STM32_GPIO::Pin( GPIOD,  6, "PD6",  0x0040 ),  STM32_GPIO::Pin( GPIOD,  7, "PD7",  0x0080 ),
+      STM32_GPIO::Pin( GPIOD,  8, "PD8",  0x0100 ),  STM32_GPIO::Pin( GPIOD,  9, "PD9",  0x0200 ),
+      STM32_GPIO::Pin( GPIOD, 10, "PD10", 0x0400 ),  STM32_GPIO::Pin( GPIOD, 11, "PD11", 0x0800 ),
+      STM32_GPIO::Pin( GPIOD, 12, "PD12", 0x1000 ),  STM32_GPIO::Pin( GPIOD, 13, "PD13", 0x2000 ),
+      STM32_GPIO::Pin( GPIOD, 14, "PD14", 0x4000 ),  STM32_GPIO::Pin( GPIOD, 15, "PD15", 0x8000 )
+   };
+
    /* aliases */
 
    STM32_GPIO::Pin& PA0  = GPIOA_Pins[  0 ];  STM32_GPIO::Pin& PA1  = GPIOA_Pins[  1 ];
@@ -129,6 +140,15 @@ namespace qb50 {
    STM32_GPIO::Pin& PC12 = GPIOC_Pins[ 12 ];  STM32_GPIO::Pin& PC13 = GPIOC_Pins[ 13 ];
    STM32_GPIO::Pin& PC14 = GPIOC_Pins[ 14 ];  STM32_GPIO::Pin& PC15 = GPIOC_Pins[ 15 ];
 
+   STM32_GPIO::Pin& PD0  = GPIOD_Pins[  0 ];  STM32_GPIO::Pin& PD1  = GPIOD_Pins[  1 ];
+   STM32_GPIO::Pin& PD2  = GPIOD_Pins[  2 ];  STM32_GPIO::Pin& PD3  = GPIOD_Pins[  3 ];
+   STM32_GPIO::Pin& PD4  = GPIOD_Pins[  4 ];  STM32_GPIO::Pin& PD5  = GPIOD_Pins[  5 ];
+   STM32_GPIO::Pin& PD6  = GPIOD_Pins[  6 ];  STM32_GPIO::Pin& PD7  = GPIOD_Pins[  7 ];
+   STM32_GPIO::Pin& PD8  = GPIOD_Pins[  8 ];  STM32_GPIO::Pin& PD9  = GPIOD_Pins[  9 ];
+   STM32_GPIO::Pin& PD10 = GPIOD_Pins[ 10 ];  STM32_GPIO::Pin& PD11 = GPIOD_Pins[ 11 ];
+   STM32_GPIO::Pin& PD12 = GPIOD_Pins[ 12 ];  STM32_GPIO::Pin& PD13 = GPIOD_Pins[ 13 ];
+   STM32_GPIO::Pin& PD14 = GPIOD_Pins[ 14 ];  STM32_GPIO::Pin& PD15 = GPIOD_Pins[ 15 ];
+
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
@@ -137,6 +157,7 @@ namespace qb50 {
    STM32_GPIO GPIOA( AHB1, GPIOA_BASE, STM32_RCC::AHB1Periph_GPIOA, 0, "GPIOA", GPIOA_Pins );
    STM32_GPIO GPIOB( AHB1, GPIOB_BASE, STM32_RCC::AHB1Periph_GPIOB, 1, "GPIOB", GPIOB_Pins );
    STM32_GPIO GPIOC( AHB1, GPIOC_BASE, STM32_RCC::AHB1Periph_GPIOC, 2, "GPIOC", GPIOC_Pins );
+   STM32_GPIO GPIOD( AHB1, GPIOD_BASE, STM32_RCC::AHB1Periph_GPIOD, 3, "GPIOD", GPIOD_Pins );
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //
@@ -157,8 +178,8 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   STM32_SPI::Stream SPI3_MISO( DMA1ST2, DMA::CH0, "SPI3MISO", PB4, STM32_GPIO::SPI3 );
-   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, DMA::CH0, "SPI3MOSI", PB5, STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4, STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5, STM32_GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //

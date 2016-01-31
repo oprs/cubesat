@@ -11,7 +11,7 @@
 #include "device/STM32/STM32_PWR.h"
 #include "device/STM32/STM32_RTC.h"
 #include "device/STM32/STM32_BKP.h"
-#include "device/STM32/DMA.h"
+#include "device/STM32/STM32_DMA.h"
 #include "device/STM32/STM32_SPI.h"
 #include "device/GPIO.h"
 #include "device/STM32/STM32_GPIO.h"

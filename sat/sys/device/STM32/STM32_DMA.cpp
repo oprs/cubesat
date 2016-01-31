@@ -1,5 +1,5 @@
 
-#include "DMA.h"
+#include "STM32/STM32_DMA.h"
 #include "STM32/STM32_RCC.h"
 #include "system/Logger.h"
 
@@ -12,7 +12,7 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-DMA::DMA( Bus& bus,
+STM32_DMA::STM32_DMA( Bus& bus,
           const uint32_t iobase,
           const uint32_t periph,
           const char *name )
@@ -20,7 +20,7 @@ DMA::DMA( Bus& bus,
 { ; }
 
 
-DMA::~DMA()
+STM32_DMA::~STM32_DMA()
 { ; }
 
 
@@ -28,14 +28,14 @@ DMA::~DMA()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-DMA& DMA::init( void )
+STM32_DMA& STM32_DMA::init( void )
 {
    LOG << _name << ": STM32F4xx DMA controller at " << bus.name;
    return *this;
 }
 
 
-DMA& DMA::enable( bool silent )
+STM32_DMA& STM32_DMA::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -46,7 +46,7 @@ DMA& DMA::enable( bool silent )
 }
 
 
-DMA& DMA::disable( bool silent )
+STM32_DMA& STM32_DMA::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;

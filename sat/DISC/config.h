@@ -35,14 +35,14 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   extern qb50::DMA DMA1;
+   extern qb50::STM32_DMA DMA1;
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   extern qb50::DMA::Stream DMA1ST2;
-   extern qb50::DMA::Stream DMA1ST5;
+   extern qb50::STM32_DMA::Stream DMA1ST2;
+   extern qb50::STM32_DMA::Stream DMA1ST5;
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -75,6 +75,15 @@ namespace qb50 {
    extern qb50::STM32_GPIO::Pin& PC12;  extern qb50::STM32_GPIO::Pin& PC13;
    extern qb50::STM32_GPIO::Pin& PC14;  extern qb50::STM32_GPIO::Pin& PC15;
 
+   extern qb50::STM32_GPIO::Pin& PD0;   extern qb50::STM32_GPIO::Pin& PD1;
+   extern qb50::STM32_GPIO::Pin& PD2;   extern qb50::STM32_GPIO::Pin& PD3;
+   extern qb50::STM32_GPIO::Pin& PD4;   extern qb50::STM32_GPIO::Pin& PD5;
+   extern qb50::STM32_GPIO::Pin& PD6;   extern qb50::STM32_GPIO::Pin& PD7;
+   extern qb50::STM32_GPIO::Pin& PD8;   extern qb50::STM32_GPIO::Pin& PD9;
+   extern qb50::STM32_GPIO::Pin& PD10;  extern qb50::STM32_GPIO::Pin& PD11;
+   extern qb50::STM32_GPIO::Pin& PD12;  extern qb50::STM32_GPIO::Pin& PD13;
+   extern qb50::STM32_GPIO::Pin& PD14;  extern qb50::STM32_GPIO::Pin& PD15;
+
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
@@ -82,6 +91,7 @@ namespace qb50 {
    extern qb50::STM32_GPIO GPIOA;
    extern qb50::STM32_GPIO GPIOB;
    extern qb50::STM32_GPIO GPIOC;
+   extern qb50::STM32_GPIO GPIOD;
 
 //  - - - - - - - - - - - - - - - -  //
 //  U A R T   C O N T R O L L E R S  //

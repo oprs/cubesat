@@ -27,14 +27,14 @@ void CTCSSThread( Thread *self )
 {
     (void)self;
 
-    LED1.enable().out().off();
-    LED2.enable().out().off();
-    LED3.enable().out().off();
-    LED4.enable().out().off();
+    LED1.out().off();
+    LED2.out().off();
+    LED3.out().off();
+    LED4.out().off();
 
-    PB12.enable().out().on();   // CTCSS_ON
-    PB13.enable().out().off(); // ON/OFF_PA
-    PB15.enable().out().off(); // ON/OFF_TX
+    PB12.out().on();   // CTCSS_ON
+    PB13.out().off(); // ON/OFF_PA
+    PB15.out().off(); // ON/OFF_TX
 
     CTCSS ctcss( PB15, PB13 );
 

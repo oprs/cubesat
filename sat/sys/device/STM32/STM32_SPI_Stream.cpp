@@ -8,12 +8,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-STM32_SPI::Stream::Stream( DMA::Stream&     dmaStream,
-                           DMA::Channel     dmaChannel,
+STM32_SPI::Stream::Stream( STM32_DMA::Stream& dmaStream,
+                           STM32_DMA::Channel dmaChannel,
                            const char      *name,
                            STM32_GPIO::Pin& pin,
                            STM32_GPIO::Alt  alt )
-   : SPI::Stream( name ),
+   : Device( name ),
      dmaStream( dmaStream ),
      dmaChannel( dmaChannel ),
      _pin( pin ),
@@ -31,7 +31,7 @@ STM32_SPI::Stream::~Stream()
 
 STM32_SPI::Stream& STM32_SPI::Stream::init( void )
 {
-   _pin.enable().pullUp().alt( _alt );
+   _pin.pullUp().alt( _alt );
    return *this;
 }
 

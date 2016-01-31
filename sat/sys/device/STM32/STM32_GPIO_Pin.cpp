@@ -22,30 +22,6 @@ STM32_GPIO::Pin::~Pin()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-STM32_GPIO::Pin& STM32_GPIO::Pin::init( void )
-{
-   return *this;
-}
-
-
-STM32_GPIO::Pin& STM32_GPIO::Pin::enable( bool silent )
-{
-   if( _incRef() == 0 )
-      _gpio.enable( silent );
-
-   return *this;
-}
-
-
-STM32_GPIO::Pin& STM32_GPIO::Pin::disable( bool silent )
-{
-   if( _decRef() == 0 )
-      _gpio.disable( silent );
-
-   return *this;
-}
-
-
 STM32_GPIO::Pin& STM32_GPIO::Pin::on( void )
 {
    GPIO_TypeDef *GPIOx = (GPIO_TypeDef*)_gpio.iobase;

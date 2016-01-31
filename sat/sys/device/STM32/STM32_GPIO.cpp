@@ -16,7 +16,7 @@ STM32_GPIO::STM32_GPIO( Bus& bus,
                         const unsigned id,
                         const char *name,
                         const Pin *pins )
-   : GPIO( name, pins ), BusSlave( bus, iobase, periph ), _id( id )
+   : Device( name ), BusSlave( bus, iobase, periph ), GPIO( pins ), _id( id )
 { ; }
 
 

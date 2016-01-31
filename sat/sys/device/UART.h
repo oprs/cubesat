@@ -7,20 +7,17 @@
 
 namespace qb50 {
 
-   class UART : public Device
+   class UART
    {
 
       public:
 
-         UART( const char *name ) : Device( name )
+         UART()
          { ; }
 
          virtual ~UART()
          { ; }
 
-         virtual UART&  init     ( void )                      = 0;
-         virtual UART&  enable   ( bool silent )               = 0;
-         virtual UART&  disable  ( bool silent )               = 0;
          virtual size_t read     (       void *x, size_t len ) = 0;
          virtual size_t readLine (       void *x, size_t len ) = 0;
          virtual size_t write    ( const void *x, size_t len ) = 0;

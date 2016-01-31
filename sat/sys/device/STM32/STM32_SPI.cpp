@@ -5,6 +5,8 @@
 
 #include <safe_stm32f4xx.h>
 
+#define STM32_SPI_HARD_LIMIT 1000
+
 using namespace qb50;
 
 
@@ -21,7 +23,7 @@ STM32_SPI::STM32_SPI( Bus&              bus,
                       STM32_GPIO::Pin&  clkPin,
                       STM32_GPIO::Alt   alt,
                       STM32_SPI::ClkDiv div )
-   : SPI( name ), BusSlave( bus, iobase, periph ),
+   : Device( name ), BusSlave( bus, iobase, periph ),
      _stMISO( stMISO ),
      _stMOSI( stMOSI ),
      _clkPin( clkPin ),
@@ -40,7 +42,7 @@ STM32_SPI::~STM32_SPI()
 
 STM32_SPI& STM32_SPI::init( void )
 {
-   _clkPin.enable().pullDn().alt( _alt );
+   _clkPin.pullDn().alt( _alt );
 
    _stMISO.init();
    _stMOSI.init();
@@ -118,6 +120,20 @@ STM32_SPI& STM32_SPI::slave( void )
 }
 
 
+STM32_SPI& STM32_SPI::lock( void )
+{
+   (void)Device::lock();
+   return *this;
+}
+
+
+STM32_SPI& STM32_SPI::unlock( void )
+{
+   (void)Device::unlock();
+   return *this;
+}
+
+
 STM32_SPI& STM32_SPI::xfer( const void *src, void *dst, size_t len )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
@@ -125,16 +141,16 @@ STM32_SPI& STM32_SPI::xfer( const void *src, void *dst, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     dst     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::INCR             )
-                    .direction ( DMA::P2M              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::INCR       )
+                    .direction ( STM32_DMA::P2M        );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     src     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::INCR             )
-                    .direction ( DMA::M2P              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::INCR       )
+                    .direction ( STM32_DMA::M2P        );
 
    return _xfer();
 }
@@ -148,16 +164,16 @@ STM32_SPI& STM32_SPI::write( const void *src, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)   &dummy    )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::FIXED            )
-                    .direction ( DMA::P2M              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::FIXED      )
+                    .direction ( STM32_DMA::P2M        );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     src     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::INCR             )
-                    .direction ( DMA::M2P              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::INCR       )
+                    .direction ( STM32_DMA::M2P        );
 
    return _xfer();
 }
@@ -171,16 +187,16 @@ STM32_SPI& STM32_SPI::read( void *dst, size_t len )
    _stMISO.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)     dst     )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::INCR             )
-                    .direction ( DMA::P2M              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::INCR       )
+                    .direction ( STM32_DMA::P2M        );
 
    _stMOSI.dmaStream.pAddr     ((uint32_t)&( SPIx->DR ))
                     .m0Addr    ((uint32_t)   &dummy    )
                     .counter   ((uint32_t)     len     )
-                    .pIncMode  ( DMA::FIXED            )
-                    .mIncMode  ( DMA::FIXED            )
-                    .direction ( DMA::M2P              );
+                    .pIncMode  ( STM32_DMA::FIXED      )
+                    .mIncMode  ( STM32_DMA::FIXED      )
+                    .direction ( STM32_DMA::M2P        );
 
    return _xfer();
 }
@@ -190,10 +206,19 @@ STM32_SPI& STM32_SPI::read( void *dst, size_t len )
 STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   int n;
    uint8_t rx;
 
    for( size_t i = 0 ; i < len ; ++i ) {
-      while( !( SPIx->SR & SPI_SR_TXE )); // XXX hard limit
+
+      for( n = 0 ; n < STM32_SPI_HARD_LIMIT ; ++n ) {
+         if( SPIx->SR & SPI_SR_TXE ) break;
+      }
+
+      if( n == STM32_SPI_HARD_LIMIT ) {
+         LOG << _name << ": timeout in STM32_SPI::pollXfer()";
+         break;
+      }
 
       if( src == NULL ) {
          SPIx->DR = 0xff;
@@ -201,7 +226,14 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
          SPIx->DR = ((uint8_t*)src)[ i ];
       }
 
-      while( !( SPIx->SR & SPI_SR_RXNE )); // XXX hard limit
+      for( n = 0 ; n < STM32_SPI_HARD_LIMIT ; ++n ) {
+         if( SPIx->SR & SPI_SR_RXNE ) break;
+      }
+
+      if( n == STM32_SPI_HARD_LIMIT ) {
+         LOG << _name << ": timeout in STM32_SPI::pollXfer()";
+         break;
+      }
 
       rx = SPIx->DR & 0xff;
       if( dst != NULL ) {

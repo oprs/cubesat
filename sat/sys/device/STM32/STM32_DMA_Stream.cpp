@@ -1,5 +1,5 @@
 
-#include "STM32/DMA.h"
+#include "STM32/STM32_DMA.h"
 #include "system/qb50.h" // XXX
 
 #include <safe_stm32f4xx.h>
@@ -11,11 +11,11 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-DMA::Stream::Stream( DMA& dma,
-                     const uint32_t iobase,
-                     const uint32_t IRQn,
-                     const char *name,
-                     const uint32_t shl )
+STM32_DMA::Stream::Stream( STM32_DMA& dma,
+                           const uint32_t iobase,
+                           const uint32_t IRQn,
+                           const char    *name,
+                           const uint32_t shl )
    : Device( name ),
      _dma( dma ),
      _iobase( iobase ),
@@ -26,7 +26,7 @@ DMA::Stream::Stream( DMA& dma,
 }
 
 
-DMA::Stream::~Stream()
+STM32_DMA::Stream::~Stream()
 { ; }
 
 
@@ -34,11 +34,11 @@ DMA::Stream::~Stream()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-DMA::Stream& DMA::Stream::init( void )
+STM32_DMA::Stream& STM32_DMA::Stream::init( void )
 { return *this; }
 
 
-DMA::Stream& DMA::Stream::enable( bool silent )
+STM32_DMA::Stream& STM32_DMA::Stream::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -66,7 +66,7 @@ DMA::Stream& DMA::Stream::enable( bool silent )
 }
 
 
-DMA::Stream& DMA::Stream::disable( bool silent )
+STM32_DMA::Stream& STM32_DMA::Stream::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -78,7 +78,7 @@ DMA::Stream& DMA::Stream::disable( bool silent )
 }
 
 
-DMA::Stream& DMA::Stream::start( void )
+STM32_DMA::Stream& STM32_DMA::Stream::start( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
@@ -94,7 +94,7 @@ DMA::Stream& DMA::Stream::start( void )
 }
 
 
-DMA::Stream& DMA::Stream::stop( void )
+STM32_DMA::Stream& STM32_DMA::Stream::stop( void )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
@@ -105,7 +105,7 @@ DMA::Stream& DMA::Stream::stop( void )
 }
 
 
-DMA::Stream& DMA::Stream::wait( void )
+STM32_DMA::Stream& STM32_DMA::Stream::wait( void )
 {
    xSemaphoreTake( _isrTxIE, portMAX_DELAY );
 
@@ -113,7 +113,7 @@ DMA::Stream& DMA::Stream::wait( void )
 }
 
 
-DMA::Stream& DMA::Stream::counter( uint16_t cnt )
+STM32_DMA::Stream& STM32_DMA::Stream::counter( uint16_t cnt )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    STRMx->NDTR = (uint32_t)cnt;
@@ -122,7 +122,7 @@ DMA::Stream& DMA::Stream::counter( uint16_t cnt )
 }
 
 
-DMA::Stream& DMA::Stream::pAddr( uint32_t addr )
+STM32_DMA::Stream& STM32_DMA::Stream::pAddr( uint32_t addr )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    STRMx->PAR = addr;
@@ -131,7 +131,7 @@ DMA::Stream& DMA::Stream::pAddr( uint32_t addr )
 }
 
 
-DMA::Stream& DMA::Stream::m0Addr( uint32_t addr )
+STM32_DMA::Stream& STM32_DMA::Stream::m0Addr( uint32_t addr )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    STRMx->M0AR = addr;
@@ -140,7 +140,7 @@ DMA::Stream& DMA::Stream::m0Addr( uint32_t addr )
 }
 
 
-DMA::Stream& DMA::Stream::m1Addr( uint32_t addr )
+STM32_DMA::Stream& STM32_DMA::Stream::m1Addr( uint32_t addr )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    STRMx->M1AR = addr;
@@ -153,7 +153,7 @@ DMA::Stream& DMA::Stream::m1Addr( uint32_t addr )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-DMA::Stream& DMA::Stream::_updateCR( uint32_t val, uint32_t mask, int shift )
+STM32_DMA::Stream& STM32_DMA::Stream::_updateCR( uint32_t val, uint32_t mask, int shift )
 {
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
    register uint32_t tmp32;
@@ -167,7 +167,7 @@ DMA::Stream& DMA::Stream::_updateCR( uint32_t val, uint32_t mask, int shift )
 }
 
 
-DMA::Stream& DMA::Stream::_clearIFR( uint32_t flags )
+STM32_DMA::Stream& STM32_DMA::Stream::_clearIFR( uint32_t flags )
 {
    DMA_TypeDef *DMAx = (DMA_TypeDef*)_dma.iobase;
 
@@ -185,7 +185,7 @@ DMA::Stream& DMA::Stream::_clearIFR( uint32_t flags )
 //  I S R   H A N D L E R S  //
 //  - - - - - - - - - - - -  //
 
-void DMA::Stream::isr( void )
+void STM32_DMA::Stream::isr( void )
 {
    DMA_TypeDef  *DMAx   = (DMA_TypeDef*)_dma.iobase;
    portBASE_TYPE hpTask = pdFALSE;

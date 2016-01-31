@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 MAX111x::MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin )
-   : ADC( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
+   : Device( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
 { ; }
 
 
@@ -26,7 +26,7 @@ MAX111x& MAX111x::init( void )
 {
    (void)SPISlave::init();
 
-   LOG << _name << ": Onboard MAX111x serial ADC at " << _spi.name()
+   LOG << _name << ": Onboard MAX111x serial ADC"
        << ", cs: " << _csPin.name();
 
    return *this;
@@ -38,7 +38,7 @@ MAX111x& MAX111x::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+ //_spi.enable( silent );
 
    if( !silent )
       LOG << _name << ": enabled";
@@ -52,7 +52,7 @@ MAX111x& MAX111x::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   _spi.disable( silent );
+ //_spi.disable( silent );
 
    if( !silent )
       LOG << _name << ": disabled";

@@ -1,9 +1,9 @@
 
-#ifndef _QB50_SYS_DEVICE_DMA_STREAM_H
-#define _QB50_SYS_DEVICE_DMA_STREAM_H
+#ifndef _QB50_SYS_DEVICE_STM32_DMA_STREAM_H
+#define _QB50_SYS_DEVICE_STM32_DMA_STREAM_H
 
-#ifndef _QB50_SYS_DEVICE_DMA_H
- #error "can't include DMA_Stream.h, try DMA.h instead"
+#ifndef _QB50_SYS_DEVICE_STM32_DMA_H
+ #error "can't include STM32_DMA_Stream.h, try STM32_DMA.h instead"
 #endif
 
 
@@ -12,7 +12,7 @@ class Stream : public Device
 
    public:
 
-      Stream( DMA& dma, const uint32_t iobase, const uint32_t IRQn, const char *name, const uint32_t shl );
+      Stream( STM32_DMA& dma, const uint32_t iobase, const uint32_t IRQn, const char *name, const uint32_t shl );
       ~Stream();
 
       Stream& init    ( void );
@@ -70,7 +70,7 @@ class Stream : public Device
 
       xSemaphoreHandle _isrTxIE;  /**< ISR semaphore bound to TCIE and TEIE */
 
-      DMA&           _dma;
+      STM32_DMA&     _dma;
       const uint32_t _iobase;
       const uint32_t _IRQn;
       const uint32_t _shl;
@@ -78,6 +78,6 @@ class Stream : public Device
 };
 
 
-#endif /*_QB50_SYS_DEVICE_DMA_STREAM_H*/
+#endif /*_QB50_SYS_DEVICE_STM32_DMA_STREAM_H*/
 
 /*EoF*/

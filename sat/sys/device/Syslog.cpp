@@ -76,7 +76,7 @@ Syslog& Syslog::write( std::string *sp )
 
 Syslog& Syslog::enable( bool silent )
 {
-   _uart.enable( silent );
+   //_uart.enable( silent );
    return *this;
 }
 

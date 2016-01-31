@@ -5,6 +5,11 @@
 
 using namespace qb50;
 
+#define LED1 PD12
+#define LED2 PD13
+#define LED3 PD14
+#define LED4 PD15
+
 
 static void test( Thread *self )
 {
@@ -40,19 +45,22 @@ void MainThread::initDevices( void )
    RCC.init();
    PWR.init();
    BKP.init();
-   DMA1.init();
  //DMA2.init();
    GPIOA.init();
    GPIOB.init();
    GPIOC.init();
+   GPIOD.init();
+   DMA1.init();
    UART6.init();
  //SPI1.init();
  //SPI2.init();
    SPI3.init();
    FLASH0.init();
+#if 0
    FLASH1.init();
    GYR0.init();
  //MAG0.init();
+#endif
 }
 
 
@@ -60,12 +68,27 @@ void MainThread::run( void )
 {
    initDevices();
 
+   GPIOA.enable();
+   GPIOB.enable();
+   GPIOC.enable();
+   GPIOD.enable();
+
+   LED1.out().on();
+   LED2.out().on();
+   LED3.out().on();
+   LED4.out().on();
+
    UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
 
    LOG << "STM32F4-Discovery board";
 
    createThread( "test", test );
+
+for( ;; ) {
+   delay( 250 );
+   LED1.toggle();
+}
 
    Gyro::vec3d v;
 
@@ -75,7 +98,7 @@ void MainThread::run( void )
    GYR0.enable();
  //GYR1.enable();
 
-   PC9.enable().out().on();
+   PC9.out().on();
 
    delay( 250 ); // see AN4505, sec 2.4, table 5
 

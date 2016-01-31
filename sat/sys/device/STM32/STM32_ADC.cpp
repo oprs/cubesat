@@ -19,7 +19,7 @@ STM32_ADC::STM32_ADC( Bus& bus,
                       const uint32_t iobase,
                       const uint32_t periph,
                       const char    *name )
-   : ADC( name ), BusSlave( bus, iobase, periph )
+   : Device( name ), BusSlave( bus, iobase, periph )
 {
    _numConv = 5;
 }

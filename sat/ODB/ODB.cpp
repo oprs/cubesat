@@ -54,9 +54,9 @@ ODB& ODB::init( void )
  //WDB.init();
    RFTX.init();
 
-   _selPin.enable().in().noPull();
-   _asPin.enable().in().noPull();
-   _adPin.enable().out().off();
+   _selPin.in().noPull();
+   _asPin.in().noPull();
+   _adPin.out().off();
 
    LOG << _name << ": AMSAT-F micro-satellite";
 

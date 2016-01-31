@@ -1,6 +1,6 @@
 
-#ifndef _QB50_SYS_DEVICE_DMA_H
-#define _QB50_SYS_DEVICE_DMA_H
+#ifndef _QB50_SYS_DEVICE_STM32_DMA_H
+#define _QB50_SYS_DEVICE_STM32_DMA_H
 
 #include "Device.h"
 #include "BusSlave.h"
@@ -8,7 +8,7 @@
 
 namespace qb50 {
 
-   class DMA : public Device, public BusSlave
+   class STM32_DMA : public Device, public BusSlave
    {
 
       public:
@@ -81,14 +81,14 @@ namespace qb50 {
             M2M      = 2  /*!< memory to memory     */
          };
 
-         #include "DMA_Stream.h"
+         #include "STM32_DMA_Stream.h"
 
-         DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name );
-         ~DMA();
+         STM32_DMA( Bus& bus, const uint32_t iobase, const uint32_t periph, const char *name );
+         ~STM32_DMA();
 
-         DMA& init    ( void );
-         DMA& enable  ( bool silent = false );
-         DMA& disable ( bool silent = false );
+         STM32_DMA& init    ( void );
+         STM32_DMA& enable  ( bool silent = false );
+         STM32_DMA& disable ( bool silent = false );
 
    };
 
@@ -116,6 +116,6 @@ extern "C" {
 }
 
 
-#endif /*_QB50_SYS_DEVICE_DMA_H*/
+#endif /*_QB50_SYS_DEVICE_STM32_DMA_H*/
 
 /*EoF*/

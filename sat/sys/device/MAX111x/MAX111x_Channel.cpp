@@ -9,7 +9,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 MAX111x::Channel::Channel( MAX111x& adc, const char *name, ChId id )
-: ADC::Channel( adc, name ), _id( id )
+: Device( name ), ADC::Channel( adc ), _id( id )
 { ; }
 
 

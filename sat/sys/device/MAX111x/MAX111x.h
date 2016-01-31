@@ -8,7 +8,7 @@
 
 namespace qb50 {
 
-   class MAX111x : public ADC, public SPISlave
+   class MAX111x : public Device, public ADC, public SPISlave
    {
 
       protected:

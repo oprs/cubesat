@@ -39,7 +39,6 @@ Device& Device::unlock( void )
 }
 
 
-
 //  - - - - - - - - - - - - - - -  //
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
@@ -53,6 +52,5 @@ unsigned Device::_decRef( void )
    if( _refCount > 0 ) _refCount--;
       return _refCount;
 }
-
 
 /*EoF*/

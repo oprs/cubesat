@@ -2,6 +2,7 @@
 #ifndef _QB50_ODB_WOD_STORE_H
 #define _QB50_ODB_WOD_STORE_H
 
+#include "Device.h"
 #include "device/FlashMemory.h"
 
 

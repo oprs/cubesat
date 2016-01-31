@@ -2,18 +2,17 @@
 #ifndef _QB50_SYS_DEVICE_FLASH_MEMORY_H
 #define _QB50_SYS_DEVICE_FLASH_MEMORY_H
 
-#include "Device.h"
 #include <cstdint>
 
 
 namespace qb50 {
 
-   class FlashMemory : public Device
+   class FlashMemory
    {
 
       public:
 
-         FlashMemory( const char *name ) : Device( name )
+         FlashMemory()
          { ; }
 
          virtual ~FlashMemory()

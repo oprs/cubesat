@@ -42,14 +42,14 @@ namespace qb50 {
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   extern qb50::DMA DMA1;
+   extern qb50::STM32_DMA DMA1;
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
 //  - - - - - - - - - - -  //
 
-   extern qb50::DMA::Stream DMA1ST2;
-   extern qb50::DMA::Stream DMA1ST5;
+   extern qb50::STM32_DMA::Stream DMA1ST2;
+   extern qb50::STM32_DMA::Stream DMA1ST5;
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //

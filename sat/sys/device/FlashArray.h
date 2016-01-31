@@ -2,12 +2,13 @@
 #ifndef _QB50_SYS_DEVICE_FLASH_ARRAY_H
 #define _QB50_SYS_DEVICE_FLASH_ARRAY_H
 
+#include "Device.h"
 #include "device/FlashMemory.h"
 
 
 namespace qb50 {
 
-   class FlashArray : public FlashMemory
+   class FlashArray : public Device, public FlashMemory
    {
 
       public:
