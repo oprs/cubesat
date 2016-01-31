@@ -193,8 +193,8 @@ namespace qb50 {
 //  - - - - - - - - - - - - - -  //
 
    /*              SPI    name    csPin */
-   A25Lxxx FLASH0( SPI3, "FLASH0", PB6 );
-   A25Lxxx FLASH1( SPI3, "FLASH1", PB7 );
+   A25Lxxx FLASH0( SPI3, "FLASH0", PA0 );
+   A25Lxxx FLASH1( SPI3, "FLASH1", PA7 );
 
 //  - - - - - - - -  //
 //  G Y R O / M A G  //

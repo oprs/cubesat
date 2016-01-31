@@ -69,10 +69,16 @@ void ControlThread::run( void )
    SAT.init();
    WOD.init();
 
+   GPIOA.enable();
+   GPIOB.enable();
+   GPIOC.enable();
+   UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
  //RTC.enable();
    BKP.enable( true );
    WOD.enable( true );
+
+PB1.out().on();
 
    /*
     * Hardware reset ?
@@ -143,7 +149,7 @@ void ControlThread::run( void )
       if( !ev ) continue;
 
       Event::event_t etype = ev->type();
-      LOG << "EVENT TYPE #" << etype << " - " << ev->name();
+      LOG << "EVENT TYPE #" << etype << " - \033[1m" << ev->name() << "\033[0m";
 
       switch( etype ) {
 
@@ -164,8 +170,13 @@ void ControlThread::run( void )
 
          case Event::VBAT_LOW:
 
-            if( mode != Config::POWER )
+            if( mode != Config::POWER ) {
+#if 1
+               LOG << RED( "Ignoring VBAT_LOW" );
+#else
                _switchModes( Config::POWER );
+#endif
+            }
 
             break;
 
@@ -211,7 +222,7 @@ void ControlThread::_switchModes( Config::mode_t target )
    _ctb = _mt[ target ];
    CONF.mode( target );
 
-   LOG << "-------- [ " << Config::modes[ target ] << " ] --------";
+   LOG << "\033[7m-------- [ " << Config::modes[ target ] << " ] --------\033[0m";
 }
 
 

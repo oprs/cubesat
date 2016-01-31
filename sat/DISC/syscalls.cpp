@@ -122,7 +122,11 @@ ssize_t _write( int fd, const void *x, size_t len )
 {
 	(void)fd;
 
-	//(void)qb50::UART6.write( x, len );
+#if 1
+
+	(void)qb50::UART6.write( x, len );
+
+#else
 
 	uint8_t *v = (uint8_t*)x;
 	USART_TypeDef *U6 = (USART_TypeDef*)qb50::UART6.iobase;
@@ -131,6 +135,8 @@ ssize_t _write( int fd, const void *x, size_t len )
 		while( !( U6->SR & USART_SR_TXE ));
 		U6->DR = v[i];
 	}
+
+#endif
 
 	// Always pretend that write() was successful, regardless of UART6
 	// occasionnally dropping some of the data (i.e. _txFIFO overflow).

@@ -5,7 +5,13 @@
 
 #include <safe_stm32f4xx.h>
 
-#define STM32_SPI_HARD_LIMIT 1000
+/*
+ * STM32_SPI_HARD_LIMIT - hard limit for busy-wait loops
+ * 4000000 = about 7076ms @ 16MHz
+ *   10000 = about 18ms @ 16Mhz
+ */
+
+#define STM32_SPI_HARD_LIMIT 10000
 
 using namespace qb50;
 
@@ -216,7 +222,7 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         LOG << _name << ": timeout in STM32_SPI::pollXfer()";
+         LOG << _name << ": " RED( "timeout in STM32_SPI::pollXfer()" );
          break;
       }
 
@@ -231,7 +237,7 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         LOG << _name << ": timeout in STM32_SPI::pollXfer()";
+         LOG << _name << ": " RED( "timeout in STM32_SPI::pollXfer()" );
          break;
       }
 

@@ -56,8 +56,8 @@ void MainThread::initDevices( void )
  //SPI2.init();
    SPI3.init();
    FLASH0.init();
-#if 0
    FLASH1.init();
+#if 0
    GYR0.init();
  //MAG0.init();
 #endif
@@ -83,7 +83,7 @@ void MainThread::run( void )
 
    LOG << "STM32F4-Discovery board";
 
-   createThread( "test", test );
+ //createThread( "test", test );
 
 for( ;; ) {
    delay( 250 );

@@ -16,7 +16,14 @@ ODB::ODB( const char *name,
      _selPin( selPin ),
      _asPin( asPin ),
      _adPin( adPin )
-{ ; }
+{
+   maI[0] = maI[1] = maI[2] = maI[3] = 0;
+   mvV[0] = mvV[1] = mvV[2] = mvV[3] = 0;
+   maIRx  = 0;
+   maITx  = 0;
+   mvBat  = 0;
+   dcBat  = 0;
+}
 
 
 ODB::~ODB()

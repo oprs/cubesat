@@ -38,7 +38,7 @@ MAX111x& MAX111x::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
- //_spi.enable( silent );
+   _spi.enable( silent );
 
    if( !silent )
       LOG << _name << ": enabled";
@@ -52,7 +52,7 @@ MAX111x& MAX111x::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
- //_spi.disable( silent );
+   _spi.disable( silent );
 
    if( !silent )
       LOG << _name << ": disabled";

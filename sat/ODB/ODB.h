@@ -32,6 +32,13 @@ namespace qb50 {
          AntState aState  ( void );
          AntState aDeploy ( void );
 
+         unsigned maI[4];
+         unsigned mvV[4];
+         unsigned maIRx;
+         unsigned maITx;
+         unsigned mvBat;
+         int      dcBat;
+
 
       private:
 

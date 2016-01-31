@@ -58,16 +58,16 @@ void Morse::writeChar( char c )
 
    while( x ) {
       if( x & 1 ) {
-         _pin.off();
-      } else {
          _pin.on();
+      } else {
+         _pin.off();
       }
       delay( DOTMS );
 
       x >>= 1;
    }
 
-   _pin.on();
+   _pin.off();
 
    delay( 3 * DOTMS );
 }
@@ -81,3 +81,11 @@ void Morse::write( const char *x )
    }
 }
 
+
+void Morse::write( const char *x, size_t len )
+{
+   for( size_t i = 0 ; i < len ; ++i )
+      writeChar( x[i] );
+}
+
+/*EoF*/

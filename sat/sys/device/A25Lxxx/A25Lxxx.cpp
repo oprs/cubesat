@@ -3,7 +3,7 @@
 #include "system/Application.h"
 #include "system/Logger.h"
 
-#define A25Lxxx_HARD_LIMIT 1000
+#define A25Lxxx_HARD_LIMIT 100
 
 using namespace qb50;
 
@@ -96,7 +96,7 @@ A25Lxxx& A25Lxxx::init( void )
       ++chip;
 
    if( chip->mask == 0 ) {
-      LOG << _name << ": unknown chip - using default";
+      LOG << _name << ": " RED( "unknown chip - using default" );
       chip = &chips[7];
    }
 
@@ -123,7 +123,7 @@ A25Lxxx& A25Lxxx::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
- //_spi.enable( silent );
+   _spi.enable( silent );
 
    if( !silent )
       LOG << _name << ": enabled";
@@ -137,7 +137,7 @@ A25Lxxx& A25Lxxx::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
- //_spi.disable( silent );
+   _spi.disable( silent );
 
    if( !silent )
       LOG << _name << ": disabled";
@@ -337,7 +337,7 @@ void A25Lxxx::_WIPWait( unsigned ms )
       }
 
       if( n == A25Lxxx_HARD_LIMIT ) {
-         LOG << _name << ": timeout in A25Lxxx::_WIPWait()";
+         LOG << _name << ": " RED( "timeout in A25Lxxx::_WIPWait()" );
       }
    }
    _deselect();

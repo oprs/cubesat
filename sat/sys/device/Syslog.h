@@ -11,6 +11,9 @@
 
 #define LOG Syslog::LogLine( SYSLOG ).get()
 
+#define RED( MSG ) "\033[31;1m" MSG "\033[0m"
+#define WHITE( MSG ) "\033[1m" MSG "\033[0m"
+
 
 namespace qb50 {
 

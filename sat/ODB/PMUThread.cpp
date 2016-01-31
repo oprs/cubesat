@@ -38,8 +38,6 @@ void PMUThread::run( void )
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
- //unsigned dt;
-
    ADC1.enable( true );
    ADC2.enable( true );
    ADC3.enable( true );
@@ -60,8 +58,6 @@ void PMUThread::run( void )
        */
 
       vbat = ADC1CH7.read();
-    //LOG << "VBAT: " << vbat << " (" << 35.235952 * COEF( vbat ) << "mV)";
-      (void)vbat;
 
 
       /*
@@ -75,9 +71,6 @@ void PMUThread::run( void )
       tbat = ADC1CH6.read();
       dK   = 1.6 * COEF( tbat );
       dC   = dK - 273.15;
-    //LOG << "TBAT: " << tbat << " (" << dK << "K|" << dC << "C)";
-      (void)tbat;
-      (void)dC;
 
 
       /*
@@ -89,8 +82,6 @@ void PMUThread::run( void )
        */
 
       irx = ADC3CH2.read();
-    //LOG << " IRX: " << irx << " (" << 0.32 * COEF( irx ) << "mA)";
-      (void)irx;
 
 
       /*
@@ -108,8 +99,6 @@ void PMUThread::run( void )
        */
 
       itx = ADC3CH4.read();
-    //LOG << " ITX: " << itx << " (" << 3.2 * COEF( itx ) << "mA)";
-      (void)itx;
 
 
       /*
@@ -130,31 +119,26 @@ void PMUThread::run( void )
       v3 = ADC2CH3.read();
       v4 = ADC1CH0.read();
 
-      (void)i1;
-      (void)i2;
-      (void)i3;
-      (void)i4;
 
-      (void)v1;
-      (void)v2;
-      (void)v3;
-      (void)v4;
+      /* conversions */
 
-/*
-      LOG << "  I1: " << i1 << " (" << 32.0 * COEF( i1 ) / 15.0 << "mA)"
-          << ", V1: " << v1 << " (" << 35.235952 * COEF( v1 ) << "mV)";
-tbat
-      LOG << "  I2: " << i2 << " (" << 32.0 * COEF( i2 ) / 15.0 << "mA)"
-          << ", V2: " << v2 << " (" << 35.235952 * COEF( v2 ) << "mV)";
+      SAT.maI[ 0 ] = COEF(   i1 ) * 32.0 / 15.0;
+      SAT.mvV[ 0 ] = COEF(   v1 ) * 35.235952;
 
-      LOG << "  I3: " << i3 << " (" << 32.0 * COEF( i3 ) / 15.0 << "mA)"
-          << ", V3: " << v3 << " (" << 35.235952 * COEF( v3 ) << "mV)";
-*/
+      SAT.maI[ 1 ] = COEF(   i2 ) * 32.0 / 15.0;
+      SAT.mvV[ 1 ] = COEF(   v2 ) * 35.235952;
 
-/*
-      LOG << "  I4: " << i4 << " (" << 32.0 * COEF( i4 ) / 15.0 << "mA)"
-          << ", V4: " << v4 << " (" << 35.235952 * COEF( v4 ) << "mV)";
-*/
+      SAT.maI[ 2 ] = COEF(   i3 ) * 32.0 / 15.0;
+      SAT.mvV[ 2 ] = COEF(   v3 ) * 35.235952;
+
+      SAT.maI[ 3 ] = COEF(   i4 ) * 32.0 / 15.0;
+      SAT.mvV[ 3 ] = COEF(   v4 ) * 35.235952;
+
+      SAT.maIRx    = COEF(  irx ) * 0.32;
+      SAT.maITx    = COEF(  itx ) * 3.20;
+      SAT.mvBat    = COEF( vbat ) * 35.235952;
+
+      SAT.dcBat    = dC;
 
       /* check battery voltage */
 

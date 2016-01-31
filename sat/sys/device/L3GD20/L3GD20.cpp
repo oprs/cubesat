@@ -81,7 +81,7 @@ L3GD20& L3GD20::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
- //_spi.enable( silent );
+   _spi.enable( silent );
 
    _spi.lock();
    _select();
@@ -107,7 +107,7 @@ L3GD20& L3GD20::disable( bool silent )
    _deselect();
    _spi.unlock();
 
- //_spi.disable( silent );
+   _spi.disable( silent );
 
    if( !silent )
       LOG << _name << " disabled";

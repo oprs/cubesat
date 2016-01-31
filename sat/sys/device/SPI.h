@@ -20,8 +20,10 @@ namespace qb50 {
          virtual ~SPI()
          { ; }
 
-         virtual SPI& lock   ( void ) = 0;
-         virtual SPI& unlock ( void ) = 0;
+         virtual SPI& lock    ( void ) = 0;
+         virtual SPI& unlock  ( void ) = 0;
+         virtual SPI& enable  ( bool silent = false ) = 0;
+         virtual SPI& disable ( bool silent = false ) = 0;
 
          /* synchronous transfer */
 
