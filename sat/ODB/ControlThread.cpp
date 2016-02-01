@@ -11,6 +11,7 @@
 #include "PMUThread.h"
 #include "TelemThread.h"
 #include "CTCSSThread.h"
+#include "ADCSThread.h"
 
 #include "WodStore.h"
 
@@ -20,24 +21,25 @@ QueueHandle_t evQueue;
 
 
 uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
-  /* +------------ CTCSSThread
-     |+----------- TelemThread
-     ||+---------- PMUThread
-     |||+--------- FipexThread
-     ||||+-------- GPSThread
-     |||||+------- WodexThread
-     ||||||+------ CWThread
-     |||||||+----- InitThread
-     |||||||| */
-   0b00000001, /* mode INIT  */
-   0b00100010, /* mode CW    */
-   0b00000000, /* mode STDBY */
-   0b00100100, /* mode WODEX */
-   0b01100000, /* mode TELEM */
-   0b00110000, /* mode FiPEX */
-   0b00101000, /* mode GPS   */
-   0b10100000, /* mode FM    */
-   0b00100000  /* mode POWER */
+  /* +------------- ADCSThread
+     |+------------ CTCSSThread
+     ||+----------- TelemThread
+     |||+---------- CWThread
+     ||||+--------- FipexThread
+     |||||+-------- GPSThread
+     ||||||+------- WodexThread
+     |||||||+------ PMUThread
+     ||||||||+----- InitThread
+     ||||||||| */
+   0b000000001, /* mode INIT  */
+   0b000100010, /* mode CW    */
+   0b000000000, /* mode STDBY */
+   0b000000110, /* mode WODEX */
+   0b001000010, /* mode TELEM */
+   0b000010010, /* mode FiPEX */
+   0b000001010, /* mode GPS   */
+   0b010000010, /* mode FM    */
+   0b000000010  /* mode POWER */
 };
 
 
@@ -48,12 +50,19 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
 ControlThread::ControlThread()
    : Thread( "Event Manager", 2 )
 {
-   for( int i = 0 ; i < _QB50_NTHREADS ; ++i )
-      _tv[i] = (Thread*)0;
+   evQueue = xQueueCreate( 16, sizeof( Event* ));
+
+   _tv[ 0 ] = new InitThread();
+   _tv[ 1 ] = new PMUThread();
+   _tv[ 2 ] = new WodexThread();
+   _tv[ 3 ] = new GPSThread();
+   _tv[ 4 ] = new FipexThread();
+   _tv[ 5 ] = new CWThread();
+   _tv[ 6 ] = new TelemThread();
+   _tv[ 7 ] = new CTCSSThread();
+   _tv[ 8 ] = new ADCSThread();
 
    _ctb = 0x00;
-
-   evQueue = xQueueCreate( 16, sizeof( Event* ));
 }
 
 
@@ -70,8 +79,6 @@ ControlThread::~ControlThread()
 void ControlThread::run( void )
 {
    Event *ev;
-
-/* <INIT> */
 
    SAT.init();
    WOD.init();
@@ -115,26 +122,14 @@ void ControlThread::run( void )
          ;
    }
 
-/* </INIT> */
-
-
-   /* command thread is always running */
+   /* register worker threads */
 
    (void)registerThread( new CommandThread() );
 
-
-   /* create threads (suspended state) */
-
-   _tv[ 0 ] = registerThread( new InitThread()    );
-   _tv[ 1 ] = registerThread( new CWThread()      );
-   _tv[ 2 ] = registerThread( new WodexThread()   );
-   _tv[ 3 ] = registerThread( new GPSThread()     );
-   _tv[ 4 ] = registerThread( new FipexThread()   );
-   _tv[ 5 ] = registerThread( new PMUThread()     );
-   _tv[ 6 ] = registerThread( new TelemThread()   );
-   _tv[ 7 ] = registerThread( new CTCSSThread()   );
-
-   delay( 100 );
+   for( int i = 0 ; i < _QB50_NTHREADS ; ++i ) {
+      delay( 100 );
+      (void)registerThread( _tv[i] );
+   }
 
    /* get the last-known mode */
 

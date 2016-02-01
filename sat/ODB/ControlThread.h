@@ -6,9 +6,6 @@
 #include "Config.h"
 
 
-#define _QB50_NTHREADS 6
-
-
 namespace qb50 {
 
    class ControlThread : public Thread

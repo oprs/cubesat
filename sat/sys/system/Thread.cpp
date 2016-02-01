@@ -13,12 +13,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Thread::Thread( const char *name, int prio, bool suspended )
+Thread::Thread( const char *name, int prio, bool suspended, unsigned stackDepth )
    : _suspended( suspended )
 {
    this->name       = name == NULL ? "(generic thread)" : name;
    this->priority   = prio;
-   this->stackDepth = 2048;
+   this->stackDepth = stackDepth;
 
    onInit();
 }

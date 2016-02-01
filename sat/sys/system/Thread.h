@@ -10,7 +10,7 @@ namespace qb50 {
 
       public:
 
-         Thread( const char *name, int prio, bool suspended = false );
+         Thread( const char *name, int prio, bool suspended = false, unsigned stackDepth = 256 );
          ~Thread();
 
                  void suspend   ( void );

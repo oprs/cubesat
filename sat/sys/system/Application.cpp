@@ -28,13 +28,21 @@ void vApplicationIdleHook( void )
 { ; }
 
 void vApplicationMallocFailedHook( void )
-{ for( ;; ); }
+{
+   printf( "\r\n\r\n\033[31;1mvApplicationMallocFailedHook()\033[0m\r\n\r\n" );
+   for( ;; );
+}
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
    (void)pxTask;
    (void)pcTaskName;
 
+   if( pcTaskName != 0 ) {
+      printf( "\r\n\r\n\033[31;1mSTACK OVERVLOW [%s]\033[0m\r\n\r\n", pcTaskName );
+   } else {
+      printf( "\r\n\r\n\033[31;1mSTACK OVERVLOW\033[0m\r\n\r\n" );
+   }
    for( ;; );
 }
 
@@ -136,8 +144,12 @@ Thread* registerThread( Thread *thread )
       &thread->handle
    );
 
-   if( rv != pdTRUE )
+   if( rv != pdTRUE ) {
+      printf( "\033[31;1mThread::registerThread( %p ) failed [%s]\033[0m\r\n", thread, thread->name );
+      #if 0
       { throw 42; /* XXX */ }
+      #endif
+   }
 
    return thread;
 }

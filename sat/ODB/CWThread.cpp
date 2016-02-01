@@ -65,6 +65,11 @@ void CWThread::run( void )
 
    for( unsigned i = 0 ;; ++i ) {
 
+      dt = CONF.getParam( Config::PARAM_CW_CYCLE_TX );
+      dt = ( 10 + 5 * dt ) * 1000;
+
+      delay( dt );
+
       _wait();  // wait if suspended
 
       x[  0 ] = 'O';
@@ -80,16 +85,11 @@ void CWThread::run( void )
       x[ 10 ] = dcCode( SAT.dcBat );
       x[ 11 ] = '\0';
 
+#if 1
       kprintf( "  vBat: %4d mv (%c)\r\n", SAT.mvBat,                                         x[  7 ] );
       kprintf( " I_out: %4d mA (%c)\r\n", SAT.maIRx + SAT.maITx,                             x[  8 ] );
       kprintf( "  I_in: %4d mA (%c)\r\n", SAT.maI[0] + SAT.maI[1] + SAT.maI[2] + SAT.maI[3], x[  9 ] );
       kprintf( "  tBat: %4d dC (%c)\r\n", SAT.dcBat,                                         x[ 10 ] );
-
-#if 0
-      LOG << "SAT.mvBat: " << SAT.mvBat;
-      LOG << "SAT.maIRx: " << SAT.maIRx;
-      LOG << "SAT.maITx: " << SAT.maITx;
-      LOG << "SAT.dcBat: " << SAT.dcBat;
 #endif
 
       if(( i % 5 ) == 0 ) {
@@ -99,11 +99,6 @@ void CWThread::run( void )
          kprintf( "CW - %s\r\n", x + 3 );
          cw.write( x + 3, 8 );
       }
-
-      dt = CONF.getParam( Config::PARAM_CW_CYCLE_TX );
-      dt = ( 10 + 5 * dt ) * 1000;
-
-      delay( dt );
    }
 }
 

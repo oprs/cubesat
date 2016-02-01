@@ -3,8 +3,6 @@
 #include "Config.h"
 #include "devices.h"
 
-//#include <cstdio>
-
 using namespace qb50;
 
 

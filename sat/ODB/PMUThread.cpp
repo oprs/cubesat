@@ -19,7 +19,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 PMUThread::PMUThread()
-   : Thread( "Power Monitor", 1, true ),
+   : Thread( "Power Monitor", 1, true, 384 ),
      _mode( HIGH )
 { ; }
 
