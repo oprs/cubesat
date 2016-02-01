@@ -1,5 +1,5 @@
 
-#include "L3GD20/L3GD20.h"
+#include "SPI/L3GD20.h"
 #include "system/Application.h"
 #include "system/Logger.h"
 
@@ -29,8 +29,7 @@ L3GD20::L3GD20( SPI&        spi,
                 const char *name,
                 GPIO::Pin&  csPin,
                 Range       r )
-   : Device( name ),
-     SPISlave( spi, csPin, SPISlave::ActiveLow ),
+   : SPI_Device( name, spi, csPin, SPI_Device::ActiveLow ),
      _range( r )
 {
    _calX = _calY = _calZ = 0;
@@ -47,7 +46,7 @@ L3GD20::~L3GD20()
 
 L3GD20& L3GD20::init( void )
 {
-   (void)SPISlave::init();
+   (void)SPI_Device::init();
 
    (void)reset();
 

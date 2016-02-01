@@ -1,5 +1,5 @@
 
-#include "device/SPISlave.h"
+#include "SPI/Device.h"
 #include "system/Logger.h"
 
 using namespace qb50;
@@ -9,12 +9,12 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-SPISlave::SPISlave( SPI& spi, GPIO::Pin& csPin, SelectMode csMode )
-   : _spi( spi ), _csPin( csPin ), _csMode( csMode )
+SPI_Device::SPI_Device( const char *name, SPI& spi, GPIO::Pin& csPin, SelectMode csMode )
+   : Device( name ), _spi( spi ), _csPin( csPin ), _csMode( csMode )
 { ; }
 
 
-SPISlave::~SPISlave()
+SPI_Device::~SPI_Device()
 { ; }
 
 
@@ -22,7 +22,7 @@ SPISlave::~SPISlave()
 //  P U B L I C   M E T H O D S  //
 //  - - - - - - - - - - - - - -  //
 
-SPISlave& SPISlave::init( void )
+SPI_Device& SPI_Device::init( void )
 {
    if( _csMode == ActiveLow ) {
       _csPin.out().on();
@@ -38,7 +38,7 @@ SPISlave& SPISlave::init( void )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void SPISlave::_select( void )
+void SPI_Device::_select( void )
 {
    if( _csMode == ActiveLow ) {
       _csPin.off();
@@ -48,7 +48,7 @@ void SPISlave::_select( void )
 }
 
 
-void SPISlave::_deselect( void )
+void SPI_Device::_deselect( void )
 {
    if( _csMode == ActiveLow ) {
       _csPin.on();

@@ -1,5 +1,5 @@
 
-#include "MAX111x/MAX111x.h"
+#include "SPI/MAX111x.h"
 
 using namespace qb50;
 

@@ -1,15 +1,14 @@
 
-#ifndef _QB50_SYS_DEVICE_L3GD20_H
-#define _QB50_SYS_DEVICE_L3GD20_H
+#ifndef _QB50_SYS_DEVICE_SPI_L3GD20_H
+#define _QB50_SYS_DEVICE_SPI_L3GD20_H
 
-#include "Device.h"
-#include "SPISlave.h"
+#include "SPI/Device.h"
 #include "Gyro.h"
 
 
 namespace qb50 {
 
-   class L3GD20 : public Device, public SPISlave, public Gyro
+   class L3GD20 : public SPI_Device, public Gyro
    {
 
       public:
@@ -50,6 +49,6 @@ namespace qb50 {
 } /*qb50*/
 
 
-#endif /*_QB50_SYS_DEVICE_L3GD20_H*/
+#endif /*_QB50_SYS_DEVICE_SPI_L3GD20_H*/
 
 /*EoF*/

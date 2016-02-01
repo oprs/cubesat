@@ -1,5 +1,5 @@
 
-#include "A25Lxxx/A25Lxxx.h"
+#include "SPI/A25Lxxx.h"
 #include "system/Application.h"
 #include "system/Logger.h"
 
@@ -59,7 +59,7 @@ static const uint8_t WRDICmd[]  = { 0x04 };
 //  - - - - - - - - -  //
 
 A25Lxxx::A25Lxxx( SPI& spi, const char *name, GPIO::Pin& csPin )
-   : Device( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
+   : SPI_Device( name, spi, csPin, SPI_Device::ActiveLow )
 { ; }
 
 
@@ -75,7 +75,7 @@ A25Lxxx& A25Lxxx::init( void )
 {
    RDIDResp rdid;
 
-   (void)SPISlave::init();
+   (void)SPI_Device::init();
 
    /* temporarily (silently) enable the device
     * in order to read its identification ID */

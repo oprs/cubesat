@@ -1,17 +1,17 @@
 
-#ifndef _QB50_SYS_DEVICE_A25LXXX_H
-#define _QB50_SYS_DEVICE_A25LXXX_H
+#ifndef _QB50_SYS_DEVICE_SPI_A25LXXX_H
+#define _QB50_SYS_DEVICE_SPI_A25LXXX_H
 
-#include "Device.h"
+#include "SPI/Device.h"
 #include "FlashMemory.h"
-#include "SPISlave.h"
 
+#include <FreeRTOS.h>
 #include <task.h>
 
 
 namespace qb50 {
 
-   class A25Lxxx : public Device, public SPISlave, public FlashMemory
+   class A25Lxxx : public SPI_Device, public FlashMemory
    {
 
       private:
@@ -100,6 +100,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_A25LXXX_H*/
+#endif /*_QB50_SYS_DEVICE_SPI_A25LXXX_H*/
 
 /*EoF*/

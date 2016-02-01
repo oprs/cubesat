@@ -1,5 +1,5 @@
 
-#include "MAX111x/MAX111x.h"
+#include "SPI/MAX111x.h"
 #include "system/Logger.h"
 
 using namespace qb50;
@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 MAX111x::MAX111x( SPI& spi, const char *name, GPIO::Pin& csPin )
-   : Device( name ), SPISlave( spi, csPin, SPISlave::ActiveLow )
+   : SPI_Device( name, spi, csPin, SPI_Device::ActiveLow )
 { ; }
 
 
@@ -24,7 +24,7 @@ MAX111x::~MAX111x()
 
 MAX111x& MAX111x::init( void )
 {
-   (void)SPISlave::init();
+   (void)SPI_Device::init();
 
    kprintf( "%s: Onboard MAX111x serial ADC, cs: %s\r\n",
             _name, _csPin.name() );

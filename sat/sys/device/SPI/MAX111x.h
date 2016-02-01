@@ -1,14 +1,14 @@
 
-#ifndef _QB50_SYS_DEVICE_MAX111x_H
-#define _QB50_SYS_DEVICE_MAX111x_H
+#ifndef _QB50_SYS_DEVICE_SPI_MAX111x_H
+#define _QB50_SYS_DEVICE_SPI_MAX111x_H
 
+#include "SPI/Device.h"
 #include "ADC.h"
-#include "SPISlave.h"
 
 
 namespace qb50 {
 
-   class MAX111x : public Device, public ADC, public SPISlave
+   class MAX111x : public SPI_Device, public ADC
    {
 
       protected:
@@ -47,6 +47,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_MAX111x_H*/
+#endif /*_QB50_SYS_DEVICE_SPI_MAX111x_H*/
 
 /*EoF*/
