@@ -2,15 +2,15 @@
 #ifndef _QB50_SYS_DEVICE_STM32_SPI_H
 #define _QB50_SYS_DEVICE_STM32_SPI_H
 
-#include "SPI.h"
-#include "BusSlave.h"
+#include "STM32/STM32_Device.h"
 #include "STM32/STM32_GPIO.h"
 #include "STM32/STM32_DMA.h"
+#include "SPI.h"
 
 
 namespace qb50 {
 
-   class STM32_SPI : public Device, public BusSlave, public SPI
+   class STM32_SPI : public STM32_Device, public SPI
    {
 
       public:

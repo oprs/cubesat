@@ -2,13 +2,12 @@
 #ifndef _QB50_SYS_DEVICE_STM32_DMA_H
 #define _QB50_SYS_DEVICE_STM32_DMA_H
 
-#include "Device.h"
-#include "BusSlave.h"
+#include "STM32/STM32_Device.h"
 
 
 namespace qb50 {
 
-   class STM32_DMA : public Device, public BusSlave
+   class STM32_DMA : public STM32_Device
    {
 
       public:

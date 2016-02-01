@@ -29,7 +29,7 @@ STM32_SPI::STM32_SPI( Bus&              bus,
                       STM32_GPIO::Pin&  clkPin,
                       STM32_GPIO::Alt   alt,
                       STM32_SPI::ClkDiv div )
-   : Device( name ), BusSlave( bus, iobase, periph ),
+   : STM32_Device( name, bus, iobase, periph ),
      _stMISO( stMISO ),
      _stMOSI( stMOSI ),
      _clkPin( clkPin ),

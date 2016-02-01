@@ -15,7 +15,7 @@ STM32_BKP::STM32_BKP( Bus& bus,
                 const uint32_t iobase,
                 const uint32_t periph,
                 const char    *name )
-   : Device( name ), BusSlave( bus, iobase, periph )
+   : STM32_Device( name, bus, iobase, periph )
 { ; }
 
 

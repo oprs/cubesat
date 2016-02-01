@@ -2,10 +2,9 @@
 #ifndef _QB50_SYS_DEVICE_STM32_UART_H
 #define _QB50_SYS_DEVICE_STM32_UART_H
 
-#include "Device.h"
+#include "STM32/STM32_Device.h"
 #include "STM32/STM32_GPIO.h"
 #include "device/UART.h"
-#include "device/BusSlave.h"
 #include "device/FIFO.hpp"
 
 #include <task.h>
@@ -13,7 +12,7 @@
 
 namespace qb50{
 
-   class STM32_UART : public Device, public BusSlave, public UART
+   class STM32_UART : public STM32_Device, public UART
    {
 
       public:

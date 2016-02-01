@@ -53,7 +53,7 @@ STM32_RCC& STM32_RCC::init( void )
 }
 
 
-STM32_RCC& STM32_RCC::enable( BusSlave *dev, bool silent )
+STM32_RCC& STM32_RCC::enable( STM32_Device *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -69,17 +69,15 @@ STM32_RCC& STM32_RCC::enable( BusSlave *dev, bool silent )
 
    };
 
-/*
    if( !silent ) {
       kprintf( "%s: %s enabled at %s\r\n", _name, dev->name(), dev->bus.name );
    }
-*/
 
    return *this;
 }
 
 
-STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
+STM32_RCC& STM32_RCC::disable( STM32_Device *dev, bool silent )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
@@ -95,11 +93,9 @@ STM32_RCC& STM32_RCC::disable( BusSlave *dev, bool silent )
 
    };
 
-/*
    if( !silent ) {
       kprintf( "%s: %s disabled at %s\r\n", _name, dev->name(), dev->bus.name );
    }
-*/
 
    return *this;
 }

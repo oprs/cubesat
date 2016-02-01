@@ -46,6 +46,7 @@ static char maCode( unsigned ma )
       alpha[ ma / 100 ];
 }
 
+
 static char dcCode( int dc )
 {
    if( dc < -20 ) dc = -25;

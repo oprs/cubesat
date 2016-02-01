@@ -19,7 +19,7 @@ STM32_TIMER::STM32_TIMER( Bus&  bus,
               const char       *name,
               STM32_GPIO::Pin&  pin,
               STM32_GPIO::Alt   alt )
-   : Device( name ), BusSlave( bus, iobase, periph ),
+   : STM32_Device( name, bus, iobase, periph ),
      _pin( pin ), _alt( alt )
 { ; }
 

@@ -2,7 +2,7 @@
 #ifndef _QB50_SYS_DEVICE_STM32_RCC_H
 #define _QB50_SYS_DEVICE_STM32_RCC_H
 
-#include "BusSlave.h"
+#include "STM32/STM32_Device.h"
 
 
 namespace qb50 {
@@ -99,8 +99,8 @@ namespace qb50 {
          ~STM32_RCC();
 
          STM32_RCC&  init    ( void );
-         STM32_RCC&  enable  ( BusSlave *dev, bool silent = false );
-         STM32_RCC&  disable ( BusSlave *dev, bool silent = false );
+         STM32_RCC&  enable  ( STM32_Device *dev, bool silent = false );
+         STM32_RCC&  disable ( STM32_Device *dev, bool silent = false );
 
          STM32_RCC&  enableRTC  ( uint32_t clkSrc );
          STM32_RCC&  disableRTC ( void );

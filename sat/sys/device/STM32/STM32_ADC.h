@@ -2,17 +2,16 @@
 #ifndef _QB50_SYS_DEVICE_STM32_ADC_H
 #define _QB50_SYS_DEVICE_STM32_ADC_H
 
-#include "Device.h"
+#include "STM32/STM32_Device.h"
 #include "STM32/STM32_GPIO.h"
 #include "ADC.h"
-#include "BusSlave.h"
 
 //Over-ride macros defined by CMSIS
 #undef ADC
 
 namespace qb50{
 
-   class STM32_ADC : public Device, public BusSlave, public ADC
+   class STM32_ADC : public STM32_Device, public ADC
    {
 
       public:

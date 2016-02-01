@@ -21,7 +21,7 @@ STM32_UART::STM32_UART( Bus&              bus,
                         STM32_GPIO::Pin&  txPin,
                         const uint32_t    IRQn,
                         STM32_GPIO::Alt   alt )
-   : Device( name ), BusSlave( bus, iobase, periph ),
+   : STM32_Device( name, bus, iobase, periph ),
      _rxFIFO( FIFO<uint8_t>( 64 )),
      _txFIFO( FIFO<uint8_t>( 64 )),
      _rxPin ( rxPin ),

@@ -2,14 +2,13 @@
 #ifndef _QB50_SYS_DEVICE_STM32_GPIO_H
 #define _QB50_SYS_DEVICE_STM32_GPIO_H
 
-#include "Device.h"
+#include "STM32/STM32_Device.h"
 #include "GPIO.h"
-#include "BusSlave.h"
 
 
 namespace qb50 {
 
-   class STM32_GPIO : public Device, public BusSlave, public GPIO
+   class STM32_GPIO : public STM32_Device, public GPIO
    {
       public:
 

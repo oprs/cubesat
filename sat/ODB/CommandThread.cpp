@@ -31,12 +31,12 @@ void CommandThread::run( void )
 {
    Form *form;
 
-   UART6.enable(); /* XXX UART6 */
+   UART6.enable();
 
    for( ;; ) {
 
       try {
-         form = _parseLine( UART6 /* XXX UART6 */ );
+         form = _parseLine( UART6 );
       } catch( const char *e ) {
          kprintf( "Exception: %s\r\n", e );
          continue;

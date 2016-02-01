@@ -41,8 +41,6 @@ void PMUThread::run( void )
 
    uint16_t raw[ 32 ];       // 4 ADCs, 8 channels each
 
- //unsigned dt;
-
    ADC1.enable( true );
    ADC2.enable( true );
    ADC3.enable( true );
