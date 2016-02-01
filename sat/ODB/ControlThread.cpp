@@ -2,12 +2,16 @@
 #include "devices.h"
 
 #include "ControlThread.h"
-#include "InitThread.h"
 #include "CommandThread.h"
+#include "InitThread.h"
 #include "CWThread.h"
+#include "WodexThread.h"
 #include "GPSThread.h"
-#include "PMUThread.h"
 #include "FiPEX/FipexThread.h"
+#include "PMUThread.h"
+#include "TelemThread.h"
+#include "CTCSSThread.h"
+
 #include "WodStore.h"
 
 using namespace qb50;
@@ -19,16 +23,16 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
   /* +------------ CTCSSThread
      |+----------- TelemThread
      ||+---------- PMUThread
-     |||+--------- FiPEXThread
+     |||+--------- FipexThread
      ||||+-------- GPSThread
-     |||||+------- WODEXThread
+     |||||+------- WodexThread
      ||||||+------ CWThread
      |||||||+----- InitThread
      |||||||| */
    0b00000001, /* mode INIT  */
-   0b00110000 /*0b00110010*/, /* mode CW    */
+   0b00100010, /* mode CW    */
    0b00000000, /* mode STDBY */
-   0b00110100, /* mode WODEX */
+   0b00100100, /* mode WODEX */
    0b01100000, /* mode TELEM */
    0b00110000, /* mode FiPEX */
    0b00101000, /* mode GPS   */
@@ -81,8 +85,6 @@ void ControlThread::run( void )
    BKP.enable( true );
    WOD.enable( true );
 
-PB1.out().on();
-
    /*
     * Hardware reset ?
     * -> load the default configuration
@@ -125,12 +127,12 @@ PB1.out().on();
 
    _tv[ 0 ] = registerThread( new InitThread()    );
    _tv[ 1 ] = registerThread( new CWThread()      );
- //_tv[ 2 ] = registerThread( new WODEXThread()   );
+   _tv[ 2 ] = registerThread( new WodexThread()   );
    _tv[ 3 ] = registerThread( new GPSThread()     );
    _tv[ 4 ] = registerThread( new FipexThread()   );
    _tv[ 5 ] = registerThread( new PMUThread()     );
- //_tv[ 6 ] = registerThread( new TelemThread()   );
- //_tv[ 7 ] = registerThread( new CTCSSThread()   );
+   _tv[ 6 ] = registerThread( new TelemThread()   );
+   _tv[ 7 ] = registerThread( new CTCSSThread()   );
 
    delay( 100 );
 

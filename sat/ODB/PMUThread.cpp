@@ -209,40 +209,6 @@ void PMUThread::run( void )
       SAT.mvBat    = COEF( vbat ) * 35.235952;
       SAT.dcBat    = dC;
 
-#if 0
-      unsigned i33, v33, i5, v5;
-
-      i33 = raw[27]; /* ADC4CH3 */
-      v33 = raw[28]; /* ADC4CH4 */
-      i5  = raw[29]; /* ADC4CH5 */
-      v5  = raw[30]; /* ADC4CH6 */
-
-      kprintf( "Fipex: i33: %u, v33: %umV, i5: %u, v5: %umV\r\n",
-               i33,
-               16 * v33,   // 2 * ( v33 / 256 ) * 2048
-               i5,
-               9408 * v5 / 909  // ((267+909)/909) * ( v5 / 256 ) * 2048
-      );
-
-/*
-#if 0
-      int a1 = i33; //(( i33 *  8 ) * 0.275 );
-      int a2 = v33; //(( v33 *  8 ) * 2.0   );
-      int a3 =  i5; //((  i5 *  8 ) * 0.24  );
-      int a4 =  v5; //((  v5 *  8 ) * 4.4   );
-
-      printf( "Fipex: i33: %d mA, v33: %d mV, i5: %d mA, v5: %d mV\r\n", a1, a2, a3, a4 );
-#else
-      printf( "Fipex: i33: %umA, v33: %umV, i5: %umA, v5: %umV\r\n",
-               (int)(( i33 * 8 ) * 0.0275 ),
-               16 * v33,         // 2 * ( v33 / 256 ) * 2048
-               (int)((  i5 * 8 ) * 0.24 ),
-               (int)((  v5 * 8 ) * 4.4 )  // 8 = 2048 / 256
-      );
-#endif
-*/
-#endif
-
       /* check battery voltage */
 
       float mvMin = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));

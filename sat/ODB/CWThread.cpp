@@ -80,6 +80,11 @@ void CWThread::run( void )
       x[ 10 ] = dcCode( SAT.dcBat );
       x[ 11 ] = '\0';
 
+      kprintf( "  vBat: %4d mv (%c)\r\n", SAT.mvBat,                                         x[  7 ] );
+      kprintf( " I_out: %4d mA (%c)\r\n", SAT.maIRx + SAT.maITx,                             x[  8 ] );
+      kprintf( "  I_in: %4d mA (%c)\r\n", SAT.maI[0] + SAT.maI[1] + SAT.maI[2] + SAT.maI[3], x[  9 ] );
+      kprintf( "  tBat: %4d dC (%c)\r\n", SAT.dcBat,                                         x[ 10 ] );
+
 #if 0
       LOG << "SAT.mvBat: " << SAT.mvBat;
       LOG << "SAT.maIRx: " << SAT.maIRx;
@@ -87,12 +92,11 @@ void CWThread::run( void )
       LOG << "SAT.dcBat: " << SAT.dcBat;
 #endif
 
-      /* XXX kprintf */
       if(( i % 5 ) == 0 ) {
-         kprintf( "%s - %s\r\n", x );
+         kprintf( "CW - %s\r\n", x );
          cw.write( x, 11 );
       } else {
-         kprintf( "%s - %s\r\n", x + 3 );
+         kprintf( "CW - %s\r\n", x + 3 );
          cw.write( x + 3, 8 );
       }
 
