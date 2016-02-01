@@ -20,7 +20,7 @@ int main( void )
    UART3.enable();            /* GPS        */
 #endif
    (void)registerThread( new ControlThread() );
-   run();
+   run(); // FreeRTOS RUN.
 }
 
 // PWR_BackupAccessCmd
