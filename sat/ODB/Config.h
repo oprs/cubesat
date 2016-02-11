@@ -9,7 +9,7 @@
 #include <semphr.h>
 
 
-#define _QB50_NMODES     9
+#define _QB50_NMODES    16
 #define _QB50_NTHREADS   9
 #define _QB50_NPARAMS   64
 #define _QB50_PVAL_MASK 0xffff
@@ -35,14 +35,18 @@ namespace qb50 {
             PARAM_ADCS_CYCLE_MEAS   = 5,
             PARAM_GPS_CYCLE_ON      = 6,
             PARAM_VBAT_LOW          = 7,
-          //UNUSED                  = 8,
+            PARAM_ADCS_CYCLE_DTMB   = 8,
             PARAM_FM_WODEX_CYCLE_TX = 9,
             PARAM_ADCS_CYCLE_CTRL   = 10,
             PARAM_FM_CYCLE_ON       = 11,
             PARAM_VBAT_HIGH         = 12,
           //UNUSED                  = 13,
             PARAM_PA_TEMP_HIGH      = 14,
-            PARAM_PA_TEMP_LOW       = 15
+            PARAM_PA_TEMP_LOW       = 15,
+
+            PARAM_CW_POWER          = 32,
+            PARAM_WODEX_POWER       = 33,
+            PARAM_FM_POWER          = 34,
          };
 
          typedef int16_t pval_t;
@@ -65,15 +69,22 @@ namespace qb50 {
          //  - - - - -  //
 
          enum Mode {
-            INIT  = 0,
-            CW    = 1,
-            STDBY = 2,
-            WODEX = 3,
-            TELEM = 4,
-            FIPEX = 5,
-            GPS   = 6,
-            FM    = 7,
-            POWER = 8
+            INIT   = 0x00,
+            CW     = 0x01,
+            WODEX  = 0x02,
+            AMEAS  = 0x03,
+            DTMB   = 0x04,
+            ACTRL  = 0x05,
+            FIPEX  = 0x06,
+            FM     = 0x07,
+            STDBY  = 0x08,
+            TELEM  = 0x09,
+            GPS    = 0x0a,
+          //(11)   = 0x0b,
+            POWER  = 0x0c,
+          //(13)   = 0x0d,
+          //(14)   = 0x0e,
+          //(15)   = 0x0f
          };
 
          static const char *modes[ _QB50_NMODES ];

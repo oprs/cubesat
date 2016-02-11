@@ -4,6 +4,7 @@
 
 #include "system/qb50.h"
 #include "Config.h"
+#include "Form.h"
 
 
 namespace qb50 {
@@ -26,7 +27,10 @@ namespace qb50 {
 
          uint32_t _ctb; // current thread bitmask
 
-         void _switchModes( Config::mode_t target );
+         void _handleForm  ( Form  *fp );
+         void _handleCForm ( CForm *fp );
+
+         void _switchModes ( Config::mode_t target );
 
    };
 

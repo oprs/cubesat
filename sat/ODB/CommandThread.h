@@ -5,6 +5,7 @@
 #include "system/qb50.h"
 #include "mBuf.h"
 #include "Form.h"
+#include "Event.h"
 
 
 namespace qb50 {

@@ -2,6 +2,8 @@
 #ifndef _QB50_ODB_EVENT_H
 #define _QB50_ODB_EVENT_H
 
+#include "Form.h"
+
 
 namespace qb50 {
 
@@ -12,27 +14,31 @@ namespace qb50 {
 
       enum event_t {
 
-         GENERIC     = 0,  /* generic event                    */
+         GENERIC     = 0x00,  /* generic event                    */
 
-         AD_SUCCESS  = 1,  /* antenna deployment (success)     */
-         AD_FAILURE  = 2,  /* antenna deployment (failure)     */
-         VBAT_HIGH   = 3,  /* V_Bat crossed the high threshold */
-         VBAT_LOW    = 4,  /* V_Bat crossed the low threshold  */
-         FORM        = 5,  /* command (form) from the ground   */
+         AD_SUCCESS  = 0x01,  /* antenna deployment (success)     */
+         AD_FAILURE  = 0x02,  /* antenna deployment (failure)     */
+         VBAT_HIGH   = 0x03,  /* V_Bat crossed the high threshold */
+         VBAT_LOW    = 0x04,  /* V_Bat crossed the low threshold  */
+         FORM        = 0x05,  /* command from the ground          */
 
       };
 
-      Event( event_t type )
-         : type( type )
+      Event( event_t type, Form *form = (Form*)0 )
+         : type( type ), form( form )
       { ; }
 
       ~Event()
-      { ; }
+      {
+         if(( type == FORM ) && ( form != 0 ))
+            delete form;
+      }
 
       const char *name( void )
       { return events[ type ]; }
 
       event_t type;
+      Form   *form;
 
    };
 

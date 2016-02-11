@@ -32,15 +32,22 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
      |||||||+------ PMUThread
      ||||||||+----- InitThread
      ||||||||| */
-   0b000000001, /* mode INIT  */
-   0b000100010, /* mode CW    */
-   0b000000000, /* mode STDBY */
-   0b000000110, /* mode WODEX */
-   0b001000010, /* mode TELEM */
-   0b000010010, /* mode FiPEX */
-   0b000001010, /* mode GPS   */
-   0b010000010, /* mode FM    */
-   0b000000010  /* mode POWER */
+   0b000000001, /* mode INIT   */
+   0b000100010, /* mode CW     */
+   0b000000110, /* mode WODEX  */
+   0b100000010, /* mode AMEAS  */
+   0b100000010, /* mode DTMB   */
+   0b100000010, /* mode ACTRL  */
+   0b000010010, /* mode FIPEX  */
+   0b010000010, /* mode FM     */
+   0b000000000, /* mode STDBY  */
+   0b001000010, /* mode TELEM  */
+   0b000001010, /* mode GPS    */
+   0b000000010, /* mode (11)   */
+   0b000000010, /* mode POWER  */
+   0b000000010, /* mode (13)   */
+   0b000000010, /* mode (14)   */
+   0b000000010  /* mode (15)   */
 };
 
 
@@ -132,7 +139,7 @@ void ControlThread::run( void )
       (void)registerThread( _tv[i] );
    }
 
-   /* get the last-known mode */
+   /* get the last known mode */
 
    Config::mode_t mode = CONF.mode();
 
@@ -175,33 +182,258 @@ void ControlThread::run( void )
          case Event::VBAT_LOW:
 
             if( mode != Config::POWER ) {
-#if 1
-               kprintf( RED( "Ignoring VBAT_LOW" ) "\r\n" );
-#else
                _switchModes( Config::POWER );
-#endif
             }
 
             break;
 
          case Event::FORM:
+
+            _handleForm( ev->form );
             break;
 
          default:
             break;
 
       }
-/*
-      if( cform.argc > 0 ) {
-         std::cout << "+ C" << cform.argv[0];
-         for( int i = 1 ; i < cform.argc ; ++i )
-            std::cout << ',' << cform.argv[i];
-         std::cout << "\r\n";
-      }
-*/
+
       mode = CONF.mode();
 
       delete ev;
+   }
+}
+
+
+void ControlThread::_handleForm( Form *fp )
+{
+   switch( fp->type ) {
+
+      case Form::FORM_TYPE_C:
+         _handleCForm( &fp->C );
+         break;
+
+      default:
+         break;
+   }
+}
+
+
+void ControlThread::_handleCForm( CForm *fp )
+{
+   Config::mode_t mode = CONF.mode();
+
+   switch( fp->argv[0] ) {
+
+      /* C1 - passage en mode CW */
+
+      case 1:
+
+         kprintf( "FORM C1\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_CW_CYCLE_TX, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_CW_POWER, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::CW ) {
+            _switchModes( Config::CW );
+         }
+
+         break;
+
+      /* C2 - passage en mode WODEX */
+
+      case 2:
+
+         kprintf( "FORM C2\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_WODEX_CYCLE_TX, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::WODEX ) {
+            _switchModes( Config::WODEX );
+         }
+
+         break;
+
+      /* C3 - passage en mode mesure d'attitude */
+
+      case 3:
+
+         kprintf( "FORM C3\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[1] );
+         }
+
+         if( mode != Config::AMEAS ) {
+            _switchModes( Config::AMEAS );
+         }
+
+         break;
+
+      /* C4 - passage en mode détumbling */
+
+      case 4:
+
+         kprintf( "FORM C4\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_DTMB, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::DTMB) {
+            _switchModes( Config::DTMB );
+         }
+
+         break;
+
+         /* C5 - passage en mode contrôle d'attitude */
+
+      case 5:
+
+         kprintf( "FORM C5\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_CTRL, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::ACTRL ) {
+            _switchModes( Config::ACTRL );
+         }
+
+         break;
+
+      /* C6 - passage en mode FIPEX */
+
+      case 6:
+
+         kprintf( "FORM C6\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_FIPEX_SCRIPT_N, fp->argv[1] );
+         }
+
+         if( mode != Config::FIPEX ) {
+            _switchModes( Config::FIPEX );
+         }
+
+         break;
+
+      /* C7 - passage en mode relais FM */
+
+      case 7:
+
+         kprintf( "FORM C7\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_FM_CYCLE_ON, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_FM_POWER, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::FM ) {
+            _switchModes( Config::FM );
+         }
+
+         break;
+
+      /* C8 - passage en mode standby */
+
+      case 8:
+
+         kprintf( "FORM C8\r\n" );
+
+         if( mode != Config::STDBY ) {
+            _switchModes( Config::STDBY );
+         }
+
+         break;
+
+      /* C9 - passage en mode télémétrie */
+
+      case 9:
+
+         kprintf( "FORM C9\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
+         }
+
+         if( mode != Config::TELEM ) {
+            _switchModes( Config::TELEM );
+         }
+
+         break;
+
+      /* C10 - passage en mode GPS */
+
+      case 10:
+
+         kprintf( "FORM C10\r\n" );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_GPS_CYCLE_ON, fp->argv[1] );
+         }
+
+         if( mode != Config::GPS ) {
+            _switchModes( Config::GPS );
+         }
+
+         break;
+
+      /* C11 - ping */
+
+      case 11:
+         kprintf( "FORM C11\r\n" );
+         break;
+
+      /* C12 - arrêt télémétries */
+
+      case 12:
+
+         kprintf( "FORM C12\r\n" );
+
+         if( mode != Config::GPS ) {
+            _switchModes( Config::WODEX );
+         }
+
+         break;
+
+      /* C13 - effacement données FIPEX (SU) */
+
+      case 13:
+         kprintf( "FORM C13\r\n" );
+         break;
+
+      /* C14 - mode test mesure d'attitude */
+
+      case 14:
+         kprintf( "FORM C14\r\n" );
+         break;
+
+      /* C15 - mode test contrôle d'attitude */
+
+      case 15:
+         kprintf( "FORM C15\r\n" );
+         break;
+
+      default:
+         break;
+
    }
 }
 

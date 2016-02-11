@@ -69,7 +69,9 @@ void CommandThread::run( void )
       switch( _form.type ) {
          case Form::FORM_TYPE_C:
          {
-            //xQueueSendToBack( evQueue, &form, portMAX_DELAY );
+            Form  *fp = new Form( _form );
+            Event *ev = new Event( Event::FORM, fp );
+            xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
             break;
          }
 
@@ -90,13 +92,7 @@ void CommandThread::run( void )
                break;
             }
 
-            Config::pval_t old = CONF.setParam( _form.P.pid, _form.P.pval );
-
-            if( _form.P.pval == old ) {
-               kprintf( "+ P%d,%d (unchanged)\r\n", _form.P.pid, _form.P.pval );
-            } else {
-               kprintf( "+ P%d,%d (was: %d)\r\n", _form.P.pid, _form.P.pval, old );
-            }
+            (void)CONF.setParam( _form.P.pid, _form.P.pval );
 
             break;
          }

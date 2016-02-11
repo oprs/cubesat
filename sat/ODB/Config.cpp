@@ -1,5 +1,7 @@
 
 #include "Config.h"
+#include "Syslog.h"
+
 #include <safe_stm32f4xx.h>
 
 using namespace qb50;
@@ -15,7 +17,7 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
    { PARAM_WODEX_CYCLE_TX,     1,  3,  1 },  { PARAM_FIPEX_SCRIPT_N,     1,  7,  1 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_ADCS_CYCLE_MEAS,    1,  4,  1 },
    { PARAM_GPS_CYCLE_ON,       1,  5,  2 },  { PARAM_VBAT_LOW,           1,  7,  7 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,  4,  2 },
+   { PARAM_ADCS_CYCLE_DTMB,    0, 24,  0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,  4,  2 },
    { PARAM_ADCS_CYCLE_CTRL,    0, 24,  0 },  { PARAM_FM_CYCLE_ON,        1, 96, 16 },
    { PARAM_VBAT_HIGH,          1,  5,  1 },  { PARAM_NONE,               0,  0,  0 },
    { PARAM_PA_TEMP_HIGH,       0,  7,  1 },  { PARAM_PA_TEMP_LOW,        0,  5,  4 },
@@ -31,8 +33,8 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
    { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
 
    /* params[ 32 .. 47 ]      min max def                               min max def */
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
+   { PARAM_CW_POWER,           1,  4,  1 },  { PARAM_WODEX_POWER,        1,  4,  1 },
+   { PARAM_FM_POWER,           1,  4,  1 },  { PARAM_NONE,               0,  0,  0 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
    { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
@@ -54,7 +56,10 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
 
 const char *Config::modes[ _QB50_NMODES ] = {
-   "INIT", "CW", "STDBY", "WODEX", "TELEM", "FIPEX", "GPS", "FM", "POWER"
+   "INIT",     "CW",       "WODEX",    "AMEAS",
+   "DTMB",     "ACTRL",    "FIPEX",    "FM",
+   "STDBY",    "TELEM",    "GPS",      "(11)",
+   "POWER",    "(13)",     "(14)",     "(15)"
 };
 
 
@@ -149,6 +154,12 @@ Config::pval_t Config::setParam( Config::pid_t pid, Config::pval_t pval )
    st->pv[ pid ] = pval;
 
    unlock();
+
+   if( pval == old ) {
+      kprintf( "+ P%d,%d (unchanged)\r\n", pid, pval );
+   } else {
+      kprintf( "+ P%d,%d (was: %d)\r\n", pid, pval, old );
+   }
 
    return old;
 }
