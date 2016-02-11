@@ -13,6 +13,7 @@
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
 
+#include "Event.h"
 #include "WodStore.h"
 
 using namespace qb50;
@@ -152,10 +153,9 @@ void ControlThread::run( void )
       xQueueReceive( evQueue, &ev, portMAX_DELAY );
       if( !ev ) continue;
 
-      Event::event_t etype = ev->type();
-      kprintf( "\033[1mEVENT TYPE #%d - %s\033[0m\r\n", etype, ev->name() );
+      kprintf( "\033[1mEVENT TYPE #%d - %s\033[0m\r\n", ev->type, ev->name() );
 
-      switch( etype ) {
+      switch( ev->type ) {
 
          case Event::AD_SUCCESS:
          case Event::AD_FAILURE:

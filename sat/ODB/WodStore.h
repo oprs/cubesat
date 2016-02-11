@@ -40,7 +40,7 @@ namespace qb50 {
             uint8_t  _raw[32];
 
             ADCEntry( uint32_t time ) : Entry( ADC, time )
-            { ; }
+            { _flags = 0; }
 
             ~ADCEntry()
             { ; }

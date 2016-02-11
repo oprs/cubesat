@@ -64,7 +64,7 @@ L3GD20& L3GD20::reset( void )
    (void)enable( true );
 
    _WHO_AM_I( id  );
-   kprintf( "%s: id: 0x02x\r\n", _name, id );
+   kprintf( "%s: id: 0x%02x\r\n", _name, id );
 
    range( R250DPS );
 

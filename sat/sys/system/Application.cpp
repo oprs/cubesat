@@ -43,6 +43,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
    } else {
       printf( "\r\n\r\n\033[31;1mSTACK OVERVLOW\033[0m\r\n\r\n" );
    }
+
    for( ;; );
 }
 

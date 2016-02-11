@@ -11,7 +11,7 @@ sys:
 	@$(MAKE) -C $(SATDIR)/$@ SATDIR=$(SATDIR) ARCH=$(ARCH)
 
 check:
-	$(CHECK) -I. -I$(SATDIR)/sys -I$(SATDIR)/sys/device -I$(SATDIR)/sys/system ./sys/src ./app
+	$(CHECK) -I. -I$(SATDIR)/sys -I$(SATDIR)/sys/device -I$(SATDIR)/sys/system ./sys/system ./sys/device ./ODB
 
 clean: cleanODB cleanADCS cleanDISC
 

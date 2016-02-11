@@ -2,6 +2,7 @@
 #include "devices.h"
 #include "PMUThread.h"
 #include "Config.h"
+#include "Event.h"
 #include "WodStore.h"
 #include "system/Application.h"
 

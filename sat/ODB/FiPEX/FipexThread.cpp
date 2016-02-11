@@ -45,7 +45,7 @@ void FipexThread::cmd( uint8_t *cmd, size_t len )
    dlen = x[2];
 
    kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
-   kprintf( "%s: len: %d\r\n", name, dlen );
+   kprintf( "%s: len: %zu\r\n", name, dlen );
    kprintf( "%s: seq: %d\r\n", name, x[3] );
 
    delete[] o;

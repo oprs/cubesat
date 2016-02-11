@@ -8,12 +8,14 @@ fallback:
 include $(SATDIR)/rules/arch-$(ARCH).mk
 
 RM     := rm -f
+#CHECK  := cppcheck --enable=warning
 CHECK  := cppcheck --enable=all
 #CHECK  := cppcheck --force --enable=warning,style
 FLASH  := st-flash
 
 CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)
+CFLAGS += -fstack-usage
 
 CFLAGS += -g -O0 -DDEBUG
 #CFLAGS += -Os

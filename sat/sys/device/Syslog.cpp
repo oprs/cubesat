@@ -73,6 +73,8 @@ Syslog& Syslog::printf( const char *fmt, ... )
 
    } while( 0 );
 
+   va_end( ap );
+
    return *this;
 }
 

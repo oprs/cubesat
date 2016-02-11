@@ -28,7 +28,6 @@
 #include "system/Application.h"
 #include "system/UserLock.h"
 #include "system/Logger.h"
-#include "system/Event.h"
 
 
 #endif /*_QB50_H*/
