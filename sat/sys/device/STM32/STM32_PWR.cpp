@@ -54,10 +54,6 @@ STM32_PWR& STM32_PWR::enable( bool silent )
 
    RCC.enable( this, silent );
 
-   if( !silent ) {
-      kprintf( "%s: enabled\r\n", _name );
-   }
-
    return *this;
 }
 
@@ -68,10 +64,6 @@ STM32_PWR& STM32_PWR::disable( bool silent )
       return *this;
 
    RCC.disable( this, silent );
-
-   if( !silent ) {
-      kprintf( "%s: disabled\r\n", _name );
-   }
 
    return *this;
 }

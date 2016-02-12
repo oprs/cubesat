@@ -39,10 +39,9 @@ ODB& ODB::init( void )
    SYSLOG.init();
    RCC.init();
    PWR.init();
-   RTC.init();
    BKP.init();
+   RTC.init();
    DMA1.init();
- //DMA2.init();
    GPIOA.init();
    GPIOB.init();
    GPIOC.init();
@@ -50,8 +49,6 @@ ODB& ODB::init( void )
    UART2.init();
    UART3.init();
    UART6.init();
- //SPI1.init();
- //SPI2.init();
    SPI3.init();
    ADC1.init();
    ADC2.init();

@@ -4,11 +4,12 @@
 
 #include "STM32/STM32_Device.h"
 #include "STM32/STM32_PWR.h"
+#include "device/RTC.h"
 
 
 namespace qb50 {
 
-   class STM32_RTC : public STM32_Device
+   class STM32_RTC : public STM32_Device, public RTC
    {
 
       public:
@@ -24,6 +25,9 @@ namespace qb50 {
          STM32_RTC& init    ( void );
          STM32_RTC& enable  ( bool silent = false );
          STM32_RTC& disable ( bool silent = false );
+
+         STM32_RTC& getTime ( Time &t );
+         STM32_RTC& setTime ( Time &t );
 
       private:
 

@@ -96,7 +96,7 @@ void ControlThread::run( void )
    GPIOC.enable();
    UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
- //RTC.enable();
+   RTC.enable();
    BKP.enable( true );
    WOD.enable( true );
 
@@ -167,15 +167,17 @@ void ControlThread::run( void )
          case Event::AD_SUCCESS:
          case Event::AD_FAILURE:
 
-            if( mode == Config::INIT )
+            if( mode == Config::INIT ) {
                _switchModes( Config::CW );
+            }
 
             break;
 
          case Event::VBAT_HIGH:
 
-            if( mode == Config::POWER )
+            if( mode == Config::POWER ) {
                _switchModes( Config::WODEX );
+            }
 
             break;
 
@@ -460,6 +462,5 @@ void ControlThread::_switchModes( Config::mode_t target )
 
    kprintf( "\033[7m-------- [ %s ] --------\033[0m\r\n", Config::modes[ target ] );
 }
-
 
 /*EoF*/
