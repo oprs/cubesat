@@ -27,6 +27,12 @@ namespace qb50 {
 
    extern qb50::STM32_NVIC NVIC;
 
+//  - - - - - - - - - - -  //
+//  B A C K U P   S R A M  //
+//  - - - - - - - - - - -  //
+
+   extern qb50::STM32_BKP BPK;
+
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
@@ -86,6 +92,13 @@ namespace qb50 {
    extern qb50::STM32_GPIO::Pin& PC10;  extern qb50::STM32_GPIO::Pin& PC11;
    extern qb50::STM32_GPIO::Pin& PC12;  extern qb50::STM32_GPIO::Pin& PC13;
    extern qb50::STM32_GPIO::Pin& PC14;  extern qb50::STM32_GPIO::Pin& PC15;
+
+   extern qb50::STM32_GPIO::Pin& F1;
+   extern qb50::STM32_GPIO::Pin& R1;
+   extern qb50::STM32_GPIO::Pin& F2;
+   extern qb50::STM32_GPIO::Pin& R2;
+   extern qb50::STM32_GPIO::Pin& F3;
+   extern qb50::STM32_GPIO::Pin& R3;
 
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //

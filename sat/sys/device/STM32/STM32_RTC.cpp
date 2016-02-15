@@ -74,8 +74,6 @@ STM32_RTC& STM32_RTC::enable( bool silent )
    PWR.enableBKP();              // enable access to backup domain
    BKP.enable( silent );
 
-//RCC_LSICmd
-
    //RCC.enable( this, silent );
    RCC.enableRTC( 0x00000200 );  // select the RTC source (LSI) and enable RTC
 

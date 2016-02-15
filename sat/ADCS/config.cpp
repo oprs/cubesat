@@ -9,7 +9,7 @@ namespace qb50 {
 //  S Y S T E M   L O G G E R  //
 //  - - - - - - - - - - - - -  //
 
-   Syslog SYSLOG( "SYSLOG", UART1 );
+   Syslog SYSLOG( "SYSLOG", UART6 );
 
 //  - - - - - - - - - -  //
 //  C O R E   B U S E S  //
@@ -35,6 +35,18 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - - - - - -  //
 
    STM32_NVIC NVIC;
+
+//  - - - - - - - - - - - - - - - -  //
+//  P O W E R   C O N T R O L L E R  //
+//  - - - - - - - - - - - - - - - -  //
+
+   STM32_PWR PWR( APB1, PWR_BASE, STM32_RCC::APB1Periph_PWR, "PWR" );
+
+//  - - - - - - - - - - -  //
+//  B A C K U P   S R A M  //
+//  - - - - - - - - - - -  //
+
+   STM32_BKP BKP( AHB1, BKPSRAM_BASE, STM32_RCC::AHB1Periph_BKP, "BKP" );
 
 //  - - - - - - - - - - - - - - -  //
 //  D M A   C O N T R O L L E R S  //
@@ -132,6 +144,15 @@ namespace qb50 {
    STM32_GPIO::Pin& PC12 = GPIOC_Pins[ 12 ];  STM32_GPIO::Pin& PC13 = GPIOC_Pins[ 13 ];
    STM32_GPIO::Pin& PC14 = GPIOC_Pins[ 14 ];  STM32_GPIO::Pin& PC15 = GPIOC_Pins[ 15 ];
 
+   /* aliases for coils */
+
+   STM32_GPIO::Pin& F1 = PB14;
+   STM32_GPIO::Pin& R1 = PB13;
+   STM32_GPIO::Pin& F2 = PB12;
+   STM32_GPIO::Pin& R2 = PB11;
+   STM32_GPIO::Pin& F3 = PB10;
+   STM32_GPIO::Pin& R3 = PA5;
+
 //  - - - - - - - - - - - - - - - -  //
 //  G P I O   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - -  //
@@ -147,10 +168,6 @@ namespace qb50 {
 
    /*                bus   iobase       periph                        name    rxPin txPin  IRQ number   alt. function */
    STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PA10, PB6,  USART1_IRQn, STM32_GPIO::UART1 );
-   STM32_UART UART2( APB1, USART2_BASE, STM32_RCC::APB1Periph_USART2, "UART2", PA3,  PA2,  USART2_IRQn, STM32_GPIO::UART2 );
-   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3", PB11, PB10, USART3_IRQn, STM32_GPIO::UART3 );
-   STM32_UART UART4( APB1, UART4_BASE,  STM32_RCC::APB1Periph_UART4,  "UART4", PA1,  PA0,  UART4_IRQn,  STM32_GPIO::UART4 );
- //STM32_UART UART5( APB1, UART5_BASE,  STM32_RCC::APB1Periph_UART5,  "UART5", PD2,  PC12, UART5_IRQn,  STM32_GPIO::UART5 );
    STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, STM32_GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
@@ -162,12 +179,6 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   STM32_SPI::Stream SPI1_MISO( DMA2ST0, STM32_DMA::CH3, "SPI1MISO", PA6,  STM32_GPIO::SPI1 );
-   STM32_SPI::Stream SPI1_MOSI( DMA2ST3, STM32_DMA::CH3, "SPI1MOSI", PA7,  STM32_GPIO::SPI1 );
-
-   STM32_SPI::Stream SPI2_MISO( DMA1ST3, STM32_DMA::CH0, "SPI2MISO", PB14, STM32_GPIO::SPI2 );
-   STM32_SPI::Stream SPI2_MOSI( DMA1ST4, STM32_DMA::CH0, "SPI2MOSI", PB15, STM32_GPIO::SPI2 );
-
    STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4,  STM32_GPIO::SPI3 );
    STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5,  STM32_GPIO::SPI3 );
 
@@ -175,9 +186,7 @@ namespace qb50 {
 //  S P I   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - -  //
 
-   /*        bus   iobase     periph                      name    rx stream  tx stream  clk   alt. func.        clk. div */
-   STM32_SPI SPI1( APB2, SPI1_BASE, STM32_RCC::APB2Periph_SPI1, "SPI1", SPI1_MISO, SPI1_MOSI, PA5,  STM32_GPIO::SPI1, STM32_SPI::DIV16 );
-   STM32_SPI SPI2( APB1, SPI2_BASE, STM32_RCC::APB1Periph_SPI2, "SPI2", SPI2_MISO, SPI2_MOSI, PB13, STM32_GPIO::SPI2, STM32_SPI::DIV16 );
+   /*        bus   iobase           periph                      name    rx stream  tx stream  clk   alt. func.        clk. div */
    STM32_SPI SPI3( APB1, SPI3_BASE, STM32_RCC::APB1Periph_SPI3, "SPI3", SPI3_MISO, SPI3_MOSI, PB3,  STM32_GPIO::SPI3, STM32_SPI::DIV16 );
 
 //  - - - - - - - - - - - - - - -  //
@@ -240,6 +249,9 @@ namespace qb50 {
 
 void USART1_IRQHandler( void )
 { qb50::UART1.isr(); }
+
+void USART6_IRQHandler( void )
+{ qb50::UART6.isr(); }
 
 
 /*EoF*/

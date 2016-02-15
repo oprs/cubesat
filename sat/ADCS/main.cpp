@@ -12,20 +12,54 @@ extern void TestThreads                     ( Thread *self );  //Thread for test
 static void initDevices( void );
 
 
+void CoilThread( Thread *self )
+{
+   (void)self;
+
+   for( ;; ) {
+
+      F1.toggle();
+      R1.toggle();
+      F2.toggle();
+      R2.toggle();
+      F3.toggle();
+      R3.toggle();
+
+      delay( 100 );
+   }
+}
+
+
 //Principal Thread for ADCS
-void Main_Thread( Thread *self ){
+void Main_Thread( Thread *self )
+{
+   (void)self;
 
-    (void)self;
+   initDevices();
 
-    initDevices();
-    SYSLOG.enable();
+   GPIOA.enable();
+   GPIOB.enable();
+   GPIOC.enable();
+
+R1.out().on();
+R2.out().on();
+R3.out().on();
+F1.out().off();
+F2.out().off();
+F3.out().off();
+
+   UART6.enable().baudRate( 115200 );
+   SYSLOG.enable();
+   BKP.enable( true );
+
+   createThread( "Coil Thread", CoilThread );
 
 #if 0
    createThread( "Thread 1", testThread1 );
 #else
-   createThread( "ADC Test Thread", TestThreads);
+//   createThread( "ADC Test Thread", TestThreads);
    //createThread( "ODB Comm Up Thread", ODBCommUpThread);
-   createThread( "ODB Comm Down Thread", ODBCommDownThread);
+//   createThread( "ODB Comm Down Thread", ODBCommDownThread);
    //createThread( "Attitude Determination Thread", AttitudeDeterThread);
    //createThread( "Attitude Control Thread", AttitudeControlThread);
 #endif
@@ -68,14 +102,39 @@ void Main_Thread( Thread *self ){
 
 void initDevices( void )
 {
-    SYSLOG.init();
-    RCC.init();
-    GPIOA.init();
-    GPIOB.init();
-    GPIOC.init();
-    UART1.init();
-    ADC1.init();
-    FLASH0.init();
+/*
+   SYSLOG.init();
+   RCC.init();
+   PWR.init();
+   BKP.init();
+   RTC.init();
+   DMA1.init();
+   GPIOA.init();
+   GPIOB.init();
+   GPIOC.init();
+   UART1.init();
+   UART2.init();
+   UART3.init();
+   UART6.init();
+   SPI3.init();
+   ADC1.init();
+   ADC2.init();
+   ADC3.init();
+   ADC4.init();
+*/
+
+   SYSLOG.init();
+   RCC.init();
+   PWR.init();
+   BKP.init();
+   GPIOA.init();
+   GPIOB.init();
+   GPIOC.init();
+   UART1.init();
+   UART6.init();
+   SPI3.init();
+   ADC1.init();
+   FLASH0.init();
 }
 
 int main( void )
