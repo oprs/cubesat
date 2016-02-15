@@ -19,6 +19,9 @@ namespace qb50 {
          void test ( void );
          void cmd  ( uint8_t *x, size_t len );
 
+         void onSuspend ( void );
+         void onResume  ( void );
+
    };
 
 } /* qb50 */

@@ -24,11 +24,28 @@ ADCSThread::~ADCSThread()
 
 void ADCSThread::run( void )
 {
-	for( ;; ) {
-		_wait();
-		delay( 2000 );
-		kprintf( "--------[ ADCS ]--------\r\n" );
-	}
+   PC13.out().off();
+
+   for( ;; ) {
+      _wait();
+      delay( 100 );
+      //kprintf( "--------[ ADCS ]--------\r\n" );
+   }
 }
+
+
+void ADCSThread::onSuspend()
+{
+   PC13.off();
+   Thread::onSuspend();
+}
+
+
+void ADCSThread::onResume()
+{
+   Thread::onResume();
+   PC13.on();
+}
+
 
 /*EoF*/

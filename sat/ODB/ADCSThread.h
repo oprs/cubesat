@@ -17,6 +17,9 @@ namespace qb50 {
 
          void run( void );
 
+         void onSuspend ( void );
+         void onResume  ( void );
+
       private:
 
          enum Mode { LOW = 0, HIGH = 1 };

@@ -102,7 +102,9 @@ size_t STM32_UART::read( void *x, size_t len, int toms )
 
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, tk );
+         if( xSemaphoreTake( _isrRXNE, tk ) == pdFALSE ) {
+            return 0; /* timeout */
+         }
          continue;
       }
 
@@ -122,7 +124,9 @@ size_t STM32_UART::readLine( void *x, size_t len, int toms )
 
    while( n < len ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, tk );
+         if( xSemaphoreTake( _isrRXNE, tk ) == pdFALSE ) {
+            return 0; /* timeout */
+         }
          continue;
       }
 
@@ -136,7 +140,9 @@ size_t STM32_UART::readLine( void *x, size_t len, int toms )
 
    while( ch != 0x0d ) {
       if( _rxFIFO.isEmpty() ) {
-         xSemaphoreTake( _isrRXNE, tk );
+         if( xSemaphoreTake( _isrRXNE, tk ) == pdFALSE ) {
+            return 0; /* timeout */
+         }
          continue;
       }
 

@@ -100,6 +100,10 @@ void ControlThread::run( void )
    BKP.enable( true );
    WOD.enable( true );
 
+   // ADCS off
+
+   PC13.out().off();
+
    /*
     * Hardware reset ?
     * -> load the default configuration
@@ -152,9 +156,6 @@ void ControlThread::run( void )
    }
 
    _switchModes( mode );
-
-   // ADCS
-   // PC13.enable().out().off();
 
    for( ;; ) {
       xQueueReceive( evQueue, &ev, portMAX_DELAY );

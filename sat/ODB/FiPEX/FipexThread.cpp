@@ -14,7 +14,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 FipexThread::FipexThread()
-   : Thread( "Fipex", 1, true )
+   : Thread( "Fipex", 1, true, 512 )
 { ; }
 
 
@@ -37,15 +37,22 @@ void FipexThread::cmd( uint8_t *cmd, size_t len )
 {
    uint8_t *x = new uint8_t[ 256 ];
    char    *o = new char[ 32 ];
-   size_t dlen;
+   size_t n, dlen;
 
    UART2.write( cmd, len );
-   UART2.read( x, 205 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
+   n = UART2.read( x, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
+
+   if( n == 0 ) {
+      kprintf( RED( "%s: n: %lu" ) "\r\n", name, n );
+      kprintf( RED( "%s: tiemout in cmd()" ) "\r\n", name );
+   } else {
+      kprintf( GREEN( "%s: n: %lu" ) "\r\n", name, n );
+   }
 
    dlen = x[2];
 
    kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
-   kprintf( "%s: len: %zu\r\n", name, dlen );
+   kprintf( "%s: len: %lu\r\n", name, dlen );
    kprintf( "%s: seq: %d\r\n", name, x[3] );
 
    delete[] o;
@@ -83,20 +90,21 @@ void FipexThread::test( void )
    cmd( cmd_sm, 4 );
    delay( 100 );
 
-   for( int i = 0 ; i < 4 ; ++i ) {
-      UART2.read( x, 205 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
-      kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
-      kprintf( "%s: len: %d\r\n", name, x[2] );
-      kprintf( "%s: seq: %d\r\n", name, x[3] );
+   for( int i = 0 ; i < 10 ; ++i ) {
+      n = UART2.read( x, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
+      if( n > 0 ) {
+         kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
+         kprintf( "%s: len: %d\r\n", name, x[2] );
+         kprintf( "%s: seq: %d\r\n", name, x[3] );
+      } else {
+         kprintf( RED( "%s: UART2.read() timeout" ) "\r\n", name );
+         i5 = ADC4CH5.read();
+         kprintf( "i5: %lu\r\n", i5 );
+         if( i5 < 10 ) break;
+      }
    }
 
-   for( ;; ) {
-      i5 = ADC4CH5.read();
-      if( i5 < 10 ) break;
-      delay( 100 );
-   }
-
-   kprintf( "%s: i5 < 10\r\n", name );
+   kprintf( GREEN( "%s: i5 < 10" ) "\r\n", name );
 
    kprintf( "%s: STEP #11 - SU_SP stm_interval = 1 @01:00\r\n", name );
    cmd( cmd_sp_si1, 7);
@@ -126,20 +134,26 @@ void FipexThread::run( void )
 
    Config::pval_t sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
 
- //PC3.enable().out().on(); /* ON_OFF_GPS */
-
-   _wait();
-   test();
-
    for( ;; ) {
       _wait();
+      test();
       delay( 1000 );
-/*
-      n = UART2.readLine( x, 128 );
-      (void)UART6.write( x, n );
-      (void)UART6.write( "\r\n", 2 );
-*/
    }
 }
+
+
+void FipexThread::onSuspend( void )
+{
+   PB14.out().on();
+   Thread::onSuspend();
+}
+
+
+void FipexThread::onResume( void )
+{
+   Thread::onResume();
+   PB14.out().off();
+}
+
 
 /*EoF*/
