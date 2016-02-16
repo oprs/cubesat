@@ -1,5 +1,7 @@
 
 #include "system/qb50.h"
+
+#include "WatchdogThread.h"
 #include "ControlThread.h"
 
 using namespace qb50;
@@ -19,6 +21,7 @@ int main( void )
    UART2.enable();            /* FiPEX      */
    UART3.enable();            /* GPS        */
 #endif
+   (void)registerThread( new WatchdogThread() );
    (void)registerThread( new ControlThread() );
    run(); // FreeRTOS RUN.
 }

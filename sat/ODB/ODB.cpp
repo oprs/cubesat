@@ -38,6 +38,7 @@ ODB& ODB::init( void )
 {
    SYSLOG.init();
    RCC.init();
+   WDG.init();
    PWR.init();
    BKP.init();
    RTC.init();

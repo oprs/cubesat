@@ -91,6 +91,7 @@ void ControlThread::run( void )
    SAT.init();
    WOD.init();
 
+   WDG.enable();
    GPIOA.enable();
    GPIOB.enable();
    GPIOC.enable();

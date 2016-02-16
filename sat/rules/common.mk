@@ -9,7 +9,7 @@ include $(SATDIR)/rules/arch-$(ARCH).mk
 
 RM     := rm -f
 #CHECK  := cppcheck --enable=warning
-CHECK  := cppcheck --enable=all
+CHECK  := cppcheck -q --platform=unix32 --enable=warning
 #CHECK  := cppcheck --force --enable=warning,style
 FLASH  := st-flash
 

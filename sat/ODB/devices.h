@@ -20,6 +20,12 @@ namespace qb50 {
 
    extern qb50::STM32_RCC RCC;
 
+//  - - - - - - - -  //
+//  W A T C H D O G  //
+//  - - - - - - - -  //
+
+   extern qb50::STM32_IWDG WDG;
+
 //  - - - - - - - - - - - - - -  //
 //  R T C   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - -  //

@@ -58,7 +58,7 @@ Syslog& Syslog::printf( const char *fmt, ... )
 
    do {
       LogLine *line = new LogLine();
-      size_t n;
+      int n;
 
       n = snprintf( line->_x, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
       if( n <= 0 ) { delete line; break; }

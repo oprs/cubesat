@@ -30,6 +30,12 @@ namespace qb50 {
 
    STM32_RCC RCC( RCC_BASE, "RCC" );
 
+//  - - - - - - - -  //
+//  W A T C H D O G  //
+//  - - - - - - - -  //
+
+   STM32_IWDG WDG( IWDG_BASE, "WDG" );
+
 //  - - - - - - - - - - - - - -  //
 //  R T C   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - -  //

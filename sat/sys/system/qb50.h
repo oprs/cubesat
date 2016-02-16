@@ -7,6 +7,7 @@
 #include "device/Syslog.h"
 #include "device/STM32/STM32_NVIC.h"
 #include "device/STM32/STM32_EXTI.h"
+#include "device/STM32/STM32_IWDG.h"
 #include "device/STM32/STM32_RCC.h"
 #include "device/STM32/STM32_PWR.h"
 #include "device/STM32/STM32_RTC.h"
