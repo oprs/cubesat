@@ -56,7 +56,7 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
 //  - - - - - - - - -  //
 
 ControlThread::ControlThread()
-   : Thread( "Event Manager", 2 )
+   : Thread( "Event Manager", 2 /*, 384*/ )
 {
    evQueue = xQueueCreate( 16, sizeof( Event* ));
 

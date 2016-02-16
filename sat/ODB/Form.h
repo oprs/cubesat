@@ -3,13 +3,10 @@
 #define _QB50_ODB_FORM_H
 
 #include "Config.h"
+#include "devices.h"
 
 #include <cstdint>
 #include <ctime>
-
-extern "C" {
- #include <sys/time.h>
-}
 
 
 namespace qb50 {
@@ -20,7 +17,7 @@ namespace qb50 {
    };
 
    struct HForm {
-      ::timeval tv;
+      RTC::Time tm;
    };
 
    struct PForm {

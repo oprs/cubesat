@@ -77,11 +77,7 @@ void CommandThread::run( void )
 
          case Form::FORM_TYPE_H:
          {
-            char tmp[ 32 ];
-
-            (void)strftime( tmp, 32, "%a, %d %b %Y %T %Z", gmtime( &_form.H.tv.tv_sec ));
-            kprintf( "+ H %lu [%s]\r\n", _form.H.tv.tv_sec, tmp );
-
+            RTC.setTime( _form.H.tm );
             break;
          }
 
@@ -184,8 +180,6 @@ CommandThread::_parseCForm( void )
 {
    int i;
 
-   //kprintf( "CForm: [%.*s]\r\n", _m.avail(), _m._x + _m._off );
-
    for( i = 0 ; i < 4 ; ++i ) {
       if( !_parseInteger( _form.C.argv[i] ))
          return 0;
@@ -207,8 +201,6 @@ CommandThread::_parseHForm( void )
    size_t argc;
    long   argv[6];
 
-   //kprintf( "HForm: [%.*s]\r\n", _m.avail(), _m._x + _m._off );
-
    for( argc = 0 ; argc < 6 ; ++argc ) {
       if(( !_m.avail() ) || ( *(_m++) != ',' ))
          break;
@@ -222,31 +214,14 @@ CommandThread::_parseHForm( void )
    while( argc < 6 )
       argv[argc++] = 0;
 
-   // see: https://github.com/git/git/blob/master/date.c
-   //      https://en.wikipedia.org/wiki/Leap_year
+   _form.H.tm.day  = argv[0];
+   _form.H.tm.mon  = argv[1];
+   _form.H.tm.year = argv[2];
+   _form.H.tm.hour = argv[3];
+   _form.H.tm.min  = argv[4];
+   _form.H.tm.sec  = argv[5];
 
-   long dd = argv[0];
-   long mm = argv[1] - 1;
-   long yy = argv[2] - 1970;
-
-   if(( yy < 0 ) || ( yy > 129 )) return 0;
-   if(( mm < 0 ) || ( mm > 11  )) return 0;
-
-   if(( mm < 2 ) || (( yy + 2 ) % 4 ))
-      --dd;
-
-   if(( argv[3] < 0 ) || ( argv[4] < 0 ) || ( argv[5] < 0 ))
-      return 0;
-
-   time_t ts = ( yy * 365 + ( yy + 1 ) / 4 + _mdays[mm] + dd ) * 24 * 60 * 60
-             + argv[3] * 60 * 60
-             + argv[4] * 60
-             + argv[5];
-
-   _form.H.tv.tv_sec  = ts;
-   _form.H.tv.tv_usec = 0;
-
-   _form.type = Form::FORM_TYPE_H;
+   _form.type      = Form::FORM_TYPE_H;
 
    return 1;
 }

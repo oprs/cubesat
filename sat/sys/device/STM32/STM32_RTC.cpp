@@ -34,26 +34,6 @@ STM32_RTC::~STM32_RTC()
 
 STM32_RTC& STM32_RTC::init( void )
 {
-#if 0
-   RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
-
-   lock();
-
-   PWR.enable( false );          // enable the power controller
-   PWR.enableBKP();              // enable access to backup domain
-   RCC.enableRTC( 0x00000200 );  // select the RTC source (LSI) and enable RTC
-
-   RTCx->WPR = 0xca;
-   RTCx->WPR = 0x53;
-
-   _enterInit();
-   _exitInit();
-
-   RTCx->WPR = 0x00;
-
-   unlock();
-#endif
-
    kprintf( "%s: STM32F4xx Real-Time Clock controller at %s\r\n", _name, bus.name );
 
    return *this;
@@ -63,7 +43,6 @@ STM32_RTC& STM32_RTC::init( void )
 STM32_RTC& STM32_RTC::enable( bool silent )
 {
    Time t;
-   int  n;
 
    if( _incRef() > 0 )
       return *this;
@@ -74,8 +53,10 @@ STM32_RTC& STM32_RTC::enable( bool silent )
    PWR.enableBKP();              // enable access to backup domain
    BKP.enable( silent );
 
-   //RCC.enable( this, silent );
-   RCC.enableRTC( 0x00000200 );  // select the RTC source (LSI) and enable RTC
+   RCC.enableLSE();
+
+   // select the RTC source (LSE) and enable RTC
+   RCC.enableRTC( 0x00000100, silent );
 
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
 
@@ -85,44 +66,15 @@ STM32_RTC& STM32_RTC::enable( bool silent )
       kprintf( "%s: calendar already initialized\r\n", _name );
    }
 
-   /* see the STM32F4 Ref. Manual sec. 26.3.5 */
-
-   RTCx->WPR = 0xca;
-   RTCx->WPR = 0x53;
-
-   /* init sequence */
-
-   RTCx->ISR |= (uint32_t)RTC_ISR_INIT;
-
-   for( n = 0 ; n < RTC_HARD_LIMIT ; ++n ) {
-      if(( RTCx->ISR & RTC_ISR_INITF ) != 0 )
-         break;
+   if( _enterInit() ) {
+      /* set prescaler to 32678 */
+      RTCx->PRER |= 0x000000ff; /*  synchronous prescaler */
+      RTCx->PRER |= 0x007f0000; /* asynchronous prescaler */
    }
-
-   if(( RTCx->ISR & RTC_ISR_INITF ) == 0 ) {
-      kprintf( RED( "%s: timeout while waiting for RTC_ISR_INITF" ) "\r\n", _name );
-   }
-
-   /* set prescaler to 32678 */
-
-   RTCx->PRER |= 0x000000ff; /*  synchronous prescaler */
-   RTCx->PRER |= 0x007f0000; /* asynchronous prescaler */
-
-   /* set calendar */
-
-   ;
 
    /* exit init mode */
 
-   RTCx->ISR &= (uint32_t)~RTC_ISR_INIT;
-
-   /* lock RTC registers */
-
-   RTCx->WPR = 0xff;
-
-   //RTC->CR   = 0x00;
-
-   /* - */
+   _exitInit();
 
    (void)getTime( t );
 
@@ -146,7 +98,7 @@ STM32_RTC& STM32_RTC::disable( bool silent )
 
    RTCx->WPR = 0x00;
 
-   RCC.disable( this, silent );
+   RCC.disableRTC( silent );
 
    unlock();
 
@@ -184,7 +136,8 @@ STM32_RTC& STM32_RTC::getTime( Time &t )
    uint32_t DR = RTCx->DR;
 
    t.year = 10 * (( DR >> 20 ) & 0x0f )
-               + (( DR >> 16 ) & 0x0f );
+               + (( DR >> 16 ) & 0x0f )
+               + 2000;
 
    t.mon  = 10 * (( DR >> 12 ) & 0x01 )
                + (( DR >>  8 ) & 0x0f );
@@ -207,6 +160,42 @@ STM32_RTC& STM32_RTC::getTime( Time &t )
 
 STM32_RTC& STM32_RTC::setTime( Time &t )
 {
+   RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
+
+   /* set calendar */
+
+   uint32_t year = t.year - 2000;
+
+   uint32_t DR = (   year / 10 ) << 20
+               | (   year % 10 ) << 16
+               | ( t.mon  / 10 ) << 12
+               | ( t.mon  % 10 ) <<  8
+               | ( t.day  / 10 ) <<  4
+               | ( t.day  % 10 )
+               ;
+
+   uint32_t TR = ( t.hour / 10 ) << 20
+               | ( t.hour % 10 ) << 16
+               | ( t.min  / 10 ) << 12
+               | ( t.min  % 10 ) <<  8
+               | ( t.sec  / 10 ) <<  4
+               | ( t.sec  % 10 )
+               ;
+
+   if( !_enterInit() )
+      return *this;
+
+   RTCx->TR = TR;
+   RTCx->DR = DR;
+
+   _exitInit();
+
+   Time t1;
+   (void)getTime( t1 );
+
+   kprintf( "%s: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", _name, t1.year, t1.mon, t1.day );
+   kprintf( "%s: time is %02d:%02d:%02d (hh:mm:ss)\r\n", _name, t1.hour, t1.min, t1.sec );
+
    return *this;
 }
 
@@ -215,34 +204,44 @@ STM32_RTC& STM32_RTC::setTime( Time &t )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void STM32_RTC::_enterInit( void )
+int STM32_RTC::_enterInit( void )
 {
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
 
-   if(( RTCx->ISR & RTC_ISR_INITF ) == 0 ) {
-      kprintf( "%s: initializing RTC (hardware reset)\r\n", _name );
-      RTCx->ISR = (uint32_t)0xffffffff;
+   /* see the STM32F4 Ref. Manual sec. 26.3.5 */
 
-      for( int cnt = 0 ; cnt < 10000 ; ++cnt ) {
-         if(( RTCx->ISR & RTC_ISR_INITF ) != 0 )
-            break;
-      }
+   RTCx->WPR = 0xca;
+   RTCx->WPR = 0x53;
 
-      if(( RTCx->ISR & RTC_ISR_INITF ) != 0 ) {
-         kprintf( "%s: success\r\n", _name );
-      } else {
-         kprintf( "%s: failure, ISR: 0x%08lx\r\n", _name, RTCx->ISR );
-      }
-   } else {
-      kprintf( "%s: already initialized (software reset)\r\n", _name );
+   /* init sequence */
+
+   RTCx->ISR |= (uint32_t)RTC_ISR_INIT;
+
+   for( int n = 0 ; n < RTC_HARD_LIMIT ; ++n ) {
+      if(( RTCx->ISR & RTC_ISR_INITF ) != 0 )
+         break;
    }
+
+   if(( RTCx->ISR & RTC_ISR_INITF ) == 0 ) {
+      kprintf( RED( "%s: timeout while waiting for RTC_ISR_INITF" ) "\r\n", _name );
+      return 0;
+   }
+
+   return 1;
 }
 
 
 void STM32_RTC::_exitInit( void )
 {
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
+
+   /* exit init mode */
+
    RTCx->ISR &= (uint32_t)~RTC_ISR_INIT;
+
+   /* lock RTC registers */
+
+   RTCx->WPR = 0xff;
 }
 
 

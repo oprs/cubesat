@@ -81,11 +81,11 @@ A25Lxxx& A25Lxxx::init( void )
     * in order to read its identification ID */
 
    _spi.lock();
-   enable( true /* be quiet */ );
+   enable( /*true*/ /* be quiet */ );
 
    _RDID( &rdid );
 
-   disable( true /* be quiet */ );
+   disable( /*true*/ /* be quiet */ );
    _spi.unlock();
 
    /* display ID infos */
@@ -97,7 +97,7 @@ A25Lxxx& A25Lxxx::init( void )
       ++chip;
 
    if( chip->mask == 0 ) {
-      kprintf( RED( "%s: unknown chip - using default\r\n" ), _name );
+      kprintf( RED( "%s: unknown chip - using default" ) "\r\n", _name );
       kprintf( "%s:   manID: 0x%04x\r\n", _name, rdid.manId   );
       kprintf( "%s: memType: 0x%04x\r\n", _name, rdid.memType );
       kprintf( "%s:  memCap: 0x%04x\r\n", _name, rdid.memCap  );

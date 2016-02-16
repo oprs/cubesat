@@ -64,7 +64,7 @@ void FipexThread::test( void )
 {
    uint8_t *x = new uint8_t[ 256 ];
    char    *o = new char[ 32 ];
-   unsigned i5;
+   unsigned i5, i3;
    size_t   n;
 
    kprintf( "%s: FIPEX Functional Test Procedure\r\n", name );
@@ -99,7 +99,9 @@ void FipexThread::test( void )
       } else {
          kprintf( RED( "%s: UART2.read() timeout" ) "\r\n", name );
          i5 = ADC4CH5.read();
+         i3 = ADC4CH3.read();
          kprintf( "i5: %lu\r\n", i5 );
+         kprintf( "i3: %lu\r\n", i3 );
          if( i5 < 10 ) break;
       }
    }
@@ -110,10 +112,15 @@ void FipexThread::test( void )
    cmd( cmd_sp_si1, 7);
 
    for( ;; ) {
+      _wait();
       UART2.read( x, 205 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
       kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
       kprintf( "%s: len: %d\r\n", name, x[2] );
       kprintf( "%s: seq: %d\r\n", name, x[3] );
+i5 = ADC4CH5.read();
+i3 = ADC4CH3.read();
+kprintf( "i5: %lu\r\n", i5 );
+kprintf( "i3: %lu\r\n", i3 );
    }
 
    delay( 60 * 1000 );

@@ -31,7 +31,7 @@ namespace qb50 {
 
       private:
 
-         void _enterInit ( void );
+         int  _enterInit ( void );
          void _exitInit  ( void );
 
    };
