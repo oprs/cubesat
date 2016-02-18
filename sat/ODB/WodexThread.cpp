@@ -11,7 +11,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 WodexThread::WodexThread()
-   : Thread( "Wodex", 1, true )
+   : Thread( "Wodex", 1, SUSPENDED )
 { ; }
 
 

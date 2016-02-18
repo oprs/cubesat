@@ -50,10 +50,10 @@ STM32_RTC& STM32_RTC::enable( bool silent )
    lock();
 
    PWR.enable( silent );         // enable the power controller
-   PWR.enableBKP();              // enable access to backup domain
+   PWR.enableBRE();              // enable access to backup domain
    BKP.enable( silent );
 
-   RCC.enableLSE();
+   RCC.enableLSE( silent );
 
    // select the RTC source (LSE) and enable RTC
    RCC.enableRTC( 0x00000100, silent );

@@ -11,7 +11,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 CTCSSThread::CTCSSThread()
-   : Thread( "CTCSS", 1, true )
+   : Thread( "CTCSS", 1, SUSPENDED )
 { ; }
 
 

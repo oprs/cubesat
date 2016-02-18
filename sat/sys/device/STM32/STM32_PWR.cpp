@@ -5,6 +5,9 @@
 
 #include <safe_stm32f4xx.h>
 
+#define PWR_BRR_HARD_LIMIT 100000
+
+
 using namespace qb50;
 
 
@@ -23,18 +26,6 @@ STM32_PWR::STM32_PWR( Bus& bus,
 STM32_PWR::~STM32_PWR()
 { ; }
 
-// RCC_AHB1PeriphClockCmd
-
-/*
-  if (NewState != DISABLE)
-  {
-    RCC->AHB1ENR |= RCC_AHB1Periph;
-  }
-  else
-  {
-    RCC->AHB1ENR &= ~RCC_AHB1Periph;
-  }
-*/
 
 //  - - - - - - - - - - - - - -  //
 //  P U B L I C   M E T H O D S  //
@@ -69,26 +60,50 @@ STM32_PWR& STM32_PWR::disable( bool silent )
 }
 
 
-STM32_PWR& STM32_PWR::enableBKP( void )
+STM32_PWR& STM32_PWR::enableBRE( bool silent )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
-   PWRx->CR  |=  PWR_CR_DBP;
-   PWRx->CSR |=  PWR_CSR_BRE;
- //PWRx->CR  &= ~PWR_CR_DBP;
+   if(( PWRx->CSR & PWR_CSR_BRR ) != 0 )
+      return *this;
+
+   PWRx->CR  |= PWR_CR_DBP;
+   PWRx->CSR |= PWR_CSR_BRE;
+
+   for( int n = 0 ; n < PWR_BRR_HARD_LIMIT ; ++n ) {
+      if(( PWRx->CSR & PWR_CSR_BRR ) != 0 )
+         break;
+   }
+
+   if(( PWRx->CSR & PWR_CSR_BRR ) == 0 ) {
+      kprintf( RED( "%s: timeout in STM32_PWR::enableBRE()" ) "\r\n", _name );
+      return *this;
+   }
+
+   if( !silent ) {
+      kprintf( "%s: Backup regulator enabled\r\n", _name );
+   }
 
    return *this;
 }
 
 
-STM32_PWR& STM32_PWR::disableBKP( void )
+STM32_PWR& STM32_PWR::disableBRE( bool silent )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
- // PWRx->CR  |=  PWR_CR_DBP;
+   if(( PWRx->CSR & PWR_CSR_BRR ) == 0 )
+      return *this;
+
    PWRx->CSR &= ~PWR_CSR_BRE;
    PWRx->CR  &= ~PWR_CR_DBP;
 
+   if( !silent ) {
+      kprintf( "%s: Backup regulator disabled\r\n", _name );
+   }
+
+
    return *this;
 }
 
+/*EoF*/

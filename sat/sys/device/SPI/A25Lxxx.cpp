@@ -81,11 +81,11 @@ A25Lxxx& A25Lxxx::init( void )
     * in order to read its identification ID */
 
    _spi.lock();
-   enable( /*true*/ /* be quiet */ );
+   enable( true /* be quiet */ );
 
    _RDID( &rdid );
 
-   disable( /*true*/ /* be quiet */ );
+   disable( true /* be quiet */ );
    _spi.unlock();
 
    /* display ID infos */

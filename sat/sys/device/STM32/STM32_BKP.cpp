@@ -41,8 +41,8 @@ STM32_BKP& STM32_BKP::enable( bool silent )
       return *this;
 
    PWR.enable( silent );
-   RCC.enable( this );
-   PWR.enableBKP();
+   RCC.enable( this, silent );
+   PWR.enableBRE( silent );
 
    return *this;
 }
@@ -53,8 +53,8 @@ STM32_BKP& STM32_BKP::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   PWR.disableBKP();
-   RCC.disable( this );
+   PWR.disableBRE( silent );
+   RCC.disable( this, silent );
    PWR.disable( silent );
 
    return *this;

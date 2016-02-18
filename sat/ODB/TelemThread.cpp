@@ -11,7 +11,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 TelemThread::TelemThread()
-   : Thread( "Telem", 1, true )
+   : Thread( "Telem", 1, SUSPENDED )
 { ; }
 
 

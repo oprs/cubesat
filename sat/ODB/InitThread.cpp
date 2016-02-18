@@ -16,7 +16,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 InitThread::InitThread()
-   : Thread( "Initialization", 1, true )
+   : Thread( "Initialization", 1, SUSPENDED )
 { ; }
 
 

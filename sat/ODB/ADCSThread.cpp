@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 ADCSThread::ADCSThread()
-   : Thread( "ADCS Thread", 1, true )
+   : Thread( "ADCS Thread", 1, SUSPENDED )
 { ; }
 
 

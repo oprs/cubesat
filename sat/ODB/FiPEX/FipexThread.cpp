@@ -14,7 +14,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 FipexThread::FipexThread()
-   : Thread( "Fipex", 1, true, 512 )
+   : Thread( "Fipex", 1, SUSPENDED, 512 )
 { ; }
 
 

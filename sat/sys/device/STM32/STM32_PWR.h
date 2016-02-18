@@ -19,13 +19,13 @@ namespace qb50 {
 
          ~STM32_PWR();
 
-         STM32_PWR& init    ( void );
+         STM32_PWR& init       ( void );
 
-         STM32_PWR& enable  ( bool silent = false );
-         STM32_PWR& disable ( bool silent = false );
+         STM32_PWR& enable     ( bool silent = false );
+         STM32_PWR& disable    ( bool silent = false );
 
-         STM32_PWR& enableBKP  ( void );
-         STM32_PWR& disableBKP ( void );
+         STM32_PWR& enableBRE  ( bool silent = false );
+         STM32_PWR& disableBRE ( bool silent = false );
 
    };
 

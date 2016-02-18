@@ -56,7 +56,7 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
 //  - - - - - - - - -  //
 
 ControlThread::ControlThread()
-   : Thread( "Event Manager", 2 /*, 384*/ )
+   : Thread( "Event Manager", 2, RUNNING, 384 /* XXX */)
 {
    evQueue = xQueueCreate( 16, sizeof( Event* ));
 
@@ -98,8 +98,11 @@ void ControlThread::run( void )
    UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
    RTC.enable();
-   BKP.enable( true );
-   WOD.enable( true );
+   BKP.enable();
+   WOD.enable();
+
+uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
+kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
    // ADCS off
 
@@ -140,7 +143,7 @@ void ControlThread::run( void )
    (void)registerThread( new CommandThread() );
 
    for( int i = 0 ; i < _QB50_NTHREADS ; ++i ) {
-      delay( 100 );
+      //delay( 100 );
       (void)registerThread( _tv[i] );
    }
 

@@ -27,7 +27,7 @@ static void test( Thread *self )
 //  - - - - - - - - -  //
 
 MainThread::MainThread()
-   : Thread( "Main Thread", 2 )
+   : Thread( "Main Thread", 2, RUNNING )
 { ; }
 
 

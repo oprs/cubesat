@@ -1,5 +1,6 @@
 
 #include "STM32/STM32_SPI.h"
+#include "system/Logger.h"
 
 using namespace qb50;
 

@@ -26,7 +26,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 CommandThread::CommandThread()
-   : Thread( "Command Handler", 1, 2048 )
+   : Thread( "Command Handler", 1, RUNNING )
 {
    _x = new uint8_t[ 128 ];
    _m.reset( _x, 128 );

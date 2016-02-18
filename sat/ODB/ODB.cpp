@@ -43,9 +43,9 @@ ODB& ODB::init( void )
    BKP.init();
    RTC.init();
    DMA1.init();
-   GPIOA.init();
-   GPIOB.init();
-   GPIOC.init();
+   GPIOA.init().enable();
+   GPIOB.init().enable();
+   GPIOC.init().enable();
    UART1.init();
    UART2.init();
    UART3.init();

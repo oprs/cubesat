@@ -13,7 +13,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 CWThread::CWThread()
-   : Thread( "CW Transmitter", 1, true )
+   : Thread( "CW Transmitter", 1, SUSPENDED )
 { ; }
 
 

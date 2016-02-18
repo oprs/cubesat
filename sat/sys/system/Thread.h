@@ -10,7 +10,12 @@ namespace qb50 {
 
       public:
 
-         Thread( const char *name, int prio, bool suspended = false, unsigned stackDepth = 256 );
+         enum State {
+            SUSPENDED = 0,
+            RUNNING   = 1
+         };
+
+         Thread( const char *name, int prio, State state = RUNNING, unsigned stackDepth = 256 );
          ~Thread();
 
                  void suspend   ( void );
@@ -30,7 +35,7 @@ namespace qb50 {
 
       protected:
 
-         bool _suspended;
+         bool _state;
 
          void _wait( void );
 

@@ -13,7 +13,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 GPSThread::GPSThread()
-   : Thread( "GPS", 1, true  )
+   : Thread( "GPS", 1, SUSPENDED )
 { ; }
 
 

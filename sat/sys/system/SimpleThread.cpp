@@ -9,7 +9,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 SimpleThread::SimpleThread( const char *name, ThreadWorker worker )
-   : Thread( name, 2 ), _worker( worker )
+   : Thread( name, 2, RUNNING ), _worker( worker )
 { ; }
 
 

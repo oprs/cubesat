@@ -13,8 +13,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Thread::Thread( const char *name, int prio, bool suspended, unsigned stackDepth )
-   : _suspended( suspended )
+Thread::Thread( const char *name, int prio, State state, unsigned stackDepth )
+   : _state( state )
 {
    this->name       = name == NULL ? "(generic thread)" : name;
    this->priority   = prio;
@@ -36,14 +36,14 @@ Thread::~Thread()
 
 void Thread::suspend( void )
 {
-   _suspended = true;
+   _state = SUSPENDED;
 }
 
 
 void Thread::resume( void )
 {
-   if( _suspended ) {
-      _suspended = false;
+   if( _state == SUSPENDED ) {
+      _state = RUNNING;
       (void)xTaskNotifyGive( (TaskHandle_t)handle );
    }
 }
@@ -76,7 +76,7 @@ void Thread::onResume( void )
 
 void Thread::_wait( void )
 {
-   while( _suspended ) {
+   while( _state == SUSPENDED) {
       onSuspend();
       ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
       onResume();

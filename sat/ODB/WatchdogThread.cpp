@@ -10,7 +10,7 @@ using namespace qb50;
 //  - - - - - - - - -  //
 
 WatchdogThread::WatchdogThread()
-   : Thread( "Watchdog Thread", 2 )
+   : Thread( "Watchdog Thread", 2, RUNNING )
 { ; }
 
 
