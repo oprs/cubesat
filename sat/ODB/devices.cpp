@@ -319,7 +319,7 @@ namespace qb50 {
 //  O D B  //
 //  - - -  //
 
-   ODB SAT( "QB50", PC11, PA11, PA15 );
+   ODB SAT( "QB50", PC11, PC1, PA11, PA15 );
 
 } /* qb50 */
 

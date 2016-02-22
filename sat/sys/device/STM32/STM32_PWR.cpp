@@ -64,8 +64,10 @@ STM32_PWR& STM32_PWR::enableBRE( bool silent )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
+/*
    if(( PWRx->CSR & PWR_CSR_BRR ) != 0 )
       return *this;
+*/
 
    PWRx->CR  |= PWR_CR_DBP;
    PWRx->CSR |= PWR_CSR_BRE;
@@ -92,8 +94,10 @@ STM32_PWR& STM32_PWR::disableBRE( bool silent )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
+/*
    if(( PWRx->CSR & PWR_CSR_BRR ) == 0 )
       return *this;
+*/
 
    PWRx->CSR &= ~PWR_CSR_BRE;
    PWRx->CR  &= ~PWR_CR_DBP;

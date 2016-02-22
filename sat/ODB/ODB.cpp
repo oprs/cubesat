@@ -10,10 +10,12 @@ using namespace qb50;
 
 ODB::ODB( const char *name,
           STM32_GPIO::Pin& selPin,
+          STM32_GPIO::Pin& inhPin,
           STM32_GPIO::Pin& asPin,
           STM32_GPIO::Pin& adPin )
    : _name( name ),
      _selPin( selPin ),
+     _inhPin( inhPin ),
      _asPin( asPin ),
      _adPin( adPin )
 {
@@ -60,6 +62,7 @@ ODB& ODB::init( void )
    RFTX.init();
 
    _selPin.in().noPull();
+   _inhPin.in().pullUp();
    _asPin.in().noPull();
    _adPin.out().off();
 
@@ -78,6 +81,11 @@ ODB::SatSel ODB::id( void )
 
 ODB::AntState ODB::aState( void )
 {
+   if( _inhPin.read() == 0 ) {
+      kprintf( "%s: Inhibit ON\r\n", _name );
+      return ODB::DEPLOYED;
+   }
+
    return
       _asPin.read() ? ODB::RETRACTED : ODB::DEPLOYED;
 }
