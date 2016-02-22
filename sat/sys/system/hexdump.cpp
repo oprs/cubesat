@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "system/Application.h"
+#include "device/Syslog.h"
 
 
 namespace qb50 {
@@ -35,7 +36,7 @@ void hexdump( const void *addr, unsigned len )
 	/* allocate enough space to hold a full line of data;
 	   go easy on the stack and use dynamic allocation */
 
-	char *buf = new char[ 78 ];
+	char *buf = new char[ 80 ];
 
 	const uint8_t *x = (const uint8_t*)addr;
 	uint8_t b;
@@ -95,8 +96,10 @@ void hexdump( const void *addr, unsigned len )
 
 		buf[ aoff++ ] = '\r';
 		buf[ aoff++ ] = '\n';
+		buf[ aoff++ ] = '\0';
 
-		(void)write( 1, buf, aoff );
+		kprintf( "%s", buf );
+		//(void)write( 1, buf, aoff );
 
 		/* start over with the next line (or exit when done) */
 	}
