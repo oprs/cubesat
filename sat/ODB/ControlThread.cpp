@@ -101,8 +101,10 @@ void ControlThread::run( void )
    BKP.enable();
    WOD.enable();
 
+/*
 uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
 kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
+*/
 
    // ADCS off
 

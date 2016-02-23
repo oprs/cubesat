@@ -46,7 +46,7 @@ FlashArray& FlashArray::init( void )
    _shft = log2( sz );
 
 /*
-   kprintf( "%s: Virtual flash memory device (%lu) Mbit\r\n",
+   kprintf( "%s: Virtual flash memory device (%lu Mbit)\r\n",
             _name, ( chipSize() >> 17 ));
    kprintf( "%s: %d blocks * %d sectors * %d pages * %d bytes\r\n",
             _name, _geo.bpc, _geo.spb, _geo.pps, _geo.bpp );

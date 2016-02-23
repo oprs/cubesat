@@ -35,7 +35,7 @@ WodStore& WodStore::init( void )
    _rCache.size = _mem.sectorSize();
    _rCache.x    = new uint8_t[ _rCache.size ];
 
-   _wCache.addr =  0;
+   _wCache.addr = 0;
    _wCache.size = _mem.sectorSize();
    _wCache.x    = new uint8_t[ _wCache.size ];
 

@@ -37,7 +37,8 @@ namespace qb50 {
 
          bool _state;
 
-         void _wait( void );
+         void     _wait     ( void );
+         unsigned _stackHWM ( void );
 
    };
 

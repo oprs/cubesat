@@ -61,6 +61,10 @@ void Thread::onExit( void )
 void Thread::onSuspend( void )
 {
    kprintf( "[%s] suspended\r\n", name );
+/*
+   unsigned su = _stackHWM();
+   kprintf( "[%s] suspended (stack usage: %u/%u words)\r\n", name, su, stackDepth );
+*/
 }
 
 
@@ -81,6 +85,13 @@ void Thread::_wait( void )
       ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
       onResume();
    }
+}
+
+
+unsigned Thread::_stackHWM( void )
+{
+   uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
+   return( stackDepth - hwm );
 }
 
 /*EoF*/

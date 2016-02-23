@@ -161,6 +161,8 @@ size_t STM32_UART::write( const void *x, size_t len, int toms )
 
    TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
 
+   //lock(); XXX
+
    while( n < len ) {
       if( _txFIFO.isFull() ) {
          xSemaphoreTake( _isrTXE, tk );
@@ -169,6 +171,8 @@ size_t STM32_UART::write( const void *x, size_t len, int toms )
       (void)_txFIFO.push( ((uint8_t*)x)[ n++ ] );
    }
    USARTx->CR1 |= USART_CR1_TXEIE;
+
+   //unlock(); XXX
 
    return n;
 }
