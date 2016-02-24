@@ -46,14 +46,21 @@ CommandThread::~CommandThread()
 void CommandThread::run( void )
 {
    UART6.enable();
+   RTC::Time t;
 
    std::size_t n;
 
    for( ;; ) {
 
-      n = UART6.readLine( _x, 128 );
+      n = UART6.readLine( _x, 128, 5 * 60 * 1000 );
       if( n == 0 ) {
+         RTC.getTime( t );
+       //kprintf( "RTC: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", t.year, t.mon, t.day );
+         kprintf( "RTC: time is %02d:%02d:%02d\r\n", t.hour, t.min, t.sec );
+/*
          kprintf( "\033[31;1mEMPTY COMMAND\033[0m\r\n" );
+         delay( 100 );
+*/
          delay( 100 );
          continue;
       }

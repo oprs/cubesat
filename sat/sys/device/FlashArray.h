@@ -13,8 +13,6 @@ namespace qb50 {
 
       public:
 
-         FlashArray();
-
          FlashArray( const char *name, const int nSlaves, FlashMemory *slaves[] );
          ~FlashArray();
 
