@@ -27,11 +27,14 @@ namespace qb50 {
 
       protected:
 
-         FlashMemory& _mem;  // slave FlashMemory
+         FlashMemory& _mem;   // slave FlashMemory
 
-         uint32_t     _base; // address (slave) of the sector currently in cache
-         uint32_t     _ssiz; // sector size
-         uint8_t     *_x;    // buffer
+         uint32_t     _nhit;  // number of cache hits
+         uint32_t     _nmis;  // number of cache misses
+
+         uint32_t     _base;  // address (slave) of the sector currently in cache
+         uint32_t     _ssiz;  // sector size
+         uint8_t     *_x;     // buffer
 
    };
 

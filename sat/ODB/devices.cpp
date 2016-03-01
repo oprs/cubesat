@@ -222,6 +222,7 @@ namespace qb50 {
    static FlashMemory *VFLASH_Memories[ 2 ] = { &FLASH0, &FLASH1 };
 
    FlashArray VFLASH( "VFLASH", 2, VFLASH_Memories );
+   FlashCache FCACHE( "FCACHE", VFLASH );
 
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //

@@ -21,6 +21,7 @@
 #include "device/SPI/MAX111x.h"
 #include "device/SPI/L3GD20.h"
 #include "device/FlashArray.h"
+#include "device/FlashCache.h"
 #include "device/AX25Out.h"
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"

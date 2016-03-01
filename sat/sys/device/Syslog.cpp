@@ -57,7 +57,9 @@ Syslog& Syslog::printf( const char *fmt, ... )
    va_start( ap, fmt );
 
    do {
-      LogLine *line = new LogLine();
+      LogLine *line = new( std::nothrow ) LogLine();
+      if( line == (LogLine*)0 ) break;
+
       int n;
 
       n = snprintf( line->_x, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );

@@ -58,6 +58,7 @@ ODB& ODB::init( void )
    ADC3.init();
    ADC4.init();
    VFLASH.init();
+   FCACHE.init();
  //WDB.init();
    RFTX.init();
 

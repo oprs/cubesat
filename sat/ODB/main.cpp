@@ -15,16 +15,9 @@ using namespace qb50;
 
 int main( void )
 {
-#if 0
-   UART6.enable();            /* AX.25      */
-   UART1.enable();            /* ADCS       */
-   UART2.enable();            /* FiPEX      */
-   UART3.enable();            /* GPS        */
-#endif
    (void)registerThread( new WatchdogThread() );
    (void)registerThread( new ControlThread() );
    run(); // FreeRTOS RUN.
 }
 
-// PWR_BackupAccessCmd
 /*EoF*/

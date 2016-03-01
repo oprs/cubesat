@@ -152,6 +152,7 @@ namespace qb50 {
    extern qb50::A25Lxxx FLASH1;
 
    extern qb50::FlashArray VFLASH;
+   extern qb50::FlashCache FCACHE;
 
 //  - - - - - - - - - - -  //
 //  T R A N S C E I V E R  //

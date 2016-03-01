@@ -17,6 +17,9 @@ namespace qb50 {
 
          void run( void );
 
+         void onSuspend ( void );
+         void onResume  ( void );
+
    };
 
 } /* qb50 */
