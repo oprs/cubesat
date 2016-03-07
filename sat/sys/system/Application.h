@@ -2,7 +2,9 @@
 #ifndef _QB50_SYSTEM_APPLICATION_H
 #define _QB50_SYSTEM_APPLICATION_H
 
-#include "SimpleThread.h"
+//#include "system/Ring.h"
+//#include "system/printf.h"
+#include "system/SimpleThread.h"
 
 
 namespace qb50 {

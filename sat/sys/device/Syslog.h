@@ -2,6 +2,7 @@
 #ifndef _QB50_SYS_SYSLOG_H
 #define _QB50_SYS_SYSLOG_H
 
+#include "system/Ring.hpp"
 #include "device/UART.h"
 
 #include <iostream>
@@ -24,10 +25,6 @@ namespace qb50 {
    class Syslog : public Device
    {
 
-      protected:
-
-         struct LogLine;
-
       public:
 
          Syslog( const char *name, UART& uart );
@@ -43,18 +40,20 @@ namespace qb50 {
 
       protected:
 
-         struct LogLine
-         {
-            LogLine();
-            ~LogLine();
+         enum { NITEMS = 64 };
 
-            char   *_x;
-            size_t  _len;
+         struct Line
+         {
+            uint8_t len;
+            char    x[95];
          };
 
-         UART&        _uart;
-         xQueueHandle _ioQueue;
-         TaskHandle_t _ioTask;
+         Ring<4096>  _ring;
+         uint8_t    *_line;
+         UART&       _uart;
+
+         xSemaphoreHandle _sem;
+         TaskHandle_t     _ioTask;
 
    };
 

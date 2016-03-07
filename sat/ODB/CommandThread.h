@@ -3,7 +3,6 @@
 #define _QB50_ODB_COMMAND_THREAD_H
 
 #include "system/qb50.h"
-#include "mBuf.h"
 #include "Form.h"
 #include "Event.h"
 

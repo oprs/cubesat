@@ -8,7 +8,7 @@ OBJ_ARCH = \
 
 OBJ_RTOS = \
    $(patsubst %c,%o,$(wildcard ./FreeRTOS/*.c)) \
-   $(patsubst %c,%o,$(wildcard ./FreeRTOS/portable/MemMang/heap_3.c)) \
+   $(patsubst %c,%o,$(wildcard ./FreeRTOS/portable/MemMang/heap_4.c)) \
    $(patsubst %c,%o,$(wildcard ./FreeRTOS/portable/$(ARCH)/*.c)) \
    $(patsubst %c,%o,$(wildcard ./sys/*.c)) \
    $(patsubst %cpp,%o,$(wildcard ./sys/*.cpp))

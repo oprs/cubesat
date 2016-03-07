@@ -34,7 +34,7 @@ void InitThread::run( void )
 
    _wait();
 
-   delay( 100 );
+   //delay( 100 );
 
    kprintf( "Waiting for 30mn...\r\n" );
    delay( 5000 );

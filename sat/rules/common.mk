@@ -15,7 +15,7 @@ FLASH  := st-flash
 
 CFLAGS += -Wall -Wextra
 CFLAGS += -DARCH=$(ARCH)
-CFLAGS += -fstack-usage
+#CFLAGS += -fstack-usage
 
 CFLAGS += -g -O0 -DDEBUG
 #CFLAGS += -Os

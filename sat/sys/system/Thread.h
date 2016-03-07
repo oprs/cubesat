@@ -2,6 +2,8 @@
 #ifndef _QB50_SYSTEM_THREAD_H
 #define _QB50_SYSTEM_THREAD_H
 
+#include <cstddef>
+
 
 namespace qb50 {
 
@@ -27,6 +29,11 @@ namespace qb50 {
          virtual void onExit    ( void );
          virtual void onSuspend ( void );
          virtual void onResume  ( void );
+
+#if 0
+         static  void *operator new    ( size_t size );
+         static  void  operator delete ( void   *p   );
+#endif
 
          const char *name;
          void       *handle;

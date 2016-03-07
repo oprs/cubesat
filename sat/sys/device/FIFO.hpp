@@ -5,94 +5,96 @@
 
 namespace qb50 {
 
-template <class T>
+template <class T, unsigned depth>
 class FIFO
 {
 
-	public:
+   public:
 
-		FIFO<T>( unsigned depth ) : _m( depth - 1 )
-		{
-			if(( depth < 2 ) || ( depth & _m ))
-				throw( "depth must be a power of 2" ); /* XXX InvalidFIFODepthException */
+      FIFO<T,depth>()
+      {
+         static_assert(
+            (( depth > 2 ) && (( depth & ( depth - 1 )) == 0 )),
+            "depth must be a power of 2"
+         );
 
-			_x = new T[ depth ];
-			_r = 0;
-			_w = 0;
-		}
-
-
-		virtual ~FIFO<T>()
-		{ delete[] _x; }
-
-
-		bool isEmpty( void )
-		{ return( _r == _w ); }
+         _x = new T[ depth ];
+         _m = depth - 1;
+         _r = 0;
+         _w = 0;
+      }
 
 
-		bool isFull( void )
-		{ return((( _r & _m ) == ( _w & _m )) && ( _r != _w )); }
+      virtual ~FIFO<T,depth>()
+      { delete[] _x; }
 
 
-		unsigned avail( void )
-		{ return( _w - _r ); }
+      bool isEmpty( void )
+      { return( _r == _w ); }
 
 
-		FIFO<T>& push( T val )
-		{
-			if( isFull() )
-				_triggerFullCondition();
-
-			_x[ _w & _m ] = val;
-			_w++;
-
-			return *this;
-		}
+      bool isFull( void )
+      { return((( _r & _m ) == ( _w & _m )) && ( _r != _w )); }
 
 
-		T pull( void )
-		{
-			if( isEmpty() )
-				_triggerEmptyCondition();
-
-			T rv = _x[ _r & _m ];
-			_r++;
-
-			return rv;
-		}
+      unsigned count( void )
+      { return( _w - _r ); }
 
 
-		FIFO<T>& flush( void )
-		{
-			_r = _w = 0;
-			return *this;
-		}
+      FIFO<T,depth>& push( T val )
+      {
+         if( isFull() ) {
+            _triggerFullCondition();
+         } else {
+            _x[ _w & _m ] = val;
+            _w++;
+         }
+
+         return *this;
+      }
 
 
-		virtual void lock( void )
-		{ ; }
+      T pull( void )
+      {
+         T rv = _x[ _r & _m ];
+
+         if( isEmpty() ) {
+            _triggerEmptyCondition();
+         } else {
+            _r++;
+         }
+
+         return rv;
+      }
 
 
-		virtual void unlock( void )
-		{ ; }
+      FIFO<T,depth>& flush( void )
+      {
+         _r = _w = 0;
+         return *this;
+      }
 
 
-	protected:
+      virtual void lock( void )
+      { ; }
 
-		unsigned _m;  /* counter mask (= depth - 1) */
-		unsigned _r;  /* read offset in units of T  */
-		unsigned _w;  /* write offset in units of T */
-		T*       _x;
 
-		void _triggerFullCondition( void )
-		{
-			throw "FIFO is full"; /* XXX FullFIFOException */
-		}
+      virtual void unlock( void )
+      { ; }
 
-		void _triggerEmptyCondition( void )
-		{
-			throw "FIFO is empty"; /*XXX EmptyFIFOException */
-		}
+
+   protected:
+
+      unsigned _m;  /* counter mask (= depth - 1) */
+      unsigned _r;  /* read offset in units of T  */
+      unsigned _w;  /* write offset in units of T */
+      T*       _x;
+
+      void _triggerFullCondition( void )
+      { ; }
+
+      void _triggerEmptyCondition( void )
+      { ; }
 
 };
 

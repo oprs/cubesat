@@ -22,7 +22,7 @@
 #include "device/SPI/L3GD20.h"
 #include "device/FlashArray.h"
 #include "device/FlashCache.h"
-#include "device/AX25Out.h"
+//#include "device/AX25Out.h"
 #include "device/NRZI.h"
 #include "device/FIFO.hpp"
 #include "device/Transceiver.h"
@@ -30,6 +30,8 @@
 #include "system/Application.h"
 #include "system/UserLock.h"
 #include "system/Logger.h"
+#include "system/Ring.hpp"
+#include "system/mBuf.h"
 
 
 #endif /*_QB50_H*/

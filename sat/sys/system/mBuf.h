@@ -1,6 +1,6 @@
 
-#ifndef _QB50_ODB_MBUF_H
-#define _QB50_ODB_MBUF_H
+#ifndef _QB50_SYSTEM_MBUF_H
+#define _QB50_SYSTEM_MBUF_H
 
 #include <cstddef>
 #include <cstdint>
@@ -133,6 +133,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_ODB_MBUF_H*/
+#endif /*_QB50_SYSTEM_MBUF_H*/
 
 /*EoF*/

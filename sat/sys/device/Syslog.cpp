@@ -15,26 +15,15 @@ static void _trampoline( void *x );
 Syslog::Syslog( const char *name, UART& uart )
    : Device( name ), _uart( uart )
 {
-   _ioQueue = xQueueCreate( 64, sizeof( LogLine* ));
+   _line = new uint8_t[ 128 ];
+   _sem  = xSemaphoreCreateBinary();
 }
 
 
 Syslog::~Syslog()
 {
-   vQueueDelete( _ioQueue );
-}
-
-
-Syslog::LogLine::LogLine()
-{
-   _x   = new char[ 128 ];
-   _len = 0;
-}
-
-
-Syslog::LogLine::~LogLine()
-{
-   delete[] _x;
+   vSemaphoreDelete( _sem );
+   delete[] _line;
 }
 
 
@@ -44,36 +33,37 @@ Syslog::LogLine::~LogLine()
 
 Syslog& Syslog::init( void )
 {
-   (void)xTaskCreate( _trampoline, _name, /*128*/ 512, this, 1, &_ioTask );
+   (void)xTaskCreate( _trampoline, _name, /*128*/ 256, this, 1, &_ioTask );
    return *this;
 }
 
 
 Syslog& Syslog::printf( const char *fmt, ... )
 {
-   unsigned ts = ticks();
-
    va_list ap;
    va_start( ap, fmt );
 
+   lock();
+
    do {
-      LogLine *line = new( std::nothrow ) LogLine();
-      if( line == (LogLine*)0 ) break;
+      unsigned ts = ticks();
 
-      int n;
+      int len = snprintf( (char*)_line, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
+      if( len <= 0 ) break;
 
-      n = snprintf( line->_x, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
-      if( n <= 0 ) { delete line; break; }
+      int n = vsnprintf( (char*)_line + len, 128 - len - 1, fmt, ap );
+      if( n <= 0 ) break;
 
-      line->_len += n;
+      len += n;
 
-      n = vsnprintf( line->_x + n, 128 - n - 1, fmt, ap );
-      if( n <= 0 ) { delete line; break; }
-
-      line->_len += n;
-      (void)xQueueSend( _ioQueue, &line, 0 );
+      if( _ring.avail() >= len )
+         _ring.write( _line, len );
 
    } while( 0 );
+
+   unlock();
+
+   (void)xSemaphoreGive( _sem );
 
    va_end( ap );
 
@@ -109,16 +99,20 @@ static void _trampoline( void *x )
 
 void Syslog::run( void )
 {
-   LogLine *line;
+   uint8_t *buf = new uint8_t[ 64 ];
+   unsigned n;
 
    for( ;; ) {
-      if( xQueueReceive( _ioQueue, &line, portMAX_DELAY ) != pdPASS ) {
-         continue;
-      }
+      (void)xSemaphoreTake( _sem, 500 / portTICK_RATE_MS );
 
-      (void)_uart.write( line->_x, line->_len );
-      delete line;
+      n = _ring.read( buf, 64 );
+      while( n > 0 ) {
+         (void)_uart.write( buf, n );
+         n = _ring.read( buf, 64 );
+      }
    }
+
+   delete[] buf;
 }
 
 /*EoF*/

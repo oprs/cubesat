@@ -45,8 +45,8 @@ namespace qb50{
          xSemaphoreHandle _isrRXNE; /**< ISR semaphore bound to RXNE  */
          xSemaphoreHandle _isrTXE;  /**< ISR semaphore bound to TXE   */
 
-         FIFO<uint8_t>    _rxFIFO;  /**< receiver FIFO (input)        */
-         FIFO<uint8_t>    _txFIFO;  /**< transmitter FIFO (output)    */
+         FIFO<uint8_t,64> _rxFIFO;  /**< receiver FIFO (input)        */
+         FIFO<uint8_t,64> _txFIFO;  /**< transmitter FIFO (output)    */
 
          STM32_GPIO::Pin& _rxPin;
          STM32_GPIO::Pin& _txPin;

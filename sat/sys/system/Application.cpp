@@ -14,12 +14,27 @@ void vApplicationTickHook( void );
 void vApplicationIdleHook( void );
 void vApplicationMallocFailedHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vAssertCalled( const char *file, unsigned line );
 void HardFault_Handler( void ) __attribute__(( naked ));
 void hard_fault_handler_c( uint32_t *argv );
 
 #ifdef __cplusplus
 }
 #endif
+
+void *operator new( size_t size )
+{
+   void *p;
+
+   p = pvPortMalloc( size );
+   return p;
+}
+
+void operator delete( void *p )
+{
+   vPortFree( p );
+   p = NULL;
+}
 
 void vApplicationTickHook( void )
 { ; }
@@ -46,6 +61,13 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
    for( ;; );
 }
+
+void vAssertCalled( const char *file, unsigned line )
+{
+   printf( "\r\n\r\n\033[31;1mASSERTION FAILED - %s:%d\033[0m\r\n\r\n", file, line );
+   for( ;; );
+}
+
 
 /*
 void HardFault_Handler( void )

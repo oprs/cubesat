@@ -74,6 +74,25 @@ void Thread::onResume( void )
 }
 
 
+#if 0
+void *Thread::operator new( size_t size )
+{
+   void *p = pvPortMalloc( size );
+
+   kprintf( "\033[42;1mNEW( %u ): %p\033[0m\r\n", size, p );
+
+   return p;
+}
+
+
+void Thread::operator delete( void *p )
+{
+   kprintf( "\033[42;1mDELETE( %p )\033[0m\r\n", p );
+   vPortFree( p );
+}
+#endif
+
+
 //  - - - - - - - - - - - - - - -  //
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //

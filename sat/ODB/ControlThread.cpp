@@ -145,7 +145,6 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
    (void)registerThread( new CommandThread() );
 
    for( int i = 0 ; i < _QB50_NTHREADS ; ++i ) {
-      //delay( 100 );
       (void)registerThread( _tv[i] );
    }
 
