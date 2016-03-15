@@ -12,6 +12,12 @@ class Pin
 
    public:
 
+      enum Edge {
+         RISING  = 0,
+         FALLING = 1,
+         BOTH    = 2
+      };
+
       Pin( const char *name ) : _name( name )
       { ; }
 
@@ -27,6 +33,10 @@ class Pin
       virtual Pin& off    ( void ) = 0;
       virtual Pin& toggle ( void ) = 0;
       virtual bool read   ( void ) = 0;
+
+      /* input signal handler */
+
+      virtual Pin& setHandler ( Handler *handler, Edge edge ) = 0;
 
    protected:
 

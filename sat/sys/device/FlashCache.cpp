@@ -16,6 +16,7 @@ FlashCache::FlashCache( const char *name, FlashMemory& mem )
 {
    _nhit = 0;
    _nmis = 0;
+   _drty = false;
    _base = (uint32_t)-1;
    _ssiz = 0;
    _x    = 0;
@@ -29,9 +30,9 @@ FlashCache::~FlashCache()
 }
 
 
-//  - - - - - - -  //
-//  M E T H O D S  //
-//  - - - - - - -  //
+//  - - - - - - - - - - - - - -  //
+//  P U B L I C   M E T H O D S  //
+//  - - - - - - - - - - - - - -  //
 
 FlashCache& FlashCache::init( void )
 {
@@ -82,54 +83,40 @@ FlashCache& FlashCache::read( uint32_t addr, void *x, size_t len )
    }
 
    uint8_t* dst = (uint8_t*)x;
-   uint32_t cur = addr & ~( _ssiz - 1 );
-   uint32_t off = addr &  ( _ssiz - 1 );
+   uint32_t off = addr & ( _ssiz - 1 );
    uint32_t nb  = _ssiz - off;
 
    if( nb > len ) nb = len;
 
 kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
-kprintf( "- base: %u, off: %u, nb: %u\r\n", cur, off, nb );
 
-   /* lock the device */
+   (void)lock();
 
-   lock();
+   /* read the first sector */
 
-   /* read the first page */
-
-   if( cur == _base ) {
-      ++_nhit;
-   } else {
-      ++_nmis;
-      _mem.pageRead( cur, _x );
-      _base = cur;
-   }
-
+   _load( addr );
    (void)memcpy( dst, _x + off, nb );
 
-   len -= nb;
-   dst += nb;
+   len  -= nb;
+   dst  += nb;
+   addr += _ssiz;
+   nb    = ( len > _ssiz ) ? _ssiz : len;
 
-   /* read subsequent pages */
+   /* read subsequent sectors */
 
-   while( len > 0 ) {
+   while( nb > 0 ) {
 
-      ++_nmis;
-
-      _base += _ssiz;
-      _mem.pageRead( _base, _x );
-
-      nb = len & ( _ssiz - 1 );
-kprintf( "- base: %u, nb: %u, len: %u\r\n", _base, nb, len );
+      _load( addr );
       (void)memcpy( dst, _x, nb );
 
-      len -= nb;
-      dst += nb;
+      len  -= nb;
+      dst  += nb;
+      addr += _ssiz;
+      nb    = ( len > _ssiz ) ? _ssiz : len;
+
    }
 
-   /* unlock the device and return */
-
-   unlock();
+   (void)unlock();
 
 kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
 
@@ -137,15 +124,112 @@ kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
 }
 
 
-FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len )
+FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sync )
 {
+   if( len == 0 ) {
+      kprintf( "%s: FlashCache::write(): nothing to write\r\n", _name );
+      if( sync ) {
+         /* let the user a chance to flush the cache */
+         (void)lock();
+         _flush();
+         (void)unlock();
+      }
+      return *this;
+   }
+
+   const uint8_t* src = (const uint8_t*)x;
+ //uint32_t       cur = addr & ~( _ssiz - 1 );
+   uint32_t       off = addr &  ( _ssiz - 1 );
+   uint32_t       nb  = _ssiz - off;
+
+   if( nb > len ) nb = len;
+
+kprintf( "FlashCache::write( %u, %p, %u )\r\n", addr, x, len );
+
+   /* lock the device */
+
+   (void)lock();
+
+   /* write the first sector */
+
+   _load( addr );
+   (void)memcpy( _x + off, src, nb );
+   _drty = true;
+
+   len  -= nb;
+   src  += nb;
+   addr += _ssiz;
+   nb    = ( len > _ssiz ) ? _ssiz : len;
+
+   /* write subsequent sectors */
+
+   while( nb > 0 ) {
+
+      _load( addr );
+      (void)memcpy( _x, src, nb );
+      _drty = true;
+
+      len  -= nb;
+      src  += nb;
+      addr += _ssiz;
+      nb    = ( len > _ssiz ) ? _ssiz : len;
+
+   }
+
+   /**/
+
+   if( sync ) {
+      /* synchronous operation requested: force a sector flush */
+      _flush();
+   }
+
+   (void)unlock();
+
+kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
+
    return *this;
 }
 
 
-FlashCache& FlashCache::flush( void )
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+void FlashCache::_load( uint32_t addr )
 {
-   return *this;
+   addr &= ~( _ssiz - 1 );
+
+kprintf( "FlashCache::_load( %u )\r\n", addr );
+
+   if( addr == _base ) {
+      /* sector is already in cache: this is a hit */
+      ++_nhit;
+      return;
+   }
+
+   /* sector not in cache */
+
+   ++_nmis;
+
+   if( _drty ) {
+      /* flush the sector if cache is dirty */
+      _flush();
+      /* cache is now clean */
+   }
+
+   /* load the requested sector */
+
+   _mem.sectorRead( addr, _x );
+   _base = addr;
+}
+
+
+void FlashCache::_flush( void )
+{
+kprintf( "FlashCache::_flush(), _base: %u\r\n", _base );
+   _mem.sectorErase( _base );
+   _mem.sectorWrite( _base, _x );
+   _drty = false;
 }
 
 

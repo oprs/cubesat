@@ -21,6 +21,7 @@ namespace qb50 {
          VBAT_HIGH   = 0x03,  /* V_Bat crossed the high threshold */
          VBAT_LOW    = 0x04,  /* V_Bat crossed the low threshold  */
          FORM        = 0x05,  /* command from the ground          */
+         WOD_EMPTY   = 0x06,  /* WOD store is empty               */
 
       };
 

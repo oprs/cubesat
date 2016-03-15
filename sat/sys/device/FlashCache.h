@@ -21,8 +21,7 @@ namespace qb50 {
          FlashCache& disable ( bool silent = false );
 
          FlashCache& read    ( uint32_t addr,       void *x, size_t len );
-         FlashCache& write   ( uint32_t addr, const void *x, size_t len );
-         FlashCache& flush   ( void );
+         FlashCache& write   ( uint32_t addr, const void *x, size_t len, bool sync = false );
 
 
       protected:
@@ -31,10 +30,14 @@ namespace qb50 {
 
          uint32_t     _nhit;  // number of cache hits
          uint32_t     _nmis;  // number of cache misses
+         bool         _drty;  // cache is dirty
 
          uint32_t     _base;  // address (slave) of the sector currently in cache
          uint32_t     _ssiz;  // sector size
          uint8_t     *_x;     // buffer
+
+         void _load  ( uint32_t addr );
+         void _flush ( void );
 
    };
 

@@ -15,13 +15,17 @@ namespace qb50 {
          PMUThread();
          ~PMUThread();
 
-         void run( void );
+         void run       ( void );
+         void onSuspend ( void );
+         void onResume  ( void );
+
 
       private:
 
          enum Mode { LOW = 0, HIGH = 1 };
 
-         Mode _mode;
+         uint16_t *_raw;
+         Mode      _mode;
 
    };
 

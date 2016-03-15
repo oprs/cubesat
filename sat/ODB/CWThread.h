@@ -15,7 +15,9 @@ namespace qb50 {
          CWThread();
          ~CWThread();
 
-         void run( void );
+         void run       ( void );
+         void onSuspend ( void );
+         void onResume  ( void );
 
    };
 

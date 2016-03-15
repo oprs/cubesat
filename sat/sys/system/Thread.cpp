@@ -36,12 +36,48 @@ Thread::~Thread()
 
 void Thread::suspend( void )
 {
-   _state = SUSPENDED;
+   switch( _state ) {
+
+      case RUNNING:
+      case RESUMING:
+         _state = SUSPENDING;
+         break;
+
+      case SUSPENDED:
+         /* already suspended */
+         break;
+
+      case SUSPENDING:
+         /* already about to be suspended */
+         break;
+
+   }
 }
 
 
 void Thread::resume( void )
 {
+   switch( _state ) {
+
+      case SUSPENDED:
+         _state = RESUMING;
+         (void)xTaskNotifyGive( (TaskHandle_t)handle );
+         break;
+
+      case SUSPENDING:
+         _state = RESUMING;
+         break;
+
+      case RUNNING:
+         /* already running */
+         break;
+
+      case RESUMING:
+         /* already about to be resumed */
+         break;
+
+   }
+
    if( _state == SUSPENDED ) {
       _state = RUNNING;
       (void)xTaskNotifyGive( (TaskHandle_t)handle );
@@ -99,11 +135,39 @@ void Thread::operator delete( void *p )
 
 void Thread::_wait( void )
 {
+
+   while( _state != RUNNING ) {
+
+      switch( _state ) {
+
+         case RUNNING:
+            /* can't happen - keep gcc happy */
+            break;
+
+         case RESUMING:
+            onResume();
+            _state = RUNNING;
+            break;
+
+         case SUSPENDING:
+            onSuspend();
+            _state = SUSPENDED;
+            break;
+
+         case SUSPENDED:
+            ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+            break;
+
+      }
+   }
+
+/*
    while( _state == SUSPENDED) {
       onSuspend();
       ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
       onResume();
    }
+*/
 }
 
 

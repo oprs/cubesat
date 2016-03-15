@@ -5,11 +5,15 @@
 
 namespace qb50 {
 
+   class Pin;
+   class Handler;
+
    class GPIO
    {
 
       public:
 
+         #include "GPIO_Handler.h"
          #include "GPIO_Pin.h"
 
          GPIO( const Pin *pins )

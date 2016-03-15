@@ -238,12 +238,8 @@ uint32_t STM32_RCC::freq( Bus &bus )
 
 bool STM32_RCC::isPwrOn( void )
 {
-#if 1
    return
-      (( _csr & 0x04000000 ) != 0 );
-#else
-   return true;
-#endif
+      (( _csr & ( RCC_CSR_PORRSTF | RCC_CSR_BORRSTF )) != 0 );
 }
 
 /*EoF*/

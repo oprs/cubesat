@@ -95,11 +95,11 @@ void ControlThread::run( void )
    GPIOA.enable();
    GPIOB.enable();
    GPIOC.enable();
-   UART6.enable().baudRate( 115200 );
+   UART6.enable(); //.baudRate( 115200 );
    SYSLOG.enable();
    RTC.enable();
    BKP.enable();
-   WOD.enable();
+   //WOD.enable();
 
 /*
 uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
@@ -118,6 +118,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
    if( RCC.isPwrOn() ) {
       kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
+      WOD.clear();
    }
 
    /* increment the reset counter */
@@ -198,6 +199,14 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
          case Event::FORM:
 
             _handleForm( ev->form );
+            break;
+
+         case Event::WOD_EMPTY:
+
+            if( mode == Config::TELEM ) {
+               _switchModes( Config::WODEX );
+            }
+
             break;
 
          default:

@@ -1,5 +1,6 @@
 
 #include "STM32/STM32_GPIO.h"
+#include "STM32/STM32_EXTI.h"
 #include <safe_stm32f4xx.h>
 
 using namespace qb50;
@@ -129,6 +130,14 @@ STM32_GPIO::Pin& STM32_GPIO::Pin::PuPd( PullUpDn pud )
 
    GPIOx->PUPDR = tmp32;
 
+   return *this;
+}
+
+
+STM32_GPIO::Pin& STM32_GPIO::Pin::setHandler( GPIO::Handler *handler, GPIO::Pin::Edge edge )
+{
+   //STM32_EXTI::EXTIn
+   //(void)handler;
    return *this;
 }
 

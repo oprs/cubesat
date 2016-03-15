@@ -38,6 +38,7 @@ class Pin : public GPIO::Pin
       Pin& pullUp ( void ) { return PuPd( PULLUP ); }
       Pin& pullDn ( void ) { return PuPd( PULLDN ); }
 
+      Pin& setHandler ( Handler *handler, Edge edge );
 
    protected:
 

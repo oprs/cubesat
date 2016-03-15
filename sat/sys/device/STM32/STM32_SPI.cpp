@@ -209,17 +209,18 @@ STM32_SPI& STM32_SPI::read( void *dst, size_t len )
 STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
 {
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
+   size_t i;
    int n;
    uint8_t rx;
 
-   for( size_t i = 0 ; i < len ; ++i ) {
+   for( i = 0 ; i < len ; ++i ) {
 
       for( n = 0 ; n < STM32_SPI_HARD_LIMIT ; ++n ) {
          if( SPIx->SR & SPI_SR_TXE ) break;
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer()" ) "\r\n", _name );
+         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer() - SPI_SR_TXE" ) "\r\n", _name );
          break;
       }
 
@@ -234,7 +235,7 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       }
 
       if( n == STM32_SPI_HARD_LIMIT ) {
-         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer()" ) "\r\n", _name );
+         kprintf( RED( "%s: timeout in STM32_SPI::pollXfer() - SPI_SR_RXNE" ) "\r\n", _name );
          break;
       }
 
@@ -242,6 +243,10 @@ STM32_SPI& STM32_SPI::pollXfer( const void *src, void *dst, size_t len )
       if( dst != NULL ) {
          ((uint8_t*)dst)[ i ] = rx;
       }
+   }
+
+   if( i < len ) {
+      kprintf( RED( "%s: got %u/%u bytes" ) "\r\n", _name, i, len );
    }
 
    return *this;

@@ -22,16 +22,45 @@ extern QueueHandle_t evQueue;
 PMUThread::PMUThread()
    : Thread( "Power Monitor", 1, SUSPENDED, 384 /* XXX check with 256 */ ),
      _mode( HIGH )
-{ ; }
+{
+   _raw = new uint16_t[ 32 ];
+}
 
 
 PMUThread::~PMUThread()
-{ ; }
+{
+   delete[] _raw;
+}
 
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
+
+void PMUThread::onSuspend( void )
+{
+   ADC4.disable();
+   ADC3.disable();
+   ADC2.disable();
+   ADC1.disable();
+   FCACHE.disable();
+
+   Thread::onSuspend();
+}
+
+
+void PMUThread::onResume( void )
+{
+   Thread::onResume();
+
+   FCACHE.enable();
+   ADC1.enable();
+   ADC2.enable();
+   ADC3.enable();
+   ADC4.enable();
+
+}
+
 
 void PMUThread::run( void )
 {
@@ -40,16 +69,9 @@ void PMUThread::run( void )
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
 
-   uint16_t raw[ 32 ];       // 4 ADCs, 8 channels each
-
-   ADC1.enable( true );
-   ADC2.enable( true );
-   ADC3.enable( true );
-   ADC4.enable( true );
-
    float dK, dC; // degres (Kelvin/Celsius)
 
-   for( ;; ) {
+   for( int n = 0 ;; ++n ) {
 
       int i;
 
@@ -58,65 +80,66 @@ void PMUThread::run( void )
       /* read all the channels */
 
       for( i = 0 ; i < 32 ; ++i )
-         raw[ i ] = 0;
+         _raw[ i ] = 0;
 
       for( i = 0 ; i < 4 ; ++i ) {
 
          /* ADC1 */
 
-         raw[ 0] += ADC1CH0.read();
-         raw[ 1] += ADC1CH1.read();
-         raw[ 2] += ADC1CH2.read();
-         raw[ 3] += ADC1CH3.read();
-         raw[ 4] += ADC1CH4.read();
-         raw[ 5] += ADC1CH5.read();
-         raw[ 6] += ADC1CH6.read();
-         raw[ 7] += ADC1CH7.read();
+         _raw[ 0] += ADC1CH0.read();
+         _raw[ 1] += ADC1CH1.read();
+         _raw[ 2] += ADC1CH2.read();
+         _raw[ 3] += ADC1CH3.read();
+         _raw[ 4] += ADC1CH4.read();
+         _raw[ 5] += ADC1CH5.read();
+         _raw[ 6] += ADC1CH6.read();
+         _raw[ 7] += ADC1CH7.read();
 
          /* ADC2 */
 
-         raw[ 8] += ADC2CH0.read();
-         raw[ 9] += ADC2CH1.read();
-         raw[10] += ADC2CH2.read();
-         raw[11] += ADC2CH3.read();
-         raw[12] += ADC2CH4.read();
-         raw[13] += ADC2CH5.read();
-         raw[14] += ADC2CH6.read();
-         raw[15] += ADC2CH7.read();
+         _raw[ 8] += ADC2CH0.read();
+         _raw[ 9] += ADC2CH1.read();
+         _raw[10] += ADC2CH2.read();
+         _raw[11] += ADC2CH3.read();
+         _raw[12] += ADC2CH4.read();
+         _raw[13] += ADC2CH5.read();
+         _raw[14] += ADC2CH6.read();
+         _raw[15] += ADC2CH7.read();
 
          /* ADC3 */
 
-         raw[16] += ADC3CH0.read();
-         raw[17] += ADC3CH1.read();
-         raw[18] += ADC3CH2.read();
-         raw[19] += ADC3CH3.read();
-         raw[20] += ADC3CH4.read();
-         raw[21] += ADC3CH5.read();
-         raw[22] += ADC3CH6.read();
-         raw[23] += ADC3CH7.read();
+         _raw[16] += ADC3CH0.read();
+         _raw[17] += ADC3CH1.read();
+         _raw[18] += ADC3CH2.read();
+         _raw[19] += ADC3CH3.read();
+         _raw[20] += ADC3CH4.read();
+         _raw[21] += ADC3CH5.read();
+         _raw[22] += ADC3CH6.read();
+         _raw[23] += ADC3CH7.read();
 
          /* ADC4 */
 
-         raw[24] += ADC4CH0.read();
-         raw[25] += ADC4CH1.read();
-         raw[26] += ADC4CH2.read();
-         raw[27] += ADC4CH3.read();
-         raw[28] += ADC4CH4.read();
-         raw[29] += ADC4CH5.read();
-         raw[30] += ADC4CH6.read();
-         raw[31] += ADC4CH7.read();
+         _raw[24] += ADC4CH0.read();
+         _raw[25] += ADC4CH1.read();
+         _raw[26] += ADC4CH2.read();
+         _raw[27] += ADC4CH3.read();
+         _raw[28] += ADC4CH4.read();
+         _raw[29] += ADC4CH5.read();
+         _raw[30] += ADC4CH6.read();
+         _raw[31] += ADC4CH7.read();
 
       }
 
-      WodStore::ADCEntry *ae = new WodStore::ADCEntry( 0 );
+      uint8_t raw8[ 32 ];
 
       for( i = 0 ; i < 32 ; ++i ) {
-         raw[ i ] >>= 2;
-         ae->_raw[ i ] = ( raw[ i ] & 0xff );
+         _raw[ i ] >>= 2;
+         raw8[ i ] = _raw[ i ] & 0xff;
       }
 
-      //WOD.write( ae );
-      delete ae;
+      if(( n % 120 ) == 0 ) {
+         (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
+      }
 
       /*
        * R26 = 2.67K, R8 = 9.09K
@@ -126,7 +149,7 @@ void PMUThread::run( void )
        *    = vbat * 35.235952
        */
 
-      vbat = raw[7]; /* ADC1CH7 */
+      vbat = _raw[7]; /* ADC1CH7 */
 
 
       /*
@@ -137,7 +160,7 @@ void PMUThread::run( void )
        *    = tbat * 1.6
        */
 
-      tbat = raw[6]; /* ADC1CH6 */
+      tbat = _raw[6]; /* ADC1CH6 */
       dK   = 1.6 * COEF( tbat );
       dC   = dK - 273.15;
 
@@ -150,7 +173,7 @@ void PMUThread::run( void )
        *    = irx * 0.32
        */
 
-      irx = raw[18]; /* ADC3CH2 */
+      irx = _raw[18]; /* ADC3CH2 */
 
 
       /*
@@ -167,7 +190,7 @@ void PMUThread::run( void )
        *    = itx * 3.2
        */
 
-      itx = raw[19]; /* ADC3CH4 */
+      itx = _raw[19]; /* ADC3CH4 */
 
 
       /*
@@ -178,15 +201,15 @@ void PMUThread::run( void )
        *    = i[1-4] * 32 / 15
        */
 
-      i1 = raw[ 5]; /* ADC1CH5 */
-      i2 = raw[10]; /* ADC2CH2 */
-      i3 = raw[13]; /* ADC2CH5 */
-      i4 = raw[ 1]; /* ADC1CH1 */
+      i1 = _raw[ 5]; /* ADC1CH5 */
+      i2 = _raw[10]; /* ADC2CH2 */
+      i3 = _raw[13]; /* ADC2CH5 */
+      i4 = _raw[ 1]; /* ADC1CH1 */
 
-      v1 = raw[ 3]; /* ADC1CH3 */
-      v2 = raw[ 8]; /* ADC2CH0 */
-      v3 = raw[11]; /* ADC2CH3 */
-      v4 = raw[ 0]; /* ADC1CH0 */
+      v1 = _raw[ 3]; /* ADC1CH3 */
+      v2 = _raw[ 8]; /* ADC2CH0 */
+      v3 = _raw[11]; /* ADC2CH3 */
+      v4 = _raw[ 0]; /* ADC1CH0 */
 
 
       /* conversions */

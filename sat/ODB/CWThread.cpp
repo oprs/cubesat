@@ -57,11 +57,28 @@ static char dcCode( int dc )
 }
 
 
+void CWThread::onSuspend( void )
+{
+   PC5.off();
+   PB15.off();
+   PB13.off();
+   Thread::onSuspend();
+}
+
+
+void CWThread::onResume( void )
+{
+   Thread::onResume();
+}
+
+
 void CWThread::run( void )
 {
    char x[16];
    unsigned dt;
 
+   PB13.out().off();
+   PB15.out().off();
    Morse cw( PC5 );
 
    for( unsigned i = 0 ;; ++i ) {
@@ -93,6 +110,9 @@ void CWThread::run( void )
       kprintf( "  tBat: %4d dC (%c)\r\n", SAT.dcBat,                                         x[ 10 ] );
 #endif
 
+      PB13.on(); // PA
+      PB15.on(); // TX
+
       if(( i % 5 ) == 0 ) {
          kprintf( "CW - %s\r\n", x );
          cw.write( x, 11 );
@@ -100,6 +120,9 @@ void CWThread::run( void )
          kprintf( "CW - %s\r\n", x + 3 );
          cw.write( x + 3, 8 );
       }
+
+      PB15.off(); // TX
+      PB13.off(); // PA
    }
 }
 

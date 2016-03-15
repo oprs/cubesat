@@ -3,7 +3,7 @@
 #define _QB50_ODB_WOD_STORE_H
 
 #include "Device.h"
-#include "device/FlashMemory.h"
+#include "device/FlashCache.h"
 
 
 namespace qb50 {
@@ -36,48 +36,16 @@ namespace qb50 {
             uint32_t crc;   // CRC32( all above + data words )
          };
 
+         enum : uint32_t { NIL = (uint32_t)-1 };
+
          enum EntryType {
-            NIL   = 0,
+            NONE  = 0,
             ADC   = 1,
-            FIPEX = 2
+            FIPEX = 2,
+            GPS   = 3
          };
 
-         struct Entry
-         {
-            uint32_t _type:4;
-            uint32_t _prev:28;
-            uint32_t _time;
-
-            Entry( EntryType type, uint32_t time )
-            : _type( type ), _prev( 0 ), _time( time )
-            { ; }
-
-            ~Entry()
-            { ; }
-         };
-
-         struct ADCEntry : public Entry
-         {
-            uint16_t _flags;
-            uint8_t  _raw[32];
-
-            ADCEntry( uint32_t time ) : Entry( ADC, time )
-            { _flags = 0; }
-
-            ~ADCEntry()
-            { ; }
-         };
-
-         struct FipexEntry : public Entry
-         {
-            FipexEntry( uint32_t time ) : Entry( FIPEX, time )
-            { ; }
-
-            ~FipexEntry()
-            { ; }
-         };
-
-         WodStore( const char *name, FlashMemory &mem );
+         WodStore( const char *name, FlashCache &mem );
          ~WodStore();
 
          WodStore& init    ( void );
@@ -85,26 +53,17 @@ namespace qb50 {
          WodStore& disable ( bool silent = false );
 
          WodStore& clear   ( void );
-         WodStore& write   ( Entry *e );
-         Entry    *read    ( uint32_t addr );
-         uint32_t  size    ( Entry *e );
+         WodStore& read    ( WEH *hdr, void *x );
+         WodStore& write   ( EntryType type, const void *x, unsigned len );
 
-      protected:
 
-         struct Sector {
-            // XXX dirty: isDirty() / setDirty()
-            uint8_t *x;     // cached data
-            uint32_t addr;  // address in flash
-            uint32_t size;  // sector size
-         };
+      private:
 
-         uint32_t _nsaddr ( uint32_t addr );
-
-         FlashMemory& _mem;
+         FlashCache&  _mem;
          const char  *_name;
 
-         Sector _rCache; /* read cache  */
-         Sector _wCache; /* write cache */
+         void _read  ( WEH *hdr, void *x );
+         void _write ( EntryType type, const void *x, unsigned len );
 
    };
 
