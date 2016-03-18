@@ -247,10 +247,10 @@ namespace qb50 {
 } /* qb50 */
 
 
-void USART1_IRQHandler( void )
+extern "C" void USART1_IRQHandler( void )
 { qb50::UART1.isr(); }
 
-void USART6_IRQHandler( void )
+extern "C" void USART6_IRQHandler( void )
 { qb50::UART6.isr(); }
 
 

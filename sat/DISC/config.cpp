@@ -206,25 +206,25 @@ namespace qb50 {
 } /* qb50 */
 
 
-void DMA1_Stream2_IRQHandler( void )
+extern "C" void DMA1_Stream2_IRQHandler( void )
 { qb50::DMA1ST2.isr(); }
 
-void DMA1_Stream5_IRQHandler( void )
+extern "C" void DMA1_Stream5_IRQHandler( void )
 { qb50::DMA1ST5.isr(); }
 
-void SPI3_IRQHandler( void )
+extern "C" void SPI3_IRQHandler( void )
 { qb50::SPI3.isr(); }
 
-void USART1_IRQHandler( void )
+extern "C" void USART1_IRQHandler( void )
 { qb50::UART1.isr(); }
 
-void USART2_IRQHandler( void )
+extern "C" void USART2_IRQHandler( void )
 { qb50::UART2.isr(); }
 
-void USART3_IRQHandler( void )
+extern "C" void USART3_IRQHandler( void )
 { qb50::UART3.isr(); }
 
-void USART6_IRQHandler( void )
+extern "C" void USART6_IRQHandler( void )
 { qb50::UART6.isr(); }
 
 

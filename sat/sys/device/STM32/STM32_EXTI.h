@@ -9,7 +9,6 @@
 
 namespace qb50 {
 
-    /* forward declaration */
     class STM32_EXTIHandler;
 
     class STM32_EXTI
@@ -34,13 +33,14 @@ namespace qb50 {
                 RISING = 0, FALLING = 1, BOTH = 2
             };
 
+            STM32_EXTI& init( void );
+
             void registerHandler( STM32_GPIO::Pin &Pin, STM32_EXTIHandler *handler, Edge edge = RISING );
             void isr( EXTIn i );
 
 
         private:
 
-            //xSemaphoreHandle _extiLock[16];
             STM32_EXTIHandler* _extiHandler[16];
     };
 
@@ -48,8 +48,11 @@ namespace qb50 {
     {
         public:
 
-            STM32_EXTIHandler() { ; }
-            virtual ~STM32_EXTIHandler() { ; } //ajout de virtual
+            STM32_EXTIHandler()
+            { ; }
+
+            virtual ~STM32_EXTIHandler()
+            { ; }
 
             virtual void handle( STM32_EXTI::EXTIn ) = 0;
     };

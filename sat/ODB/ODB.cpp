@@ -1,5 +1,6 @@
 
 #include "devices.h"
+#include "AX25/AX25TX.h"
 
 using namespace qb50;
 
@@ -44,6 +45,8 @@ ODB& ODB::init( void )
    PWR.init();
    BKP.init();
    RTC.init();
+   NVIC.init();
+   EXTI.init();
    DMA1.init();
    GPIOA.init().enable();
    GPIOB.init().enable();
@@ -61,6 +64,7 @@ ODB& ODB::init( void )
    FCACHE.init();
  //WDB.init();
    RFTX.init();
+   AX25.init();
 
    _selPin.in().noPull();
    _inhPin.in().pullUp();

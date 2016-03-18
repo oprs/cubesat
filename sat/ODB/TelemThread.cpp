@@ -4,6 +4,7 @@
 #include "WodStore.h"
 #include "Config.h"
 #include "devices.h"
+#include "AX25/AX25TX.h"
 
 #include <cstring> // XXX out!
 
@@ -72,6 +73,7 @@ TelemThread::~TelemThread()
 
 void TelemThread::onSuspend( void )
 {
+   AX25.disable();
    WOD.disable();
    Thread::onSuspend();
 }
@@ -81,8 +83,25 @@ void TelemThread::onResume( void )
 {
    Thread::onResume();
    WOD.enable();
+   AX25.enable();
 }
 
+
+#if 0
+static const bool v[32] = {
+   true, false, true, false, true, false, true, false,
+   true, false, true, false, true, false, true, false,
+   true, false, true, false, true, false, true, false,
+   true, false, true, false, true, false, true, false
+};
+#else
+static const bool v[32] = {
+   false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false,
+   false, false, false, false, false, false, false, false
+};
+#endif
 
 void TelemThread::run( void )
 {
@@ -112,6 +131,8 @@ void TelemThread::run( void )
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
          hexdump( _x, hdr.len - sizeof( WodStore::WEH ));
          (void)WOD.read( &hdr, _x );
+
+AX25.test( v, 32 );
 
          delay( 500 );
       }

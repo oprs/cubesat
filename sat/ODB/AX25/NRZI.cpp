@@ -1,5 +1,5 @@
 
-#include "device/NRZI.h"
+#include "NRZI.h"
 
 using namespace qb50;
 
@@ -18,3 +18,4 @@ bool NRZI::push( bool cur )
    return _prv;
 }
 
+/*EoF*/

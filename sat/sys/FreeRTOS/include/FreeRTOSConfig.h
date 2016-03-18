@@ -101,6 +101,7 @@
 #define configUSE_APPLICATION_TASK_TAG   0
 #define configUSE_COUNTING_SEMAPHORES    1
 #define configGENERATE_RUN_TIME_STATS    0
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 #ifdef DEBUG
  #define configUSE_IDLE_HOOK             1

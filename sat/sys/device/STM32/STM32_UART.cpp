@@ -224,8 +224,10 @@ void STM32_UART::isr( void )
       if( _txFIFO.isEmpty() ) {
          USARTx->CR1 &= ~USART_CR1_TXEIE;
       } else {
+         if( _txFIFO.isFull() ) {
+            xSemaphoreGiveFromISR( _isrTXE, &hpTask );
+         }
          USARTx->DR = _txFIFO.pull();
-         xSemaphoreGiveFromISR( _isrTXE, &hpTask );
       }
    }
 

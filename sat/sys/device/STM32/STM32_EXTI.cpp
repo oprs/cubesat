@@ -2,23 +2,41 @@
 #include "STM32/STM32_EXTI.h"
 #include "STM32/STM32_NVIC.h"
 #include "STM32/STM32_GPIO.h"
+#include "system/Logger.h"
 
 #include <safe_stm32f4xx.h>
 
 using namespace qb50;
 
 
+//  - - - - - - - - -  //
+//  S T R U C T O R S  //
+//  - - - - - - - - -  //
+
 STM32_EXTI::STM32_EXTI()
 {
-    for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (STM32_EXTIHandler*)0;
+   ;
 }
 
 
 STM32_EXTI::~STM32_EXTI()
 {
-    for( int i = 0; i < 16; i++ )
-        _extiHandler[i] = (STM32_EXTIHandler*)0;
+   ;
+}
+
+
+//  - - - - - - -  //
+//  M E T H O D S  //
+//  - - - - - - -  //
+
+STM32_EXTI& STM32_EXTI::init( void )
+{
+   for( int i = 0; i < 16; i++ )
+      _extiHandler[i] = (STM32_EXTIHandler*)0;
+
+   kprintf( "EXTI: STM32F4xx External Interrupt Controller\r\n" );
+
+   return *this;
 }
 
 
@@ -85,7 +103,9 @@ void STM32_EXTI::registerHandler( STM32_GPIO::Pin& pin, STM32_EXTIHandler *handl
             break;
     }
 
+#if 0
     EXTIx->SWIER |= exti_mask; // XXX
+#endif
     EXTIx->PR    |= exti_mask;
 
     /* XXX - NVIC IRQ channel configuration*/
@@ -108,6 +128,7 @@ void STM32_EXTI::registerHandler( STM32_GPIO::Pin& pin, STM32_EXTIHandler *handl
 void STM32_EXTI::isr( EXTIn i )
 {
     STM32_EXTIHandler *handler = _extiHandler[ i ];
+
     if( handler != 0 )
         handler->handle( i );
 }
@@ -119,7 +140,7 @@ void STM32_EXTI::isr( EXTIn i )
 
 /* EXTI0_IRQHandler */
 
-void EXTI0_IRQHandler( void )
+extern "C" void EXTI0_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -129,7 +150,7 @@ void EXTI0_IRQHandler( void )
 
 /* EXTI1_IRQHandler */
 
-void EXTI1_IRQHandler( void )
+extern "C" void EXTI1_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -139,7 +160,7 @@ void EXTI1_IRQHandler( void )
 
 /* EXTI2_IRQHandler */
 
-void EXTI2_IRQHandler( void )
+extern "C" void EXTI2_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -149,7 +170,7 @@ void EXTI2_IRQHandler( void )
 
 /* EXTI3_IRQHandler */
 
-void EXTI3_IRQHandler( void )
+extern "C" void EXTI3_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -159,7 +180,7 @@ void EXTI3_IRQHandler( void )
 
 /* EXTI4_IRQHandler */
 
-void EXTI4_IRQHandler( void )
+extern "C" void EXTI4_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -169,7 +190,7 @@ void EXTI4_IRQHandler( void )
 
 /* EXTI9_5_IRQHandler */
 
-void EXTI9_5_IRQHandler( void )
+extern "C" void EXTI9_5_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 
@@ -207,7 +228,7 @@ void EXTI9_5_IRQHandler( void )
 
 /* EXTI15_10_IRQHandler */
 
-void EXTI15_10_IRQHandler( void )
+extern "C" void EXTI15_10_IRQHandler( void )
 {
     EXTI_TypeDef *EXTIx = (EXTI_TypeDef*)EXTI_BASE;
 

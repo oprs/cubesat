@@ -21,9 +21,11 @@ namespace qb50 {
             IPR12,    IPR13, IPR14, IPR15,
          };
 
-         void enable  ( uint32_t IRQn, Priority sel = IPR15 );
-         void clear   ( uint32_t IRQn );
-         void disable ( uint32_t IRQn );
+         STM32_NVIC& init    ( void );
+
+         STM32_NVIC& enable  ( uint32_t IRQn, Priority sel = IPR15 );
+         STM32_NVIC& clear   ( uint32_t IRQn );
+         STM32_NVIC& disable ( uint32_t IRQn );
    };
 
    extern qb50::STM32_NVIC NVIC;

@@ -1,6 +1,6 @@
 
-#ifndef _QB50_SYS_NRZI_H
-#define _QB50_SYS_NRZI_H
+#ifndef _QB50_ODB_NRZI_H
+#define _QB50_ODB_NRZI_H
 
 #include <FreeRTOS.h>
 
@@ -25,6 +25,6 @@ namespace qb50 {
 
 }
 
-#endif /*_QB50_SYS_NRZI_H*/
+#endif /*_QB50_ODB_NRZI_H*/
 
 /*EoF*/

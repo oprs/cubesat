@@ -86,6 +86,8 @@ void CWThread::run( void )
       dt = CONF.getParam( Config::PARAM_CW_CYCLE_TX );
       dt = ( 10 + 5 * dt ) * 1000;
 
+    //pw = CONF.getParam( Config::PARAM_CW_POWER );
+
       delay( dt );
 
       _wait();  // wait if suspended
@@ -110,8 +112,9 @@ void CWThread::run( void )
       kprintf( "  tBat: %4d dC (%c)\r\n", SAT.dcBat,                                         x[ 10 ] );
 #endif
 
-      PB13.on(); // PA
       PB15.on(); // TX
+      delay( 20 * 1000 );
+      PB13.on(); // PA
 
       if(( i % 5 ) == 0 ) {
          kprintf( "CW - %s\r\n", x );
@@ -121,8 +124,8 @@ void CWThread::run( void )
          cw.write( x + 3, 8 );
       }
 
-      PB15.off(); // TX
       PB13.off(); // PA
+      PB15.off(); // TX
    }
 }
 

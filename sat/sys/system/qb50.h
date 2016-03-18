@@ -23,7 +23,6 @@
 #include "device/FlashArray.h"
 #include "device/FlashCache.h"
 //#include "device/AX25Out.h"
-#include "device/NRZI.h"
 #include "device/FIFO.hpp"
 #include "device/Transceiver.h"
 
