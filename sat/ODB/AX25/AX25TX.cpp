@@ -8,6 +8,12 @@ using namespace qb50;
 AX25TX qb50::AX25( "AX25" ); // global AX25TX object
 
 
+static const uint8_t hexv[ 16 ] = {
+   '0', '1', '2', '3', '4', '5', '6', '7',
+   '8' ,'9', 'a', 'b', 'c', 'd', 'e', 'f'
+};
+
+
 static const uint16_t crc16v[ 256 ] = {
    0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
    0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -44,42 +50,6 @@ static const uint16_t crc16v[ 256 ] = {
 };
 
 
-static const uint8_t rev8v[ 256 ] = {
-   0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
-   0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
-   0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
-   0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
-   0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
-   0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
-   0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
-   0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
-   0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
-   0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
-   0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
-   0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
-   0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
-   0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
-   0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
-   0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
-   0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
-   0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
-   0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
-   0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
-   0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
-   0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
-   0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
-   0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
-   0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
-   0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
-   0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
-   0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
-   0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
-   0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
-   0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
-   0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
-};
-
-
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -88,6 +58,13 @@ AX25TX::AX25TX( const char *name )
    : Device( name )
 {
    _semTX = xSemaphoreCreateBinary();
+   _flag  = false;
+   _byte  = 0x00;
+   _mask  = 0x00;
+   _ones  = 0;
+
+   for( unsigned i = 0 ; i < sizeof( _ohdr ) ; ++i )
+      _ohdr[ i ] = 0x00;
 }
 
 
@@ -109,7 +86,18 @@ AX25TX& AX25TX::init( void )
    PB15 . out() . off();      // TX
    PB13 . out() . off();      // PA
 
+   PC5  . out() . off();      // P1
+   PB0  . out() . off();      // P2
+   PB1  . out() . off();      // P3
+   PA1  . out() . off();      // P4
+
    EXTI.registerHandler( PC9, this, STM32_EXTI::RISING );
+
+   unproto ( "F6FAO",  0 );
+   mycall  ( "ON0FR1", 0 );
+
+   _ohdr[ 14 ] = 0x03; // Control
+   _ohdr[ 15 ] = 0xf0; // PID
 
    kprintf( "%s: AX.25 Transmitter\r\n", _name );
 
@@ -123,6 +111,7 @@ AX25TX& AX25TX::enable( bool silent )
       return *this;
 
 PC5.on(); // P1
+   //unsigned p = CONF.getParam( Config::PARAM_WODEX_POWER );
 
    PB15.on(); // TX
    PB13.on(); // PA
@@ -153,50 +142,128 @@ PC5.off(); // P1
 }
 
 
-AX25TX& AX25TX::send( const uint8_t *x, unsigned len, int toms )
+AX25TX& AX25TX::mycall( const char *addr, int ssid )
 {
-   unsigned i = 0;
-   uint16_t w;
+   int i;
+   uint8_t c;
 
-   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
-
-   while( i < len ) {
-      if( _fifo.isFull() ) {
-         xSemaphoreTake( _semTX, tk );
-         continue;
-      }
-
-      w = x[ i++ ];
-      (void)_fifo.push( w );
+   for( i = 0 ; i < 6 ; ++i ) {
+      c = (uint8_t)addr[ i ];
+      if( c == 0 ) break;
+      _ohdr[ i + 7 ] = ( c << 1 );
    }
+
+   for( ; i < 6 ; ++i )
+      _ohdr[ i + 7 ] = 0x20 << 1;
+
+   _ohdr[ 13 ] = (( ssid & 0x7f ) << 1 ) | 1;
 
    return *this;
 }
 
 
-uint16_t AX25TX::crc16( const uint8_t *x, unsigned len )
+AX25TX& AX25TX::unproto( const char *addr, int ssid )
 {
-   uint16_t crc = 0xffff;
+   int i;
+   uint8_t c;
+
+   for( i = 0 ; i < 6 ; ++i ) {
+      c = (uint8_t)addr[ i ];
+      if( c == 0 ) break;
+      _ohdr[ i ] = ( c << 1 );
+   }
+
+   for( ; i < 6 ; ++i )
+      _ohdr[ i ] = 0x20 << 1;
+
+   _ohdr[ 6 ] = ( ssid & 0x7f ) << 1;
+
+   return *this;
+}
+
+
+AX25TX& AX25TX::sendUI( const uint8_t *x, unsigned len, int toms )
+{
+   unsigned i;
+   uint16_t fcs, w;
+
+   _ones = 0;
+
+hexdump( x, len );
+
+   /* start flags */
+
+   for( i = 0 ; i < 20 ; ++i )
+      _push( 0x017e, toms );
+
+   /* header */
+
+   for( i = 0 ; i < 16 ; ++i )
+      _push( _ohdr[ i ], toms );
+
+   /* data */
+
+   for( i = 0 ; i < len ; ++i )
+      _push( x[ i ], toms );
+
+   /* FCS */
+
+   fcs = crc16( _ohdr, 16       );
+   fcs = crc16( x,     len, fcs );
+   fcs ^= 0xffff;
+
+   w = fcs & 0xff;
+   _push( w, toms );
+
+   w = ( fcs >> 8 ) & 0xff;
+   _push( w, toms );
+
+   /* end flag */
+
+   _push( 0x017e, toms );
+
+   return *this;
+}
+
+
+AX25TX& AX25TX::sendUIH( const uint8_t *x, unsigned len, int toms )
+{
+   uint8_t *h = new uint8_t[ 2 * len ];
 
    for( unsigned i = 0 ; i < len ; ++i ) {
-      crc = ( crc >> 8 ) ^ crc16v[ ( crc ^ x[i] ) & 0x00ff ];
+      h[ 2*i     ] = hexv[ x[ i ] >> 4    ];
+      h[ 2*i + 1 ] = hexv[ x[ i ]  & 0x0f ];
    }
+
+   sendUI( h, 2 * len, toms );
+
+   delete[] h;
+}
+
+
+uint16_t AX25TX::crc16( const uint8_t *x, unsigned len, uint16_t crc )
+{
+   for( unsigned i = 0 ; i < len ; ++i )
+      crc = ( crc >> 8 ) ^ crc16v[ ( crc ^ x[i] ) & 0x00ff ];
 
    return crc;
 }
 
-#if 1
-void AX25TX::test( const bool *v, unsigned len )
-{
-   unsigned i;
 
-   for( i = 0 ; i < len ; ++i ) {
-      if( !_fifo.isFull() ) {
-         _fifo.push( v[i] );
-      }
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+void AX25TX::_push( const uint16_t w, int toms )
+{
+   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
+
+   while( _fifo.isFull() ) {
+      xSemaphoreTake( _semTX, tk );
    }
+
+   (void)_fifo.push( w );
 }
-#endif
 
 
 //  - - - - - - - - - - - -  //
@@ -208,38 +275,49 @@ void AX25TX::handle( STM32_EXTI::EXTIn n )
    portBASE_TYPE hpTask = pdFALSE;
    uint16_t w;
 
-/*
-   bool bit0;
-   bool bit1;
-*/
+   bool bit;
 
-   (void)n;
-
-   if( _fifo.isEmpty() ) {
+   if( !_flag && ( _ones == 5 )) {
+      _ones = 0;
+      PC8.toggle();
       return;
    }
 
-   if( _fifo.isFull() ) {
-      (void)xSemaphoreGiveFromISR( _semTX, &hpTask );
-   }
-
-   w = _fifo.pull();
-
-/*
-      bit0 = _fifo.pull();
-      bit1 = _nrzi.push( bit0 );
-
-      if( bit1 ) {
-         PC8.on();
+   if( _mask == 0 ) {
+      if( _fifo.isEmpty() ) {
+         /* no data ? transmit flags */
+         w = 0x017e;
       } else {
-         PC8.off();
+         w = _fifo.pull();
+         (void)xSemaphoreGiveFromISR( _semTX, &hpTask );
       }
+
+      /* check if flag */
+
+      if(( w & 0x0100 ) != 0 ) {
+         _flag = true;
+         _ones = 0;
+      } else {
+         _flag = false;
+      }
+
+      _byte = w & 0xff;
+      _mask = 0x01;
    }
-*/
+
+   bit = (( _byte & _mask ) != 0 );
+
+   if( bit ) {
+      ++_ones;
+   } else {
+      _ones = 0;
+      PC8.toggle();
+   }
+
+   _mask <<= 1;
 
    if( hpTask == pdTRUE )
       portEND_SWITCHING_ISR( hpTask );
 }
-
 
 /*EoF*/

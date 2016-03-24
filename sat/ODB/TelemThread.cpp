@@ -12,43 +12,6 @@ using namespace qb50;
 
 extern QueueHandle_t evQueue;
 
-#if 0
-//  - - - - - - - - - - - - -  //
-//  A X . 2 5   H A N D L E R  //
-//  - - - - - - - - - - - - -  //
-
-AX25Handler::AX25Handler( FIFO<bool>& fifo )
-   : _fifo( fifo )
-{ ; }
-
-
-AX25Handler::~AX25Handler()
-{ ; }
-
-
-void AX25Handler::handle( EXTI::EXTIn )
-{
-   bool bit0;
-   bool bit1;
-
-   if( !_fifo.isEmpty() ) {
-      bit0 = _fifo.pull();
-      bit1 = _nrzi.push( bit0 );
-
-      if( bit0 ) {
-         LED1.on();
-      } else {
-         LED1.off();
-      }
-
-      if( bit1 ) {
-         PC8.on();
-      } else {
-         PC8.off();
-      }
-   }
-}
-#endif
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -87,22 +50,6 @@ void TelemThread::onResume( void )
 }
 
 
-#if 0
-static const bool v[32] = {
-   true, false, true, false, true, false, true, false,
-   true, false, true, false, true, false, true, false,
-   true, false, true, false, true, false, true, false,
-   true, false, true, false, true, false, true, false
-};
-#else
-static const bool v[32] = {
-   false, false, false, false, false, false, false, false,
-   false, false, false, false, false, false, false, false,
-   false, false, false, false, false, false, false, false,
-   false, false, false, false, false, false, false, false
-};
-#endif
-
 void TelemThread::run( void )
 {
    WodStore::WEH hdr;
@@ -110,6 +57,16 @@ void TelemThread::run( void )
    for( ;; ) {
 
       _wait();
+
+#if 1
+
+      kprintf( "transmit\r\n" );
+
+      AX25.sendUI( (const uint8_t *)"test123 hello", 13 );
+      delay( 2000 );
+
+#else
+      delay( 2000 );
 
       (void)WOD.read( &hdr, _x );
 
@@ -130,12 +87,12 @@ void TelemThread::run( void )
          kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
          hexdump( _x, hdr.len - sizeof( WodStore::WEH ));
+         AX25.sendUIH( _x, hdr.len - sizeof( WodStore::WEH ));
          (void)WOD.read( &hdr, _x );
-
-AX25.test( v, 32 );
 
          delay( 500 );
       }
+#endif
 
    }
 }
