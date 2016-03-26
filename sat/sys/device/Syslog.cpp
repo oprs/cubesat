@@ -48,7 +48,7 @@ Syslog& Syslog::printf( const char *fmt, ... )
    do {
       unsigned ts = ticks();
 
-      int len = snprintf( (char*)_line, 13, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
+      int len = snprintf( (char*)_line, 16, "[% 9.3f] ", (float)ts / configTICK_RATE_HZ );
       if( len <= 0 ) break;
 
       int n = vsnprintf( (char*)_line + len, 128 - len - 1, fmt, ap );

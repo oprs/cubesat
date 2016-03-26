@@ -59,7 +59,7 @@ const char *Config::modes[ _QB50_NMODES ] = {
    "INIT",     "CW",       "WODEX",    "AMEAS",
    "DTMB",     "ACTRL",    "FIPEX",    "FM",
    "STDBY",    "TELEM",    "GPS",      "(11)",
-   "POWER",    "(13)",     "(14)",     "(15)"
+   "POWER",    "(13)",     "TEST1",    "TEST2"
 };
 
 

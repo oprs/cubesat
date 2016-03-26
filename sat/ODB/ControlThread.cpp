@@ -12,6 +12,7 @@
 #include "TelemThread.h"
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
+#include "TestThread.h"
 
 #include "Event.h"
 #include "WodStore.h"
@@ -22,32 +23,33 @@ QueueHandle_t evQueue;
 
 
 uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
-  /* +------------- ADCSThread
-     |+------------ CTCSSThread
-     ||+----------- TelemThread
-     |||+---------- CWThread
-     ||||+--------- FipexThread
-     |||||+-------- GPSThread
-     ||||||+------- WodexThread
-     |||||||+------ PMUThread
-     ||||||||+----- InitThread
-     ||||||||| */
-   0b000000001, /* mode INIT   */
-   0b000100010, /* mode CW     */
-   0b000000110, /* mode WODEX  */
-   0b100000010, /* mode AMEAS  */
-   0b100000010, /* mode DTMB   */
-   0b100000010, /* mode ACTRL  */
-   0b000010010, /* mode FIPEX  */
-   0b010000010, /* mode FM     */
-   0b000000000, /* mode STDBY  */
-   0b001000010, /* mode TELEM  */
-   0b000001010, /* mode GPS    */
-   0b000000010, /* mode (11)   */
-   0b000000010, /* mode POWER  */
-   0b000000010, /* mode (13)   */
-   0b000000010, /* mode (14)   */
-   0b000000010  /* mode (15)   */
+  /* +-------------- TestThread
+     |+------------- ADCSThread
+     ||+------------ CTCSSThread
+     |||+----------- TelemThread
+     ||||+---------- CWThread
+     |||||+--------- FipexThread
+     ||||||+-------- GPSThread
+     |||||||+------- WodexThread
+     ||||||||+------ PMUThread
+     |||||||||+----- InitThread
+     |||||||||| */
+   0b0000000001, /* mode INIT   */
+   0b0000100010, /* mode CW     */
+   0b0000000110, /* mode WODEX  */
+   0b0100000010, /* mode AMEAS  */
+   0b0100000010, /* mode DTMB   */
+   0b0100000010, /* mode ACTRL  */
+   0b0000010010, /* mode FIPEX  */
+   0b0010000010, /* mode FM     */
+   0b0000000000, /* mode STDBY  */
+   0b0001000010, /* mode TELEM  */
+   0b0000001010, /* mode GPS    */
+   0b0000000010, /* mode (11)   */
+   0b0000000010, /* mode POWER  */
+   0b0000000010, /* mode (13)   */
+   0b1001000000, /* mode TEST1  */
+   0b1000000000  /* mode TEST2  */
 };
 
 
@@ -69,6 +71,7 @@ ControlThread::ControlThread()
    _tv[ 6 ] = new TelemThread();
    _tv[ 7 ] = new CTCSSThread();
    _tv[ 8 ] = new ADCSThread();
+   _tv[ 9 ] = new TestThread();
 
    _ctb = 0x00;
 }
@@ -149,6 +152,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
       (void)registerThread( _tv[i] );
    }
 
+#if 1
    /* get the last known mode */
 
    Config::mode_t mode = CONF.mode();
@@ -160,6 +164,11 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
          kprintf( "Antenna already deployed, resuming previous mode\r\n" );
       }
    }
+#else
+
+   Config::mode_t mode = Config::TEST2;
+
+#endif
 
    _switchModes( mode );
 
@@ -176,6 +185,14 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
             if( mode == Config::INIT ) {
                _switchModes( Config::CW );
+            }
+
+            if(( mode == Config::TEST1 ) && ( ev->type == Event::AD_FAILURE )) {
+               _switchModes( Config::TEST2 );
+            }
+
+            if(( mode == Config::TEST2 ) && ( ev->type == Event::AD_SUCCESS )) {
+               _switchModes( Config::TEST1 );
             }
 
             break;

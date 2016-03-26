@@ -65,6 +65,7 @@ void PMUThread::onResume( void )
 void PMUThread::run( void )
 {
    unsigned vbat, tbat,      // tension + temperature batterie
+            tpa,             // temperature PA
             irx, itx,        // courant global consommé
             i1, i2, i3, i4,  // courant paneaux solaires
             v1, v2, v3, v4;  // tension paneaux solaires
@@ -137,7 +138,7 @@ void PMUThread::run( void )
          raw8[ i ] = _raw[ i ] & 0xff;
       }
 
-      if(( n % 120 ) == 0 ) {
+      if(( n % 3 /*120*/ ) == 0 ) {
          (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
       }
 
@@ -251,6 +252,15 @@ void PMUThread::run( void )
             _mode = HIGH;
          }
       }
+
+      /* check PA termperature */
+
+   kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat, dK, dC );
+
+      tpa = _raw[ 23 ];
+      dK  = 1.6 * tpa;
+      dC  = dK - 273.15;
+   kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", tpa, dK, dC );
 
       delay( 500 );
    }

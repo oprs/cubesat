@@ -10,7 +10,7 @@
 
 
 #define _QB50_NMODES    16
-#define _QB50_NTHREADS   9
+#define _QB50_NTHREADS  10
 #define _QB50_NPARAMS   64
 #define _QB50_PVAL_MASK 0xffff
 
@@ -83,8 +83,8 @@ namespace qb50 {
           //(11)   = 0x0b,
             POWER  = 0x0c,
           //(13)   = 0x0d,
-          //(14)   = 0x0e,
-          //(15)   = 0x0f
+            TEST1  = 0x0e,
+            TEST2  = 0x0f
          };
 
          static const char *modes[ _QB50_NMODES ];

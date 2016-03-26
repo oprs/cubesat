@@ -88,7 +88,7 @@ FlashCache& FlashCache::read( uint32_t addr, void *x, size_t len )
 
    if( nb > len ) nb = len;
 
-kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
+ //kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
 
    (void)lock();
 
@@ -118,7 +118,7 @@ kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
 
    (void)unlock();
 
-kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
+ //kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
 
    return *this;
 }
@@ -144,7 +144,7 @@ FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sy
 
    if( nb > len ) nb = len;
 
-kprintf( "FlashCache::write( %u, %p, %u )\r\n", addr, x, len );
+ //kprintf( "FlashCache::write( %u, %p, %u )\r\n", addr, x, len );
 
    /* lock the device */
 
@@ -185,7 +185,7 @@ kprintf( "FlashCache::write( %u, %p, %u )\r\n", addr, x, len );
 
    (void)unlock();
 
-kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
+ //kprintf( "%s: hits: %u, misses: %u\r\n", _name, _nhit, _nmis );
 
    return *this;
 }
@@ -199,7 +199,7 @@ void FlashCache::_load( uint32_t addr )
 {
    addr &= ~( _ssiz - 1 );
 
-kprintf( "FlashCache::_load( %u )\r\n", addr );
+ //kprintf( "FlashCache::_load( %u )\r\n", addr );
 
    if( addr == _base ) {
       /* sector is already in cache: this is a hit */
@@ -226,7 +226,7 @@ kprintf( "FlashCache::_load( %u )\r\n", addr );
 
 void FlashCache::_flush( void )
 {
-kprintf( "FlashCache::_flush(), _base: %u\r\n", _base );
+ //kprintf( "FlashCache::_flush(), _base: %u\r\n", _base );
    _mem.sectorErase( _base );
    _mem.sectorWrite( _base, _x );
    _drty = false;

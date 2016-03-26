@@ -238,6 +238,8 @@ AX25TX& AX25TX::sendUIH( const uint8_t *x, unsigned len, int toms )
    sendUI( h, 2 * len, toms );
 
    delete[] h;
+
+   return *this;
 }
 
 
@@ -270,7 +272,7 @@ void AX25TX::_push( const uint16_t w, int toms )
 //  E X T I   H A N D L E R  //
 //  - - - - - - - - - - - -  //
 
-void AX25TX::handle( STM32_EXTI::EXTIn n )
+void AX25TX::handle( STM32_EXTI::EXTIn /* ignored */ )
 {
    portBASE_TYPE hpTask = pdFALSE;
    uint16_t w;

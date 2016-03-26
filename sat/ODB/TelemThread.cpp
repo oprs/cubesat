@@ -58,12 +58,12 @@ void TelemThread::run( void )
 
       _wait();
 
-#if 1
+#if 0
 
       kprintf( "transmit\r\n" );
 
       AX25.sendUI( (const uint8_t *)"test123 hello", 13 );
-      delay( 2000 );
+      delay( 1000 );
 
 #else
       delay( 2000 );
@@ -86,7 +86,6 @@ void TelemThread::run( void )
          kprintf( " ticks: %lu\r\n",    hdr.ticks );
          kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
-         hexdump( _x, hdr.len - sizeof( WodStore::WEH ));
          AX25.sendUIH( _x, hdr.len - sizeof( WodStore::WEH ));
          (void)WOD.read( &hdr, _x );
 
