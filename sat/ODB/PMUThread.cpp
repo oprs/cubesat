@@ -12,7 +12,8 @@ using namespace qb50;
 extern QueueHandle_t evQueue;
 
 
-#define COEF( x ) ( (float)x )
+#define DEPTH 5
+#define COEF( x ) ( (float)x / DEPTH )
 
 
 //  - - - - - - - - -  //
@@ -21,14 +22,19 @@ extern QueueHandle_t evQueue;
 
 PMUThread::PMUThread()
    : Thread( "Power Monitor", 1, SUSPENDED, 384 /* XXX check with 256 */ ),
-     _mode( HIGH )
+     _modeBat( HIGH ),
+     _modePA( LOW )
 {
-   _raw = new uint16_t[ 32 ];
+   _raw = new adcval_t[ 32 * DEPTH ];
+   _sum = new adcval_t[ 32 ];
+   _cur = 0;
+   _rdy = false;
 }
 
 
 PMUThread::~PMUThread()
 {
+   delete[] _sum;
    delete[] _raw;
 }
 
@@ -45,6 +51,9 @@ void PMUThread::onSuspend( void )
    ADC1.disable();
    FCACHE.disable();
 
+   _cur = 0;
+   _rdy = false;
+
    Thread::onSuspend();
 }
 
@@ -58,209 +67,132 @@ void PMUThread::onResume( void )
    ADC2.enable();
    ADC3.enable();
    ADC4.enable();
-
 }
 
 
 void PMUThread::run( void )
 {
-   unsigned vbat, tbat,      // tension + temperature batterie
-            tpa,             // temperature PA
-            irx, itx,        // courant global consommé
-            i1, i2, i3, i4,  // courant paneaux solaires
-            v1, v2, v3, v4;  // tension paneaux solaires
-
    float dK, dC; // degres (Kelvin/Celsius)
+   float min, max;
 
-   for( int n = 0 ;; ++n ) {
+   unsigned i, n;
 
-      int i;
+   for( n = 0 ;; ++n ) {
 
-      _wait(); // wait if suspended
+      /* wait if suspended */
 
-      /* read all the channels */
+      _wait();
+
+      /* update sums */
+
+      adcval_t *v = _raw + 32 * _cur;
 
       for( i = 0 ; i < 32 ; ++i )
-         _raw[ i ] = 0;
+         _sum[ i ] -= v[ i ];
 
-      for( i = 0 ; i < 4 ; ++i ) {
+      ADC1.readAll( v      );
+      ADC2.readAll( v +  8 );
+      ADC3.readAll( v + 16 );
+      ADC4.readAll( v + 24 );
 
-         /* ADC1 */
+      for( i = 0 ; i < 32 ; ++i )
+         _sum[ i ] += v[ i ];
 
-         _raw[ 0] += ADC1CH0.read();
-         _raw[ 1] += ADC1CH1.read();
-         _raw[ 2] += ADC1CH2.read();
-         _raw[ 3] += ADC1CH3.read();
-         _raw[ 4] += ADC1CH4.read();
-         _raw[ 5] += ADC1CH5.read();
-         _raw[ 6] += ADC1CH6.read();
-         _raw[ 7] += ADC1CH7.read();
+      _cur = ( _cur + 1 ) % DEPTH;
 
-         /* ADC2 */
+      if( _rdy ) {
 
-         _raw[ 8] += ADC2CH0.read();
-         _raw[ 9] += ADC2CH1.read();
-         _raw[10] += ADC2CH2.read();
-         _raw[11] += ADC2CH3.read();
-         _raw[12] += ADC2CH4.read();
-         _raw[13] += ADC2CH5.read();
-         _raw[14] += ADC2CH6.read();
-         _raw[15] += ADC2CH7.read();
+         /* write WOD */
 
-         /* ADC3 */
+         uint8_t raw8[ 32 ];
 
-         _raw[16] += ADC3CH0.read();
-         _raw[17] += ADC3CH1.read();
-         _raw[18] += ADC3CH2.read();
-         _raw[19] += ADC3CH3.read();
-         _raw[20] += ADC3CH4.read();
-         _raw[21] += ADC3CH5.read();
-         _raw[22] += ADC3CH6.read();
-         _raw[23] += ADC3CH7.read();
+         for( i = 0 ; i < 32 ; ++i )
+            raw8[ i ] = (uint8_t)COEF( _sum[ i ] );
 
-         /* ADC4 */
+         if(( n % 20 /*120*/ ) == 0 ) {
+            (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
+         }
 
-         _raw[24] += ADC4CH0.read();
-         _raw[25] += ADC4CH1.read();
-         _raw[26] += ADC4CH2.read();
-         _raw[27] += ADC4CH3.read();
-         _raw[28] += ADC4CH4.read();
-         _raw[29] += ADC4CH5.read();
-         _raw[30] += ADC4CH6.read();
-         _raw[31] += ADC4CH7.read();
+         /* conversions */
 
-      }
+         SAT.maI[ 0 ] = COEF( _sum[ 5] ) * 32.0 / 15.0;
+         SAT.mvV[ 0 ] = COEF( _sum[ 3] ) * 35.235952;
 
-      uint8_t raw8[ 32 ];
+         SAT.maI[ 1 ] = COEF( _sum[10] ) * 32.0 / 15.0;
+         SAT.mvV[ 1 ] = COEF( _sum[ 8] ) * 35.235952;
 
-      for( i = 0 ; i < 32 ; ++i ) {
-         _raw[ i ] >>= 2;
-         raw8[ i ] = _raw[ i ] & 0xff;
-      }
+         SAT.maI[ 2 ] = COEF( _sum[13] ) * 32.0 / 15.0;
+         SAT.mvV[ 2 ] = COEF( _sum[11] ) * 35.235952;
 
-      if(( n % 3 /*120*/ ) == 0 ) {
-         (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
-      }
+         SAT.maI[ 3 ] = COEF( _sum[ 1] ) * 32.0 / 15.0;
+         SAT.mvV[ 3 ] = COEF( _sum[ 0] ) * 35.235952;
 
-      /*
-       * R26 = 2.67K, R8 = 9.09K
-       *
-       * mV = vbat / 256 * 2048 * (( R26 + R8 ) / R26 )
-       *    = vbat * 8 * 4.404494
-       *    = vbat * 35.235952
-       */
+         SAT.maIRx    = COEF( _sum[18] ) * 0.32;
+         SAT.maITx    = COEF( _sum[19] ) * 3.20;
+         SAT.mvBat    = COEF( _sum[ 7] ) * 35.235952;
 
-      vbat = _raw[7]; /* ADC1CH7 */
+         /* battery temperature */
 
+         dK = 1.6 * COEF( _sum[6] );
+         dC = dK - 273.15;
+         SAT.dcBat = dC;
 
-      /*
-       * R58 = 2.67K, R59 = 2.67K, LM335: 10mV / dK
-       *
-       * dK = tbat / 256 * 2048 * (( R58 + R59 ) / R58 ) / 10
-       *    = tbat * 8 * 2 / 10
-       *    = tbat * 1.6
-       */
+kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", v[6], dK, dC );
 
-      tbat = _raw[6]; /* ADC1CH6 */
-      dK   = 1.6 * COEF( tbat );
-      dC   = dK - 273.15;
+         /* check battery voltage */
 
+         min = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
+         max = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
 
-      /*
-       * R1 = 1, ZXCT1084: Vout = 25 * V_R1
-       *
-       * mA = irx / 256 * 2048 / 25
-       *    = irx * 8 / 25
-       *    = irx * 0.32
-       */
-
-      irx = _raw[18]; /* ADC3CH2 */
-
-
-      /*
-       * R6 = 0.1, R7 = 0.1
-       *
-       * 1/Rsense = 1/R6 + 1/R7
-       * Rsense = 0.05
-       * Vsense = 0.05 * I
-       *
-       * ZXCT1086: Vout = 50 * Vsense
-       *
-       * mA = itx / 256 * 2048 / ( 50 * 0.05 )
-       *    = itx * 8 / 2.5
-       *    = itx * 3.2
-       */
-
-      itx = _raw[19]; /* ADC3CH4 */
-
-
-      /*
-       * R = 0.15, ZXCT1084: Vout = 25 * V_R
-       *
-       * mA = i[1-4] / 256 * 2048 / ( 25 * 0.15 )
-       *    = i[1-4] * 8 / 3.75
-       *    = i[1-4] * 32 / 15
-       */
-
-      i1 = _raw[ 5]; /* ADC1CH5 */
-      i2 = _raw[10]; /* ADC2CH2 */
-      i3 = _raw[13]; /* ADC2CH5 */
-      i4 = _raw[ 1]; /* ADC1CH1 */
-
-      v1 = _raw[ 3]; /* ADC1CH3 */
-      v2 = _raw[ 8]; /* ADC2CH0 */
-      v3 = _raw[11]; /* ADC2CH3 */
-      v4 = _raw[ 0]; /* ADC1CH0 */
-
-
-      /* conversions */
-
-      SAT.maI[ 0 ] = COEF(   i1 ) * 32.0 / 15.0;
-      SAT.mvV[ 0 ] = COEF(   v1 ) * 35.235952;
-
-      SAT.maI[ 1 ] = COEF(   i2 ) * 32.0 / 15.0;
-      SAT.mvV[ 1 ] = COEF(   v2 ) * 35.235952;
-
-      SAT.maI[ 2 ] = COEF(   i3 ) * 32.0 / 15.0;
-      SAT.mvV[ 2 ] = COEF(   v3 ) * 35.235952;
-
-      SAT.maI[ 3 ] = COEF(   i4 ) * 32.0 / 15.0;
-      SAT.mvV[ 3 ] = COEF(   v4 ) * 35.235952;
-
-      SAT.maIRx    = COEF(  irx ) * 0.32;
-      SAT.maITx    = COEF(  itx ) * 3.20;
-      SAT.mvBat    = COEF( vbat ) * 35.235952;
-      SAT.dcBat    = dC;
-
-      /* check battery voltage */
-
-      float mvMin = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
-      float mvMax = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
-
-      if( SAT.mvBat <= mvMax ) {
-         if( SAT.mvBat <= mvMin ) {
-            if( _mode != LOW ) {
-               Event *ev = new Event( Event::VBAT_LOW );
+         if( SAT.mvBat <= max ) {
+            if( SAT.mvBat <= min ) {
+               if( _modeBat != LOW ) {
+                  Event *ev = new Event( Event::VBAT_LOW );
+                  xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
+                  _modeBat = LOW;
+               }
+            }
+         } else {
+            if( _modeBat != HIGH ) {
+               Event *ev = new Event( Event::VBAT_HIGH );
                xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
-               _mode = LOW;
+               _modeBat = HIGH;
             }
          }
-      } else {
-         if( _mode != HIGH ) {
-            Event *ev = new Event( Event::VBAT_HIGH );
-            xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
-            _mode = HIGH;
+
+         /* check PA temperature */
+
+         dK = 1.6 * COEF( _sum[23] );
+         dC = dK - 273.15;
+         SAT.dcPA = dC;
+
+         min = 60.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_LOW  ));
+         max = 73.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_HIGH ));
+
+kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", v[23], dK, dC );
+
+         if( SAT.dcPA <= max ) {
+            if( SAT.dcPA <= min ) {
+               if( _modePA != LOW ) {
+                  Event *ev = new Event( Event::TPA_LOW );
+                  xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
+                  _modePA = LOW;
+               }
+            }
+         } else {
+            if( _modePA != HIGH ) {
+               Event *ev = new Event( Event::TPA_HIGH );
+               xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
+               _modePA = HIGH;
+            }
          }
       }
 
-      /* check PA termperature */
-
-   kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat, dK, dC );
-
-      tpa = _raw[ 23 ];
-      dK  = 1.6 * tpa;
-      dC  = dK - 273.15;
-   kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", tpa, dK, dC );
+      else {
+         if( _cur == 0 ) {
+            _rdy = true;
+         }
+      }
 
       delay( 500 );
    }

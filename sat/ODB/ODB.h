@@ -41,7 +41,8 @@ namespace qb50 {
          unsigned maIRx;
          unsigned maITx;
          unsigned mvBat;
-         int      dcBat;
+         float    dcBat;
+         float    dcPA;
 
 
       private:

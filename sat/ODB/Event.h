@@ -14,14 +14,16 @@ namespace qb50 {
 
       enum event_t {
 
-         GENERIC     = 0x00,  /* generic event                    */
+         GENERIC     = 0x00,  /* generic event                     */
 
-         AD_SUCCESS  = 0x01,  /* antenna deployment (success)     */
-         AD_FAILURE  = 0x02,  /* antenna deployment (failure)     */
-         VBAT_HIGH   = 0x03,  /* V_Bat crossed the high threshold */
-         VBAT_LOW    = 0x04,  /* V_Bat crossed the low threshold  */
-         FORM        = 0x05,  /* command from the ground          */
-         WOD_EMPTY   = 0x06,  /* WOD store is empty               */
+         AD_SUCCESS  = 0x01,  /* antenna deployment (success)      */
+         AD_FAILURE  = 0x02,  /* antenna deployment (failure)      */
+         VBAT_HIGH   = 0x03,  /* V_Bat crossed the upper threshold */
+         VBAT_LOW    = 0x04,  /* V_Bat crossed the lower threshold */
+         TPA_HIGH    = 0x05,  /* T_PA crossed the upper threshold  */
+         TPA_LOW     = 0x06,  /* T_PA crossed the lower threshold  */
+         FORM        = 0x07,  /* command from the ground           */
+         WOD_EMPTY   = 0x08,  /* WOD store is empty                */
 
       };
 

@@ -11,9 +11,9 @@ namespace qb50 {
    class MAX111x : public SPI_Device, public ADC
    {
 
-      protected:
+      private:
 
-         struct IOReq;
+         uint8_t *_x;
 
 
       public:
@@ -41,6 +41,7 @@ namespace qb50 {
          MAX111x& enable  ( bool silent = false );
          MAX111x& disable ( bool silent = false );
          adcval_t read    ( ADC::Channel& ch );
+         MAX111x& readAll ( adcval_t *rvp );
 
    };
 
