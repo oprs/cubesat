@@ -8,7 +8,7 @@
 
 namespace qb50 {
 
-   class MAX111x : public SPI_Device, public ADC
+   class MAX111x : public SPI_Device, public ADC<uint8_t>
    {
 
       private:
@@ -40,8 +40,8 @@ namespace qb50 {
        //MAX111x& reset   ( void );
          MAX111x& enable  ( bool silent = false );
          MAX111x& disable ( bool silent = false );
-         adcval_t read    ( ADC::Channel& ch );
-         MAX111x& readAll ( adcval_t *rvp );
+         MAX111x& read    ( ADC::Channel& ch, SensorSample<uint8_t> *sample );
+         MAX111x& readAll ( SensorSample<uint8_t> *rvp );
 
    };
 

@@ -152,7 +152,12 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
       (void)registerThread( _tv[i] );
    }
 
-#if 1
+#ifdef TEST_GERARD
+
+   Config::mode_t mode = Config::TEST2;
+
+#else
+
    /* get the last known mode */
 
    Config::mode_t mode = CONF.mode();
@@ -164,9 +169,6 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
          kprintf( "Antenna already deployed, resuming previous mode\r\n" );
       }
    }
-#else
-
-   Config::mode_t mode = Config::TEST2;
 
 #endif
 
@@ -184,7 +186,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
          case Event::AD_FAILURE:
 
             if( mode == Config::INIT ) {
-               _switchModes( Config::CW );
+               _switchModes( Config::WODEX );
             }
 
             if(( mode == Config::TEST1 ) && ( ev->type == Event::AD_FAILURE )) {

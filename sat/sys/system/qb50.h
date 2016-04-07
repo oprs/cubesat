@@ -24,7 +24,6 @@
 #include "device/FlashCache.h"
 //#include "device/AX25Out.h"
 #include "device/FIFO.hpp"
-#include "device/Transceiver.h"
 
 #include "system/Application.h"
 #include "system/UserLock.h"

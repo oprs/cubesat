@@ -304,12 +304,6 @@ namespace qb50 {
    MAX111x::Channel& ADC4CH4 = ADC4_Channels[ 4 ];  MAX111x::Channel& ADC4CH5 = ADC4_Channels[ 5 ];
    MAX111x::Channel& ADC4CH6 = ADC4_Channels[ 6 ];  MAX111x::Channel& ADC4CH7 = ADC4_Channels[ 7 ];
 
-//  - - - - - - - - - - -  //
-//  T R A N S C E I V E R  //
-//  - - - - - - - - - - -  //
-
-   Transceiver RFTX( "RFTX", PB15, PB13 );
-
 //  - - - - -  //
 //  A X . 2 5  //
 //  - - - - -  //

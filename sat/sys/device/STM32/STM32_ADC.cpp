@@ -95,7 +95,7 @@ STM32_ADC& STM32_ADC::disable( bool silent )
 }
 
 
-adcval_t STM32_ADC::read( ADC::Channel& ch )
+STM32_ADC& STM32_ADC::read( ADC::Channel& ch, SensorSample<uint16_t> *sample )
 {
    STM32_ADC::Channel& stmCh = static_cast<STM32_ADC::Channel&>( ch );
 
@@ -107,8 +107,10 @@ adcval_t STM32_ADC::read( ADC::Channel& ch )
    while( ADC_GetFlagStatus( ADCx, ADC_FLAG_EOC ) == RESET ) /* XXX meh... use interrupts */
       ;
 
-   return
-      ADC_GetConversionValue( ADCx );
+   sample->steady = true;
+   sample->value  = ADC_GetConversionValue( ADCx );
+
+   return *this;
 }
 
 /*EoF*/

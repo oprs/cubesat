@@ -20,6 +20,10 @@ CFLAGS += -DARCH=$(ARCH)
 CFLAGS += -g -O0 -DDEBUG
 #CFLAGS += -Os
 
+ifdef TEST_GERARD
+CFLAGS += -DTEST_GERARD
+endif
+
 ifndef VERBOSE
  QUIET := @
 endif

@@ -99,9 +99,10 @@ void CTCSS::modeRelaisFM()
             {
 
 
-                int T_PA = 0;
+                SensorSample<uint8_t> T_PA;
 
-                T_PA = (int)ADC3CH7.read() - 273;
+                (void)ADC3CH7.read( &T_PA );
+                T_PA.value -= 273;
 
                 //printf( "%d\r\n", T_PA );
                 //printf("%d\r\n", PA8.read());
@@ -124,13 +125,13 @@ void CTCSS::modeRelaisFM()
                     {*/
                         //temp_PA14[i];
 
-                        if( T_PA > T_PA_MAX )
+                        if( T_PA.value > T_PA_MAX )
                         {
                             _paPin.off();
                             _txPin.off();
                             LED2.off();
 
-                            if( T_PA >= T_PA_MIN)
+                            if( T_PA.value >= T_PA_MIN)
                             {
                                 _paPin.off();
                                 _txPin.off();

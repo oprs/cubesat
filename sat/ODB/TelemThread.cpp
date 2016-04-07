@@ -58,14 +58,16 @@ void TelemThread::run( void )
 
       _wait();
 
-#if 0
+#ifdef TEST_GERARD
 
+      (void)hdr;
       kprintf( "transmit\r\n" );
 
       AX25.sendUI( (const uint8_t *)"test123 hello", 13 );
       delay( 1000 );
 
 #else
+
       delay( 2000 );
 
       (void)WOD.read( &hdr, _x );
@@ -91,6 +93,7 @@ void TelemThread::run( void )
 
          delay( 500 );
       }
+
 #endif
 
    }

@@ -158,7 +158,7 @@ void FipexThread::test( void )
 {
    uint8_t *x = new uint8_t[ 256 ];
    char    *o = new char[ 32 ];
-   unsigned i5, i3;
+   SensorSample<uint8_t> i3, i5;
    size_t   i, n;
 
    kprintf( "%s: FIPEX Functional Test Procedure\r\n", name );
@@ -166,13 +166,13 @@ void FipexThread::test( void )
    kprintf( "%s: STEP #5 - switching FIPEX on\r\n", name );
    PB14.out().off();
    // Req: FPX-SW-0240 - "The OBC shall wait 500ms before initializing the UART interface [...]"
-i5 = ADC4CH5.read();
-i3 = ADC4CH3.read();
+(void)ADC4CH5.read( &i5 );
+(void)ADC4CH3.read( &i3 );
 kprintf( "i5: %lu\r\n", i5 );
 kprintf( "i3: %lu\r\n", i3 );
    delay( 500 );
-i5 = ADC4CH5.read();
-i3 = ADC4CH3.read();
+(void)ADC4CH5.read( &i5 );
+(void)ADC4CH3.read( &i3 );
 kprintf( "i5: %lu\r\n", i5 );
 kprintf( "i3: %lu\r\n", i3 );
 
@@ -204,11 +204,11 @@ kprintf( "i3: %lu\r\n", i3 );
          dump( x, n );
       } else {
          kprintf( RED( "%s: UART2.read() timeout" ) "\r\n", name );
-         i5 = ADC4CH5.read();
-         i3 = ADC4CH3.read();
+         (void)ADC4CH5.read( &i5 );
+         (void)ADC4CH3.read( &i3 );
          kprintf( "i5: %lu\r\n", i5 );
          kprintf( "i3: %lu\r\n", i3 );
-         if( i5 < 3 ) {
+         if( i5.value < 3 ) {
             kprintf( GREEN( "%s: i5 < 3" ) "\r\n", name );
             break;
          }
@@ -226,8 +226,8 @@ kprintf( "i3: %lu\r\n", i3 );
       kprintf( "%s: seq: %d\r\n", name, x[3] );
       //hexdump( x, 205 );
       dump( x, 205 );
-i5 = ADC4CH5.read();
-i3 = ADC4CH3.read();
+(void)ADC4CH5.read( &i5 );
+(void)ADC4CH3.read( &i3 );
 kprintf( "i5: %lu\r\n", i5 );
 kprintf( "i3: %lu\r\n", i3 );
    }

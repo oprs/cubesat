@@ -21,26 +21,6 @@ namespace qb50 {
 
       private:
 
-#if 0
-         class AX25Handler : public GPIOHandler
-         {
-
-            public:
-
-               AX25Handler( FIFO<bool>& fifo );
-               ~AX25Handler();
-
-               void handle( EXTI::EXTIn );
-
-            private:
-
-               FIFO<bool>& _fifo;
-               NRZI        _nrzi;
-               Scrambler   _sblr;
-
-         };
-#endif
-
          uint8_t *_x;
 
    };

@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "AX25TX.h"
+#include "Baseband.h"
 
 using namespace qb50;
 
@@ -105,17 +106,27 @@ AX25TX& AX25TX::init( void )
 }
 
 
+#define POWPIN PC5
+
 AX25TX& AX25TX::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
-PC5.on(); // P1
    //unsigned p = CONF.getParam( Config::PARAM_WODEX_POWER );
+POWPIN.on();
 
+#ifdef TEST_GERARD
+   /* no TX, no PA */
+#else
+ #if 0
    PB15.on(); // TX
+   delay( 10 * 1000 );
    PB13.on(); // PA
-   PC10.on(); // CLK_9600
+ #endif
+   BB.enable();
+#endif
+   PC10.on(); // ON_OFF_9600
 
    if( !silent )
       kprintf( "%s: enabled\r\n", _name );
@@ -130,10 +141,17 @@ AX25TX& AX25TX::disable( bool silent )
       return *this;
 
    PC10.off(); // CLK_9600
+#ifdef TEST_GERARD
+   /* no TX, no PA */
+#else
+ #if 0
    PB13.off(); // PA
    PB15.off(); // TX
+ #endif
+   BB.disable();
+#endif
 
-PC5.off(); // P1
+POWPIN.off();
 
    if( !silent )
       kprintf( "%s: disabled\r\n", _name );

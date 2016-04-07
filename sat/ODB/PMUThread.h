@@ -24,8 +24,9 @@ namespace qb50 {
 
          enum Mode { LOW = 0, HIGH = 1 };
 
-         adcval_t *_raw;
-         adcval_t *_sum;
+         SensorSample<uint8_t> *_raw;
+         SensorSample<uint8_t> *_sum;
+
          unsigned  _cur;
          bool      _rdy;
 

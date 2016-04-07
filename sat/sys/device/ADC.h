@@ -3,12 +3,12 @@
 #define _QB50_SYS_DEVICE_ADC_H
 
 #include "Device.h"
+#include "Sensor.h"
 
 
 namespace qb50 {
 
-   typedef uint16_t adcval_t;
-
+   template<class T>
    class ADC
    {
 
@@ -26,8 +26,7 @@ namespace qb50 {
          virtual ~ADC()
          { ; }
 
-         virtual adcval_t read    ( Channel& ch  ) = 0;
-       //virtual adcval_t read    ( unsigned cid ) = 0;
+         virtual ADC& read ( Channel& ch, SensorSample<T> *sample ) = 0;
 
    };
 

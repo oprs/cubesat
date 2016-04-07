@@ -39,7 +39,7 @@ namespace qb50 {
     };
 
     struct test_adc{
-        uint16_t adc_temp[5];
+        SensorSample<uint16_t> adc_temp[5];
     };
 
     struct moment_mag{

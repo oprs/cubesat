@@ -11,7 +11,7 @@
 
 namespace qb50{
 
-   class STM32_ADC : public STM32_Device, public ADC
+   class STM32_ADC : public STM32_Device, public ADC<uint16_t>
    {
 
       public:
@@ -44,7 +44,7 @@ namespace qb50{
          STM32_ADC& init    ( void );
          STM32_ADC& enable  ( bool silent = false );
          STM32_ADC& disable ( bool silent = false );
-         adcval_t   read    ( ADC::Channel& ch );
+         STM32_ADC& read    ( ADC::Channel& ch, SensorSample<uint16_t> *sample );
 
 
       protected:

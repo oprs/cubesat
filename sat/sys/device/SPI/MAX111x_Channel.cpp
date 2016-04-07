@@ -35,7 +35,6 @@ MAX111x::Channel::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
- //_adc.enable( silent )
    MAX111x& adc = static_cast<MAX111x&>( _adc );
    adc.enable( silent );
 
@@ -49,7 +48,6 @@ MAX111x::Channel::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
- //_adc.disable( silent )
    MAX111x& adc = static_cast<MAX111x&>( _adc );
    adc.disable( silent );
 

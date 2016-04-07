@@ -18,7 +18,7 @@ void testThreadADC()
         kprintf( "[DATA ADC]\r\n" );
 
         for( i = 0 ; i < 9 ; ++i )
-            Current_state.TADC.adc_temp[i] = ch[i]->read();
+            (void)ch[i]->read( &Current_state.TADC.adc_temp[i] );
 
         kprintf( "SUN sensors: [ %d, %d, %d, %d, %d, %d, %d, %d ]\r\n",
                   Current_state.TADC.adc_temp[0],

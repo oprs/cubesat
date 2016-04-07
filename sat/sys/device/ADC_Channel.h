@@ -7,7 +7,7 @@
 #endif
 
 
-class Channel
+class Channel : public Sensor<T>
 {
 
    public:
@@ -20,8 +20,14 @@ class Channel
       virtual ~Channel()
       { ; }
 
-      inline adcval_t read( void ) __attribute__(( always_inline ))
-      { return _adc.read( *this ); }
+
+   protected:
+
+      Channel& _readRaw( SensorSample<T> *sample )
+      {
+         (void)_adc.read( *this, sample );
+         return *this;
+      }
 
 };
 

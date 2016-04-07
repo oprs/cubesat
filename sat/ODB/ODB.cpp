@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "AX25/AX25TX.h"
+#include "Baseband.h"
 
 using namespace qb50;
 
@@ -63,7 +64,7 @@ ODB& ODB::init( void )
    VFLASH.init();
    FCACHE.init();
  //WDB.init();
-   RFTX.init();
+   BB.init();
    AX25.init();
 
    _selPin.in().noPull();

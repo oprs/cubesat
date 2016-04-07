@@ -15,6 +15,13 @@ extern QueueHandle_t evQueue;
 #define DEPTH 5
 #define COEF( x ) ( (float)x / DEPTH )
 
+/*
+struct Reading
+{
+   bool         valid;
+   SensorSample value;
+};
+*/
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -25,8 +32,8 @@ PMUThread::PMUThread()
      _modeBat( HIGH ),
      _modePA( LOW )
 {
-   _raw = new adcval_t[ 32 * DEPTH ];
-   _sum = new adcval_t[ 32 ];
+   _raw = new SensorSample<uint8_t>[ 32 * DEPTH ];
+   _sum = new SensorSample<uint8_t>[ 32 ];
    _cur = 0;
    _rdy = false;
 }
@@ -85,10 +92,28 @@ void PMUThread::run( void )
 
       /* update sums */
 
-      adcval_t *v = _raw + 32 * _cur;
+      SensorSample<uint8_t> *v = _raw + 32 * _cur;
 
       for( i = 0 ; i < 32 ; ++i )
-         _sum[ i ] -= v[ i ];
+         _sum[ i ].value -= v[ i ].value;
+
+SensorSample<uint8_t> tbat;
+(void)ADC1CH6.read( &tbat );
+kprintf( "T_BAT: %d (sensor)\r\n", tbat.value );
+
+SensorSample<uint8_t> vbat;
+(void)ADC1CH7.read( &vbat );
+if( vbat.steady ) {
+   kprintf( "V_BAT: %d (sensor): " GREEN( "OK" ) "\r\n", vbat.value );
+} else {
+   kprintf( "V_BAT: %d (sensor): " RED( "ERROR" ) "\r\n", vbat.value );
+}
+
+/*
+SensorSample<uint8_t> tpa;
+(void)ADC3CH7.read( &tpa );
+kprintf( "T_PA: %d (sensor)\r\n", tbat );
+*/
 
       ADC1.readAll( v      );
       ADC2.readAll( v +  8 );
@@ -96,7 +121,7 @@ void PMUThread::run( void )
       ADC4.readAll( v + 24 );
 
       for( i = 0 ; i < 32 ; ++i )
-         _sum[ i ] += v[ i ];
+         _sum[ i ].value += v[ i ].value;
 
       _cur = ( _cur + 1 ) % DEPTH;
 
@@ -107,7 +132,7 @@ void PMUThread::run( void )
          uint8_t raw8[ 32 ];
 
          for( i = 0 ; i < 32 ; ++i )
-            raw8[ i ] = (uint8_t)COEF( _sum[ i ] );
+            raw8[ i ] = (uint8_t)COEF( _sum[ i ].value );
 
          if(( n % 20 /*120*/ ) == 0 ) {
             (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
@@ -115,25 +140,25 @@ void PMUThread::run( void )
 
          /* conversions */
 
-         SAT.maI[ 0 ] = COEF( _sum[ 5] ) * 32.0 / 15.0;
-         SAT.mvV[ 0 ] = COEF( _sum[ 3] ) * 35.235952;
+         SAT.maI[ 0 ] = COEF( _sum[ 5].value ) * 32.0 / 15.0;
+         SAT.mvV[ 0 ] = COEF( _sum[ 3].value ) * 35.235952;
 
-         SAT.maI[ 1 ] = COEF( _sum[10] ) * 32.0 / 15.0;
-         SAT.mvV[ 1 ] = COEF( _sum[ 8] ) * 35.235952;
+         SAT.maI[ 1 ] = COEF( _sum[10].value ) * 32.0 / 15.0;
+         SAT.mvV[ 1 ] = COEF( _sum[ 8].value ) * 35.235952;
 
-         SAT.maI[ 2 ] = COEF( _sum[13] ) * 32.0 / 15.0;
-         SAT.mvV[ 2 ] = COEF( _sum[11] ) * 35.235952;
+         SAT.maI[ 2 ] = COEF( _sum[13].value ) * 32.0 / 15.0;
+         SAT.mvV[ 2 ] = COEF( _sum[11].value ) * 35.235952;
 
-         SAT.maI[ 3 ] = COEF( _sum[ 1] ) * 32.0 / 15.0;
-         SAT.mvV[ 3 ] = COEF( _sum[ 0] ) * 35.235952;
+         SAT.maI[ 3 ] = COEF( _sum[ 1].value ) * 32.0 / 15.0;
+         SAT.mvV[ 3 ] = COEF( _sum[ 0].value ) * 35.235952;
 
-         SAT.maIRx    = COEF( _sum[18] ) * 0.32;
-         SAT.maITx    = COEF( _sum[19] ) * 3.20;
-         SAT.mvBat    = COEF( _sum[ 7] ) * 35.235952;
+         SAT.maIRx    = COEF( _sum[18].value ) * 0.32;
+         SAT.maITx    = COEF( _sum[19].value ) * 3.20;
+         SAT.mvBat    = COEF( _sum[ 7].value ) * 35.235952;
 
          /* battery temperature */
 
-         dK = 1.6 * COEF( _sum[6] );
+         dK = 1.6 * COEF( _sum[6].value );
          dC = dK - 273.15;
          SAT.dcBat = dC;
 
@@ -162,7 +187,7 @@ kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", v[6], dK, dC );
 
          /* check PA temperature */
 
-         dK = 1.6 * COEF( _sum[23] );
+         dK = 1.6 * COEF( _sum[23].value );
          dC = dK - 273.15;
          SAT.dcPA = dC;
 

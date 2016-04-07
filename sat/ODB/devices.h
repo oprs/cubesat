@@ -154,12 +154,6 @@ namespace qb50 {
    extern qb50::FlashArray VFLASH;
    extern qb50::FlashCache FCACHE;
 
-//  - - - - - - - - - - -  //
-//  T R A N S C E I V E R  //
-//  - - - - - - - - - - -  //
-
-   extern qb50::Transceiver RFTX;
-
 //  - - -  //
 //  O D B  //
 //  - - -  //

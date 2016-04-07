@@ -1,21 +1,23 @@
 
-#include "device/Transceiver.h"
-#include "system/Application.h"
-#include "system/Logger.h"
+#include "devices.h"
+#include "Baseband.h"
 
 using namespace qb50;
+
+
+Baseband qb50::BB( "BB", PB15, PB13 ); // global Baseband object
 
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Transceiver::Transceiver( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin )
+Baseband::Baseband( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin )
    : Device( name ), _enTXPin( enTXPin ), _enPAPin( enPAPin )
 { ; }
 
 
-Transceiver::~Transceiver()
+Baseband::~Baseband()
 { ; }
 
 
@@ -23,9 +25,9 @@ Transceiver::~Transceiver()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-Transceiver& Transceiver::init( void )
+Baseband& Baseband::init( void )
 {
-   kprintf( "%s: AMSAT-F Radio Board (F6FAO), enTX: %s, enPA: %s\r\n",
+   kprintf( "%s: AMSAT-F Baseband Interface (F6FAO), enTX: %s, enPA: %s\r\n",
             _name, _enTXPin.name(), _enPAPin.name() );
 
    _enTXPin.out().off();
@@ -35,7 +37,7 @@ Transceiver& Transceiver::init( void )
 }
 
 
-Transceiver& Transceiver::enable( bool silent )
+Baseband& Baseband::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -56,7 +58,7 @@ Transceiver& Transceiver::enable( bool silent )
 }
 
 
-Transceiver& Transceiver::disable( bool silent )
+Baseband& Baseband::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
