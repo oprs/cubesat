@@ -104,7 +104,7 @@ MAX111x& MAX111x::disable( bool silent )
 }
 
 
-MAX111x& MAX111x::read( ADC::Channel& ch, SensorSample<uint8_t> *sample )
+MAX111x& MAX111x::read( ADC::Channel& ch, Sample *sample )
 {
    MAX111x::Channel& maxCh = static_cast<MAX111x::Channel&>( ch );
    float v1, v2, v3, v4;
@@ -148,7 +148,7 @@ MAX111x& MAX111x::read( ADC::Channel& ch, SensorSample<uint8_t> *sample )
 }
 
 
-MAX111x& MAX111x::readAll( SensorSample<uint8_t> *rvp )
+MAX111x& MAX111x::readAll( Sample *rvp )
 {
    _spi.lock();
    _select();

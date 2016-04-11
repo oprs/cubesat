@@ -18,6 +18,8 @@ namespace qb50 {
 
       public:
 
+         typedef SensorSample<uint8_t> Sample;
+
          /* channel selection */
 
          enum ChId {
@@ -40,8 +42,8 @@ namespace qb50 {
        //MAX111x& reset   ( void );
          MAX111x& enable  ( bool silent = false );
          MAX111x& disable ( bool silent = false );
-         MAX111x& read    ( ADC::Channel& ch, SensorSample<uint8_t> *sample );
-         MAX111x& readAll ( SensorSample<uint8_t> *rvp );
+         MAX111x& read    ( ADC::Channel& ch, Sample *sample );
+         MAX111x& readAll ( Sample *rvp );
 
    };
 

@@ -158,7 +158,7 @@ void FipexThread::test( void )
 {
    uint8_t *x = new uint8_t[ 256 ];
    char    *o = new char[ 32 ];
-   SensorSample<uint8_t> i3, i5;
+   MAX111x::Sample i3, i5;
    size_t   i, n;
 
    kprintf( "%s: FIPEX Functional Test Procedure\r\n", name );

@@ -32,8 +32,8 @@ PMUThread::PMUThread()
      _modeBat( HIGH ),
      _modePA( LOW )
 {
-   _raw = new SensorSample<uint8_t>[ 32 * DEPTH ];
-   _sum = new SensorSample<uint8_t>[ 32 ];
+   _raw = new MAX111x::Sample[ 32 * DEPTH ];
+   _sum = new MAX111x::Sample[ 32 ];
    _cur = 0;
    _rdy = false;
 }
@@ -92,28 +92,28 @@ void PMUThread::run( void )
 
       /* update sums */
 
-      SensorSample<uint8_t> *v = _raw + 32 * _cur;
+      MAX111x::Sample *v = _raw + 32 * _cur;
 
       for( i = 0 ; i < 32 ; ++i )
          _sum[ i ].value -= v[ i ].value;
 
-SensorSample<uint8_t> tbat;
+MAX111x::Sample tbat;
 (void)ADC1CH6.read( &tbat );
-kprintf( "T_BAT: %d (sensor)\r\n", tbat.value );
+//kprintf( "T_BAT: %d (sensor)\r\n", tbat.value );
 
-SensorSample<uint8_t> vbat;
+MAX111x::Sample vbat;
 (void)ADC1CH7.read( &vbat );
+/*
 if( vbat.steady ) {
    kprintf( "V_BAT: %d (sensor): " GREEN( "OK" ) "\r\n", vbat.value );
 } else {
    kprintf( "V_BAT: %d (sensor): " RED( "ERROR" ) "\r\n", vbat.value );
 }
-
-/*
-SensorSample<uint8_t> tpa;
-(void)ADC3CH7.read( &tpa );
-kprintf( "T_PA: %d (sensor)\r\n", tbat );
 */
+
+MAX111x::Sample tpa;
+(void)ADC3CH7.read( &tpa );
+//kprintf( "T_PA: %d (sensor)\r\n", tbat );
 
       ADC1.readAll( v      );
       ADC2.readAll( v +  8 );
@@ -158,11 +158,11 @@ kprintf( "T_PA: %d (sensor)\r\n", tbat );
 
          /* battery temperature */
 
-         dK = 1.6 * COEF( _sum[6].value );
+         dK = 1.6 * tbat.value;
          dC = dK - 273.15;
          SAT.dcBat = dC;
 
-kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", v[6], dK, dC );
+kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat.value, dK, dC );
 
          /* check battery voltage */
 
@@ -187,14 +187,14 @@ kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", v[6], dK, dC );
 
          /* check PA temperature */
 
-         dK = 1.6 * COEF( _sum[23].value );
+         dK = 1.6 * tpa.value;
          dC = dK - 273.15;
          SAT.dcPA = dC;
 
          min = 60.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_LOW  ));
          max = 73.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_HIGH ));
 
-kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", v[23], dK, dC );
+kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", tpa.value, dK, dC );
 
          if( SAT.dcPA <= max ) {
             if( SAT.dcPA <= min ) {

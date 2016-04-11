@@ -98,8 +98,7 @@ void CTCSS::modeRelaisFM()
             for( int k = 0; k < 20; k++ )
             {
 
-
-                SensorSample<uint8_t> T_PA;
+                MAX111x::Sample T_PA;
 
                 (void)ADC3CH7.read( &T_PA );
                 T_PA.value -= 273;

@@ -13,9 +13,10 @@
 #include <cstdarg>
 
 
-#define RED( MSG ) "\033[31;1m" MSG "\033[0m"
-#define GREEN( MSG ) "\033[32;1m" MSG "\033[0m"
-#define WHITE( MSG ) "\033[1m" MSG "\033[0m"
+#define RED( MSG )    "\033[31;1m" MSG "\033[0m"
+#define GREEN( MSG )  "\033[32;1m" MSG "\033[0m"
+#define YELLOW( MSG ) "\033[33;1m" MSG "\033[0m"
+#define WHITE( MSG )  "\033[1m" MSG "\033[0m"
 
 #define kprintf SYSLOG.printf
 
