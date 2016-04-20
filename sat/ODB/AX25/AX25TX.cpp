@@ -84,13 +84,6 @@ AX25TX& AX25TX::init( void )
    PC9  . in()  . noPull();   // CLK_9600
    PC8  . out() . off();      // DATA_9600
    PC10 . out() . off();      // ON/OFF_9600
-   PB15 . out() . off();      // TX
-   PB13 . out() . off();      // PA
-
-   PC5  . out() . off();      // P1
-   PB0  . out() . off();      // P2
-   PB1  . out() . off();      // P3
-   PA1  . out() . off();      // P4
 
    EXTI.registerHandler( PC9, this, STM32_EXTI::RISING );
 
@@ -106,26 +99,12 @@ AX25TX& AX25TX::init( void )
 }
 
 
-#define POWPIN PC5
-
 AX25TX& AX25TX::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
-   //unsigned p = CONF.getParam( Config::PARAM_WODEX_POWER );
-POWPIN.on();
-
-#ifdef TEST_GERARD
-   /* no TX, no PA */
-#else
- #if 0
-   PB15.on(); // TX
-   delay( 10 * 1000 );
-   PB13.on(); // PA
- #endif
    BB.enable();
-#endif
    PC10.on(); // ON_OFF_9600
 
    if( !silent )
@@ -141,17 +120,7 @@ AX25TX& AX25TX::disable( bool silent )
       return *this;
 
    PC10.off(); // CLK_9600
-#ifdef TEST_GERARD
-   /* no TX, no PA */
-#else
- #if 0
-   PB13.off(); // PA
-   PB15.off(); // TX
- #endif
    BB.disable();
-#endif
-
-POWPIN.off();
 
    if( !silent )
       kprintf( "%s: disabled\r\n", _name );

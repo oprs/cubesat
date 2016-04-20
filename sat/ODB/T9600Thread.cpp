@@ -1,12 +1,10 @@
 
-#include "TelemThread.h"
+#include "T9600Thread.h"
 #include "Event.h"
 #include "WodStore.h"
 #include "Config.h"
 #include "devices.h"
 #include "AX25/AX25TX.h"
-
-#include <cstring> // XXX out!
 
 using namespace qb50;
 
@@ -17,14 +15,14 @@ extern QueueHandle_t evQueue;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-TelemThread::TelemThread()
-   : Thread( "Telem", 1, SUSPENDED, 512 )
+T9600Thread::T9600Thread()
+   : Thread( "T9600", 1, SUSPENDED, 512 )
 {
    _x = new uint8_t[ 256 ];
 }
 
 
-TelemThread::~TelemThread()
+T9600Thread::~T9600Thread()
 {
    delete[] _x;
 }
@@ -34,7 +32,7 @@ TelemThread::~TelemThread()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void TelemThread::onSuspend( void )
+void T9600Thread::onSuspend( void )
 {
    AX25.disable();
    WOD.disable();
@@ -42,7 +40,7 @@ void TelemThread::onSuspend( void )
 }
 
 
-void TelemThread::onResume( void )
+void T9600Thread::onResume( void )
 {
    Thread::onResume();
    WOD.enable();
@@ -50,23 +48,13 @@ void TelemThread::onResume( void )
 }
 
 
-void TelemThread::run( void )
+void T9600Thread::run( void )
 {
    WodStore::WEH hdr;
 
    for( ;; ) {
 
       _wait();
-
-#ifdef TEST_GERARD
-
-      (void)hdr;
-      kprintf( "transmit\r\n" );
-
-      AX25.sendUI( (const uint8_t *)"test123 hello", 13 );
-      delay( 1000 );
-
-#else
 
       delay( 2000 );
 
@@ -89,15 +77,12 @@ void TelemThread::run( void )
          kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
          AX25.sendUIH( _x, hdr.len - sizeof( WodStore::WEH ));
-         (void)WOD.read( &hdr, _x );
+         (void)WOD.read( &hdr, _x ); // XXX wow wow wow...
 
          delay( 500 );
+
       }
-
-#endif
-
    }
 }
-
 
 /*EoF*/

@@ -1,19 +1,19 @@
 
-#ifndef _QB50_TELEM_THREAD_H
-#define _QB50_TELEM_THREAD_H
+#ifndef _QB50_T9600_THREAD_H
+#define _QB50_T9600_THREAD_H
 
 #include "system/qb50.h"
 
 
 namespace qb50 {
 
-   class TelemThread : public Thread
+   class T9600Thread : public Thread
    {
 
       public:
 
-         TelemThread();
-         ~TelemThread();
+         T9600Thread();
+         ~T9600Thread();
 
          void run       ( void );
          void onSuspend ( void );
@@ -28,6 +28,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_TELEM_THREAD_H*/
+#endif /*_QB50_T9600_THREAD_H*/
 
 /*EoF*/

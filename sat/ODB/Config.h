@@ -69,22 +69,22 @@ namespace qb50 {
          //  - - - - -  //
 
          enum Mode {
-            INIT   = 0x00,
-            CW     = 0x01,
-            WODEX  = 0x02,
-            AMEAS  = 0x03,
-            DTMB   = 0x04,
-            ACTRL  = 0x05,
-            FIPEX  = 0x06,
-            FM     = 0x07,
-            STDBY  = 0x08,
-            TELEM  = 0x09,
-            GPS    = 0x0a,
-          //(11)   = 0x0b,
-            POWER  = 0x0c,
-          //(13)   = 0x0d,
-            TEST1  = 0x0e,
-            TEST2  = 0x0f
+            INIT      = 0x00,
+            CW        = 0x01,
+            WODEX     = 0x02,
+            AMEAS     = 0x03,
+            DTMB      = 0x04,
+            ACTRL     = 0x05,
+            FIPEX     = 0x06,
+            FM        = 0x07,
+            STDBY     = 0x08,
+            TELEM9600 = 0x09,
+            TELEM1200 = 0x0a,
+          //(11)      = 0x0b,
+            POWER     = 0x0c,
+          //(13)      = 0x0d,
+            TEST1     = 0x0e,
+            TEST2     = 0x0f
          };
 
          static const char *modes[ _QB50_NMODES ];

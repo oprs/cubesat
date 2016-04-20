@@ -6,10 +6,11 @@
 #include "InitThread.h"
 #include "CWThread.h"
 #include "WodexThread.h"
-#include "GPSThread.h"
+//#include "GPSThread.h"
 #include "FiPEX/FipexThread.h"
 #include "PMUThread.h"
-#include "TelemThread.h"
+#include "T9600Thread.h"
+#include "T1200Thread.h"
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
 #include "TestThread.h"
@@ -26,30 +27,30 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
   /* +-------------- TestThread
      |+------------- ADCSThread
      ||+------------ CTCSSThread
-     |||+----------- TelemThread
-     ||||+---------- CWThread
-     |||||+--------- FipexThread
-     ||||||+-------- GPSThread
+     |||+----------- T9600Thread
+     ||||+---------- T1200Thread
+     |||||+--------- CWThread
+     ||||||+-------- FipexThread
      |||||||+------- WodexThread
      ||||||||+------ PMUThread
      |||||||||+----- InitThread
      |||||||||| */
-   0b0000000001, /* mode INIT   */
-   0b0000100010, /* mode CW     */
-   0b0000000110, /* mode WODEX  */
-   0b0100000010, /* mode AMEAS  */
-   0b0100000010, /* mode DTMB   */
-   0b0100000010, /* mode ACTRL  */
-   0b0000010010, /* mode FIPEX  */
-   0b0010000010, /* mode FM     */
-   0b0000000000, /* mode STDBY  */
-   0b0001000010, /* mode TELEM  */
-   0b0000001010, /* mode GPS    */
-   0b0000000010, /* mode (11)   */
-   0b0000000010, /* mode POWER  */
-   0b0000000010, /* mode (13)   */
-   0b1001000000, /* mode TEST1  */
-   0b1000000000  /* mode TEST2  */
+   0b0000000001, /* mode INIT      */
+   0b0000010010, /* mode CW        */
+   0b0000000110, /* mode WODEX     */
+   0b0100000010, /* mode AMEAS     */
+   0b0100000010, /* mode DTMB      */
+   0b0100000010, /* mode ACTRL     */
+   0b0000001010, /* mode FIPEX     */
+   0b0010000010, /* mode FM        */
+   0b0000000000, /* mode STDBY     */
+   0b0001000010, /* mode TELEM9600 */
+   0b0000100010, /* mode TEKEM1200 */
+   0b0000000010, /* mode (11)      */
+   0b0000000010, /* mode POWER     */
+   0b0000000010, /* mode (13)      */
+   0b1001000000, /* mode TEST1     */
+   0b1000000000  /* mode TEST2     */
 };
 
 
@@ -65,10 +66,10 @@ ControlThread::ControlThread()
    _tv[ 0 ] = new InitThread();
    _tv[ 1 ] = new PMUThread();
    _tv[ 2 ] = new WodexThread();
-   _tv[ 3 ] = new GPSThread();
-   _tv[ 4 ] = new FipexThread();
-   _tv[ 5 ] = new CWThread();
-   _tv[ 6 ] = new TelemThread();
+   _tv[ 3 ] = new FipexThread();
+   _tv[ 4 ] = new CWThread();
+   _tv[ 5 ] = new T1200Thread();
+   _tv[ 6 ] = new T9600Thread();
    _tv[ 7 ] = new CTCSSThread();
    _tv[ 8 ] = new ADCSThread();
    _tv[ 9 ] = new TestThread();
@@ -222,7 +223,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
          case Event::WOD_EMPTY:
 
-            if( mode == Config::TELEM ) {
+            if(( mode == Config::TELEM9600 ) || ( mode == Config::TELEM1200 )) {
                _switchModes( Config::WODEX );
             }
 
@@ -399,7 +400,7 @@ void ControlThread::_handleCForm( CForm *fp )
 
          break;
 
-      /* C9 - passage en mode télémétrie */
+      /* C9 - passage en mode télémétrie PSK9600 */
 
       case 9:
 
@@ -409,13 +410,13 @@ void ControlThread::_handleCForm( CForm *fp )
             (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
          }
 
-         if( mode != Config::TELEM ) {
-            _switchModes( Config::TELEM );
+         if( mode != Config::TELEM9600 ) {
+            _switchModes( Config::TELEM9600 );
          }
 
          break;
 
-      /* C10 - passage en mode GPS */
+      /* C10 - passage en mode télémétrie AFSK1200 */
 
       case 10:
 
@@ -425,8 +426,8 @@ void ControlThread::_handleCForm( CForm *fp )
             (void)CONF.setParam( Config::PARAM_GPS_CYCLE_ON, fp->argv[1] );
          }
 
-         if( mode != Config::GPS ) {
-            _switchModes( Config::GPS );
+         if( mode != Config::TELEM1200 ) {
+            _switchModes( Config::TELEM1200 );
          }
 
          break;
@@ -443,7 +444,7 @@ void ControlThread::_handleCForm( CForm *fp )
 
          kprintf( "FORM C12\r\n" );
 
-         if( mode != Config::GPS ) {
+         if( mode != Config::TELEM9600 ) {
             _switchModes( Config::WODEX );
          }
 

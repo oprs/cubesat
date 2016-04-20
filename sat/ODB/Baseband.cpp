@@ -30,17 +30,26 @@ Baseband& Baseband::init( void )
    kprintf( "%s: AMSAT-F Baseband Interface (F6FAO), enTX: %s, enPA: %s\r\n",
             _name, _enTXPin.name(), _enPAPin.name() );
 
-   _enTXPin.out().off();
-   _enPAPin.out().off();
+   _enTXPin . out() . off();  // TX
+   _enPAPin . out() . off();  // PA
+   PC3      . out() . off();  // ON/OFF_GPS
+   PC5      . out() . off();  // P1
+   PB0      . out() . off();  // P2
+   PB1      . out() . off();  // P3
+   PA1      . out() . off();  // P4
 
    return *this;
 }
 
+#define POWPIN PC5
 
 Baseband& Baseband::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
+
+   //unsigned p = CONF.getParam( Config::PARAM_WODEX_POWER );
+   POWPIN.on();
 
    _enTXPin.on();
    if( !silent ) {
@@ -65,6 +74,11 @@ Baseband& Baseband::disable( bool silent )
 
    _enPAPin.off();
    _enTXPin.off();
+
+   PC5.off();
+   PB0.off();
+   PB1.off();
+   PA1.off();
 
    if( !silent ) {
       kprintf( "%s: disabled\r\n", _name );

@@ -143,9 +143,6 @@ MAX111x::Sample tpa;
          SAT.maI[ 0 ] = COEF( _sum[ 5].value ) * 32.0 / 15.0;
          SAT.mvV[ 0 ] = COEF( _sum[ 3].value ) * 35.235952;
 
-         SAT.maI[ 1 ] = COEF( _sum[10].value ) * 32.0 / 15.0;
-         SAT.mvV[ 1 ] = COEF( _sum[ 8].value ) * 35.235952;
-
          SAT.maI[ 2 ] = COEF( _sum[13].value ) * 32.0 / 15.0;
          SAT.mvV[ 2 ] = COEF( _sum[11].value ) * 35.235952;
 
@@ -154,7 +151,7 @@ MAX111x::Sample tpa;
 
          SAT.maIRx    = COEF( _sum[18].value ) * 0.32;
          SAT.maITx    = COEF( _sum[19].value ) * 3.20;
-         SAT.mvBat    = COEF( _sum[ 7].value ) * 35.235952;
+         SAT.mvBat    = vbat.value * 35.24;
 
          /* battery temperature */
 
@@ -162,9 +159,11 @@ MAX111x::Sample tpa;
          dC = dK - 273.15;
          SAT.dcBat = dC;
 
-kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat.value, dK, dC );
+//kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat.value, dK, dC );
 
          /* check battery voltage */
+
+//kprintf( "V_BAT: %d - %dmV\r\n", vbat.value, SAT.mvBat );
 
          min = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
          max = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));

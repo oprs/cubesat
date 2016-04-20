@@ -2,6 +2,7 @@
 #include "CTCSSThread.h"
 #include "Config.h"
 #include "devices.h"
+#include "Baseband.h"
 
 using namespace qb50;
 
@@ -30,6 +31,7 @@ CTCSSThread::~CTCSSThread()
 void CTCSSThread::onSuspend( void )
 {
    PB12.off();
+   BB.disable();
    Thread::onSuspend();
 }
 
@@ -63,16 +65,70 @@ void CTCSSThread::run( void )
 
    EXTI.registerHandler( PA8, this, STM32_EXTI::BOTH );
 
+#if 0
+   int cnt = 0;
+   int state = 0;
+
+   for( ;; ) {
+      _wait();
+
+      switch( state ) {
+
+         case 0: // attente DEC_Tone
+            vp = xSemaphoreTake( _semCTCSS, 1000 / portTICK_RATE_MS );
+            if( vp == pdPASS ) {
+               if( !PA8.read() ) {
+                  kprintf( RED( "CTCSS ON" ) "\r\n" );
+                  PB12.off(); // disable DEC_Tone
+                  BB.enable();
+                  state = 1;
+                  cnt   = 0;
+               }
+            } else {
+               kprintf( "waiting for CTCSS...\r\n" );
+            }
+            break;
+
+         case 1:
+
+            if( cnt < 20 ) {
+               delay( 1000 );
+            } else {
+               kprintf( RED( "CTCSS OFF" ) "\r\n" );
+               BB.disable();
+               PB12.on(); // enable DEC_Tone
+               state = 0;
+            }
+
+            ++cnt;
+            break;
+
+         default:
+            break;
+
+      }
+   }
+
+#else
+
    for( ;; ) {
       _wait();
 
       vp = xSemaphoreTake( _semCTCSS, 1000 / portTICK_RATE_MS );
-      if ( vp == pdPASS ) {
-         kprintf( RED( "CTCSS" ) "\r\n" );
+      if( vp == pdPASS ) {
+         if( PA8.read() ) {
+            kprintf( RED( "CTCSS OFF" ) "\r\n" );
+            BB.disable();
+         } else {
+            kprintf( RED( "CTCSS ON" ) "\r\n" );
+            BB.enable();
+         }
       } else {
          kprintf( "waiting for CTCSS...\r\n" );
       }
    }
+
+#endif
 
    // XXX EXTI.removeHandler()
 }

@@ -93,7 +93,7 @@ ODB::AntState ODB::aState( void )
    }
 
    return
-      _asPin.read() ? ODB::RETRACTED : ODB::DEPLOYED;
+      _asPin.read() ? ODB::DEPLOYED : ODB::RETRACTED;
 }
 
 

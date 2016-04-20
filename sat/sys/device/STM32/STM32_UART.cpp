@@ -163,12 +163,14 @@ size_t STM32_UART::write( const void *x, size_t len, int toms )
 
    while( n < len ) {
       if( _txFIFO.isFull() ) {
-         xSemaphoreTake( _isrTXE, tk );
+         if( xSemaphoreTake( _isrTXE, tk ) == pdFALSE ) {
+            return 0; /* timeout */
+         }
          continue;
       }
       (void)_txFIFO.push( ((uint8_t*)x)[ n++ ] );
+      USARTx->CR1 |= USART_CR1_TXEIE;
    }
-   USARTx->CR1 |= USART_CR1_TXEIE;
 
    //unlock(); XXX
 
