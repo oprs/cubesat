@@ -31,13 +31,14 @@ namespace qb50 {
 
       protected:
 
-         const int     _nSlaves;
-         FlashMemory **_slaves;
+         const unsigned _nSlaves;
+         FlashMemory  **_slaves;
 
-         uint32_t      _mask; /* mask for the address part    */
-         unsigned      _shft; /* bits to shift for the chip # */
+         uint32_t       _mask; /* mask for the address part    */
+         unsigned       _shft; /* bits to shift for the chip # */
 
-         unsigned log2( uint32_t u );
+         unsigned log2  ( uint32_t u    );
+         unsigned getSn ( uint32_t addr );
 
    };
 

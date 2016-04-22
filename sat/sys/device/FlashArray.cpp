@@ -29,11 +29,12 @@ FlashArray& FlashArray::init( void )
    FlashMemory::Geometry geo;
 
    // XXX check that _nSlaves > 0
+   // XXX check that ( _nSlaves & ( _nSlaves - 1 )) == 0
 
    _slaves[0]->init();
    _slaves[0]->geometry( &_geo );
 
-   for( int i = 1 ; i < _nSlaves ; ++i ) {
+   for( unsigned i = 1 ; i < _nSlaves ; ++i ) {
       _slaves[i]->init();
       _slaves[i]->geometry( &geo );
       // XXX check that geo.ppb == _geo.ppb
@@ -61,7 +62,7 @@ FlashArray& FlashArray::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   for( int i = 0 ; i < _nSlaves ; ++i )
+   for( unsigned i = 0 ; i < _nSlaves ; ++i )
       _slaves[i]->enable( silent );
 
    if( !silent )
@@ -76,7 +77,7 @@ FlashArray& FlashArray::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-   for( int i = 0 ; i < _nSlaves ; ++i )
+   for( unsigned i = 0 ; i < _nSlaves ; ++i )
       _slaves[i]->disable( silent );
 
    if( !silent )
@@ -90,7 +91,7 @@ FlashArray& FlashArray::disable( bool silent )
 
 FlashArray& FlashArray::pageRead( uint32_t addr, void *x )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->pageRead( addr & _mask, x );
 
    return *this;
@@ -99,7 +100,7 @@ FlashArray& FlashArray::pageRead( uint32_t addr, void *x )
 
 FlashArray& FlashArray::pageWrite( uint32_t addr, const void *x )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->pageWrite( addr & _mask, x );
 
    return *this;
@@ -108,7 +109,7 @@ FlashArray& FlashArray::pageWrite( uint32_t addr, const void *x )
 
 FlashArray& FlashArray::sectorErase( uint32_t addr )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->sectorErase( addr & _mask );
 
    return *this;
@@ -117,7 +118,7 @@ FlashArray& FlashArray::sectorErase( uint32_t addr )
 
 FlashArray& FlashArray::sectorRead( uint32_t addr, void *x )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->sectorRead( addr & _mask, x );
 
    return *this;
@@ -126,7 +127,7 @@ FlashArray& FlashArray::sectorRead( uint32_t addr, void *x )
 
 FlashArray& FlashArray::sectorWrite( uint32_t addr, const void *x )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->sectorWrite( addr & _mask, x );
 
    return *this;
@@ -135,7 +136,7 @@ FlashArray& FlashArray::sectorWrite( uint32_t addr, const void *x )
 
 FlashArray& FlashArray::blockErase( uint32_t addr )
 {
-   unsigned sn = addr >> _shft;
+   unsigned sn = getSn( addr );
    _slaves[ sn ]->blockErase( addr & _mask );
 
    return *this;
@@ -157,6 +158,19 @@ unsigned FlashArray::log2( uint32_t u )
    if( u & 0x00000002 /* 00000000000000000000000000000010 */ ) { u >>=  1; r |= 0x01; }
 
    return r;
+}
+
+
+unsigned FlashArray::getSn( uint32_t addr )
+{
+   unsigned sn = ( addr >> _shft );
+
+   if( sn >= _nSlaves ) {
+      kprintf( RED( "%s: invalid slave %u/%u requested" ) "\r\n", _name, sn, _nSlaves );
+      sn %= _nSlaves;
+   }
+
+   return sn;
 }
 
 

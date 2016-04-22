@@ -12,17 +12,6 @@ using namespace qb50;
 extern QueueHandle_t evQueue;
 
 
-#define DEPTH 5
-#define COEF( x ) ( (float)x / DEPTH )
-
-/*
-struct Reading
-{
-   bool         valid;
-   SensorSample value;
-};
-*/
-
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -32,16 +21,16 @@ PMUThread::PMUThread()
      _modeBat( HIGH ),
      _modePA( LOW )
 {
-   _raw = new MAX111x::Sample[ 32 * DEPTH ];
-   _sum = new MAX111x::Sample[ 32 ];
-   _cur = 0;
-   _rdy = false;
+   _raw  = new MAX111x::Sample[ 32 ];
+   _raw8 = new uint8_t[ 32 ];
+   _cur  = 0;
+   _rdy  = false;
 }
 
 
 PMUThread::~PMUThread()
 {
-   delete[] _sum;
+   delete[] _raw8;
    delete[] _raw;
 }
 
@@ -79,7 +68,6 @@ void PMUThread::onResume( void )
 
 void PMUThread::run( void )
 {
-   float dK, dC; // degres (Kelvin/Celsius)
    float min, max;
 
    unsigned i, n;
@@ -90,88 +78,76 @@ void PMUThread::run( void )
 
       _wait();
 
-      /* update sums */
+      /* update samples */
 
-      MAX111x::Sample *v = _raw + 32 * _cur;
+      (void)ADC1CH0.read( &_raw[ SAMPLE_V4          ]);
+      (void)ADC1CH1.read( &_raw[ SAMPLE_I4          ]);
+      (void)ADC1CH2.read( &_raw[ SAMPLE_T4          ]);
+      (void)ADC1CH3.read( &_raw[ SAMPLE_V1          ]);
+      (void)ADC1CH4.read( &_raw[ SAMPLE_T1          ]);
+      (void)ADC1CH5.read( &_raw[ SAMPLE_I1          ]);
+      (void)ADC1CH6.read( &_raw[ SAMPLE_T_Bat       ]);
+      (void)ADC1CH7.read( &_raw[ SAMPLE_V_Bat       ]);
 
-      for( i = 0 ; i < 32 ; ++i )
-         _sum[ i ].value -= v[ i ].value;
+      (void)ADC2CH0.read( &_raw[ SAMPLE_V2          ]);
+      (void)ADC2CH1.read( &_raw[ SAMPLE_T2          ]);
+      (void)ADC2CH2.read( &_raw[ SAMPLE_I2          ]);
+      (void)ADC2CH3.read( &_raw[ SAMPLE_V3          ]);
+      (void)ADC2CH4.read( &_raw[ SAMPLE_T3          ]);
+      (void)ADC2CH5.read( &_raw[ SAMPLE_I3          ]);
+      (void)ADC2CH6.read( &_raw[ SAMPLE_I_Surt      ]);
+      (void)ADC2CH7.read( &_raw[ SAMPLE_X0          ]);
 
-MAX111x::Sample tbat;
-(void)ADC1CH6.read( &tbat );
-//kprintf( "T_BAT: %d (sensor)\r\n", tbat.value );
+      (void)ADC3CH0.read( &_raw[ SAMPLE_I_ADCS      ]);
+      (void)ADC3CH1.read( &_raw[ SAMPLE_T_ARM       ]);
+      (void)ADC3CH2.read( &_raw[ SAMPLE_I_RX        ]);
+      (void)ADC3CH3.read( &_raw[ SAMPLE_RSSI        ]);
+      (void)ADC3CH4.read( &_raw[ SAMPLE_I_TX        ]);
+      (void)ADC3CH5.read( &_raw[ SAMPLE_P_TX        ]);
+      (void)ADC3CH6.read( &_raw[ SAMPLE_P_PA        ]);
+      (void)ADC3CH7.read( &_raw[ SAMPLE_T_PA        ]);
 
-MAX111x::Sample vbat;
-(void)ADC1CH7.read( &vbat );
-/*
-if( vbat.steady ) {
-   kprintf( "V_BAT: %d (sensor): " GREEN( "OK" ) "\r\n", vbat.value );
-} else {
-   kprintf( "V_BAT: %d (sensor): " RED( "ERROR" ) "\r\n", vbat.value );
-}
-*/
+      (void)ADC4CH0.read( &_raw[ SAMPLE_X1          ]);
+      (void)ADC4CH1.read( &_raw[ SAMPLE_I_GPS       ]);
+      (void)ADC4CH2.read( &_raw[ SAMPLE_X2          ]);
+      (void)ADC4CH3.read( &_raw[ SAMPLE_I_3V3_FIPEX ]);
+      (void)ADC4CH4.read( &_raw[ SAMPLE_V_3V3_FIPEX ]);
+      (void)ADC4CH5.read( &_raw[ SAMPLE_I_5V_FIPEX  ]);
+      (void)ADC4CH6.read( &_raw[ SAMPLE_V_5V_FIPEX  ]);
+      (void)ADC4CH7.read( &_raw[ SAMPLE_SU_TH_G0    ]);
 
-MAX111x::Sample tpa;
-(void)ADC3CH7.read( &tpa );
-//kprintf( "T_PA: %d (sensor)\r\n", tbat );
-
-      ADC1.readAll( v      );
-      ADC2.readAll( v +  8 );
-      ADC3.readAll( v + 16 );
-      ADC4.readAll( v + 24 );
-
-      for( i = 0 ; i < 32 ; ++i )
-         _sum[ i ].value += v[ i ].value;
-
-      _cur = ( _cur + 1 ) % DEPTH;
-
-      if( _rdy ) {
-
-         /* write WOD */
-
-         uint8_t raw8[ 32 ];
-
-         for( i = 0 ; i < 32 ; ++i )
-            raw8[ i ] = (uint8_t)COEF( _sum[ i ].value );
-
-         if(( n % 20 /*120*/ ) == 0 ) {
-            (void)WOD.write( WodStore::ADC, raw8, sizeof( raw8 ));
+      for( i = 0 ; i < 32 ; ++i ) {
+         if( !_raw[i].steady ) {
+            kprintf( RED( "%s: channel %u not steady" ) "\r\n", name, i );
+            _raw8[i] = 0;
+         } else {
+            _raw8[i] = _raw[i].value;
          }
+      }
 
-         /* conversions */
+      /* write WOD */
 
-         SAT.maI[ 0 ] = COEF( _sum[ 5].value ) * 32.0 / 15.0;
-         SAT.mvV[ 0 ] = COEF( _sum[ 3].value ) * 35.235952;
+#if 0
+      if(( n % 4 /*120*/ ) == 0 ) {
+         (void)WOD.write( WodStore::ADC, _raw8, 32 );
+      }
+#else
+      (void)WOD.write( WodStore::ADC, _raw8, 32 );
+#endif
 
-         SAT.maI[ 2 ] = COEF( _sum[13].value ) * 32.0 / 15.0;
-         SAT.mvV[ 2 ] = COEF( _sum[11].value ) * 35.235952;
+      /* check battery voltage */
 
-         SAT.maI[ 3 ] = COEF( _sum[ 1].value ) * 32.0 / 15.0;
-         SAT.mvV[ 3 ] = COEF( _sum[ 0].value ) * 35.235952;
-
-         SAT.maIRx    = COEF( _sum[18].value ) * 0.32;
-         SAT.maITx    = COEF( _sum[19].value ) * 3.20;
-         SAT.mvBat    = vbat.value * 35.24;
-
-         /* battery temperature */
-
-         dK = 1.6 * tbat.value;
-         dC = dK - 273.15;
-         SAT.dcBat = dC;
-
-//kprintf( "T_BAT: %d - %.2fdK - %.2fdC\r\n", tbat.value, dK, dC );
-
-         /* check battery voltage */
-
-//kprintf( "V_BAT: %d - %dmV\r\n", vbat.value, SAT.mvBat );
+      if( _raw[ SAMPLE_V_Bat ].steady ) {
+         float mvBat = 35.24 * _raw[ SAMPLE_V_Bat ].value;
 
          min = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
          max = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
 
-         if( SAT.mvBat <= max ) {
-            if( SAT.mvBat <= min ) {
+         if( mvBat <= max ) {
+            if( mvBat <= min ) {
                if( _modeBat != LOW ) {
                   Event *ev = new Event( Event::VBAT_LOW );
+kprintf( YELLOW( "%s: V_BAT: %.2fmV (raw: %u)" ) "\r\n", name, mvBat, _raw[ SAMPLE_V_Bat ].value );
                   xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
                   _modeBat = LOW;
                }
@@ -183,20 +159,21 @@ MAX111x::Sample tpa;
                _modeBat = HIGH;
             }
          }
+      }
 
-         /* check PA temperature */
+      /* check PA temperature */
 
-         dK = 1.6 * tpa.value;
-         dC = dK - 273.15;
-         SAT.dcPA = dC;
+      if( _raw[ SAMPLE_T_PA ].steady ) {
+         float dK = 1.6 * _raw[ SAMPLE_T_PA ].value;
+         float dC = dK - 273.15;
 
          min = 60.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_LOW  ));
          max = 73.0 + ( 2 * CONF.getParam( Config::PARAM_PA_TEMP_HIGH ));
 
-kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", tpa.value, dK, dC );
+kprintf( "T_PA: %.2fdK - %.2fdC (raw: %u)\r\n", dK, dC, _raw[ SAMPLE_T_PA ].value );
 
-         if( SAT.dcPA <= max ) {
-            if( SAT.dcPA <= min ) {
+         if( dC <= max ) {
+            if( dC <= min ) {
                if( _modePA != LOW ) {
                   Event *ev = new Event( Event::TPA_LOW );
                   xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
@@ -212,13 +189,8 @@ kprintf( " T_PA: %d - %.2fdK - %.2fdC\r\n", tpa.value, dK, dC );
          }
       }
 
-      else {
-         if( _cur == 0 ) {
-            _rdy = true;
-         }
-      }
-
       delay( 500 );
+
    }
 }
 

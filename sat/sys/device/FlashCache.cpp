@@ -88,7 +88,10 @@ FlashCache& FlashCache::read( uint32_t addr, void *x, size_t len )
 
    if( nb > len ) nb = len;
 
- //kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
+if( len > 1024 ) {
+   kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
+   for( ;; );
+}
 
    (void)lock();
 

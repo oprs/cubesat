@@ -75,15 +75,22 @@ void T1200Thread::run( void )
          Event *ev = new Event( Event::WOD_EMPTY );
          xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
 
+         delay( 500 );
+
       } else {
 
-         kprintf( "WOD HEADER:\r\n" );
+         kprintf(
+            "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n",
+            hdr.type, hdr.len, hdr.prev
+         );
+/*
          kprintf( "  type: %d\r\n",     hdr.type  );
          kprintf( "   len: %d\r\n",     hdr.len   );
          kprintf( "   seq: %d\r\n",     hdr.seq   );
          kprintf( " ticks: %lu\r\n",    hdr.ticks );
          kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
+*/
 
          len = hdr.len - sizeof( WodStore::WEH );
 
@@ -100,7 +107,7 @@ void T1200Thread::run( void )
 
       }
 
-      delay( 500 );
+      //delay( 500 );
    }
 
 #else

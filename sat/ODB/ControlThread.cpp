@@ -99,7 +99,7 @@ void ControlThread::run( void )
    GPIOA.enable();
    GPIOB.enable();
    GPIOC.enable();
-   UART6.enable(); //.baudRate( 115200 );
+   UART6.enable().baudRate( 115200 );
    SYSLOG.enable();
    RTC.enable();
    BKP.enable();
@@ -153,12 +153,6 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
       (void)registerThread( _tv[i] );
    }
 
-#ifdef TEST_GERARD
-
-   Config::mode_t mode = Config::TEST2;
-
-#else
-
    /* get the last known mode */
 
    Config::mode_t mode = CONF.mode();
@@ -170,8 +164,6 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
          kprintf( "Antenna already deployed, resuming previous mode\r\n" );
       }
    }
-
-#endif
 
    _switchModes( mode );
 
@@ -477,7 +469,7 @@ void ControlThread::_handleCForm( CForm *fp )
 
 void ControlThread::_switchModes( Config::mode_t target )
 {
-   uint32_t delta = _ctb ^ _mt[ target ];
+   uint32_t delta = _ctb ^ _mt[ target & 0x0f ];
    uint32_t tmp = 0x01;
 
    for( unsigned i = 0 ; i < _QB50_NTHREADS ; ++i ) {
@@ -492,10 +484,10 @@ void ControlThread::_switchModes( Config::mode_t target )
       tmp <<= 1;
    }
 
-   _ctb = _mt[ target ];
-   CONF.mode( target );
+   _ctb = _mt[ target & 0x0f ];
+   CONF.mode( target & 0x0f );
 
-   kprintf( "\033[7m-------- [ %s ] --------\033[0m\r\n", Config::modes[ target ] );
+   kprintf( "\033[7m-------- [ %s ] --------\033[0m\r\n", Config::modes[ target & 0x0f ] );
 }
 
 /*EoF*/
