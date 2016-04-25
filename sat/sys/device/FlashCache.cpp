@@ -132,26 +132,17 @@ if( len > 1024 ) {
 
    (void)lock();
 
-   /* read the first sector */
-
-   _load( vaddr );
-   (void)memcpy( dst, hdr->x + off, nb );
-
-   len   -= nb;
-   dst   += nb;
-   vaddr += nb;
-   nb     = ( len > _vsiz ) ? _vsiz : len;
-
-   /* read subsequent sectors */
+   /* read sectors */
 
    while( nb > 0 ) {
 
       _load( vaddr );
-      (void)memcpy( dst, hdr->x, nb );
+      (void)memcpy( dst, hdr->x + off, nb );
 
       len   -= nb;
       dst   += nb;
       vaddr += nb;
+      off    = 0;
       nb     = ( len > _vsiz ) ? _vsiz : len;
 
    }
@@ -191,28 +182,18 @@ FlashCache& FlashCache::write( uint32_t vaddr, const void *x, size_t len, bool s
 
    (void)lock();
 
-   /* write the first sector */
-
-   _load( vaddr );
-   (void)memcpy( hdr->x + off, src, nb );
-   _drty = true;
-
-   len   -= nb;
-   src   += nb;
-   vaddr += nb;
-   nb     = ( len > _vsiz ) ? _vsiz : len;
-
-   /* write subsequent sectors */
+   /* write sectors */
 
    while( nb > 0 ) {
 
       _load( vaddr );
-      (void)memcpy( hdr->x, src, nb );
+      (void)memcpy( hdr->x + off, src, nb );
       _drty = true;
 
       len   -= nb;
       src   += nb;
       vaddr += nb;
+      off    = 0;
       nb     = ( len > _vsiz ) ? _vsiz : len;
 
    }
@@ -241,7 +222,6 @@ FlashCache& FlashCache::write( uint32_t vaddr, const void *x, size_t len, bool s
 uint32_t FlashCache::_v2p( uint32_t vaddr )
 {
    return _psiz * ( vaddr / _vsiz );
- //return _psiz * ( vaddr / _psiz );
 }
 
 
@@ -328,6 +308,5 @@ void FlashCache::_flush( void )
 
    _drty = false;
 }
-
 
 /*EoF*/

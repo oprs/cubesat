@@ -10,8 +10,8 @@ namespace qb50 {
    template<class T>
    struct SensorSample
    {
-      bool steady;
-      T    value;
+      float stdev;
+      T     value;
    };
 
 } /*qb50*/

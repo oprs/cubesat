@@ -99,7 +99,7 @@ void ControlThread::run( void )
    GPIOA.enable();
    GPIOB.enable();
    GPIOC.enable();
-   UART6.enable().baudRate( 115200 );
+   UART6.enable(); // .baudRate( 115200 );
    SYSLOG.enable();
    RTC.enable();
    BKP.enable();

@@ -208,7 +208,7 @@ namespace qb50 {
                    SPI3_MOSI,         /* tx stream      */
                    PB3,               /* clock pin      */
                    STM32_GPIO::SPI3,  /* alt. function  */
-                   STM32_SPI::DIV32   /* clock division */
+                   STM32_SPI::DIV64   /* clock division */
    );
 
 //  - - - - - - - - - - - - - -  //

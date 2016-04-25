@@ -43,7 +43,6 @@ namespace qb50 {
          MAX111x& enable  ( bool silent = false );
          MAX111x& disable ( bool silent = false );
          MAX111x& read    ( ADC::Channel& ch, Sample *sample );
-         MAX111x& readAll ( Sample *rvp );
 
    };
 

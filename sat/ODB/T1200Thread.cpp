@@ -56,7 +56,7 @@ void T1200Thread::onResume( void )
 void T1200Thread::run( void )
 {
    uint8_t *x = new uint8_t[ 256 ];
-   uint8_t *h = new uint8_t[ 512 ];
+   uint8_t *y = new uint8_t[ 512 ];
 
    unsigned len, i;
 
@@ -93,21 +93,22 @@ void T1200Thread::run( void )
          len = hdr.len - sizeof( WodStore::WEH );
 
          for( i = 0 ; i < len ; ++i ) {
-            h[ 2*i     ] = hexv[ x[ i ] >> 4    ];
-            h[ 2*i + 1 ] = hexv[ x[ i ]  & 0x0f ];
+            y[ 2*i     ] = hexv[ x[ i ] >> 4    ];
+            y[ 2*i + 1 ] = hexv[ x[ i ]  & 0x0f ];
          }
 
-         h[ 2*i     ] = 0x0d;
-         h[ 2*i + 1 ] = 0x0a;
+         y[ 2*i     ] = 0x0d;
+         y[ 2*i + 1 ] = 0x0a;
 
-         UART3.write( h, 2 * len + 2, 500 );
+         UART3.write( y, 2 * len + 2, 500 );
 
+         delay( 500 );
       }
 
       //delay( 500 );
    }
 
-   delete[] h;
+   delete[] y;
    delete[] x;
 }
 
