@@ -80,13 +80,11 @@ A25Lxxx& A25Lxxx::init( void )
    /* temporarily (silently) enable the device
     * in order to read its identification ID */
 
-   _spi.lock();
+   lock();
    enable( true /* be quiet */ );
-
    _RDID( &rdid );
-
    disable( true /* be quiet */ );
-   _spi.unlock();
+   unlock();
 
    /* display ID infos */
 
@@ -151,23 +149,32 @@ A25Lxxx& A25Lxxx::disable( bool silent )
 
 A25Lxxx& A25Lxxx::pageRead( uint32_t addr, void *x )
 {
+   lock();
    _READ( addr, x );
+   unlock();
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::pageWrite( uint32_t addr, const void *x )
 {
+   lock();
    _WREN();
    _PP( addr, x );
+   unlock();
+
    return *this;
 }
 
 
 A25Lxxx& A25Lxxx::sectorErase( uint32_t addr )
 {
+   lock();
    _WREN();
    _SE( addr );
+   unlock();
+
    return *this;
 }
 
@@ -176,11 +183,13 @@ A25Lxxx& A25Lxxx::sectorRead( uint32_t addr, void *x )
 {
    uint8_t *dst = (uint8_t*)x;
 
+   lock();
    for( int i = 0 ; i < _geo.pps ; ++i ) {
       (void)_READ( addr, dst );
       dst  += _geo.bpp;
       addr += _geo.bpp;
    }
+   unlock();
 
    return *this;
 }
@@ -190,6 +199,7 @@ A25Lxxx& A25Lxxx::sectorWrite( uint32_t addr, const void *x )
 {
    const uint8_t *src = (const uint8_t*)x;
 
+   lock();
    _WREN();
    _SE( addr );
 
@@ -199,6 +209,7 @@ A25Lxxx& A25Lxxx::sectorWrite( uint32_t addr, const void *x )
       src  += _geo.bpp;
       addr += _geo.bpp;
    }
+   unlock();
 
    return *this;
 }
@@ -206,8 +217,11 @@ A25Lxxx& A25Lxxx::sectorWrite( uint32_t addr, const void *x )
 
 A25Lxxx& A25Lxxx::blockErase( uint32_t addr )
 {
+   lock();
    _WREN();
    _BE( addr );
+   unlock();
+
    return *this;
 }
 

@@ -20,11 +20,17 @@ namespace qb50 {
          FlashCache& enable  ( bool silent = false );
          FlashCache& disable ( bool silent = false );
 
+         FlashCache& clear   ( void );
          FlashCache& read    ( uint32_t addr,       void *x, size_t len );
          FlashCache& write   ( uint32_t addr, const void *x, size_t len, bool sync = false );
 
 
       protected:
+
+         struct Header {
+            uint32_t crc32;
+            uint8_t  x[];
+         };
 
          FlashMemory& _mem;   // slave FlashMemory
 
@@ -33,11 +39,17 @@ namespace qb50 {
          bool         _drty;  // cache is dirty
 
          uint32_t     _base;  // address (slave) of the sector currently in cache
-         uint32_t     _ssiz;  // sector size
-         uint8_t     *_x;     // buffer
+         uint32_t     _psiz;  // physical sector size
+         uint32_t     _vsiz;  // virtual sector size (excl. headers)
+         uint32_t     _vcap;  // storage capacity (excl. headers)
+         uint8_t     *_buf;   // buffer (header + data)
+         uint8_t     *_tmp;   // temporary buffer (write verification)
 
-         void _load  ( uint32_t addr );
-         void _flush ( void );
+         void         _clear ( uint32_t paddr );
+
+         uint32_t     _v2p   ( uint32_t vaddr );
+         void         _load  ( uint32_t vaddr );
+         void         _flush ( void );
 
    };
 

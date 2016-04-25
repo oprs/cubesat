@@ -119,11 +119,14 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
     * -> load the default configuration
     */
 
+//FCACHE.enable();
    if( RCC.isPwrOn() ) {
       kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
       WOD.clear();
+    //FCACHE.clear();
    }
+//FCACHE.clear( 10 );
 
    /* increment the reset counter */
 

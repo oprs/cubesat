@@ -66,7 +66,7 @@ namespace qb50 {
 
       protected:
 
-         FlashMemory::Geometry _geo;
+         Geometry _geo;
 
    };
 

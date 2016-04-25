@@ -112,7 +112,8 @@ MAX111x& MAX111x::read( ADC::Channel& ch, Sample *sample )
 
    /* get a burst of 4 samples */
 
-   _spi.lock();
+   lock();
+
    _select();
    _spi.xfer( read4Cmd + 12 * ( maxCh._id & 0x07 ) , _x, 12 );
    _deselect();
@@ -142,7 +143,7 @@ MAX111x& MAX111x::read( ADC::Channel& ch, Sample *sample )
    sample->steady = (stdev < 2.0 );
    sample->value  = avg;
 
-   _spi.unlock();
+   unlock();
 
    return *this;
 }
@@ -150,7 +151,8 @@ MAX111x& MAX111x::read( ADC::Channel& ch, Sample *sample )
 
 MAX111x& MAX111x::readAll( Sample *rvp )
 {
-   _spi.lock();
+   lock();
+
    _select();
    _spi.xfer( readAllCmd, _x, sizeof( readAllCmd ));
    _deselect();
@@ -179,7 +181,7 @@ MAX111x& MAX111x::readAll( Sample *rvp )
    rvp[ 7 ].steady = true;
    rvp[ 7 ].value  = ( _x[ 22 ] << 2 ) | ( _x[ 23 ] >> 6 );
 
-   _spi.unlock();
+   unlock();
 
    return *this;
 }

@@ -1,6 +1,7 @@
 
 #include "FlashCache.h"
 #include "system/Logger.h"
+#include "system/CRC32.h"
 
 #include <cstring>
 
@@ -18,15 +19,21 @@ FlashCache::FlashCache( const char *name, FlashMemory& mem )
    _nmis = 0;
    _drty = false;
    _base = (uint32_t)-1;
-   _ssiz = 0;
-   _x    = 0;
+   _psiz = 0;
+   _vsiz = 0;
+   _vcap = 0;
+   _buf  = (uint8_t*)0;
+   _tmp  = (uint8_t*)0;
 }
 
 
 FlashCache::~FlashCache()
 {
-   if( _x != 0 )
-      delete[] _x;
+   if( _tmp != (uint8_t*)0 )
+      delete[] _tmp;
+
+   if( _buf != (uint8_t*)0 )
+      delete[] _buf;
 }
 
 
@@ -38,10 +45,20 @@ FlashCache& FlashCache::init( void )
 {
    (void)_mem.init();
 
-   _ssiz = _mem.sectorSize();
-   _x = new uint8_t[ _ssiz ];
+   FlashMemory::Geometry geo;
+   _mem.geometry( &geo );
 
-   kprintf( "%s: Flash cache\r\n", _name );
+   _psiz = _mem.sectorSize();
+   _vsiz = _psiz - sizeof( Header );
+   _vcap = _vsiz * geo.bpc * geo.spb;
+   _buf  = new uint8_t[ _psiz ];
+   _tmp  = new uint8_t[ _psiz ];
+
+   kprintf( "%s: Flash Cache (capacity: %u/%uKbit)\r\n",
+            _name,
+            _vcap >> 7,
+            _mem.chipSize() >> 7
+   );
 
    return *this;
 }
@@ -75,21 +92,41 @@ FlashCache& FlashCache::disable( bool silent )
 }
 
 
-FlashCache& FlashCache::read( uint32_t addr, void *x, size_t len )
+FlashCache& FlashCache::clear( void )
+{
+   FlashMemory::Geometry geo;
+   _mem.geometry( &geo );
+
+   unsigned n = geo.bpc * geo.spb;
+   uint32_t paddr = 0;
+
+   for( unsigned i = 0 ; i < n ; ++i ) {
+      kprintf( "%s: Formatting sector %u/%u...\r\n", _name, i, n );
+      _clear( paddr );
+      paddr += _psiz;
+   }
+
+   return *this;
+}
+
+
+FlashCache& FlashCache::read( uint32_t vaddr, void *x, size_t len )
 {
    if( len == 0 ) {
       kprintf( "%s: FlashCache::read(): 0 bytes requested\r\n", _name );
       return *this;
    }
 
+   Header *hdr = (Header*)_buf;
+
    uint8_t* dst = (uint8_t*)x;
-   uint32_t off = addr & ( _ssiz - 1 );
-   uint32_t nb  = _ssiz - off;
+   uint32_t off = vaddr % _vsiz;
+   uint32_t nb  = _vsiz - off;
 
    if( nb > len ) nb = len;
 
 if( len > 1024 ) {
-   kprintf( "FlashCache::read( %u, %p, %u )\r\n", addr, x, len );
+   kprintf( "FlashCache::read( %u, %p, %u )\r\n", vaddr, x, len );
    for( ;; );
 }
 
@@ -97,25 +134,25 @@ if( len > 1024 ) {
 
    /* read the first sector */
 
-   _load( addr );
-   (void)memcpy( dst, _x + off, nb );
+   _load( vaddr );
+   (void)memcpy( dst, hdr->x + off, nb );
 
-   len  -= nb;
-   dst  += nb;
-   addr += _ssiz;
-   nb    = ( len > _ssiz ) ? _ssiz : len;
+   len   -= nb;
+   dst   += nb;
+   vaddr += nb;
+   nb     = ( len > _vsiz ) ? _vsiz : len;
 
    /* read subsequent sectors */
 
    while( nb > 0 ) {
 
-      _load( addr );
-      (void)memcpy( dst, _x, nb );
+      _load( vaddr );
+      (void)memcpy( dst, hdr->x, nb );
 
-      len  -= nb;
-      dst  += nb;
-      addr += _ssiz;
-      nb    = ( len > _ssiz ) ? _ssiz : len;
+      len   -= nb;
+      dst   += nb;
+      vaddr += nb;
+      nb     = ( len > _vsiz ) ? _vsiz : len;
 
    }
 
@@ -127,7 +164,7 @@ if( len > 1024 ) {
 }
 
 
-FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sync )
+FlashCache& FlashCache::write( uint32_t vaddr, const void *x, size_t len, bool sync )
 {
    if( len == 0 ) {
       kprintf( "%s: FlashCache::write(): nothing to write\r\n", _name );
@@ -140,14 +177,15 @@ FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sy
       return *this;
    }
 
+   Header *hdr = (Header*)_buf;
+
    const uint8_t* src = (const uint8_t*)x;
- //uint32_t       cur = addr & ~( _ssiz - 1 );
-   uint32_t       off = addr &  ( _ssiz - 1 );
-   uint32_t       nb  = _ssiz - off;
+   uint32_t       off = vaddr % _vsiz;
+   uint32_t       nb  = _vsiz - off;
 
    if( nb > len ) nb = len;
 
- //kprintf( "FlashCache::write( %u, %p, %u )\r\n", addr, x, len );
+ //kprintf( "FlashCache::write( %u, %p, %u )\r\n", vaddr, x, len );
 
    /* lock the device */
 
@@ -155,27 +193,27 @@ FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sy
 
    /* write the first sector */
 
-   _load( addr );
-   (void)memcpy( _x + off, src, nb );
+   _load( vaddr );
+   (void)memcpy( hdr->x + off, src, nb );
    _drty = true;
 
-   len  -= nb;
-   src  += nb;
-   addr += _ssiz;
-   nb    = ( len > _ssiz ) ? _ssiz : len;
+   len   -= nb;
+   src   += nb;
+   vaddr += nb;
+   nb     = ( len > _vsiz ) ? _vsiz : len;
 
    /* write subsequent sectors */
 
    while( nb > 0 ) {
 
-      _load( addr );
-      (void)memcpy( _x, src, nb );
+      _load( vaddr );
+      (void)memcpy( hdr->x, src, nb );
       _drty = true;
 
-      len  -= nb;
-      src  += nb;
-      addr += _ssiz;
-      nb    = ( len > _ssiz ) ? _ssiz : len;
+      len   -= nb;
+      src   += nb;
+      vaddr += nb;
+      nb     = ( len > _vsiz ) ? _vsiz : len;
 
    }
 
@@ -198,13 +236,23 @@ FlashCache& FlashCache::write( uint32_t addr, const void *x, size_t len, bool sy
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void FlashCache::_load( uint32_t addr )
+/* get physical sector address from logical memory address */
+
+uint32_t FlashCache::_v2p( uint32_t vaddr )
 {
-   addr &= ~( _ssiz - 1 );
+   return _psiz * ( vaddr / _vsiz );
+ //return _psiz * ( vaddr / _psiz );
+}
 
- //kprintf( "FlashCache::_load( %u )\r\n", addr );
 
-   if( addr == _base ) {
+void FlashCache::_load( uint32_t vaddr )
+{
+   Header  *hdr   = (Header*)_buf;
+   uint32_t paddr = _v2p( vaddr );
+
+ //kprintf( "FlashCache::_load( %u )\r\n", vaddr );
+
+   if( paddr == _base ) {
       /* sector is already in cache: this is a hit */
       ++_nhit;
       return;
@@ -222,16 +270,62 @@ void FlashCache::_load( uint32_t addr )
 
    /* load the requested sector */
 
-   _mem.sectorRead( addr, _x );
-   _base = addr;
+   _mem.sectorRead( paddr, _buf );
+
+   uint32_t crc = crc32( hdr->x, _vsiz );
+   if( crc != hdr->crc32 ) {
+      kprintf( RED( "%s: (load) CRC mismatch at physical address 0x%08x" ) "\r\n", _name, paddr );
+      kprintf( RED( "%s: (load) got 0x%08x, expected 0x%08x" ) "\r\n", _name, crc, hdr->crc32 );
+   } else {
+      kprintf( GREEN( "%s: (load) CRC verified at physical address 0x%08x" ) "\r\n", _name, paddr );
+      kprintf( GREEN( "%s: (load) got 0x%08x" ) "\r\n", _name, crc );
+   }
+
+   _base = paddr;
+}
+
+
+void FlashCache::_clear( uint32_t paddr )
+{
+   Header *hdr = (Header*)_tmp;
+
+   _mem.sectorErase ( paddr       );
+   _mem.sectorRead  ( paddr, _tmp );
+
+   hdr->crc32 = crc32( hdr->x, _vsiz );
+
+   _mem.sectorWrite ( paddr, _tmp );
+   _mem.sectorRead  ( paddr, _tmp );
+
+   uint32_t crc = crc32( hdr->x, _vsiz );
+   if( crc != hdr->crc32 ) {
+      kprintf( RED( "%s: (clear) CRC mismatch at physical address 0x%08x" ) "\r\n", _name, paddr );
+      kprintf( RED( "%s: (clear) got 0x%08x, expected 0x%08x" ) "\r\n", _name, crc, hdr->crc32 );
+   }
 }
 
 
 void FlashCache::_flush( void )
 {
- //kprintf( "FlashCache::_flush(), _base: %u\r\n", _base );
+   Header *hdr;
+
+   hdr = (Header*)_buf;
+   hdr->crc32 = crc32( hdr->x, _vsiz );
+
    _mem.sectorErase( _base );
-   _mem.sectorWrite( _base, _x );
+   _mem.sectorWrite( _base, _buf );
+
+   /* read back and check CRC */
+
+   hdr = (Header*)_tmp;
+   _mem.sectorRead( _base, _tmp );
+
+   uint32_t crc = crc32( hdr->x, _vsiz );
+   if( crc != hdr->crc32 ) {
+      kprintf( RED( "%s: (flush) CRC mismatch at physical address 0x%08x" ) "\r\n", _name, _base );
+      kprintf( RED( "%s: (flush) got 0x%08x, expected 0x%08x" ) "\r\n", _name, crc, hdr->crc32 );
+   }
+
    _drty = false;
 }
 

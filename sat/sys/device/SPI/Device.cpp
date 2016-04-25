@@ -34,6 +34,24 @@ SPI_Device& SPI_Device::init( void )
 }
 
 
+SPI_Device& SPI_Device::lock( void )
+{
+   _spi.lock();
+   Device::lock();
+
+   return *this;
+}
+
+
+SPI_Device& SPI_Device::unlock( void )
+{
+   Device::unlock();
+   _spi.unlock();
+
+   return *this;
+}
+
+
 //  - - - - - - - - - - - - - - -  //
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //

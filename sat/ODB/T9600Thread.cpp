@@ -69,6 +69,11 @@ void T9600Thread::run( void )
 
       } else {
 
+         kprintf(
+            "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n",
+            hdr.type, hdr.len, hdr.prev
+         );
+/*
          kprintf( "WOD HEADER:\r\n" );
          kprintf( "  type: %d\r\n",     hdr.type  );
          kprintf( "   len: %d\r\n",     hdr.len   );
@@ -76,8 +81,8 @@ void T9600Thread::run( void )
          kprintf( " ticks: %lu\r\n",    hdr.ticks );
          kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
          kprintf( "   crc: %lu\r\n",    hdr.crc   );
+*/
          AX25.sendUIH( _x, hdr.len - sizeof( WodStore::WEH ));
-         (void)WOD.read( &hdr, _x ); // XXX wow wow wow...
 
          delay( 500 );
 

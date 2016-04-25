@@ -60,8 +60,6 @@ void T1200Thread::run( void )
 
    unsigned len, i;
 
-#if 1
-
    WodStore::WEH hdr;
 
    for( ;; ) {
@@ -103,22 +101,11 @@ void T1200Thread::run( void )
          h[ 2*i + 1 ] = 0x0a;
 
          UART3.write( h, 2 * len + 2, 500 );
-         //(void)WOD.read( &hdr, x );
 
       }
 
       //delay( 500 );
    }
-
-#else
-
-   for( ;; ) {
-      _wait();
-      UART3.write( "HELLO\r\n", 7 );
-      delay( 500 );
-   }
-
-#endif
 
    delete[] h;
    delete[] x;

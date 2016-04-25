@@ -30,7 +30,6 @@ namespace qb50 {
          A25Lxxx& init        ( void );
          A25Lxxx& enable      ( bool silent = false );
          A25Lxxx& disable     ( bool silent = false );
-         A25Lxxx& ioctl       ( IOReq *req, TickType_t maxWait = portMAX_DELAY );
 
          A25Lxxx& pageRead    ( uint32_t addr, void *x       );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );

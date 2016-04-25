@@ -22,7 +22,9 @@ namespace qb50 {
          SPI_Device( const char *name, SPI& spi, GPIO::Pin& csPin, SelectMode csMode );
          virtual ~SPI_Device();
 
-         SPI_Device& init( void );
+         SPI_Device& init   ( void );
+         SPI_Device& lock   ( void );
+         SPI_Device& unlock ( void );
 
       protected:
 
