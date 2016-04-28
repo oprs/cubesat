@@ -32,9 +32,13 @@ namespace qb50{
          STM32_UART& init     ( void );
          STM32_UART& enable   ( bool silent = false );
          STM32_UART& disable  ( bool silent = false );
-         size_t      read     (       void *x, size_t len, int toms = -1 );
-         size_t      readLine (       void *x, size_t len, int toms = -1 );
-         size_t      write    ( const void *x, size_t len, int toms = -1 );
+
+         size_t      read     (       void *x, size_t len,  int toms = -1 );
+         size_t      readLine (       void *x, size_t len,  int toms = -1 );
+         size_t      write    ( const void *x, size_t len,  int toms = -1 );
+
+         size_t      write    ( const uint8_t tx,              int toms = -1 );
+         size_t      write    ( const uint8_t tx, uint8_t& rx, int toms = -1 );
 
          STM32_UART& baudRate ( unsigned rate );
 

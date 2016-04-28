@@ -60,7 +60,7 @@ static const char* chNames[] = {
 //  - - - - - - - - -  //
 
 PMUThread::PMUThread()
-   : Thread( "Power Monitor", 1, SUSPENDED, 384 /* XXX check with 256 */ ),
+   : Thread( "Monitor", 1, SUSPENDED, 384 /* XXX check with 256 */ ),
      _modeBat( HIGH ),
      _modePA( LOW )
 {
@@ -161,6 +161,7 @@ void PMUThread::run( void )
 
       for( i = 0 ; i < 32 ; ++i ) {
          if( _raw[i].stdev > STEADY ) {
+/*
             kprintf( RED( "%s: ADC%uCH%u (%s) not steady, stdev: %.2f" ) "\r\n",
                      name,
                      ( i >> 3 ) + 1,
@@ -168,6 +169,7 @@ void PMUThread::run( void )
                      chNames[i],
                      _raw[i].stdev
             );
+*/
             _raw8[i] = 0;
          } else {
             _raw8[i] = _raw[i].value;

@@ -5,6 +5,7 @@
 #include "devices.h"
 
 #include <cstring>
+#include <ctime>
 
 using namespace qb50;
 
@@ -97,6 +98,8 @@ WodStore& WodStore::write( EntryType type, const void *x, unsigned len )
 
 void WodStore::_write( EntryType type, const void *x, unsigned len )
 {
+   struct tm stm;
+   RTC::Time rtm;
    WEH hdr;
 
    uint32_t wHead = CONF.wHead();
@@ -113,12 +116,28 @@ hexdump( x, len );
       wNext = wHead + hdr.len;
    }
 
+   /* time */
+
+   RTC.getTime( rtm );
+
+   stm.tm_sec   = rtm.sec;
+   stm.tm_min   = rtm.min;
+   stm.tm_hour  = rtm.hour;
+   stm.tm_mday  = rtm.day;
+   stm.tm_mon   = rtm.mon;
+   stm.tm_year  = rtm.year;
+   stm.tm_wday  = 0;
+   stm.tm_yday  = 0;
+   stm.tm_isdst = 0;
+
+   /* WOD header */
+
    hdr.type  = type;
    hdr.len   = len + sizeof( WEH );
    hdr.seq   = 0;
    hdr.ticks = 0;
    hdr.prev  = wHead;
-   hdr.crc   = 0;
+   hdr.time  = mktime( &stm );
 
    (void)_mem.write( wNext, &hdr, sizeof( WEH ));
    (void)_mem.write( wNext + sizeof( WEH ), x, len );
@@ -152,6 +171,5 @@ void WodStore::_read( WEH *hdr, void *x )
 
    }
 }
-
 
 /*EoF*/

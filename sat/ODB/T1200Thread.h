@@ -11,12 +11,17 @@ namespace qb50 {
    {
 
       public:
+
          T1200Thread();
          ~T1200Thread();
 
          void run       ( void );
          void onSuspend ( void );
          void onResume  ( void );
+
+      private:
+
+         void _wrb( const uint8_t tx );
 
    };
 

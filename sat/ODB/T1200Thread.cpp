@@ -6,6 +6,8 @@
 #include "devices.h"
 #include "Baseband.h"
 
+#include <ctime>
+
 using namespace qb50;
 
 extern QueueHandle_t evQueue;
@@ -35,7 +37,7 @@ T1200Thread::~T1200Thread()
 
 void T1200Thread::onSuspend( void )
 {
-   PC3.off();
+//   PC3.off();
    BB.disable();
    WOD.disable();
    UART3.disable();
@@ -49,19 +51,23 @@ void T1200Thread::onResume( void )
    UART3.enable();
    WOD.enable();
    BB.enable();
-   PC3.on();
+//   PC3.on();
+
+   delay( 500 );
 }
 
 
 void T1200Thread::run( void )
 {
    uint8_t *x = new uint8_t[ 256 ];
-   uint8_t *y = new uint8_t[ 512 ];
+   char stime[ 32 ];
+   struct tm stm;
 
-   unsigned len, i;
+   unsigned len, i, n;
 
    WodStore::WEH hdr;
 
+PC3.on();
    for( ;; ) {
 
       _wait();
@@ -81,35 +87,61 @@ void T1200Thread::run( void )
             "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n",
             hdr.type, hdr.len, hdr.prev
          );
-/*
-         kprintf( "  type: %d\r\n",     hdr.type  );
-         kprintf( "   len: %d\r\n",     hdr.len   );
-         kprintf( "   seq: %d\r\n",     hdr.seq   );
-         kprintf( " ticks: %lu\r\n",    hdr.ticks );
-         kprintf( "  prev: 0x%08x\r\n", hdr.prev  );
-         kprintf( "   crc: %lu\r\n",    hdr.crc   );
-*/
+
+         (void)gmtime_r( (const time_t*)&hdr.time, &stm );
+         n = strftime( stime, 32, "!%Y%m%d@%H%M%S ", &stm );
+
+         for( i = 0 ; i < n ; ++i ) {
+            _wrb( stime[ i ]);
+         }
 
          len = hdr.len - sizeof( WodStore::WEH );
 
          for( i = 0 ; i < len ; ++i ) {
-            y[ 2*i     ] = hexv[ x[ i ] >> 4    ];
-            y[ 2*i + 1 ] = hexv[ x[ i ]  & 0x0f ];
+            _wrb( hexv[ x[ i ] >> 4    ]);
+            _wrb( hexv[ x[ i ]  & 0x0f ]);
          }
 
-         y[ 2*i     ] = 0x0d;
-         y[ 2*i + 1 ] = 0x0a;
+         _wrb( 0x0d );
+         _wrb( 0x0d );
+         _wrb( 0x0d );
+         _wrb( 0x0a );
 
-         UART3.write( y, 2 * len + 2, 500 );
-
-         delay( 500 );
+         delay( 600 );
       }
-
-      //delay( 500 );
    }
 
-   delete[] y;
    delete[] x;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+void T1200Thread::_wrb( const uint8_t tx )
+{
+   uint8_t rx;
+   int i;
+
+   for( i = 0 ; i < 5 ; ++i ) {
+      if( tx == 0x0a ) {
+         /* 0x0a is not echoed back by the PIC, disable read-back */
+         if( UART3.write( tx, 25 ) > 0 ) {
+            break;
+         }
+      } else {
+         if( UART3.write( tx, rx, 25 ) > 0 ) {
+            break;
+         }
+      }
+
+    //delay( 100 );
+   }
+
+   if( i == 5 ) {
+      kprintf( RED( "%s: byte lost: 0x%02x" ) "\r\n", name, tx );
+   }
 }
 
 /*EoF*/

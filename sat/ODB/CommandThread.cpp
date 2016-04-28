@@ -26,7 +26,7 @@ extern QueueHandle_t evQueue;
 //  - - - - - - - - -  //
 
 CommandThread::CommandThread()
-   : Thread( "Command Handler", 1, RUNNING )
+   : Thread( "Command Handler", 1, RUNNING, 384 )
 {
    _x = new uint8_t[ 128 ];
    _m.reset( _x, 128 );
@@ -52,7 +52,7 @@ void CommandThread::run( void )
 
    for( ;; ) {
 
-      n = UART6.readLine( _x, 128, 5 * 60 * 1000 );
+      n = UART6.readLine( _x, 128, 30 * 1000 );
       if( n == 0 ) {
          RTC.getTime( t );
        //kprintf( "RTC: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", t.year, t.mon, t.day );

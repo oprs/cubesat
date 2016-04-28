@@ -22,7 +22,7 @@ namespace qb50 {
           +-------------------------------+
           |              prev             |
           +-------------------------------+
-          |             crc32             |
+          |            VKI time           |
           +-------------------------------+
       */
 
@@ -33,7 +33,7 @@ namespace qb50 {
             uint16_t seq;   // sequence number % (2^16)
             uint32_t ticks; // ticks since poweron
             uint32_t prev;  // address of previous entry
-            uint32_t crc;   // CRC32( all above + data words )
+            uint32_t time;  // VKI time
          };
 
          enum : uint32_t { NIL = (uint32_t)-1 };
