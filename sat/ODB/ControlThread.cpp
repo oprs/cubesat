@@ -41,7 +41,7 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
    0b0100000010, /* mode AMEAS     */
    0b0100000010, /* mode DTMB      */
    0b0100000010, /* mode ACTRL     */
-   0b0000001010, /* mode FIPEX     */
+   0b0100001010, /* mode FIPEX     */
    0b0010000010, /* mode FM        */
    0b0000000000, /* mode STDBY     */
    0b0001000010, /* mode TELEM9600 */
@@ -101,7 +101,7 @@ void ControlThread::run( void )
    GPIOC.enable();
    UART6.enable(); // .baudRate( 115200 );
    SYSLOG.enable();
-   RTC.enable();
+   RTC0.enable();
    BKP.enable();
    //WOD.enable();
 

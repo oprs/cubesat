@@ -30,7 +30,7 @@ namespace qb50 {
 //  R T C   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - -  //
 
-   extern qb50::STM32_RTC RTC;
+   extern qb50::STM32_RTC RTC0;
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //

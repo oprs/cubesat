@@ -118,7 +118,7 @@ hexdump( x, len );
 
    /* time */
 
-   RTC.getTime( rtm );
+   RTC0.getTime( rtm );
 
    stm.tm_sec   = rtm.sec;
    stm.tm_min   = rtm.min;

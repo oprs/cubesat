@@ -15,15 +15,21 @@ namespace qb50 {
          FipexThread();
          ~FipexThread();
 
-         void run  ( void );
-         void test ( void );
-         void cmd  ( uint8_t *x, size_t len );
+         void run       ( void );
+         void test      ( void );
+         void cmd       ( const uint8_t *x, size_t len );
 
          void dump      ( uint8_t *x, size_t len );
          void dump_sdp  ( uint8_t *x, size_t len );
 
          void onSuspend ( void );
          void onResume  ( void );
+
+      private:
+
+         void _runScript( const uint8_t *x, bool debug = false );
+
+         uint8_t *rx;  // receive buffer
 
    };
 

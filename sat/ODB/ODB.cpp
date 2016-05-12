@@ -45,7 +45,7 @@ ODB& ODB::init( void )
    WDG.init();
    PWR.init();
    BKP.init();
-   RTC.init();
+   RTC0.init();
    NVIC.init();
    EXTI.init();
    DMA1.init();

@@ -40,7 +40,7 @@ namespace qb50 {
 //  R T C   C O N T R O L L E R  //
 //  - - - - - - - - - - - - - -  //
 
-   STM32_RTC RTC( APB1, RTC_BASE, STM32_RCC::APB1Periph_RTC, "RTC" );
+   STM32_RTC RTC0( APB1, RTC_BASE, STM32_RCC::APB1Periph_RTC, "RTC0" );
 
 //  - - - - - - - - - - - - - - - - - - - -  //
 //  I N T E R R U P T   C O N T R O L L E R  //

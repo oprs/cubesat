@@ -4,6 +4,8 @@
 
 #include "Device.h"
 
+#include <ctime>
+
 
 namespace qb50 {
 
@@ -29,9 +31,10 @@ namespace qb50 {
             uint8_t  sec;
          };
 
-         virtual RTC& getTime ( Time &t ) = 0;
-         virtual RTC& setTime ( Time &t ) = 0;
+         virtual RTC& getTime ( Time &tm ) = 0;
+         virtual RTC& setTime ( Time &tm ) = 0;
 
+         static time_t conv( const Time &tm );
    };
 
 } /* qb50 */

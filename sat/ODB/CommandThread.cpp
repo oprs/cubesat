@@ -46,7 +46,8 @@ CommandThread::~CommandThread()
 void CommandThread::run( void )
 {
    UART6.enable();
-   RTC::Time t;
+   RTC::Time tm;
+   time_t ts;
 
    std::size_t n;
 
@@ -54,9 +55,10 @@ void CommandThread::run( void )
 
       n = UART6.readLine( _x, 128, 30 * 1000 );
       if( n == 0 ) {
-         RTC.getTime( t );
+         RTC0.getTime( tm );
+         ts = RTC::conv( tm );
        //kprintf( "RTC: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", t.year, t.mon, t.day );
-         kprintf( "RTC: time is %02d:%02d:%02d\r\n", t.hour, t.min, t.sec );
+         kprintf( "RTC: time is %02d:%02d:%02d (%lu)\r\n", tm.hour, tm.min, tm.sec, ts );
 /*
          kprintf( "\033[31;1mEMPTY COMMAND\033[0m\r\n" );
          delay( 100 );
@@ -84,7 +86,7 @@ void CommandThread::run( void )
 
          case Form::FORM_TYPE_H:
          {
-            RTC.setTime( _form.H.tm );
+            RTC0.setTime( _form.H.tm );
             break;
          }
 
