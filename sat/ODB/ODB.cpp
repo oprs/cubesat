@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "AX25/AX25TX.h"
+#include "Modem1200.h"
 #include "Baseband.h"
 
 using namespace qb50;
@@ -65,6 +66,7 @@ ODB& ODB::init( void )
    FCACHE.init();
  //WDB.init();
    BB.init();
+   M12K.init();
    AX25.init();
 
    _selPin.in().noPull();

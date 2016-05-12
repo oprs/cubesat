@@ -82,10 +82,15 @@ WodStore& WodStore::read( WEH *hdr, void *x )
 }
 
 
-WodStore& WodStore::write( EntryType type, const void *x, unsigned len )
+WodStore& WodStore::write( EntryType type, const void *x, unsigned len, WEH *hdr )
 {
+   WEH _hdr;
+
+   if( hdr == (WEH*)0 )
+      hdr = &_hdr;
+
    (void)lock();
-   _write( type, x, len );
+   _write( type, x, len, hdr );
    (void)unlock();
 
    return *this;
@@ -96,11 +101,10 @@ WodStore& WodStore::write( EntryType type, const void *x, unsigned len )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void WodStore::_write( EntryType type, const void *x, unsigned len )
+void WodStore::_write( EntryType type, const void *x, unsigned len, WEH *hdr )
 {
    struct tm stm;
    RTC::Time rtm;
-   WEH hdr;
 
    uint32_t wHead = CONF.wHead();
    uint32_t wTail = CONF.wTail();
@@ -112,8 +116,8 @@ hexdump( x, len );
    if( wHead == NIL ) {
       wNext = 0;
    } else {
-      (void)_mem.read( wHead, &hdr, sizeof( WEH ));
-      wNext = wHead + hdr.len;
+      (void)_mem.read( wHead, hdr, sizeof( WEH ));
+      wNext = wHead + hdr->len;
    }
 
    /* time */
@@ -124,22 +128,22 @@ hexdump( x, len );
    stm.tm_min   = rtm.min;
    stm.tm_hour  = rtm.hour;
    stm.tm_mday  = rtm.day;
-   stm.tm_mon   = rtm.mon;
-   stm.tm_year  = rtm.year;
+   stm.tm_mon   = rtm.mon - 1;
+   stm.tm_year  = rtm.year - 1900;
    stm.tm_wday  = 0;
    stm.tm_yday  = 0;
    stm.tm_isdst = 0;
 
    /* WOD header */
 
-   hdr.type  = type;
-   hdr.len   = len + sizeof( WEH );
-   hdr.seq   = 0;
-   hdr.ticks = 0;
-   hdr.prev  = wHead;
-   hdr.time  = mktime( &stm );
+   hdr->type  = type;
+   hdr->len   = len + sizeof( WEH );
+   hdr->seq   = 0;
+   hdr->ticks = 0;
+   hdr->prev  = wHead;
+   hdr->time  = mktime( &stm );
 
-   (void)_mem.write( wNext, &hdr, sizeof( WEH ));
+   (void)_mem.write( wNext, hdr, sizeof( WEH ));
    (void)_mem.write( wNext + sizeof( WEH ), x, len );
 
    if( wHead == NIL ) {

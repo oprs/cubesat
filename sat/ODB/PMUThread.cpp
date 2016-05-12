@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "PMUThread.h"
+#include "Modem1200.h"
 #include "Config.h"
 #include "Event.h"
 #include "WodStore.h"
@@ -112,14 +113,22 @@ void PMUThread::onResume( void )
 void PMUThread::run( void )
 {
    float min, max;
-
-   unsigned i, n;
+   unsigned ms, i, n;
+   Config::pval_t dt;
 
    for( n = 0 ;; ++n ) {
 
       /* wait if suspended */
 
       _wait();
+
+      /* wait for next cycle */
+
+      dt = CONF.getParam( Config::PARAM_WODEX_CYCLE_TX ) - 1;
+      ms = dt >= 0 ? ( 30000 / ( 1 << dt )) : 30000;
+
+      kprintf( "%s: waiting for %.2f sec...\r\n", name, 0.001 * ms );
+      delay( ms );
 
       /* update samples */
 
@@ -178,12 +187,19 @@ void PMUThread::run( void )
 
       /* write WOD */
 
-#if 1
+#if 0
       if(( n % 4 /*120*/ ) == 0 ) {
          (void)WOD.write( WodStore::ADC, _raw8, 32 );
       }
 #else
-      (void)WOD.write( WodStore::ADC, _raw8, 32 );
+      WodStore::WEH hdr;
+      (void)WOD.write( WodStore::ADC, _raw8, 32, &hdr );
+
+      if( CONF.mode() != Config::TELEM1200 ) {
+         M12K.enable();
+         M12K.send( &hdr, _raw8 );
+         M12K.disable();
+      }
 #endif
 
       /* check battery voltage */
@@ -239,9 +255,6 @@ kprintf( "T_PA: %.2fdK - %.2fdC (raw: %u)\r\n", dK, dC, _raw[ SAMPLE_T_PA ].valu
             }
          }
       }
-
-      delay( 500 );
-
    }
 }
 

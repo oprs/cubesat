@@ -19,10 +19,6 @@ namespace qb50 {
          void onSuspend ( void );
          void onResume  ( void );
 
-      private:
-
-         void _wrb( const uint8_t tx );
-
    };
 
 } /* qb50 */
