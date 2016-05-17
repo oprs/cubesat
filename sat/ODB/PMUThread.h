@@ -20,36 +20,36 @@ namespace qb50 {
          void onResume  ( void );
 
          enum {
+            SAMPLE_X0,
+            SAMPLE_X1,
+            SAMPLE_X2,
             SAMPLE_V4,
             SAMPLE_I4,
             SAMPLE_T4,
             SAMPLE_V1,
             SAMPLE_T1,
+
             SAMPLE_I1,
             SAMPLE_T_Bat,
             SAMPLE_V_Bat,
-
             SAMPLE_V2,
             SAMPLE_T2,
             SAMPLE_I2,
             SAMPLE_V3,
             SAMPLE_T3,
+
             SAMPLE_I3,
             SAMPLE_I_Surt,
-            SAMPLE_X0,
-
             SAMPLE_I_ADCS,
             SAMPLE_T_ARM,
             SAMPLE_I_RX,
             SAMPLE_RSSI,
             SAMPLE_I_TX,
             SAMPLE_P_TX,
+
             SAMPLE_P_PA,
             SAMPLE_T_PA,
-
-            SAMPLE_X1,
             SAMPLE_I_GPS,
-            SAMPLE_X2,
             SAMPLE_I_3V3_FIPEX,
             SAMPLE_V_3V3_FIPEX,
             SAMPLE_I_5V_FIPEX,

@@ -13,18 +13,26 @@ namespace qb50 {
 
       public:
 
+         enum Power { P0, P1, P2, P3, P4 };
+
          Baseband( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin );
          ~Baseband();
 
          Baseband& init    ( void );
-         Baseband& enable  ( bool silent = false );
-         Baseband& disable ( bool silent = false );
+         Baseband& enable  (          bool silent = false );
+         Baseband& enable  ( Power p, bool silent = false );
+         Baseband& disable (          bool silent = false );
+
+         Baseband& power   ( Power p );
+         uint8_t   pMask   ( void ) const;
 
 
       private:
 
          GPIO::Pin& _enTXPin;
          GPIO::Pin& _enPAPin;
+
+         uint8_t _pMask;
 
    };
 

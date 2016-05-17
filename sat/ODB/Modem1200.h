@@ -22,6 +22,7 @@ namespace qb50 {
          Modem1200& disable ( bool silent = false );
 
          size_t     send    ( WodStore::WEH *hdr, const uint8_t *x );
+         size_t     send    ( const uint8_t *x, unsigned len );
 
 
       private:
@@ -31,7 +32,9 @@ namespace qb50 {
 
          uint8_t    *_rxBuf;
 
-         void _wrb( const uint8_t tx );
+         bool        _wrb  ( const uint8_t tx );
+         bool        _send ( WodStore::WEH *hdr, const uint8_t *x );
+         bool        _send ( const uint8_t *x, size_t len );
 
    };
 

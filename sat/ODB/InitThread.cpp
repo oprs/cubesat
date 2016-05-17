@@ -32,21 +32,23 @@ void InitThread::run( void )
 {
    Event *ev;
 
-   _wait();
+   for( ;; ) {
+      _wait();
 
-   //delay( 100 );
+      kprintf( "Waiting for 30mn...\r\n" );
+      delay( 30 * 60 * 1000 );
+      kprintf( "Done waiting\r\n" );
 
-   kprintf( "Waiting for 30mn...\r\n" );
-   delay( 5000 );
-   kprintf( "Done waiting\r\n" );
+      if( SAT.aDeploy() == ODB::DEPLOYED ) {
+         ev = new Event( Event::AD_SUCCESS );
+      } else {
+         ev = new Event( Event::AD_FAILURE );
+      }
 
-   if( SAT.aDeploy() == ODB::DEPLOYED ) {
-      ev = new Event( Event::AD_SUCCESS );
-   } else {
-      ev = new Event( Event::AD_FAILURE );
+      xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
+
+      delay( 1000 );
    }
-
-   xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
 }
 
 /*EoF*/

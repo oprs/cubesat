@@ -1,6 +1,7 @@
 
 #include "devices.h"
 #include "CommandThread.h"
+#include "CommandBacklog.h"
 #include "Config.h"
 
 #include <task.h> // XXX out
@@ -200,6 +201,8 @@ CommandThread::_parseCForm( void )
    _form.C.argc = i + 1;
    _form.type = Form::FORM_TYPE_C;
 
+   CBL.push( _form );
+
    return 1;
 }
 
@@ -259,6 +262,8 @@ CommandThread::_parsePForm( void )
    }
 
    _form.type = Form::FORM_TYPE_P;
+
+   CBL.push( _form );
 
    return 1;
 }

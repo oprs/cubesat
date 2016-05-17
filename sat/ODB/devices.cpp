@@ -232,7 +232,7 @@ namespace qb50 {
    MAX111x ADC1( SPI3, "ADC1", PA4 /*CS1*/ ); /* ADC carte energie (U5@PMU)   */
    MAX111x ADC2( SPI3, "ADC2", PA5 /*CS2*/ ); /* ADC carte energie (U6@PMU)   */
    MAX111x ADC3( SPI3, "ADC3", PA6 /*CS3*/ ); /* ADC carte ODB     (U7@ODB)   */
-   MAX111x ADC4( SPI3, "ADC4", PC4 /*CS4*/ ); /* ADC carte FiPEX   (U2@FiPEX) */
+   MAX111x ADC4( SPI3, "ADC4", PC4 /*CS5*/ ); /* ADC carte FiPEX   (U2@FiPEX) */
 
 //  - - - - - - - - - - - -  //
 //  A D C   C H A N N E L S  //

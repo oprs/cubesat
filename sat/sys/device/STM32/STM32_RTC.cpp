@@ -154,9 +154,6 @@ STM32_RTC& STM32_RTC::getTime( Time &t )
    t.sec  = 10 * (( TR >>  4 ) & 0x07 )
                + (  TR         & 0x0f );
 
-   kprintf( "%s: getTime(): date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", _name, t.year, t.mon, t.day );
-   kprintf( "%s: getTime(): time is %02d:%02d:%02d (hh:mm:ss)\r\n", _name, t.hour, t.min, t.sec );
-
    return *this;
 }
 

@@ -350,6 +350,7 @@ kprintf( "i3: %lu\r\n", i3 );
 void FipexThread::run( void )
 {
    //LOG << "FipexThread starting..." << std::flush;
+   PB14.out().on();
    UART2.enable();
 
    // retrieve script

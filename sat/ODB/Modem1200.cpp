@@ -2,6 +2,7 @@
 #include "devices.h"
 #include "Modem1200.h"
 #include "Baseband.h"
+#include "Config.h"
 
 #include <ctime>
 
@@ -54,13 +55,14 @@ Modem1200& Modem1200::init( void )
 
 Modem1200& Modem1200::enable( bool silent )
 {
-   size_t n;
-
    if( _incRef() > 0 )
       return *this;
 
-   BB.enable( silent );
-delay( 5000 );
+   BB.enable( Baseband::P0, silent );
+   delay( 6500 );
+   Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_WODEX_POWER );
+   BB.power( p );
+   delay( 500 );
    _uart.enable();
    _enPin.on();
 
@@ -87,7 +89,7 @@ Modem1200& Modem1200::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-delay( 1000 );
+delay( 2000 );
    _enPin.off();
    _uart.disable();
    BB.disable( silent );
@@ -100,31 +102,38 @@ delay( 1000 );
 }
 
 
+#define MAXERR 3
+#define MAXTRY 3
+
 size_t Modem1200::send( WodStore::WEH *hdr, const uint8_t *x )
 {
-   char stime[ 32 ];
-   struct tm stm;
+   int n;
 
-   unsigned len, i, n;
+   for( n = 0 ; n < MAXTRY ; ++n ) {
+      if( _send( hdr, x ))
+         break;
 
-   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n = strftime( stime, 32, "!%Y%m%d@%H%M%S ", &stm );
-
-   for( i = 0 ; i < n ; ++i ) {
-      _wrb( stime[ i ]);
+      _wrb( 0x0d );
    }
 
-   len = hdr->len - sizeof( WodStore::WEH );
-
-   for( i = 0 ; i < len ; ++i ) {
-      _wrb( _hexv[ x[ i ] >> 4    ]);
-      _wrb( _hexv[ x[ i ]  & 0x0f ]);
+   if( n == MAXTRY ) {
+      kprintf( RED( "%s: giving up after %d tries" ) "\r\n", _name, n );
    }
 
-   _wrb( 0x0d );
-   _wrb( 0x0d );
-   _wrb( 0x0d );
-   _wrb( 0x0a );
+   return 0;
+}
+
+
+size_t Modem1200::send( const uint8_t *x, size_t len )
+{
+   int n;
+
+   for( n = 0 ; n < MAXTRY ; ++n ) {
+      if( _send( x, len ))
+         break;
+
+      _wrb( 0x0d );
+   }
 
    return 0;
 }
@@ -134,17 +143,71 @@ size_t Modem1200::send( WodStore::WEH *hdr, const uint8_t *x )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void Modem1200::_wrb( const uint8_t tx )
+bool Modem1200::_send( WodStore::WEH *hdr, const uint8_t *x )
+{
+   char stime[ 32 ];
+   struct tm stm;
+
+   unsigned len, err, i, n;
+
+   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
+   n = strftime( stime, 32, "!%Y%m%d@%H%M%S;", &stm );
+
+   err = 0;
+
+   for( i = 0 ; i < n ; ++i ) {
+      if( !_wrb( stime[ i ] )) {
+         ++err;
+         if( err == MAXERR ) break;
+      }
+   }
+
+   if( err < MAXERR ) {
+      len = hdr->len - sizeof( WodStore::WEH );
+      for( i = 0 ; i < len ; ++i ) {
+         if( !_wrb( _hexv[ x[ i ] >> 4 ] )) {
+            ++err;
+            if( err == MAXERR ) break;
+         }
+
+         if( !_wrb( _hexv[ x[ i ]  & 0x0f ] )) {
+            ++err;
+            if( err == MAXERR ) break;
+         }
+      }
+   }
+
+   _wrb( 0x0d );
+   _wrb( 0x0d );
+   _wrb( 0x0d );
+   _wrb( 0x0a );
+
+   return( err < MAXERR );
+}
+
+
+bool Modem1200::_send( const uint8_t *x, size_t len )
+{
+   unsigned err = 0;
+
+   for( size_t i = 0 ; i < len ; ++i ) {
+      if( !_wrb( x[ i ] )) {
+         ++err;
+         if( err == MAXERR ) break;
+      }
+   }
+
+   return( err < MAXERR );
+}
+
+
+bool Modem1200::_wrb( const uint8_t tx )
 {
    uint8_t rx;
    int i;
 
    for( i = 0 ; i < 5 ; ++i ) {
-#if 0
-      if( true ) {
-#else
       if( tx == 0x0a ) {
-#endif
          /* 0x0a is not echoed back by the PIC, disable read-back */
          if( _uart.write( tx, 25 ) > 0 ) {
             break;
@@ -158,7 +221,10 @@ void Modem1200::_wrb( const uint8_t tx )
 
    if( i == 5 ) {
       kprintf( RED( "%s: byte lost: 0x%02x" ) "\r\n", _name, tx );
+      return false;
    }
+
+   return true;
 }
 
 

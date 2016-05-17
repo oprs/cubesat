@@ -45,7 +45,7 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
    0b0010000010, /* mode FM        */
    0b0000000000, /* mode STDBY     */
    0b0001000010, /* mode TELEM9600 */
-   0b0000100010, /* mode TEKEM1200 */
+   0b0000100010, /* mode TELEM1200 */
    0b0000000010, /* mode (11)      */
    0b0000000010, /* mode POWER     */
    0b0000000010, /* mode (13)      */
@@ -164,7 +164,8 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
       if( SAT.aState() != ODB::DEPLOYED ) {
          mode = Config::INIT;
       } else {
-         kprintf( "Antenna already deployed, resuming previous mode\r\n" );
+         kprintf( "Antenna already deployed, resuming WODEX mode\r\n" );
+         mode = Config::WODEX;
       }
    }
 

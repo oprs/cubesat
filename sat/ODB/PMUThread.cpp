@@ -1,10 +1,12 @@
 
 #include "devices.h"
 #include "PMUThread.h"
+#include "Baseband.h"
 #include "Modem1200.h"
 #include "Config.h"
 #include "Event.h"
 #include "WodStore.h"
+#include "CommandBacklog.h"
 #include "system/Application.h"
 
 using namespace qb50;
@@ -12,7 +14,7 @@ using namespace qb50;
 
 extern QueueHandle_t evQueue;
 
-#define STEADY 2.0
+#define STEADY 2.0f
 
 
 static const char* chNames[] = {
@@ -148,7 +150,7 @@ void PMUThread::run( void )
       (void)ADC2CH4.read( &_raw[ SAMPLE_T3          ]);
       (void)ADC2CH5.read( &_raw[ SAMPLE_I3          ]);
       (void)ADC2CH6.read( &_raw[ SAMPLE_I_Surt      ]);
-      (void)ADC2CH7.read( &_raw[ SAMPLE_X0          ]);
+    //(void)ADC2CH7.read( &_raw[ SAMPLE_X0          ]);
 
       (void)ADC3CH0.read( &_raw[ SAMPLE_I_ADCS      ]);
       (void)ADC3CH1.read( &_raw[ SAMPLE_T_ARM       ]);
@@ -159,14 +161,21 @@ void PMUThread::run( void )
       (void)ADC3CH6.read( &_raw[ SAMPLE_P_PA        ]);
       (void)ADC3CH7.read( &_raw[ SAMPLE_T_PA        ]);
 
-      (void)ADC4CH0.read( &_raw[ SAMPLE_X1          ]);
+    //(void)ADC4CH0.read( &_raw[ SAMPLE_X1          ]);
       (void)ADC4CH1.read( &_raw[ SAMPLE_I_GPS       ]);
-      (void)ADC4CH2.read( &_raw[ SAMPLE_X2          ]);
+    //(void)ADC4CH2.read( &_raw[ SAMPLE_X2          ]);
       (void)ADC4CH3.read( &_raw[ SAMPLE_I_3V3_FIPEX ]);
       (void)ADC4CH4.read( &_raw[ SAMPLE_V_3V3_FIPEX ]);
       (void)ADC4CH5.read( &_raw[ SAMPLE_I_5V_FIPEX  ]);
       (void)ADC4CH6.read( &_raw[ SAMPLE_V_5V_FIPEX  ]);
       (void)ADC4CH7.read( &_raw[ SAMPLE_SU_TH_G0    ]);
+
+      Config::mode_t mode = CONF.mode();
+      _raw[ SAMPLE_X0 ].value = mode & 0xff;
+      _raw[ SAMPLE_X0 ].stdev = 0.0f;
+
+      _raw[ SAMPLE_X1 ].value = BB.pMask();
+      _raw[ SAMPLE_X1 ].stdev = 0.0f;
 
       for( i = 0 ; i < 32 ; ++i ) {
          if( _raw[i].stdev > STEADY ) {
@@ -187,20 +196,65 @@ void PMUThread::run( void )
 
       /* write WOD */
 
-#if 0
-      if(( n % 4 /*120*/ ) == 0 ) {
-         (void)WOD.write( WodStore::ADC, _raw8, 32 );
-      }
-#else
       WodStore::WEH hdr;
       (void)WOD.write( WodStore::ADC, _raw8, 32, &hdr );
 
-      if( CONF.mode() != Config::TELEM1200 ) {
+      if( mode != Config::TELEM1200 ) {
+         char tmp[ 16 ];
+         Form form;
+
          M12K.enable();
+
+         while( CBL.pop( form )) {
+            switch( form.type ) {
+
+               case Form::FORM_TYPE_C:
+               {
+                  CForm *cform = &form.C;
+
+                  int n = snprintf(
+                     tmp, sizeof( tmp ),
+                     "$C%lu,%lu,%lu,%lu\r\n",
+                     cform->argv[0],
+                     cform->argv[1],
+                     cform->argv[2],
+                     cform->argv[3]
+                   );
+
+                  if( n > 0 ) {
+                     M12K.send( (const uint8_t*)tmp, (size_t)n );
+                     delay( 500 );
+                  }
+
+                  break;
+               }
+
+               case Form::FORM_TYPE_P:
+               {
+                  PForm *pform = &form.P;
+
+                  int n = snprintf(
+                     tmp, sizeof( tmp ),
+                     "$P%d,%d\r\n",
+                     pform->pid,
+                     pform->pval
+                  );
+
+                  if( n > 0 ) {
+                     M12K.send( (const uint8_t*)tmp, (size_t)n );
+                     delay( 500 );
+                  }
+               }
+
+               default:
+                  break;
+
+            }
+         }
+
          M12K.send( &hdr, _raw8 );
          M12K.disable();
       }
-#endif
 
       /* check battery voltage */
 

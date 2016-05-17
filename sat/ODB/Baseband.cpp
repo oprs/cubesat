@@ -13,7 +13,7 @@ Baseband qb50::BB( "BB", PB15, PB13 ); // global Baseband object
 //  - - - - - - - - -  //
 
 Baseband::Baseband( const char *name, GPIO::Pin& enTXPin, GPIO::Pin& enPAPin )
-   : Device( name ), _enTXPin( enTXPin ), _enPAPin( enPAPin )
+   : Device( name ), _enTXPin( enTXPin ), _enPAPin( enPAPin ), _pMask( 0x00 )
 { ; }
 
 
@@ -49,19 +49,31 @@ Baseband& Baseband::enable( bool silent )
       return *this;
 
    //unsigned p = CONF.getParam( Config::PARAM_WODEX_POWER );
-   POWPIN.on();
+   //POWPIN.on();
 
    _enTXPin.on();
+
+#if 0
    if( !silent ) {
       kprintf( "%s: Waiting for 500ms...\r\n", _name );
    }
 
    delay( 500 );
+#endif
 
    _enPAPin.on();
    if( !silent ) {
       kprintf( "%s: enabled\r\n", _name );
    }
+
+   return *this;
+}
+
+
+Baseband& Baseband::enable( Power p, bool silent )
+{
+   enable( silent );
+   power( p );
 
    return *this;
 }
@@ -75,16 +87,69 @@ Baseband& Baseband::disable( bool silent )
    _enPAPin.off();
    _enTXPin.off();
 
-   PC5.off();
-   PB0.off();
-   PB1.off();
-   PA1.off();
+   power( P0 );
 
    if( !silent ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 
    return *this;
+}
+
+
+Baseband& Baseband::power( Power p )
+{
+   switch( p ) {
+
+      case P0:
+         PC5.off(); // P1
+         PB0.off(); // P2
+         PB1.off(); // P3
+         PA1.off(); // P4
+         _pMask = 0x00;
+         break;
+
+      case P1:
+         PB0.off(); // P2
+         PB1.off(); // P3
+         PA1.off(); // P4
+         PC5.on();  // P1 <-
+         _pMask = 0x01;
+         break;
+
+      case P2:
+         PC5.off(); // P1
+         PB1.off(); // P3
+         PA1.off(); // P4
+         PB0.on();  // P2 <-
+         _pMask = 0x02;
+         break;
+
+      case P3:
+         PC5.off(); // P1
+         PB0.off(); // P2
+         PA1.off(); // P4
+         PB1.on();  // P3 <-
+         _pMask = 0x04;
+         break;
+
+      case P4:
+         PC5.off(); // P1
+         PB0.off(); // P2
+         PB1.off(); // P3
+         PA1.on();  // P4 <-
+         _pMask = 0x08;
+         break;
+
+   }
+
+   return *this;
+}
+
+
+uint8_t Baseband::pMask( void ) const
+{
+   return _pMask;
 }
 
 

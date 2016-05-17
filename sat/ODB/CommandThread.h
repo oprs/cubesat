@@ -40,7 +40,6 @@ namespace qb50 {
          int _parseNoradSci ( double &p, size_t off, size_t len );
          int _parseNoradExp ( double &p, size_t off, size_t len );
 #endif
-
          int _checkTLESum   ( const uint8_t *x, size_t& off, size_t n );
 
          uint8_t       *_x;
