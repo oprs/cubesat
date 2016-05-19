@@ -8,9 +8,7 @@
 #include "WodexThread.h"
 //#include "GPSThread.h"
 #include "FiPEX/FipexThread.h"
-#include "PMUThread.h"
-#include "T9600Thread.h"
-#include "T1200Thread.h"
+#include "TelemThread.h"
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
 #include "TestThread.h"
@@ -24,33 +22,30 @@ QueueHandle_t evQueue;
 
 
 uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
-  /* +-------------- TestThread
-     |+------------- ADCSThread
-     ||+------------ CTCSSThread
-     |||+----------- T9600Thread
-     ||||+---------- T1200Thread
-     |||||+--------- CWThread
-     ||||||+-------- FipexThread
-     |||||||+------- WodexThread
-     ||||||||+------ PMUThread
-     |||||||||+----- InitThread
-     |||||||||| */
-   0b0000000001, /* mode INIT      */
-   0b0000010010, /* mode CW        */
-   0b0000000110, /* mode WODEX     */
-   0b0100000010, /* mode AMEAS     */
-   0b0100000010, /* mode DTMB      */
-   0b0100000010, /* mode ACTRL     */
-   0b0100001010, /* mode FIPEX     */
-   0b0010000010, /* mode FM        */
-   0b0000000000, /* mode STDBY     */
-   0b0001000010, /* mode TELEM9600 */
-   0b0000100010, /* mode TELEM1200 */
-   0b0000000010, /* mode (11)      */
-   0b0000000010, /* mode POWER     */
-   0b0000000010, /* mode (13)      */
-   0b1001000000, /* mode TEST1     */
-   0b1000000000  /* mode TEST2     */
+  /* +----------- TestThread
+     |+---------- ADCSThread
+     ||+--------- CTCSSThread
+     |||+-------- TelemThread
+     ||||+------- CWThread
+     |||||+------ FipexThread
+     ||||||+----- WodexThread
+     |||||||+---- InitThread
+     |||||||| */
+   0b00000001, /* mode INIT      */
+   0b00001010, /* mode CW        */
+   0b00000010, /* mode WODEX     */
+   0b01000010, /* mode AMEAS     */
+   0b01000010, /* mode ACTRL     */
+   0b01000110, /* mode FIPEX     */
+   0b00010010, /* mode TELEM     */
+   0b00100010, /* mode FM        */
+   0b00000010, /* mode (11)      */
+   0b00000010, /* mode (12)      */
+   0b00000010, /* mode (13)      */
+   0b00000010, /* mode (14)      */
+   0b00000010, /* mode (15)      */
+   0b00000010, /* mode POWER     */
+   0b00000000  /* mode STDBY     */
 };
 
 
@@ -64,15 +59,13 @@ ControlThread::ControlThread()
    evQueue = xQueueCreate( 16, sizeof( Event* ));
 
    _tv[ 0 ] = new InitThread();
-   _tv[ 1 ] = new PMUThread();
-   _tv[ 2 ] = new WodexThread();
-   _tv[ 3 ] = new FipexThread();
-   _tv[ 4 ] = new CWThread();
-   _tv[ 5 ] = new T1200Thread();
-   _tv[ 6 ] = new T9600Thread();
-   _tv[ 7 ] = new CTCSSThread();
-   _tv[ 8 ] = new ADCSThread();
-   _tv[ 9 ] = new TestThread();
+   _tv[ 1 ] = new WodexThread();
+   _tv[ 2 ] = new FipexThread();
+   _tv[ 3 ] = new CWThread();
+   _tv[ 4 ] = new TelemThread();
+   _tv[ 5 ] = new CTCSSThread();
+   _tv[ 6 ] = new ADCSThread();
+   _tv[ 7 ] = new TestThread();
 
    _ctb = 0x00;
 }
@@ -186,14 +179,6 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
                _switchModes( Config::WODEX );
             }
 
-            if(( mode == Config::TEST1 ) && ( ev->type == Event::AD_FAILURE )) {
-               _switchModes( Config::TEST2 );
-            }
-
-            if(( mode == Config::TEST2 ) && ( ev->type == Event::AD_SUCCESS )) {
-               _switchModes( Config::TEST1 );
-            }
-
             break;
 
          case Event::VBAT_HIGH:
@@ -219,7 +204,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
          case Event::WOD_EMPTY:
 
-            if(( mode == Config::TELEM9600 ) || ( mode == Config::TELEM1200 )) {
+            if(( mode == Config::TELEM ) || ( mode == Config::TELEM )) {
                _switchModes( Config::WODEX );
             }
 
@@ -276,11 +261,13 @@ void ControlThread::_handleCForm( CForm *fp )
 
          break;
 
-      /* C2 - passage en mode WODEX */
+      /* C2 - passage en mode WODEX (1200) */
 
       case 2:
 
          kprintf( "FORM C2\r\n" );
+
+         (void)CONF.setParam( Config::PARAM_MODEM, 1 );
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_WODEX_CYCLE_TX, fp->argv[1] );
@@ -295,11 +282,32 @@ void ControlThread::_handleCForm( CForm *fp )
 
          break;
 
-      /* C3 - passage en mode mesure d'attitude */
+      /* C3 - passage en mode WODEX (9600) */
 
       case 3:
 
          kprintf( "FORM C3\r\n" );
+
+         (void)CONF.setParam( Config::PARAM_MODEM, 2 );
+
+         if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_WODEX_CYCLE_TX, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[2] );
+            }
+         }
+
+         if( mode != Config::WODEX ) {
+            _switchModes( Config::WODEX );
+         }
+
+         break;
+
+      /* C4 - passage en mode mesure d'attitude */
+
+      case 4:
+
+         kprintf( "FORM C4\r\n" );
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[1] );
@@ -311,26 +319,7 @@ void ControlThread::_handleCForm( CForm *fp )
 
          break;
 
-      /* C4 - passage en mode détumbling */
-
-      case 4:
-
-         kprintf( "FORM C4\r\n" );
-
-         if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_DTMB, fp->argv[1] );
-            if( fp->argc > 2 ) {
-               (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[2] );
-            }
-         }
-
-         if( mode != Config::DTMB) {
-            _switchModes( Config::DTMB );
-         }
-
-         break;
-
-         /* C5 - passage en mode contrôle d'attitude */
+      /* C5 - passage en mode contrôle d'attitude */
 
       case 5:
 
@@ -403,11 +392,12 @@ void ControlThread::_handleCForm( CForm *fp )
          kprintf( "FORM C9\r\n" );
 
          if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_MODEM,       2           );
             (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
          }
 
-         if( mode != Config::TELEM9600 ) {
-            _switchModes( Config::TELEM9600 );
+         if( mode != Config::TELEM ) {
+            _switchModes( Config::TELEM );
          }
 
          break;
@@ -419,11 +409,12 @@ void ControlThread::_handleCForm( CForm *fp )
          kprintf( "FORM C10\r\n" );
 
          if( fp->argc > 1 ) {
+            (void)CONF.setParam( Config::PARAM_MODEM,        1           );
             (void)CONF.setParam( Config::PARAM_GPS_CYCLE_ON, fp->argv[1] );
          }
 
-         if( mode != Config::TELEM1200 ) {
-            _switchModes( Config::TELEM1200 );
+         if( mode != Config::TELEM ) {
+            _switchModes( Config::TELEM );
          }
 
          break;
@@ -440,7 +431,7 @@ void ControlThread::_handleCForm( CForm *fp )
 
          kprintf( "FORM C12\r\n" );
 
-         if( mode != Config::TELEM9600 ) {
+         if( mode != Config::TELEM ) {
             _switchModes( Config::WODEX );
          }
 

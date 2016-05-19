@@ -10,7 +10,7 @@
 using namespace qb50;
 
 
-Modem1200 qb50::M12K( "M12K", PC3, UART3 ); // global Modem1200 object
+Modem1200 qb50::M1K2( "M1K2", PC3, UART3 ); // global Modem1200 object
 
 
 static const uint8_t _istr[ 4 ] = { 0x0d, 0x0a, 0x0d, 0x0a };
@@ -26,7 +26,7 @@ static const uint8_t _hexv[ 16 ] = {
 //  - - - - - - - - -  //
 
 Modem1200::Modem1200( const char *name, GPIO::Pin& enPin, STM32_UART& uart )
-   : Device( name ), _enPin( enPin ), _uart( uart )
+   : Modem( name ), _enPin( enPin ), _uart( uart )
 {
    _rxBuf = new uint8_t[ 16 ];
 }
@@ -105,9 +105,11 @@ delay( 2000 );
 #define MAXERR 3
 #define MAXTRY 3
 
-size_t Modem1200::send( WodStore::WEH *hdr, const uint8_t *x )
+size_t Modem1200::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
 {
    int n;
+
+   (void)toms;
 
    for( n = 0 ; n < MAXTRY ; ++n ) {
       if( _send( hdr, x ))
@@ -124,9 +126,11 @@ size_t Modem1200::send( WodStore::WEH *hdr, const uint8_t *x )
 }
 
 
-size_t Modem1200::send( const uint8_t *x, size_t len )
+size_t Modem1200::send( const uint8_t *x, size_t len, int toms )
 {
    int n;
+
+   (void)toms;
 
    for( n = 0 ; n < MAXTRY ; ++n ) {
       if( _send( x, len ))

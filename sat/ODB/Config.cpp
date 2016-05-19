@@ -15,7 +15,7 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
    /* params[ 0 .. 15 ]       min max def                               min max def */
    { PARAM_NONE,               0,  0,  0 },  { PARAM_CW_CYCLE_TX,        0, 10,  4 },
    { PARAM_WODEX_CYCLE_TX,     1,  3,  1 },  { PARAM_FIPEX_SCRIPT_N,     1,  7,  1 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_ADCS_CYCLE_MEAS,    1,  4,  1 },
+   { PARAM_MODEM,              1,  2,  1 },  { PARAM_ADCS_CYCLE_MEAS,    1,  4,  1 },
    { PARAM_GPS_CYCLE_ON,       1,  5,  2 },  { PARAM_VBAT_LOW,           1,  7,  7 },
    { PARAM_ADCS_CYCLE_DTMB,    0, 24,  0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,  4,  2 },
    { PARAM_ADCS_CYCLE_CTRL,    0, 24,  0 },  { PARAM_FM_CYCLE_ON,        1, 96, 16 },
@@ -57,9 +57,9 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
 const char *Config::modes[ _QB50_NMODES ] = {
    "INIT",         "CW",           "WODEX",        "AMEAS",
-   "DTMB",         "ACTRL",        "FIPEX",        "FM",
-   "STDBY",        "TELEM9600",    "TELEM1200",    "(11)",
-   "POWER",        "(13)",         "TEST1",        "TEST2"
+   "ACTRL",        "FIPEX",        "TELEM",        "FM",
+   "MODE8",        "MODE9",        "MODE10",       "MODE11",
+   "MODE12",       "MODE13",       "POWER",        "STDBY"
 };
 
 

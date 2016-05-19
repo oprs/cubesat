@@ -1,15 +1,14 @@
 
-#ifndef _QB50_SYS_DEVICE_MODEM_1200_H
-#define _QB50_SYS_DEVICE_MODEM_1200_H
+#ifndef _QB50_ODB_MODEM_1200_H
+#define _QB50_ODB_MODEM_1200_H
 
-#include "Device.h"
-#include "WodStore.h"
+#include "Modem.h"
 #include "GPIO.h"
 
 
 namespace qb50 {
 
-   class Modem1200 : public Device
+   class Modem1200 : public Modem
    {
 
       public:
@@ -21,8 +20,8 @@ namespace qb50 {
          Modem1200& enable  ( bool silent = false );
          Modem1200& disable ( bool silent = false );
 
-         size_t     send    ( WodStore::WEH *hdr, const uint8_t *x );
-         size_t     send    ( const uint8_t *x, unsigned len );
+         size_t     send    ( WodStore::WEH *hdr, const uint8_t *x, int toms = -1 );
+         size_t     send    ( const uint8_t *x,   unsigned len,     int toms = -1 );
 
 
       private:
@@ -38,11 +37,11 @@ namespace qb50 {
 
    };
 
-   extern qb50::Modem1200 M12K;
+   extern qb50::Modem1200 M1K2;
 
 } /* qb50 */
 
 
-#endif /*_QB50_SYS_DEVICE_MODEM_1200_H*/
+#endif /*_QB50_ODB_MODEM_1200_H*/
 
 /*EoF*/

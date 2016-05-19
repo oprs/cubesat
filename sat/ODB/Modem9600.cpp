@@ -1,21 +1,22 @@
 
 #include "devices.h"
-#include "AX25TX.h"
+#include "Modem9600.h"
 #include "Baseband.h"
+#include "Config.h"
 
 using namespace qb50;
 
 
-AX25TX qb50::AX25( "AX25" ); // global AX25TX object
+Modem9600 qb50::M9K6( "M9K6" ); // global Modem9600 object
 
 
-static const uint8_t hexv[ 16 ] = {
+static const uint8_t _hexv[ 16 ] = {
    '0', '1', '2', '3', '4', '5', '6', '7',
    '8' ,'9', 'a', 'b', 'c', 'd', 'e', 'f'
 };
 
 
-static const uint16_t crc16v[ 256 ] = {
+static const uint16_t _crc16v[ 256 ] = {
    0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
    0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
    0x1081, 0x0108, 0x3393, 0x221a, 0x56a5, 0x472c, 0x75b7, 0x643e,
@@ -55,22 +56,24 @@ static const uint16_t crc16v[ 256 ] = {
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-AX25TX::AX25TX( const char *name )
-   : Device( name )
+Modem9600::Modem9600( const char *name )
+   : Modem( name )
 {
    _semTX = xSemaphoreCreateBinary();
    _flag  = false;
    _byte  = 0x00;
    _mask  = 0x00;
    _ones  = 0;
+   _obuf  = new uint8_t[ 512 ];
 
    for( unsigned i = 0 ; i < sizeof( _ohdr ) ; ++i )
       _ohdr[ i ] = 0x00;
 }
 
 
-AX25TX::~AX25TX()
+Modem9600::~Modem9600()
 {
+   delete[] _obuf;
    vSemaphoreDelete( _semTX );
 }
 
@@ -79,7 +82,7 @@ AX25TX::~AX25TX()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-AX25TX& AX25TX::init( void )
+Modem9600& Modem9600::init( void )
 {
    PC9  . in()  . noPull();   // CLK_9600
    PC8  . out() . off();      // DATA_9600
@@ -87,8 +90,17 @@ AX25TX& AX25TX::init( void )
 
    EXTI.registerHandler( PC9, this, STM32_EXTI::RISING );
 
-   unproto ( "F6FAO",  0 );
-   mycall  ( "ON0FR1", 0 );
+   unproto( "TLM", 0 );
+
+   switch( SAT.id() ) {
+      case ODB::FR01:
+         mycall( "ON0RF1", 0 );
+         break;
+
+      case ODB::FR05:
+         mycall( "ON0RF5", 0 );
+         break;
+   }
 
    _ohdr[ 14 ] = 0x03; // Control
    _ohdr[ 15 ] = 0xf0; // PID
@@ -99,12 +111,15 @@ AX25TX& AX25TX::init( void )
 }
 
 
-AX25TX& AX25TX::enable( bool silent )
+Modem9600& Modem9600::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
 
    BB.enable();
+   delay( 6500 );
+   Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_WODEX_POWER );
+   BB.power( p );
    PC10.on(); // ON_OFF_9600
 
    if( !silent )
@@ -114,7 +129,7 @@ AX25TX& AX25TX::enable( bool silent )
 }
 
 
-AX25TX& AX25TX::disable( bool silent )
+Modem9600& Modem9600::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
@@ -129,7 +144,7 @@ AX25TX& AX25TX::disable( bool silent )
 }
 
 
-AX25TX& AX25TX::mycall( const char *addr, int ssid )
+Modem9600& Modem9600::mycall( const char *addr, int ssid )
 {
    int i;
    uint8_t c;
@@ -149,7 +164,7 @@ AX25TX& AX25TX::mycall( const char *addr, int ssid )
 }
 
 
-AX25TX& AX25TX::unproto( const char *addr, int ssid )
+Modem9600& Modem9600::unproto( const char *addr, int ssid )
 {
    int i;
    uint8_t c;
@@ -169,14 +184,12 @@ AX25TX& AX25TX::unproto( const char *addr, int ssid )
 }
 
 
-AX25TX& AX25TX::sendUI( const uint8_t *x, unsigned len, int toms )
+Modem9600& Modem9600::sendUI( const uint8_t *x, unsigned len, int toms )
 {
    unsigned i;
    uint16_t fcs, w;
 
    _ones = 0;
-
-hexdump( x, len );
 
    /* start flags */
 
@@ -195,8 +208,8 @@ hexdump( x, len );
 
    /* FCS */
 
-   fcs = crc16( _ohdr, 16       );
-   fcs = crc16( x,     len, fcs );
+   fcs = _crc16( _ohdr, 16       );
+   fcs = _crc16( x,     len, fcs );
    fcs ^= 0xffff;
 
    w = fcs & 0xff;
@@ -213,13 +226,13 @@ hexdump( x, len );
 }
 
 
-AX25TX& AX25TX::sendUIH( const uint8_t *x, unsigned len, int toms )
+Modem9600& Modem9600::sendUIH( const uint8_t *x, unsigned len, int toms )
 {
    uint8_t *h = new uint8_t[ 2 * len ];
 
    for( unsigned i = 0 ; i < len ; ++i ) {
-      h[ 2*i     ] = hexv[ x[ i ] >> 4    ];
-      h[ 2*i + 1 ] = hexv[ x[ i ]  & 0x0f ];
+      h[ 2*i     ] = _hexv[ x[ i ] >> 4    ];
+      h[ 2*i + 1 ] = _hexv[ x[ i ]  & 0x0f ];
    }
 
    sendUI( h, 2 * len, toms );
@@ -230,12 +243,33 @@ AX25TX& AX25TX::sendUIH( const uint8_t *x, unsigned len, int toms )
 }
 
 
-uint16_t AX25TX::crc16( const uint8_t *x, unsigned len, uint16_t crc )
+size_t Modem9600::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
 {
-   for( unsigned i = 0 ; i < len ; ++i )
-      crc = ( crc >> 8 ) ^ crc16v[ ( crc ^ x[i] ) & 0x00ff ];
+   struct tm stm;
 
-   return crc;
+   unsigned len, i, n;
+   uint8_t *o;
+
+   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
+   n = strftime( (char*)_obuf, 32, "!%Y%m%d@%H%M%S;", &stm );
+
+   o   = _obuf + n;
+   len = hdr->len - sizeof( WodStore::WEH );
+
+   for( i = 0 ; i < len ; ++i ) {
+      *(o++) = _hexv[ x[ i ] >> 4    ];
+      *(o++) = _hexv[ x[ i ]  & 0x0f ];
+   }
+
+   return
+      send( _obuf, n + 2*i, toms );
+}
+
+
+size_t Modem9600::send( const uint8_t *x, size_t len, int toms )
+{
+   (void)sendUI( x, len, toms );
+   return len;
 }
 
 
@@ -243,7 +277,16 @@ uint16_t AX25TX::crc16( const uint8_t *x, unsigned len, uint16_t crc )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void AX25TX::_push( const uint16_t w, int toms )
+uint16_t Modem9600::_crc16( const uint8_t *x, unsigned len, uint16_t crc )
+{
+   for( unsigned i = 0 ; i < len ; ++i )
+      crc = ( crc >> 8 ) ^ _crc16v[ ( crc ^ x[i] ) & 0x00ff ];
+
+   return crc;
+}
+
+
+void Modem9600::_push( const uint16_t w, int toms )
 {
    TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
 
@@ -259,7 +302,7 @@ void AX25TX::_push( const uint16_t w, int toms )
 //  E X T I   H A N D L E R  //
 //  - - - - - - - - - - - -  //
 
-void AX25TX::handle( STM32_EXTI::EXTIn /* ignored */ )
+void Modem9600::handle( STM32_EXTI::EXTIn /* ignored */ )
 {
    portBASE_TYPE hpTask = pdFALSE;
    uint16_t w;

@@ -1,19 +1,20 @@
 
-#ifndef _QB50_T9600_THREAD_H
-#define _QB50_T9600_THREAD_H
+#ifndef _QB50_TELEM_THREAD_H
+#define _QB50_TELEM_THREAD_H
 
 #include "system/qb50.h"
+#include "Modem.h"
 
 
 namespace qb50 {
 
-   class T9600Thread : public Thread
+   class TelemThread : public Thread
    {
 
       public:
 
-         T9600Thread();
-         ~T9600Thread();
+         TelemThread();
+         ~TelemThread();
 
          void run       ( void );
          void onSuspend ( void );
@@ -21,6 +22,7 @@ namespace qb50 {
 
       private:
 
+         Modem   *_modem;
          uint8_t *_x;
 
    };
@@ -28,6 +30,6 @@ namespace qb50 {
 } /* qb50 */
 
 
-#endif /*_QB50_T9600_THREAD_H*/
+#endif /*_QB50_TELEM_THREAD_H*/
 
 /*EoF*/

@@ -1,13 +1,11 @@
 
-#include "T1200Thread.h"
+#include "TelemThread.h"
+#include "Modem9600.h"
 #include "Modem1200.h"
 #include "Event.h"
 #include "WodStore.h"
 #include "Config.h"
 #include "devices.h"
-#include "Baseband.h"
-
-#include <ctime>
 
 using namespace qb50;
 
@@ -18,55 +16,65 @@ extern QueueHandle_t evQueue;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-T1200Thread::T1200Thread()
-   : Thread( "T1200", 1, SUSPENDED, 512 )
-{ ; }
+TelemThread::TelemThread()
+   : Thread( "Telem", 1, SUSPENDED, 512 )
+{
+   _modem = &M1K2;
+   _x     = new uint8_t[ 256 ];
+}
 
 
-T1200Thread::~T1200Thread()
-{ ; }
+TelemThread::~TelemThread()
+{
+   delete[] _x;
+}
 
 
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void T1200Thread::onSuspend( void )
+void TelemThread::onSuspend( void )
 {
-   M12K.disable();
+   _modem->disable();
    WOD.disable();
    Thread::onSuspend();
 }
 
 
-void T1200Thread::onResume( void )
+void TelemThread::onResume( void )
 {
    Thread::onResume();
    WOD.enable();
-   M12K.enable();
 
-   delay( 500 );
+   if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
+      _modem = &M1K2;
+   } else {
+      _modem = &M9K6;
+   }
+
+   _modem->enable();
 }
 
 
-void T1200Thread::run( void )
+void TelemThread::run( void )
 {
-   uint8_t *x = new uint8_t[ 256 ];
-
    WodStore::WEH hdr;
 
    for( ;; ) {
 
       _wait();
 
-      (void)WOD.read( &hdr, x );
+      delay( 2000 );
+
+      (void)WOD.read( &hdr, _x );
 
       if( hdr.type == WodStore::NONE ) {
 
          Event *ev = new Event( Event::WOD_EMPTY );
          xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
 
-         delay( 500 );
+         delay( 100 );
 
       } else {
 
@@ -75,15 +83,12 @@ void T1200Thread::run( void )
             hdr.type, hdr.len, hdr.prev
          );
 
-         M12K.send( &hdr, x );
+         _modem->send( &hdr, _x, -1 );
 
-         delay( 600 );
+         delay( 500 );
 
       }
    }
-
-   delete[] x;
 }
-
 
 /*EoF*/

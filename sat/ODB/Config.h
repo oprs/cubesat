@@ -10,7 +10,7 @@
 
 
 #define _QB50_NMODES    16
-#define _QB50_NTHREADS  10
+#define _QB50_NTHREADS  8
 #define _QB50_NPARAMS   64
 #define _QB50_PVAL_MASK 0xffff
 
@@ -31,7 +31,7 @@ namespace qb50 {
             PARAM_CW_CYCLE_TX       = 1,
             PARAM_WODEX_CYCLE_TX    = 2,
             PARAM_FIPEX_SCRIPT_N    = 3,
-          //UNUSED                  = 4,
+            PARAM_MODEM             = 4,
             PARAM_ADCS_CYCLE_MEAS   = 5,
             PARAM_GPS_CYCLE_ON      = 6,
             PARAM_VBAT_LOW          = 7,
@@ -69,22 +69,22 @@ namespace qb50 {
          //  - - - - -  //
 
          enum Mode {
-            INIT      = 0x00,
-            CW        = 0x01,
-            WODEX     = 0x02,
-            AMEAS     = 0x03,
-            DTMB      = 0x04,
-            ACTRL     = 0x05,
-            FIPEX     = 0x06,
-            FM        = 0x07,
-            STDBY     = 0x08,
-            TELEM9600 = 0x09,
-            TELEM1200 = 0x0a,
-          //(11)      = 0x0b,
-            POWER     = 0x0c,
-          //(13)      = 0x0d,
-            TEST1     = 0x0e,
-            TEST2     = 0x0f
+            INIT   = 0x00,
+            CW     = 0x01,
+            WODEX  = 0x02,
+            AMEAS  = 0x03,
+            ACTRL  = 0x04,
+            FIPEX  = 0x05,
+            TELEM  = 0x06,
+            FM     = 0x07,
+            MODE8  = 0x08,
+            MODE9  = 0x09,
+            MODE10 = 0x0a,
+            MODE11 = 0x0b,
+            MODE12 = 0x0c,
+            MODE13 = 0x0d,
+            POWER  = 0x0e,
+            STDBY  = 0x0f
          };
 
          static const char *modes[ _QB50_NMODES ];
