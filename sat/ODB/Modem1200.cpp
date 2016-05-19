@@ -201,6 +201,9 @@ bool Modem1200::_send( const uint8_t *x, size_t len )
       }
    }
 
+   _wrb( 0x0d );
+   _wrb( 0x0a );
+
    return( err < MAXERR );
 }
 
