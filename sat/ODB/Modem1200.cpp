@@ -28,7 +28,7 @@ static const uint8_t _hexv[ 16 ] = {
 Modem1200::Modem1200( const char *name, GPIO::Pin& enPin, STM32_UART& uart )
    : Modem( name ), _enPin( enPin ), _uart( uart )
 {
-   _rxBuf = new uint8_t[ 16 ];
+   _rxBuf = new uint8_t[ 64 ];
 }
 
 
@@ -55,6 +55,8 @@ Modem1200& Modem1200::init( void )
 
 Modem1200& Modem1200::enable( bool silent )
 {
+   size_t n;
+
    if( _incRef() > 0 )
       return *this;
 
@@ -66,7 +68,12 @@ Modem1200& Modem1200::enable( bool silent )
    _uart.enable();
    _enPin.on();
 
-   delay( 100 );
+   n = _uart.readLine( _rxBuf, 63, 500 );
+   while( n > 0 ) {
+      _rxBuf[ n ] = 0;
+      kprintf( RED( "%s: [modem] %s" ) "\r\n", _name, (const char*)_rxBuf );
+      n = _uart.readLine( _rxBuf, 63, 500 );
+   }
 
 /*
    _uart.write( _istr, sizeof( _istr ));
@@ -89,7 +96,6 @@ Modem1200& Modem1200::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
-delay( 2000 );
    _enPin.off();
    _uart.disable();
    BB.disable( silent );
@@ -97,6 +103,68 @@ delay( 2000 );
    if( !silent ) {
       kprintf( "%s: disabled\r\n", _name );
    }
+
+   return *this;
+}
+
+
+struct DataTrackCmd {
+   const char *name;
+   const char *cmd;
+   size_t      len;
+};
+
+Modem1200& Modem1200::configure( void )
+{
+   size_t n;
+   int i;
+
+   struct DataTrackCmd cv[ 5 ] = {
+      { "TOCALL",  "TLM\r",    4 },
+      { "MYCALL",  "XXXXXX\r", 7 },
+      { "1st VIA", "\r",       1 },
+      { "TXDELAY", "1000\r",   5 },
+      { "ECHO",    "Y\r",      2 }
+   };
+
+   cv[1].cmd = ( SAT.id() == ODB::FR01 ) ? "ON0FR1\r\n" : "ON0FR5\r\n";
+
+   kprintf( YELLOW( "%s: reconfiguring PIC " ) "\r\n", _name );
+
+   _enPin.off();
+   delay( 100 );
+
+   _uart.enable();
+   _enPin.on();
+   delay( 1000 );
+
+   for( i = 0 ; i < 5 ; ++i ) {
+      n = _uart.readLine( _rxBuf, 63, 500 );
+      while( n > 0 ) {
+         _rxBuf[ n ] = 0;
+         kprintf( "%s: [modem] %s\r\n", _name, (const char*)_rxBuf );
+         n = _uart.readLine( _rxBuf, 63, 500 );
+      }
+
+      if( _uart.write( (const uint8_t*)cv[i].cmd, cv[i].len, 250  ) != cv[i].len ) {
+         kprintf( RED( "%s: can't write to %s" ) "\r\n", _name, _uart.name() );
+         break;
+      }
+
+      delay( 250 );
+   }
+
+   n = _uart.readLine( _rxBuf, 63, 1000 );
+   while( n > 0 ) {
+      _rxBuf[ n ] = 0;
+      kprintf( "%s: [modem] %s\r\n", _name, (const char*)_rxBuf );
+      n = _uart.readLine( _rxBuf, 63, 500 );
+   }
+
+   kprintf( "%s: configuration set, hoping for the best...\r\n", _name );
+
+   _enPin.off();
+   _uart.disable();
 
    return *this;
 }
@@ -152,7 +220,8 @@ bool Modem1200::_send( WodStore::WEH *hdr, const uint8_t *x )
    char stime[ 32 ];
    struct tm stm;
 
-   unsigned len, err, i, n;
+   unsigned len = 0;
+   unsigned err, ms, i, n;
 
    (void)gmtime_r( (const time_t*)&hdr->time, &stm );
    n = strftime( stime, 32, "!%Y%m%d@%H%M%S;", &stm );
@@ -185,6 +254,14 @@ bool Modem1200::_send( WodStore::WEH *hdr, const uint8_t *x )
    _wrb( 0x0d );
    _wrb( 0x0d );
    _wrb( 0x0a );
+/*
+   _wrb( 0x0a );
+*/
+
+   ms = ( 1000 * ( n + len )) / 75;
+ //ms = 500;
+   kprintf( YELLOW( "%s: delay: %ums" ) "\r\n", _name, ms );
+   delay( ms );
 
    return( err < MAXERR );
 }
@@ -193,6 +270,7 @@ bool Modem1200::_send( WodStore::WEH *hdr, const uint8_t *x )
 bool Modem1200::_send( const uint8_t *x, size_t len )
 {
    unsigned err = 0;
+   unsigned ms;
 
    for( size_t i = 0 ; i < len ; ++i ) {
       if( !_wrb( x[ i ] )) {
@@ -202,7 +280,12 @@ bool Modem1200::_send( const uint8_t *x, size_t len )
    }
 
    _wrb( 0x0d );
-   _wrb( 0x0a );
+//   _wrb( 0x0a );
+
+   ms = ( 1000 * len ) / 100;
+ //ms = 500;
+   kprintf( YELLOW( "%s: delay: %ums" ) "\r\n", _name, ms );
+   delay( ms );
 
    return( err < MAXERR );
 }

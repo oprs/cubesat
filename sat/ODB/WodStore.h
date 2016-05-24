@@ -54,6 +54,7 @@ namespace qb50 {
 
          WodStore& clear   ( void );
          WodStore& read    ( WEH *hdr, void *x );
+         WodStore& peek    ( WEH *hdr, void *x );
          WodStore& write   ( EntryType type, const void *x, unsigned len, WEH *hdr = (WEH*)0 );
 
 
@@ -63,6 +64,7 @@ namespace qb50 {
          const char  *_name;
 
          void _read  ( WEH *hdr, void *x );
+         void _peek  ( WEH *hdr, void *x );
          void _write ( EntryType type, const void *x, unsigned len, WEH *hdr );
 
    };

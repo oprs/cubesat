@@ -26,15 +26,16 @@ namespace qb50 {
             FR05 = 1  /* SpaceCube (Mines ParisTech) */
          };
 
-         SatSel id( void );
+         SatSel id        ( void );
+         bool   isInhibit ( void );
 
          enum AntState {
             RETRACTED = 0,
             DEPLOYED  = 1
          };
 
-         AntState aState  ( void );
-         AntState aDeploy ( void );
+         AntState aState   ( void );
+         AntState aDeploy  ( void );
 
          unsigned maI[4];
          unsigned mvV[4];

@@ -12,6 +12,7 @@
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
 #include "TestThread.h"
+#include "Modem1200.h"
 
 #include "Event.h"
 #include "WodStore.h"
@@ -391,8 +392,9 @@ void ControlThread::_handleCForm( CForm *fp )
 
          kprintf( "FORM C9\r\n" );
 
+         (void)CONF.setParam( Config::PARAM_MODEM, 2 );
+
          if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_MODEM,       2           );
             (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
          }
 
@@ -408,8 +410,9 @@ void ControlThread::_handleCForm( CForm *fp )
 
          kprintf( "FORM C10\r\n" );
 
+         (void)CONF.setParam( Config::PARAM_MODEM, 1 );
+
          if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_MODEM,        1           );
             (void)CONF.setParam( Config::PARAM_GPS_CYCLE_ON, fp->argv[1] );
          }
 
@@ -456,6 +459,29 @@ void ControlThread::_handleCForm( CForm *fp )
          break;
 
       default:
+         break;
+
+      /* C1001 - formattage de la flash */
+
+      case 1001:
+
+         if( SAT.isInhibit() && ( mode == Config::STDBY )) {
+            WOD.enable();
+            WOD.clear();
+            FCACHE.clear();
+            WOD.disable();
+         }
+
+         break;
+
+      /* C1002 - reconfiguration du PIC 1200 */
+
+      case 1002:
+
+         if( SAT.isInhibit() && ( mode == Config::STDBY )) {
+            M1K2.configure();
+         }
+
          break;
 
    }

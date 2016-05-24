@@ -84,12 +84,22 @@ Baseband& Baseband::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
+   MAX111x::Sample tpa;
+   (void)ADC3CH7.read( &tpa );
+
    _enPAPin.off();
    _enTXPin.off();
 
    power( P0 );
 
    if( !silent ) {
+      if( tpa.stdev > 2.0 ) {
+         kprintf( RED( "%s: T_PA not steady" ) "\r\n", _name );
+      } else {
+         float dK = 1.6 * tpa.value;
+         float dC = dK - 273.15;
+         kprintf( YELLOW( "%s: T_PA: %.2fdK - %.2fdC (raw: %u)" ) "\r\n", _name, dK, dC, tpa.value );
+      }
       kprintf( "%s: disabled\r\n", _name );
    }
 

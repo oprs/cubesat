@@ -87,9 +87,16 @@ ODB::SatSel ODB::id( void )
 }
 
 
+bool ODB::isInhibit( void )
+{
+   return
+      ( _inhPin.read() == 0 );
+}
+
+
 ODB::AntState ODB::aState( void )
 {
-   if( _inhPin.read() == 0 ) {
+   if( isInhibit() ) {
       kprintf( "%s: Inhibit ON\r\n", _name );
       return ODB::DEPLOYED;
    }

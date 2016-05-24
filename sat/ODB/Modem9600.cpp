@@ -94,11 +94,11 @@ Modem9600& Modem9600::init( void )
 
    switch( SAT.id() ) {
       case ODB::FR01:
-         mycall( "ON0RF1", 0 );
+         mycall( "ON0FR1", 0 );
          break;
 
       case ODB::FR05:
-         mycall( "ON0RF5", 0 );
+         mycall( "ON0FR5", 0 );
          break;
    }
 
@@ -121,6 +121,7 @@ Modem9600& Modem9600::enable( bool silent )
    Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_WODEX_POWER );
    BB.power( p );
    PC10.on(); // ON_OFF_9600
+   delay( 100 );
 
    if( !silent )
       kprintf( "%s: enabled\r\n", _name );
@@ -134,6 +135,7 @@ Modem9600& Modem9600::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
+   delay( 100 );
    PC10.off(); // CLK_9600
    BB.disable();
 
@@ -193,8 +195,11 @@ Modem9600& Modem9600::sendUI( const uint8_t *x, unsigned len, int toms )
 
    /* start flags */
 
+/*
    for( i = 0 ; i < 20 ; ++i )
       _push( 0x017e, toms );
+*/
+   _push( 0x017e, toms );
 
    /* header */
 

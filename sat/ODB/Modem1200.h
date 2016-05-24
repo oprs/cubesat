@@ -16,9 +16,10 @@ namespace qb50 {
          Modem1200( const char *name, GPIO::Pin& enPin, STM32_UART& _uart );
          ~Modem1200();
 
-         Modem1200& init    ( void );
-         Modem1200& enable  ( bool silent = false );
-         Modem1200& disable ( bool silent = false );
+         Modem1200& init      ( void );
+         Modem1200& enable    ( bool silent = false );
+         Modem1200& disable   ( bool silent = false );
+         Modem1200& configure ( void );
 
          size_t     send    ( WodStore::WEH *hdr, const uint8_t *x, int toms = -1 );
          size_t     send    ( const uint8_t *x,   unsigned len,     int toms = -1 );

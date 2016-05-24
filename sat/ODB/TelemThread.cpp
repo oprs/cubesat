@@ -65,11 +65,14 @@ void TelemThread::run( void )
 
       _wait();
 
-      delay( 2000 );
+#if 0
+   (void)WOD.peek( &hdr, _x ); // XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX !
+#else
+   (void)WOD.read( &hdr, _x );
+#endif
 
-      (void)WOD.read( &hdr, _x );
-
-      if( hdr.type == WodStore::NONE ) {
+    //if( hdr.type == WodStore::NONE ) {
+      if(( hdr.type == WodStore::NONE ) || ( hdr.prev == 0xffffffff )) {
 
          Event *ev = new Event( Event::WOD_EMPTY );
          xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
@@ -84,8 +87,6 @@ void TelemThread::run( void )
          );
 
          _modem->send( &hdr, _x, -1 );
-
-         delay( 500 );
 
       }
    }

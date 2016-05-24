@@ -1,7 +1,7 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
-#include <cstdio> // XXX
+#include <cstdio>
 
 #include "system/Application.h"
 

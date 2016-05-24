@@ -62,10 +62,8 @@ WodStore& WodStore::disable( bool silent )
 WodStore& WodStore::clear( void )
 {
    (void)lock();
-
    (void)CONF.wHead( NIL );
    (void)CONF.wTail( NIL );
-
    (void)unlock();
 
    return *this;
@@ -76,6 +74,16 @@ WodStore& WodStore::read( WEH *hdr, void *x )
 {
    (void)lock();
    _read( hdr, x );
+   (void)unlock();
+
+   return *this;
+}
+
+
+WodStore& WodStore::peek( WEH *hdr, void *x )
+{
+   (void)lock();
+   _peek( hdr, x );
    (void)unlock();
 
    return *this;
@@ -156,6 +164,16 @@ hexdump( x, len );
 
 void WodStore::_read( WEH *hdr, void *x )
 {
+   _peek( hdr, x );
+
+   if( hdr->prev != NIL ) {
+      (void)CONF.wHead( hdr->prev );
+   }
+}
+
+
+void WodStore::_peek( WEH *hdr, void *x )
+{
    uint32_t wHead = CONF.wHead();
 
    if( wHead == NIL ) {
@@ -171,7 +189,6 @@ void WodStore::_read( WEH *hdr, void *x )
 
       (void)_mem.read( wHead, hdr, sizeof( WEH ));
       (void)_mem.read( wHead + sizeof( WEH ), x, hdr->len - sizeof( WEH ));
-      (void)CONF.wHead( hdr->prev );
 
    }
 }

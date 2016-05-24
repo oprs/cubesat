@@ -28,6 +28,7 @@
 #include "system/Application.h"
 #include "system/UserLock.h"
 #include "system/Logger.h"
+#include "system/Timer.h"
 #include "system/Ring.hpp"
 #include "system/mBuf.h"
 

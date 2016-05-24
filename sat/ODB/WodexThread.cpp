@@ -112,6 +112,7 @@ void WodexThread::run( void )
 {
    Config::pval_t dt;
    WodStore::WEH hdr;
+   Timer tm;
 
    float min, max;
    unsigned ms;
@@ -123,7 +124,7 @@ void WodexThread::run( void )
       ms = dt >= 0 ? ( 30000 / ( 1 << dt )) : 30000;
 
       kprintf( "%s: waiting for %.2f sec...\r\n", name, 0.001 * ms );
-      delay( ms );
+      tm.every( ms );
 
       _updateSamples();
       (void)WOD.write( WodStore::ADC, _raw8, 32, &hdr );
