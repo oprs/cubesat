@@ -101,8 +101,14 @@ Config& Config::unlock( void )
 uint16_t Config::reset( void )
 {
    _Store *st = (_Store*)BKPSRAM_BASE;
-
    return ++st->nReset;
+}
+
+
+uint16_t Config::nrst( void )
+{
+   _Store *st = (_Store*)BKPSRAM_BASE;
+   return st->nReset;
 }
 
 
@@ -115,7 +121,7 @@ void Config::clear( void )
    for( int i = 0 ; i < _QB50_NPARAMS ; ++i )
       st->pv[ i ] = defs[ i ].def;
 
-   st->nReset = 0;
+ //st->nReset = 0;
    st->mode   = Config::INIT;
    st->wHead  = 0;
    st->wTail  = 0;

@@ -116,6 +116,7 @@ namespace qb50 {
 
          void     clear    ( void );
          uint16_t reset    ( void );
+         uint16_t nrst     ( void );
 
 
       private:

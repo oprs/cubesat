@@ -256,7 +256,8 @@ size_t Modem9600::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
    uint8_t *o;
 
    (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n = strftime( (char*)_obuf, 32, "!%Y%m%d@%H%M%S;", &stm );
+   n  = snprintf ( (char*)_obuf,     32,     "!%02x", CONF.nrst() & 0xff );
+   n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
 
    o   = _obuf + n;
    len = hdr->len - sizeof( WodStore::WEH );

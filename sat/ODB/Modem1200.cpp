@@ -224,7 +224,8 @@ bool Modem1200::_send( WodStore::WEH *hdr, const uint8_t *x )
    unsigned err, ms, i, n;
 
    (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n = strftime( stime, 32, "!%Y%m%d@%H%M%S;", &stm );
+   n  = snprintf ( stime,     32,     "!%02x", CONF.nrst() & 0xff );
+   n += strftime ( stime + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
 
    err = 0;
 

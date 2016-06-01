@@ -54,7 +54,7 @@ void CommandThread::run( void )
 
    for( ;; ) {
 
-      n = UART6.readLine( _x, 128, 30 * 1000 );
+      n = UART6.readLine( _x, 128 - 1, 30 * 1000 );
       if( n == 0 ) {
          RTC0.getTime( tm );
          ts = RTC::conv( tm );
@@ -67,6 +67,9 @@ void CommandThread::run( void )
          delay( 100 );
          continue;
       }
+
+      _x[n] = 0;
+      kprintf( GREEN( "%s" ) "\r\n", _x );
 
       _m.reset( _x, n );
 

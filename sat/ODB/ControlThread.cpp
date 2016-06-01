@@ -117,6 +117,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
    if( RCC.isPwrOn() ) {
       kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
+      CONF.reset();
       WOD.clear();
     //FCACHE.clear();
    }
@@ -124,7 +125,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
    /* increment the reset counter */
 
-   kprintf( "Reset count: %d\r\n", CONF.reset() );
+   kprintf( "Reset count: %d\r\n", CONF.nrst() );
 
    /* display satellite ID */
 
