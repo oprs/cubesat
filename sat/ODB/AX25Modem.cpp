@@ -1,13 +1,14 @@
 
 #include "devices.h"
-#include "Modem9600.h"
+#include "AX25Modem.h"
 #include "Baseband.h"
 #include "Config.h"
 
 using namespace qb50;
 
 
-Modem9600 qb50::M9K6( "M9K6" ); // global Modem9600 object
+AX25Modem qb50::M9K6( "M9K6", PC10, PC9,  PC8  ); // global AX25Modem object
+AX25Modem qb50::M1K2( "M1K2", PC3,  PB11, PB10 ); // global Modem1200 object
 
 
 static const uint8_t _hexv[ 16 ] = {
@@ -56,8 +57,8 @@ static const uint16_t _crc16v[ 256 ] = {
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Modem9600::Modem9600( const char *name )
-   : Modem( name )
+AX25Modem::AX25Modem( const char *name, STM32_GPIO::Pin& enPin, STM32_GPIO::Pin& ckPin, STM32_GPIO::Pin& txPin )
+   : Modem( name ), _enPin( enPin ), _ckPin( ckPin ), _txPin( txPin )
 {
    _semTX = xSemaphoreCreateBinary();
    _flag  = false;
@@ -71,7 +72,7 @@ Modem9600::Modem9600( const char *name )
 }
 
 
-Modem9600::~Modem9600()
+AX25Modem::~AX25Modem()
 {
    delete[] _obuf;
    vSemaphoreDelete( _semTX );
@@ -82,13 +83,13 @@ Modem9600::~Modem9600()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-Modem9600& Modem9600::init( void )
+AX25Modem& AX25Modem::init( void )
 {
-   PC9  . in()  . noPull();   // CLK_9600
-   PC8  . out() . off();      // DATA_9600
-   PC10 . out() . off();      // ON/OFF_9600
+   _ckPin . in()  . noPull();   // clock
+   _txPin . out() . off();      // data
+   _enPin . out() . off();      // enable
 
-   EXTI.registerHandler( PC9, this, STM32_EXTI::RISING );
+   EXTI.registerHandler( _ckPin, this, STM32_EXTI::RISING );
 
    unproto( "TLM", 0 );
 
@@ -111,7 +112,7 @@ Modem9600& Modem9600::init( void )
 }
 
 
-Modem9600& Modem9600::enable( bool silent )
+AX25Modem& AX25Modem::enable( bool silent )
 {
    if( _incRef() > 0 )
       return *this;
@@ -120,7 +121,7 @@ Modem9600& Modem9600::enable( bool silent )
    delay( 6500 );
    Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_WODEX_POWER );
    BB.power( p );
-   PC10.on(); // ON_OFF_9600
+   _enPin.on(); // ON_OFF_9600
    delay( 100 );
 
    if( !silent )
@@ -130,13 +131,13 @@ Modem9600& Modem9600::enable( bool silent )
 }
 
 
-Modem9600& Modem9600::disable( bool silent )
+AX25Modem& AX25Modem::disable( bool silent )
 {
    if( _decRef() > 0 )
       return *this;
 
    delay( 100 );
-   PC10.off(); // CLK_9600
+   _enPin.off(); // CLK_9600
    BB.disable();
 
    if( !silent )
@@ -146,7 +147,7 @@ Modem9600& Modem9600::disable( bool silent )
 }
 
 
-Modem9600& Modem9600::mycall( const char *addr, int ssid )
+AX25Modem& AX25Modem::mycall( const char *addr, int ssid )
 {
    int i;
    uint8_t c;
@@ -166,7 +167,7 @@ Modem9600& Modem9600::mycall( const char *addr, int ssid )
 }
 
 
-Modem9600& Modem9600::unproto( const char *addr, int ssid )
+AX25Modem& AX25Modem::unproto( const char *addr, int ssid )
 {
    int i;
    uint8_t c;
@@ -186,7 +187,63 @@ Modem9600& Modem9600::unproto( const char *addr, int ssid )
 }
 
 
-Modem9600& Modem9600::sendUI( const uint8_t *x, unsigned len, int toms )
+size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
+{
+   struct tm stm;
+
+   unsigned len, i, n;
+   uint8_t *o;
+
+   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
+   n  = snprintf ( (char*)_obuf,     32,     "!%02x", CONF.nrst() & 0xff );
+   n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
+
+   o   = _obuf + n;
+   len = hdr->len - sizeof( WodStore::WEH );
+
+   for( i = 0 ; i < len ; ++i ) {
+      *(o++) = _hexv[ x[ i ] >> 4    ];
+      *(o++) = _hexv[ x[ i ]  & 0x0f ];
+   }
+
+   return
+      send( _obuf, n + 2*i, toms );
+}
+
+
+size_t AX25Modem::send( const uint8_t *x, size_t len, int toms )
+{
+   _sendUI( x, len, toms );
+   return len;
+}
+
+
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+uint16_t AX25Modem::_crc16( const uint8_t *x, unsigned len, uint16_t crc )
+{
+   for( unsigned i = 0 ; i < len ; ++i )
+      crc = ( crc >> 8 ) ^ _crc16v[ ( crc ^ x[i] ) & 0x00ff ];
+
+   return crc;
+}
+
+
+void AX25Modem::_push( const uint16_t w, int toms )
+{
+   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
+
+   while( _fifo.isFull() ) {
+      xSemaphoreTake( _semTX, tk );
+   }
+
+   (void)_fifo.push( w );
+}
+
+
+void AX25Modem::_sendUI( const uint8_t *x, unsigned len, int toms )
 {
    unsigned i;
    uint16_t fcs, w;
@@ -195,11 +252,8 @@ Modem9600& Modem9600::sendUI( const uint8_t *x, unsigned len, int toms )
 
    /* start flags */
 
-/*
    for( i = 0 ; i < 20 ; ++i )
       _push( 0x017e, toms );
-*/
-   _push( 0x017e, toms );
 
    /* header */
 
@@ -227,11 +281,11 @@ Modem9600& Modem9600::sendUI( const uint8_t *x, unsigned len, int toms )
 
    _push( 0x017e, toms );
 
-   return *this;
+   _flush();
 }
 
 
-Modem9600& Modem9600::sendUIH( const uint8_t *x, unsigned len, int toms )
+void AX25Modem::_sendUIH( const uint8_t *x, unsigned len, int toms )
 {
    uint8_t *h = new uint8_t[ 2 * len ];
 
@@ -240,67 +294,17 @@ Modem9600& Modem9600::sendUIH( const uint8_t *x, unsigned len, int toms )
       h[ 2*i + 1 ] = _hexv[ x[ i ]  & 0x0f ];
    }
 
-   sendUI( h, 2 * len, toms );
+   _sendUI( h, 2 * len, toms );
 
    delete[] h;
-
-   return *this;
 }
 
 
-size_t Modem9600::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
+void AX25Modem::_flush( void )
 {
-   struct tm stm;
-
-   unsigned len, i, n;
-   uint8_t *o;
-
-   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n  = snprintf ( (char*)_obuf,     32,     "!%02x", CONF.nrst() & 0xff );
-   n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
-
-   o   = _obuf + n;
-   len = hdr->len - sizeof( WodStore::WEH );
-
-   for( i = 0 ; i < len ; ++i ) {
-      *(o++) = _hexv[ x[ i ] >> 4    ];
-      *(o++) = _hexv[ x[ i ]  & 0x0f ];
+   while( !_fifo.isEmpty() ) {
+      delay( 100 );
    }
-
-   return
-      send( _obuf, n + 2*i, toms );
-}
-
-
-size_t Modem9600::send( const uint8_t *x, size_t len, int toms )
-{
-   (void)sendUI( x, len, toms );
-   return len;
-}
-
-
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-uint16_t Modem9600::_crc16( const uint8_t *x, unsigned len, uint16_t crc )
-{
-   for( unsigned i = 0 ; i < len ; ++i )
-      crc = ( crc >> 8 ) ^ _crc16v[ ( crc ^ x[i] ) & 0x00ff ];
-
-   return crc;
-}
-
-
-void Modem9600::_push( const uint16_t w, int toms )
-{
-   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
-
-   while( _fifo.isFull() ) {
-      xSemaphoreTake( _semTX, tk );
-   }
-
-   (void)_fifo.push( w );
 }
 
 
@@ -308,7 +312,7 @@ void Modem9600::_push( const uint16_t w, int toms )
 //  E X T I   H A N D L E R  //
 //  - - - - - - - - - - - -  //
 
-void Modem9600::handle( STM32_EXTI::EXTIn /* ignored */ )
+void AX25Modem::handle( STM32_EXTI::EXTIn /* ignored */ )
 {
    portBASE_TYPE hpTask = pdFALSE;
    uint16_t w;
@@ -317,7 +321,7 @@ void Modem9600::handle( STM32_EXTI::EXTIn /* ignored */ )
 
    if( !_flag && ( _ones == 5 )) {
       _ones = 0;
-      PC8.toggle();
+      _txPin.toggle();
       return;
    }
 
@@ -349,7 +353,7 @@ void Modem9600::handle( STM32_EXTI::EXTIn /* ignored */ )
       ++_ones;
    } else {
       _ones = 0;
-      PC8.toggle();
+      _txPin.toggle();
    }
 
    _mask <<= 1;

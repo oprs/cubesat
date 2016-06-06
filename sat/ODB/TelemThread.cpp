@@ -1,7 +1,6 @@
 
 #include "TelemThread.h"
-#include "Modem9600.h"
-#include "Modem1200.h"
+#include "AX25Modem.h"
 #include "Event.h"
 #include "WodStore.h"
 #include "Config.h"

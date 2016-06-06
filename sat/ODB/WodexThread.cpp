@@ -1,8 +1,7 @@
 
 #include "WodexThread.h"
 #include "Baseband.h"
-#include "Modem1200.h"
-#include "Modem9600.h"
+#include "AX25Modem.h"
 #include "WodStore.h"
 #include "CommandBacklog.h"
 #include "Form.h"
@@ -141,7 +140,7 @@ void WodexThread::run( void )
          _modem->enable();
          _sendBacklog( _modem );
          _modem->send( &hdr, _raw8, -1 );
-delay( 500 );
+       //delay( 1000 );
          _modem->disable();
       }
 

@@ -24,7 +24,7 @@ ADCSThread::~ADCSThread()
 
 void ADCSThread::run( void )
 {
-   PC13.out().off();
+ //PC13.out().off();
 
    for( ;; ) {
       _wait();

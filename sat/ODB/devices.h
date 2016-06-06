@@ -102,7 +102,6 @@ namespace qb50 {
 
    extern qb50::STM32_UART UART1;
    extern qb50::STM32_UART UART2;
-   extern qb50::STM32_UART UART3;
    extern qb50::STM32_UART UART6;
 
 //  - - - - - - - - - - - - - - -  //

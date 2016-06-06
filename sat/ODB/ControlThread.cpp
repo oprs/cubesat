@@ -6,13 +6,11 @@
 #include "InitThread.h"
 #include "CWThread.h"
 #include "WodexThread.h"
-//#include "GPSThread.h"
 #include "FiPEX/FipexThread.h"
 #include "TelemThread.h"
 #include "CTCSSThread.h"
 #include "ADCSThread.h"
 #include "TestThread.h"
-#include "Modem1200.h"
 
 #include "Event.h"
 #include "WodStore.h"
@@ -125,7 +123,8 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
    /* increment the reset counter */
 
-   kprintf( "Reset count: %d\r\n", CONF.nrst() );
+ //kprintf( "Reset count: %d\r\n", CONF.nrst() );
+   kprintf( "Reset count: %d\r\n", CONF.reset() );
 
    /* display satellite ID */
 
@@ -480,7 +479,7 @@ void ControlThread::_handleCForm( CForm *fp )
       case 1002:
 
          if( SAT.isInhibit() && ( mode == Config::STDBY )) {
-            M1K2.configure();
+          //M1K2.configure();
          }
 
          break;

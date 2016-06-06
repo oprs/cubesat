@@ -1,7 +1,6 @@
 
 #include "devices.h"
-#include "Modem9600.h"
-#include "Modem1200.h"
+#include "AX25Modem.h"
 #include "Baseband.h"
 
 using namespace qb50;
@@ -55,7 +54,6 @@ ODB& ODB::init( void )
    GPIOC.init().enable();
    UART1.init();
    UART2.init();
-   UART3.init();
    UART6.init();
    SPI3.init();
    ADC1.init();

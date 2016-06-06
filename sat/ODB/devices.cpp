@@ -170,14 +170,6 @@ namespace qb50 {
                      STM32_GPIO::UART2  /* alt. function */
    );
 
-                  /* bus   iobase       periph                        name */
-   STM32_UART UART3( APB1, USART3_BASE, STM32_RCC::APB1Periph_USART3, "UART3",
-                     PB11,              /* rx pin        */
-                     PB10,              /* tx pin        */
-                     USART3_IRQn,       /* IRQ number    */
-                     STM32_GPIO::UART3  /* alt. function */
-   );
-
                    /* bus   iobase       periph                        name */
    STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6",
                      PC7,               /* rx pin        */
@@ -333,9 +325,6 @@ extern "C" void USART1_IRQHandler( void )
 
 extern "C" void USART2_IRQHandler( void )
 { qb50::UART2.isr(); }
-
-extern "C" void USART3_IRQHandler( void )
-{ qb50::UART3.isr(); }
 
 extern "C" void USART6_IRQHandler( void )
 { qb50::UART6.isr(); }
