@@ -91,7 +91,7 @@ void ControlThread::run( void )
    GPIOA.enable();
    GPIOB.enable();
    GPIOC.enable();
-   UART6.enable(); // .baudRate( 115200 );
+   UART6.enable();
    SYSLOG.enable();
    RTC0.enable();
    BKP.enable();
@@ -111,7 +111,7 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
     * -> load the default configuration
     */
 
-//FCACHE.enable();
+ //FCACHE.enable();
    if( RCC.isPwrOn() ) {
       kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
@@ -119,12 +119,11 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
       WOD.clear();
     //FCACHE.clear();
    }
-//FCACHE.clear( 10 );
+ //FCACHE.clear( 10 );
 
    /* increment the reset counter */
 
- //kprintf( "Reset count: %d\r\n", CONF.nrst() );
-   kprintf( "Reset count: %d\r\n", CONF.reset() );
+   kprintf( "Reset count: %d\r\n", CONF.nrst() );
 
    /* display satellite ID */
 
@@ -247,8 +246,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 1:
 
-         kprintf( "FORM C1\r\n" );
-
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_CW_CYCLE_TX, fp->argv[1] );
             if( fp->argc > 2 ) {
@@ -265,8 +262,6 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C2 - passage en mode WODEX (1200) */
 
       case 2:
-
-         kprintf( "FORM C2\r\n" );
 
          (void)CONF.setParam( Config::PARAM_MODEM, 1 );
 
@@ -287,8 +282,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 3:
 
-         kprintf( "FORM C3\r\n" );
-
          (void)CONF.setParam( Config::PARAM_MODEM, 2 );
 
          if( fp->argc > 1 ) {
@@ -308,8 +301,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 4:
 
-         kprintf( "FORM C4\r\n" );
-
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[1] );
          }
@@ -323,8 +314,6 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C5 - passage en mode contrôle d'attitude */
 
       case 5:
-
-         kprintf( "FORM C5\r\n" );
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_CTRL, fp->argv[1] );
@@ -343,8 +332,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 6:
 
-         kprintf( "FORM C6\r\n" );
-
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_FIPEX_SCRIPT_N, fp->argv[1] );
          }
@@ -358,8 +345,6 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C7 - passage en mode relais FM */
 
       case 7:
-
-         kprintf( "FORM C7\r\n" );
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_FM_CYCLE_ON, fp->argv[1] );
@@ -378,8 +363,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 8:
 
-         kprintf( "FORM C8\r\n" );
-
          if( mode != Config::STDBY ) {
             _switchModes( Config::STDBY );
          }
@@ -389,8 +372,6 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C9 - passage en mode télémétrie PSK9600 */
 
       case 9:
-
-         kprintf( "FORM C9\r\n" );
 
          (void)CONF.setParam( Config::PARAM_MODEM, 2 );
 
@@ -408,8 +389,6 @@ void ControlThread::_handleCForm( CForm *fp )
 
       case 10:
 
-         kprintf( "FORM C10\r\n" );
-
          (void)CONF.setParam( Config::PARAM_MODEM, 1 );
 
          if( fp->argc > 1 ) {
@@ -425,14 +404,11 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C11 - ping */
 
       case 11:
-         kprintf( "FORM C11\r\n" );
          break;
 
       /* C12 - arrêt télémétries */
 
       case 12:
-
-         kprintf( "FORM C12\r\n" );
 
          if( mode != Config::TELEM ) {
             _switchModes( Config::WODEX );
@@ -443,19 +419,16 @@ void ControlThread::_handleCForm( CForm *fp )
       /* C13 - effacement données FIPEX (SU) */
 
       case 13:
-         kprintf( "FORM C13\r\n" );
          break;
 
       /* C14 - mode test mesure d'attitude */
 
       case 14:
-         kprintf( "FORM C14\r\n" );
          break;
 
       /* C15 - mode test contrôle d'attitude */
 
       case 15:
-         kprintf( "FORM C15\r\n" );
          break;
 
       default:

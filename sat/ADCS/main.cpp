@@ -41,6 +41,7 @@ void Main_Thread( Thread *self )
    GPIOB.enable();
    GPIOC.enable();
 
+PB15.out().off();
 R1.out().on();
 R2.out().on();
 R3.out().on();
@@ -48,11 +49,11 @@ F1.out().off();
 F2.out().off();
 F3.out().off();
 
-   UART6.enable().baudRate( 115200 );
+   UART6.enable();
    SYSLOG.enable();
    BKP.enable( true );
 
-   createThread( "Coil Thread", CoilThread );
+ //createThread( "Coil Thread", CoilThread );
 
 #if 0
    createThread( "Thread 1", testThread1 );

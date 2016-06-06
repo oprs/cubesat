@@ -140,7 +140,6 @@ void WodexThread::run( void )
          _modem->enable();
          _sendBacklog( _modem );
          _modem->send( &hdr, _raw8, -1 );
-       //delay( 1000 );
          _modem->disable();
       }
 
