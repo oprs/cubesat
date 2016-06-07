@@ -60,6 +60,8 @@ FlashCache& FlashCache::init( void )
             _mem.chipSize() >> 7
    );
 
+ //kprintf( "%s: Cache size: %u\r\n", _name, _psiz );
+
    return *this;
 }
 

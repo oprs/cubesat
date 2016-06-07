@@ -60,7 +60,7 @@ ODB& ODB::init( void )
    ADC2.init();
    ADC3.init();
    ADC4.init();
-   VFLASH.init();
+ //VFLASH.init();
    FCACHE.init();
  //WDB.init();
    BB.init();

@@ -1,5 +1,6 @@
 
 #include "config.h"
+#include "MainThread.h"
 
 using namespace qb50;
 
@@ -25,7 +26,7 @@ void CoilThread( Thread *self )
       F3.toggle();
       R3.toggle();
 
-      delay( 100 );
+      delay( 5 * 1000 );
    }
 }
 
@@ -41,19 +42,20 @@ void Main_Thread( Thread *self )
    GPIOB.enable();
    GPIOC.enable();
 
-PB15.out().off();
-R1.out().on();
-R2.out().on();
-R3.out().on();
-F1.out().off();
-F2.out().off();
-F3.out().off();
+   PB15.out().off();
+   R1.out().on();
+   R2.out().on();
+   R3.out().on();
+   F1.out().off();
+   F2.out().off();
+   F3.out().off();
 
    UART6.enable();
    SYSLOG.enable();
    BKP.enable( true );
 
- //createThread( "Coil Thread", CoilThread );
+#if 0
+   createThread( "Coil Thread", CoilThread );
 
 #if 0
    createThread( "Thread 1", testThread1 );
@@ -65,7 +67,12 @@ F3.out().off();
    //createThread( "Attitude Control Thread", AttitudeControlThread);
 #endif
 
+   Gyro::vec3d v;
+
+   Timer tm;
+
     for(;;){
+          //tm.every( 2000 );
             delay( 2000 );
             kprintf( "------- Main Thread -------\r\n" );
             switch (Current_state.LCR)
@@ -97,7 +104,12 @@ F3.out().off();
                 default:
                     kprintf( "------- ODB hasn't told us anything :( -------\r\n" );
             }
+
+      GYR0.omega( v );
+      kprintf( "GYR0: [ %02f %02f %02f ]\r\n", v.xr, v.yr, v.zr );
+
     }
+#endif
 }
 
 
@@ -131,41 +143,76 @@ void initDevices( void )
    GPIOA.init();
    GPIOB.init();
    GPIOC.init();
+
+GPIOA.enable();
+GPIOB.enable();
+GPIOC.enable();
+
+PA15.out().on();
+PC8.out().on();
+PC9.out().on();
+
    UART1.init();
    UART6.init();
    SPI3.init();
    ADC1.init();
    FLASH0.init();
+   MAG0.init();
+   GYR0.init();
 }
 
 int main( void )
 {
-    //Initialize the state to some standard values
-    //For testing purposes only
+   //Initialize the state to some standard values
+   //For testing purposes only
 
-    //Mag_field calculated
-    Current_state.MAGFIE.B_x = 0;
-    Current_state.MAGFIE.B_y = 0;
-    Current_state.MAGFIE.B_z = 0;
+   //Mag_field calculated
+   Current_state.MAGFIE.B_x = 0;
+   Current_state.MAGFIE.B_y = 0;
+   Current_state.MAGFIE.B_z = 0;
 
-    //Position calculated
-    Current_state.POS.pos_x =  10;
-    Current_state.POS.pos_y = -20;
-    Current_state.POS.pos_z =  15;
+   //Position calculated
+   Current_state.POS.pos_x =  10;
+   Current_state.POS.pos_y = -20;
+   Current_state.POS.pos_z =  15;
 
-    //Sun Vector calculated
-    Current_state.SUNVEC.s_x = -0.5;
-    Current_state.SUNVEC.s_y =  0.6;
-    Current_state.SUNVEC.s_z = -0.7;
+   //Sun Vector calculated
+   Current_state.SUNVEC.s_x = -0.5;
+   Current_state.SUNVEC.s_y =  0.6;
+   Current_state.SUNVEC.s_z = -0.7;
+
+   /* initialize devices */
+
+   initDevices();
+
+/*
+   GPIOA.enable();
+   GPIOB.enable();
+   GPIOC.enable();
+*/
+
+   PB15.out().on();
+   R1.out().on();
+   R2.out().on();
+   R3.out().on();
+   F1.out().off();
+   F2.out().off();
+   F3.out().off();
+
+   UART6.enable();
+   SYSLOG.enable();
+   BKP.enable( true );
 
    /* create worker threads */
 
-   createThread( "Main Thread", Main_Thread);
+PC8.out().on();  // XXX disable LSM303D
+//PA15.out().on(); // XXX disable flash
+
+   (void)registerThread( new MainThread() );
+   createThread( "Coil Thread", CoilThread );
+
    run();
 
-   /* never reached */
-
-   for( ;; );
 }
 
 /*EoF*/

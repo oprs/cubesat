@@ -237,6 +237,21 @@ namespace qb50 {
    /*              SPI   name     csPin */
    A25Lxxx FLASH0( SPI3, "FLASH0", PA15 );
 
+
+//  - - - - - - - - - - - -  //
+//  M A G N E T O M E T E R  //
+//  - - - - - - - - - - - -  //
+
+   LSM303 MAG0( SPI3, "MAG0", PC8 );
+
+
+//  - - - - - - - - -  //
+//  G Y R O S C O P E  //
+//  - - - - - - - - -  //
+
+   L3GD20 GYR0( SPI3, "GYR0", PC9 );
+
+
 //  - - - - - - - - - - -  //
 //        S T A T E        //
 //  - - - - - - - - - - -  //

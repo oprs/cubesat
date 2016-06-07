@@ -7,7 +7,7 @@
 using namespace qb50;
 
 
-AX25Modem qb50::M9K6( "M9K6", PC10, PC9,  PC8  ); // global AX25Modem object
+AX25Modem qb50::M9K6( "M9K6", PC10, PC9,  PC8  ); // global Modem9600 object
 AX25Modem qb50::M1K2( "M1K2", PC3,  PB11, PB10 ); // global Modem1200 object
 
 
@@ -252,7 +252,7 @@ void AX25Modem::_sendUI( const uint8_t *x, unsigned len, int toms )
 
    /* start flags */
 
-   for( i = 0 ; i < 20 ; ++i )
+   for( i = 0 ; i < 10 ; ++i )
       _push( 0x017e, toms );
 
    /* header */
@@ -317,8 +317,6 @@ void AX25Modem::handle( STM32_EXTI::EXTIn /* ignored */ )
    portBASE_TYPE hpTask = pdFALSE;
    uint16_t w;
 
-   bool bit;
-
    if( !_flag && ( _ones == 5 )) {
       _ones = 0;
       _txPin.toggle();
@@ -347,9 +345,7 @@ void AX25Modem::handle( STM32_EXTI::EXTIn /* ignored */ )
       _mask = 0x01;
    }
 
-   bit = (( _byte & _mask ) != 0 );
-
-   if( bit ) {
+   if(( _byte & _mask ) != 0 ) {
       ++_ones;
    } else {
       _ones = 0;

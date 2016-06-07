@@ -53,14 +53,6 @@ Baseband& Baseband::enable( bool silent )
 
    _enTXPin.on();
 
-#if 0
-   if( !silent ) {
-      kprintf( "%s: Waiting for 500ms...\r\n", _name );
-   }
-
-   delay( 500 );
-#endif
-
    _enPAPin.on();
    if( !silent ) {
       kprintf( "%s: enabled\r\n", _name );

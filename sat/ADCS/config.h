@@ -165,6 +165,21 @@ namespace qb50 {
 
    extern qb50::A25Lxxx FLASH0;
 
+
+//  - - - - - - - - - - - -  //
+//  M A G N E T O M E T E R  //
+//  - - - - - - - - - - - -  //
+
+   extern qb50::LSM303 MAG0;
+
+
+//  - - - - - - - - -  //
+//  G Y R O S C O P E  //
+//  - - - - - - - - -  //
+
+   extern qb50::L3GD20 GYR0;
+
+
 //  - - - - - - - - - - -  //
 //        S T A T E        //
 //  - - - - - - - - - - -  //

@@ -60,10 +60,6 @@ void CommandThread::run( void )
          ts = RTC::conv( tm );
        //kprintf( "RTC: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", t.year, t.mon, t.day );
          kprintf( "RTC: time is %02d:%02d:%02d (%lu)\r\n", tm.hour, tm.min, tm.sec, ts );
-/*
-         kprintf( "\033[31;1mEMPTY COMMAND\033[0m\r\n" );
-         delay( 100 );
-*/
          delay( 100 );
          continue;
       }

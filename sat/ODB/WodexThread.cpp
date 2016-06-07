@@ -295,7 +295,6 @@ void WodexThread::_sendBacklog( Modem *_modem )
 
             if( n > 0 ) {
                _modem->send( (const uint8_t*)tmp, (size_t)n, -1 );
-               delay( 500 );
             }
 
             break;
@@ -314,7 +313,6 @@ void WodexThread::_sendBacklog( Modem *_modem )
 
             if( n > 0 ) {
                _modem->send( (const uint8_t*)tmp, (size_t)n, -1 );
-               delay( 500 );
             }
          }
 
