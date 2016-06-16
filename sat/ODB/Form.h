@@ -53,8 +53,10 @@ namespace qb50 {
          FORM_TYPE_C  = 1,
          FORM_TYPE_H  = 2,
          FORM_TYPE_P  = 3,
-         FORM_TYPE_T1 = 4,
-         FORM_TYPE_T2 = 5
+         FORM_TYPE_F  = 4,
+         FORM_TYPE_T  = 5,
+         FORM_TYPE_T1 = 6,
+         FORM_TYPE_T2 = 7
       };
 
       FormType type;

@@ -225,7 +225,7 @@ void WodexThread::_updateSamples( void )
    (void)ADC2CH3.read( &_raw[ SAMPLE_V3          ]);
    (void)ADC2CH4.read( &_raw[ SAMPLE_T3          ]);
    (void)ADC2CH5.read( &_raw[ SAMPLE_I3          ]);
-   (void)ADC2CH6.read( &_raw[ SAMPLE_I_Surt      ]);
+ //(void)ADC2CH6.read( &_raw[ SAMPLE_I_Surt      ]);
  //(void)ADC2CH7.read( &_raw[ SAMPLE_X0          ]);
 
    (void)ADC3CH0.read( &_raw[ SAMPLE_I_ADCS      ]);
@@ -239,7 +239,7 @@ void WodexThread::_updateSamples( void )
 
  //(void)ADC4CH0.read( &_raw[ SAMPLE_X1          ]);
    (void)ADC4CH1.read( &_raw[ SAMPLE_I_GPS       ]);
- //(void)ADC4CH2.read( &_raw[ SAMPLE_X2          ]);
+   (void)ADC4CH2.read( &_raw[ SAMPLE_I_Surt      ]); // temp. ADCS
    (void)ADC4CH3.read( &_raw[ SAMPLE_I_3V3_FIPEX ]);
    (void)ADC4CH4.read( &_raw[ SAMPLE_V_3V3_FIPEX ]);
    (void)ADC4CH5.read( &_raw[ SAMPLE_I_5V_FIPEX  ]);

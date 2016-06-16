@@ -164,6 +164,8 @@ kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 
    _switchModes( mode );
 
+   /* event loop */
+
    for( ;; ) {
       xQueueReceive( evQueue, &ev, portMAX_DELAY );
       if( !ev ) continue;

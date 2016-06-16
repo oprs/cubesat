@@ -14,9 +14,42 @@ static const int _mdays[ 12 ] = {
    0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
 };
 
+
+#define ECHR 0x80
+
+static const uint8_t _rhex[ 128 ] = {
+   /* 0x00 */
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x10 */
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x20 */
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x30 */
+   0x00, 0x01, 0x02, 0x03,  0x04, 0x05, 0x06, 0x07,
+   0x08, 0x09, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x40 */
+   ECHR, 0x0a, 0x0b, 0x0c,  0x0d, 0x0e, 0x0f, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x50 */
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x60 */
+   ECHR, 0x0a, 0x0b, 0x0c,  0x0d, 0x0e, 0x0f, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   /* 0x70 */
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR,
+   ECHR, ECHR, ECHR, ECHR,  ECHR, ECHR, ECHR, ECHR
+   /* 0x80 */
+};
+
+
 #define ISDIGIT( c ) (((c) >= '0') && ((c) <= '9'))
 #define ISWHITE( c ) ( (c) == ' '                 )
 #define  ISSIGN( c ) (((c) == '+') || ((c) == '-'))
+#define   ISHEX( c ) (( _rhex[ (c) & 0x7f ] & 0x80 ) == 0 )
 
 
 extern QueueHandle_t evQueue;
@@ -29,14 +62,18 @@ extern QueueHandle_t evQueue;
 CommandThread::CommandThread()
    : Thread( "Command Handler", 1, RUNNING, 384 )
 {
-   _x = new uint8_t[ 128 ];
-   _m.reset( _x, 128 );
+   _c = new uint8_t[ 256 ];
+   _m.reset( _c, 256 );
+
+   _x = new uint8_t[ 256 ];
+   _m.reset( _x, 256 );
 }
 
 
 CommandThread::~CommandThread()
 {
    delete[] _x;
+   delete[] _c;
 }
 
 
@@ -54,7 +91,7 @@ void CommandThread::run( void )
 
    for( ;; ) {
 
-      n = UART6.readLine( _x, 128 - 1, 30 * 1000 );
+      n = UART6.readLine( _c, 256 - 1, 30 * 1000 );
       if( n == 0 ) {
          RTC0.getTime( tm );
          ts = RTC::conv( tm );
@@ -64,10 +101,11 @@ void CommandThread::run( void )
          continue;
       }
 
-      _x[n] = 0;
-      kprintf( GREEN( "%s" ) "\r\n", _x );
+      _c[n] = 0;
+      kprintf( GREEN( "len: %lu" ) "\r\n", n );
+      kprintf( GREEN( "%s" ) "\r\n", _c );
 
-      _m.reset( _x, n );
+      _m.reset( _c, n );
 
       if( !_parseForm() ) {
          kprintf( "\033[31;1mINVALID COMMAND\033[0m\r\n" );
@@ -99,6 +137,11 @@ void CommandThread::run( void )
 
             (void)CONF.setParam( _form.P.pid, _form.P.pval );
 
+            break;
+         }
+
+         case Form::FORM_TYPE_F:
+         {
             break;
          }
 
@@ -168,6 +211,11 @@ CommandThread::_parseForm( void )
       case 'p':
          ++_m; // skip 'P'
          return _parsePForm();
+
+      case 'F':
+      case 'f':
+         ++_m; // skip 'P'
+         return _parseFForm();
 
 #if 0
       case 'T':
@@ -263,6 +311,49 @@ CommandThread::_parsePForm( void )
    _form.type = Form::FORM_TYPE_P;
 
    CBL.push( _form );
+
+   return 1;
+}
+
+
+int
+CommandThread::_parseFForm( void )
+{
+   long n;
+
+   if( !_parseInteger( n ))
+      return 0;
+
+   if(( !_m.avail() ) || ( *(_m++) != ',' ))
+      return 0;
+
+   if( !_parseHex( _x, 256 ))
+      return 0;
+
+   kprintf( "%s: FIPEX script number: %lu\r\n", name, n );
+
+   hexdump( _x, 64 );
+
+   return 1;
+}
+
+
+int
+CommandThread::_parseHex( uint8_t *x, size_t len )
+{
+   uint8_t nH, nL;
+
+   while(( len > 0 ) && ( _m.avail() > 1 )) {
+      nH = _rhex[ *(_m++) & 0x7f ];
+      nL = _rhex[ *(_m++) & 0x7f ];
+
+      if(( nH & 0x80 ) || ( nL & 0x80 )) {
+         return 0;
+      }
+
+      *(x++) = ( nH << 8 ) | nL;
+      --len;
+   }
 
    return 1;
 }

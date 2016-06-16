@@ -2,7 +2,10 @@
 #include "FipexThread.h"
 #include "WodStore.h"
 #include "Config.h"
+#include "AX25Modem.h"
 #include "devices.h"
+
+#define VKI_EPOCH 946684800
 
 using namespace qb50;
 
@@ -38,6 +41,11 @@ static uint8_t cmd_sm[]      = { 0x7e, 0x0c, 0x00, 0x0c };
 static uint8_t cmd_sp_si1[]  = { 0x7e, 0x11, 0x03, 0x08, 0x01, 0x00, 0x1b };
 static uint8_t cmd_stdby[]   = { 0x7e, 0x0a, 0x00, 0x0a };
 
+
+static const uint8_t FPX_GERARD[] = {
+   0x1d, 0x6c, 0x06, 0x42, 0x1e, 0x00, 0x00, 0x04,  0x7e, 0x0f, 0x00, 0x0f, 0x0a, 0x00, 0x7e, 0x20,
+   0x00, 0x20, 0x1e, 0x00, 0x7e, 0xf0, 0x00, 0xf0,  0x0a, 0x00, 0x7e, 0xff, 0x01, 0xfe
+};
 
 static const uint8_t FPX_E2E_1_1[] = {
    0x23, 0x6c, 0x06, 0x42, 0x1e, 0x00, 0x00, 0x05,  0x7e, 0x0f, 0x00, 0x0f, 0x0a, 0x00, 0x7e, 0x20,
@@ -124,6 +132,7 @@ static const uint8_t FPX_E2E_8[] = {
 
 static const uint8_t *sv[] = {
 //FPX_E2E_5,
+   FPX_GERARD,
    FPX_E2E_1_1,
    FPX_E2E_1_2,
    FPX_E2E_1_3,
@@ -179,6 +188,10 @@ static const char *rsp_ids[ 64 ] = {
 void FipexThread::cmd( const uint8_t *cmd, size_t len )
 {
    size_t n, dlen;
+   Modem *modem;
+   WodStore::WEH hdr;
+   RTC::Time tm;
+   time_t ts;
 
    UART2.write( cmd, len );
    n = UART2.read( rx, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
@@ -195,7 +208,61 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
       kprintf( "%s: seq: %d\r\n", name, rx[3] );
     //hexdump( rx, n );
 
-      (void)WOD.write( WodStore::FIPEX, rx, n );
+      switch( rx[1] ) {
+
+         case 0x20: /* SU_R_HK */
+
+            RTC0.getTime( tm );
+            ts = RTC::conv( tm ) - VKI_EPOCH;
+            rx[ dlen +  5 ] = ( ts       ) & 0xff;
+            rx[ dlen +  6 ] = ( ts >>  8 ) & 0xff;
+            rx[ dlen +  7 ] = ( ts >> 16 ) & 0xff;
+            rx[ dlen +  8 ] = ( ts >> 24 ) & 0xff;
+
+            rx[ dlen +  9 ] = 0x00;  // Q1L
+            rx[ dlen + 10 ] = 0x00;  // Q1H
+            rx[ dlen + 11 ] = 0x00;  // Q2L
+            rx[ dlen + 12 ] = 0x00;  // Q2H
+            rx[ dlen + 13 ] = 0x00;  // Q3L
+            rx[ dlen + 14 ] = 0x00;  // Q3H
+            rx[ dlen + 15 ] = 0x00;  // Q4L
+            rx[ dlen + 16 ] = 0x00;  // Q4H
+
+            rx[ dlen + 17 ] = 0x00;  // XDL
+            rx[ dlen + 18 ] = 0x00;  // XDH
+            rx[ dlen + 19 ] = 0x00;  // YDL
+            rx[ dlen + 20 ] = 0x00;  // YDH
+            rx[ dlen + 21 ] = 0x00;  // ZDL
+            rx[ dlen + 22 ] = 0x00;  // ZDH
+
+            rx[ dlen + 23 ] = 0x00;  // XPL
+            rx[ dlen + 24 ] = 0x00;  // XPH
+            rx[ dlen + 25 ] = 0x00;  // YPL
+            rx[ dlen + 26 ] = 0x00;  // YPH
+            rx[ dlen + 27 ] = 0x00;  // ZPL
+            rx[ dlen + 28 ] = 0x00;  // ZPH
+
+            (void)WOD.write( WodStore::FIPEX, rx + 1, dlen + 28, &hdr );
+
+            if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
+               modem = &M1K2;
+            } else {
+               modem = &M9K6;
+            }
+
+            modem->enable();
+            modem->send( &hdr, rx + 1, -1 );
+            modem->disable();
+
+            break;
+
+         case 0x30: /* SU_R_SDP */
+            break;
+
+         default:
+            break;
+
+      }
    }
 }
 
@@ -397,7 +464,6 @@ struct FipexHeader
    uint8_t  cnt;   // command count
 } __attribute__(( packed ));
 
-#define VKI_EPOCH 946684800
 #define HDRLEN    sizeof( FipexHeader )
 
 

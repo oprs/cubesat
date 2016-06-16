@@ -27,17 +27,10 @@ namespace qb50 {
 
       };
 
-      Event( event_t type, Form *form = (Form*)0 )
-         : type( type ), form( form )
-      { ; }
+      Event( event_t type, Form *form = (Form*)0 );
+      ~Event();
 
-      ~Event()
-      {
-         if(( type == FORM ) && ( form != 0 ))
-            delete form;
-      }
-
-      const char *name( void )
+      const char *name( void ) const
       { return events[ type ]; }
 
       event_t type;

@@ -46,7 +46,7 @@ namespace qb50 {
          struct Line
          {
             uint8_t len;
-            char    x[95];
+            char    x[128];
          };
 
          Ring<4096>  _ring;

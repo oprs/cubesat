@@ -1,4 +1,5 @@
 
+#include "system/qb50.h"
 #include "system/Timer.h"
 
 using namespace qb50;
@@ -34,6 +35,7 @@ Timer& Timer::every( unsigned ms )
    }
 
    _incr = (TickType_t)ms / portTICK_RATE_MS;
+ //kprintf( YELLOW( "_INCR: %lu" ) "\r\n", _incr );
 
    (void)::vTaskDelayUntil( &_prev, _incr );
 

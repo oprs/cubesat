@@ -193,9 +193,24 @@ size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
 
    unsigned len, i, n;
    uint8_t *o;
+   char wt;
+
+   switch( hdr->type ) {
+      case WodStore::ADC:
+         wt = '!';
+         break;
+
+      case WodStore::FIPEX:
+         wt = '#';
+         break;
+
+      default:
+         wt = '?';
+         break;
+   }
 
    (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n  = snprintf ( (char*)_obuf,     32,     "!%02x", CONF.nrst() & 0xff );
+   n  = snprintf ( (char*)_obuf,     32,     "%c%02x", wt, CONF.nrst() & 0xff );
    n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
 
    o   = _obuf + n;
@@ -247,6 +262,8 @@ void AX25Modem::_sendUI( const uint8_t *x, unsigned len, int toms )
 {
    unsigned i;
    uint16_t fcs, w;
+
+kprintf( "%s: [%.*s]\r\n", _name, len, x );
 
    _ones = 0;
 
