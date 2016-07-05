@@ -121,7 +121,7 @@ void Config::clear( void )
    for( int i = 0 ; i < _QB50_NPARAMS ; ++i )
       st->pv[ i ] = defs[ i ].def;
 
- //st->nReset = 0;
+   st->nReset = 0;
    st->mode   = Config::INIT;
    st->wHead  = 0;
    st->wTail  = 0;

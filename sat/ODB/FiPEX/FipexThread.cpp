@@ -47,6 +47,14 @@ static const uint8_t FPX_GERARD[] = {
    0x00, 0x20, 0x1e, 0x00, 0x7e, 0xf0, 0x00, 0xf0,  0x0a, 0x00, 0x7e, 0xff, 0x01, 0xfe
 };
 
+static const uint8_t FPX_ICD[] = {
+   0x43, 0xc0, 0xbf, 0x56, 0x1a, 0x10, 0x0e, 0x0a,  0x7e, 0x0f, 0x00, 0x0f, 0x3c, 0x00, 0x7e, 0x0b,
+   0x00, 0x0b, 0x3c, 0x00, 0x7e, 0x11, 0x03, 0x04,  0x01, 0x00, 0x17, 0xff, 0xff, 0x7e, 0x11, 0x03,
+   0x05, 0x10, 0x0a, 0x0d, 0xff, 0xff, 0x7e, 0x11,  0x03, 0x02, 0xc8, 0x00, 0xd8, 0xff, 0xff, 0x7e,
+   0x0c, 0x00, 0x0c, 0x2c, 0x01, 0x7e, 0x20, 0x00,  0x20, 0xff, 0xff, 0x7e, 0x21, 0x00, 0x21, 0xff,
+   0xff, 0x7e, 0xf0, 0x00, 0xf0, 0xff, 0xff, 0x7e,  0xff, 0x01, 0xfe
+};
+
 static const uint8_t FPX_E2E_1_1[] = {
    0x23, 0x6c, 0x06, 0x42, 0x1e, 0x00, 0x00, 0x05,  0x7e, 0x0f, 0x00, 0x0f, 0x0a, 0x00, 0x7e, 0x20,
    0x00, 0x20, 0xd2, 0x00, 0x7e, 0x20, 0x00, 0x20,  0x0a, 0x00, 0x7e, 0xf0, 0x00, 0xf0, 0x0a, 0x00,
@@ -133,6 +141,7 @@ static const uint8_t FPX_E2E_8[] = {
 static const uint8_t *sv[] = {
 //FPX_E2E_5,
    FPX_GERARD,
+   FPX_ICD,
    FPX_E2E_1_1,
    FPX_E2E_1_2,
    FPX_E2E_1_3,
@@ -211,6 +220,7 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
       switch( rx[1] ) {
 
          case 0x20: /* SU_R_HK */
+         case 0x30: /* SU_R_SDP */
 
             RTC0.getTime( tm );
             ts = RTC::conv( tm ) - VKI_EPOCH;
@@ -254,9 +264,6 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
             modem->send( &hdr, rx + 1, -1 );
             modem->disable();
 
-            break;
-
-         case 0x30: /* SU_R_SDP */
             break;
 
          default:
@@ -334,8 +341,10 @@ void FipexThread::test( void )
 
    kprintf( "%s: FIPEX Functional Test Procedure\r\n", name );
 
+/*
    kprintf( "%s: STEP #5 - switching FIPEX on\r\n", name );
    PB14.out().off();
+*/
    // Req: FPX-SW-0240 - "The OBC shall wait 500ms before initializing the UART interface [...]"
 (void)ADC4CH5.read( &i5 );
 (void)ADC4CH3.read( &i3 );
@@ -416,10 +425,6 @@ kprintf( "i3: %lu\r\n", i3 );
 
 void FipexThread::run( void )
 {
-   //LOG << "FipexThread starting..." << std::flush;
-   PB14.out().on();
-   UART2.enable();
-
    // retrieve script
 
    Config::pval_t sn;
@@ -440,7 +445,7 @@ void FipexThread::run( void )
 
 void FipexThread::onSuspend( void )
 {
-   PB14.out().on();
+   FPX.disable();
    Thread::onSuspend();
 }
 
@@ -448,7 +453,7 @@ void FipexThread::onSuspend( void )
 void FipexThread::onResume( void )
 {
    Thread::onResume();
-   PB14.out().off();
+   FPX.enable();
 }
 
 

@@ -3,19 +3,18 @@
 #define _QB50_CTCSS_THREAD_H
 
 #include "system/qb50.h"
-#include "device/STM32/STM32_EXTI.h"
+#include "CTCSS.h"
+
 
 namespace qb50 {
 
-   class CTCSSThread : public Thread, public STM32_EXTIHandler
+   class CTCSSThread : public Thread
    {
 
       public:
 
          CTCSSThread();
          ~CTCSSThread();
-
-         void handle    ( STM32_EXTI::EXTIn );
 
          void onSuspend ( void );
          void onResume  ( void );
@@ -24,7 +23,10 @@ namespace qb50 {
 
       private:
 
-         xSemaphoreHandle _semCTCSS;
+         enum State { OFF = 0, ON = 1 };
+
+         State    _state;
+         unsigned _sec;
 
    };
 

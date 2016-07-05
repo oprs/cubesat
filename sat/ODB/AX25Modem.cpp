@@ -106,7 +106,8 @@ AX25Modem& AX25Modem::init( void )
    _ohdr[ 14 ] = 0x03; // Control
    _ohdr[ 15 ] = 0xf0; // PID
 
-   kprintf( "%s: AX.25 Transmitter\r\n", _name );
+   kprintf( "%s: AX.25 Transmitter, enPin: %s, ckPin: %s, txPin: %s\r\n",
+            _name, _enPin.name(), _ckPin.name(), _txPin.name() );
 
    return *this;
 }

@@ -104,6 +104,8 @@ void WodexThread::onResume( void )
    ADC2.enable();
    ADC3.enable();
    ADC4.enable();
+
+   _timer.reset();
 }
 
 
@@ -111,6 +113,7 @@ void WodexThread::run( void )
 {
    Config::pval_t dt;
    WodStore::WEH hdr;
+   TickType_t prev;
    Timer tm;
 
    float min, max;
@@ -119,16 +122,31 @@ void WodexThread::run( void )
    for( ;; ) {
       _wait();
 
-      dt = CONF.getParam( Config::PARAM_WODEX_CYCLE_TX ) - 1;
-      ms = dt >= 0 ? ( 30000 / ( 1 << dt )) : 30000;
+      Config::mode_t mode = CONF.mode();
+
+      if( mode == Config::FM ) {
+         dt = CONF.getParam( Config::PARAM_FM_WODEX_CYCLE_TX );
+         ms = 60000 * dt;
+      } else {
+         dt = CONF.getParam( Config::PARAM_WODEX_CYCLE_TX ) - 1;
+         ms = dt >= 0 ? ( 30000 / ( 1 << dt )) : 30000;
+      }
 
       kprintf( "%s: waiting for %.2f sec...\r\n", name, 0.001 * ms );
-      tm.every( ms );
+      prev = _timer.prev;
+      tm.until( prev + (TickType_t)ms / portTICK_RATE_MS );
+
+#if 0
+      if( mode == Config::FM ) {
+         // adjust delay if FM relay mode was activated while we were waiting
+         dt = CONF.getParam( Config::PARAM_FM_WODEX_CYCLE_TX );
+         ms = 60000 * dt;
+         tm.until( prev + (TickType_t)ms / portTICK_RATE_MS );
+      }
+#endif
 
       _updateSamples();
       (void)WOD.write( WodStore::ADC, _raw8, 32, &hdr );
-
-      Config::mode_t mode = CONF.mode();
 
       if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
          _modem = &M1K2;

@@ -1,10 +1,12 @@
 
 #include "devices.h"
+#include "FiPEX/Fipex.h"
 #include "CommandThread.h"
 #include "CommandBacklog.h"
 #include "Config.h"
 
 #include <task.h> // XXX out
+#include <cstring>
 #include <cmath>
 
 using namespace qb50;
@@ -15,7 +17,7 @@ static const int _mdays[ 12 ] = {
 };
 
 
-#define ECHR 0x80
+#define ECHR 0xf0
 
 static const uint8_t _rhex[ 128 ] = {
    /* 0x00 */
@@ -49,7 +51,6 @@ static const uint8_t _rhex[ 128 ] = {
 #define ISDIGIT( c ) (((c) >= '0') && ((c) <= '9'))
 #define ISWHITE( c ) ( (c) == ' '                 )
 #define  ISSIGN( c ) (((c) == '+') || ((c) == '-'))
-#define   ISHEX( c ) (( _rhex[ (c) & 0x7f ] & 0x80 ) == 0 )
 
 
 extern QueueHandle_t evQueue;
@@ -62,18 +63,16 @@ extern QueueHandle_t evQueue;
 CommandThread::CommandThread()
    : Thread( "Command Handler", 1, RUNNING, 384 )
 {
+   _x = new uint8_t[ 256 ];
    _c = new uint8_t[ 256 ];
    _m.reset( _c, 256 );
-
-   _x = new uint8_t[ 256 ];
-   _m.reset( _x, 256 );
 }
 
 
 CommandThread::~CommandThread()
 {
-   delete[] _x;
    delete[] _c;
+   delete[] _x;
 }
 
 
@@ -214,7 +213,7 @@ CommandThread::_parseForm( void )
 
       case 'F':
       case 'f':
-         ++_m; // skip 'P'
+         ++_m; // skip 'F'
          return _parseFForm();
 
 #if 0
@@ -320,6 +319,7 @@ int
 CommandThread::_parseFForm( void )
 {
    long n;
+   size_t len;
 
    if( !_parseInteger( n ))
       return 0;
@@ -327,12 +327,14 @@ CommandThread::_parseFForm( void )
    if(( !_m.avail() ) || ( *(_m++) != ',' ))
       return 0;
 
-   if( !_parseHex( _x, 256 ))
+   (void)memset( _x, 0, 256 );
+
+   len = _parseHex( _x, 256 );
+
+   if( len == 0 )
       return 0;
 
-   kprintf( "%s: FIPEX script number: %lu\r\n", name, n );
-
-   hexdump( _x, 64 );
+   FPX.storeScript( n, _x, len );
 
    return 1;
 }
@@ -341,21 +343,22 @@ CommandThread::_parseFForm( void )
 int
 CommandThread::_parseHex( uint8_t *x, size_t len )
 {
-   uint8_t nH, nL;
+   uint8_t hNib, lNib;
+   int n = 0;
 
    while(( len > 0 ) && ( _m.avail() > 1 )) {
-      nH = _rhex[ *(_m++) & 0x7f ];
-      nL = _rhex[ *(_m++) & 0x7f ];
+      hNib = _rhex[ *(_m++) & 0x7f ];
+      lNib = _rhex[ *(_m++) & 0x7f ];
 
-      if(( nH & 0x80 ) || ( nL & 0x80 )) {
+      if(( hNib & ECHR ) || ( lNib & ECHR )) {
          return 0;
       }
 
-      *(x++) = ( nH << 8 ) | nL;
+      x[ n++ ] = ( hNib << 4 ) | lNib;
       --len;
    }
 
-   return 1;
+   return n;
 }
 
 

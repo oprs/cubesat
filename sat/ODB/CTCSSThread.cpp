@@ -14,14 +14,13 @@ using namespace qb50;
 CTCSSThread::CTCSSThread()
    : Thread( "CTCSS", 1, SUSPENDED )
 {
-   _semCTCSS = xSemaphoreCreateBinary();
+   _sec   = 0;
+   _state = OFF;
 }
 
 
 CTCSSThread::~CTCSSThread()
-{
-   vSemaphoreDelete( _semCTCSS );
-}
+{ ; }
 
 
 //  - - - - - - -  //
@@ -30,41 +29,45 @@ CTCSSThread::~CTCSSThread()
 
 void CTCSSThread::onSuspend( void )
 {
-   PB12.off();
-   BB.disable();
+   CTCS0.disable();
+
+   _sec   = 0;
+   _state = OFF;
+
    Thread::onSuspend();
 }
 
 
 void CTCSSThread::onResume( void )
 {
+/*
    int i, vp;
+*/
 
    Thread::onResume();
-   PB12.on();
 
-   vp = xSemaphoreTake( _semCTCSS, 10 / portTICK_RATE_MS );
+   _sec   = 0;
+   _state = OFF;
+
+   CTCS0.enable();
+
+/*
+   vp = xSemaphoreTake( _sem, 10 / portTICK_RATE_MS );
    for( i = 0 ; i < 10 ; ++i ) {
       if( vp == pdFAIL ) break;
       kprintf( YELLOW( "FLUSHING CTCSS" ) "\r\n" );
-      vp = xSemaphoreTake( _semCTCSS, 10 / portTICK_RATE_MS );
+      vp = xSemaphoreTake( _sem, 10 / portTICK_RATE_MS );
    }
 
    if( i > 2 ) {
       kprintf( RED( "%s: too many pending CTCSS events" ) "\r\n", name );
    }
+*/
 }
 
 
 void CTCSSThread::run( void )
 {
-   int vp;
-
-   PA8  . in()  . noPull(); // DEC_Tone
-   PB12 . out() . off();    // ON/OFF_CTCSS
-
-   EXTI.registerHandler( PA8, this, STM32_EXTI::BOTH );
-
 #if 0
    int cnt = 0;
    int state = 0;
@@ -75,7 +78,7 @@ void CTCSSThread::run( void )
       switch( state ) {
 
          case 0: // attente DEC_Tone
-            vp = xSemaphoreTake( _semCTCSS, 1000 / portTICK_RATE_MS );
+            vp = xSemaphoreTake( _sem, 1000 / portTICK_RATE_MS );
             if( vp == pdPASS ) {
                if( !PA8.read() ) {
                   kprintf( RED( "CTCSS ON" ) "\r\n" );
@@ -114,38 +117,44 @@ void CTCSSThread::run( void )
    for( ;; ) {
       _wait();
 
-      vp = xSemaphoreTake( _semCTCSS, 1000 / portTICK_RATE_MS );
-      if( vp == pdPASS ) {
-         if( PA8.read() ) {
-            kprintf( RED( "CTCSS OFF" ) "\r\n" );
-            BB.disable();
-         } else {
-            kprintf( RED( "CTCSS ON" ) "\r\n" );
+      if( CTCS0.wait( 1000 )) {
+
+         if( CTCS0.decTone() ) {
+
+            kprintf( GREEN( "CTCSS ON" ) "\r\n" );
             BB.enable();
+            _sec   = 20;
+            _state = ON;
+
+         } else {
+
+            if( _state != OFF ) {
+               kprintf( GREEN( "CTCSS OFF" ) "\r\n" );
+               BB.disable();
+               _sec   = 0;
+               _state = OFF;
+            }
+
          }
+
       } else {
+
+         if( _state == ON ) {
+            if( _sec > 0 ) {
+               --_sec;
+            } else {
+               kprintf( YELLOW( "CTCSS OFF (TOT)" ) "\r\n" );
+               BB.disable();
+               _state = OFF;
+            }
+         }
+
          kprintf( "waiting for CTCSS...\r\n" );
+
       }
    }
 
 #endif
-
-   // XXX EXTI.removeHandler()
-}
-
-
-//  - - - - - - - - - - - -  //
-//  E X T I   H A N D L E R  //
-//  - - - - - - - - - - - -  //
-
-void CTCSSThread::handle( STM32_EXTI::EXTIn /* ignored */ )
-{
-   portBASE_TYPE hpTask = pdFALSE;
-
-   (void)xSemaphoreGiveFromISR( _semCTCSS, &hpTask );
-
-   if( hpTask == pdTRUE )
-      portEND_SWITCHING_ISR( hpTask );
 }
 
 /*EoF*/

@@ -16,13 +16,11 @@ namespace qb50 {
          Timer();
          virtual ~Timer();
 
-         Timer& every( unsigned ms );
+         Timer& reset( void );
+         Timer& every( unsigned ms     );
+         Timer& until( TickType_t tick );
 
-
-      protected:
-
-         TickType_t _incr;
-         TickType_t _prev;
+         TickType_t prev;
 
    };
 

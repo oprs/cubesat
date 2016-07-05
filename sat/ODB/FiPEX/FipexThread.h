@@ -3,6 +3,7 @@
 #define _QB50_FIPEX_THREAD_H
 
 #include "system/qb50.h"
+#include "Fipex.h"
 
 
 namespace qb50 {

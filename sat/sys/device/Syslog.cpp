@@ -74,6 +74,7 @@ Syslog& Syslog::printf( const char *fmt, ... )
 Syslog& Syslog::enable( bool silent )
 {
    //_uart.enable( silent ).baudRate( 115200 );
+   (void)silent;
    return *this;
 }
 

@@ -69,6 +69,8 @@ namespace qb50 {
          Mode   _modeBat;
          Mode   _modePA;
 
+         Timer  _timer;
+
          Modem *_modem;
 
          void _updateSamples ( void );

@@ -2,6 +2,8 @@
 #include "devices.h"
 #include "AX25Modem.h"
 #include "Baseband.h"
+#include "CTCSS.h"
+#include "FiPEX/Fipex.h"
 
 using namespace qb50;
 
@@ -41,31 +43,33 @@ ODB::~ODB()
 ODB& ODB::init( void )
 {
    SYSLOG.init();
-   RCC.init();
-   WDG.init();
-   PWR.init();
-   BKP.init();
-   RTC0.init();
-   NVIC.init();
-   EXTI.init();
-   DMA1.init();
-   GPIOA.init().enable();
-   GPIOB.init().enable();
-   GPIOC.init().enable();
-   UART1.init();
-   UART2.init();
-   UART6.init();
-   SPI3.init();
-   ADC1.init();
-   ADC2.init();
-   ADC3.init();
-   ADC4.init();
+      RCC.init();
+      WDG.init();
+      PWR.init();
+      BKP.init();
+     RTC0.init();
+     NVIC.init();
+     EXTI.init();
+     DMA1.init();
+    GPIOA.init().enable();
+    GPIOB.init().enable();
+    GPIOC.init().enable();
+    UART1.init();
+    UART2.init();
+    UART6.init();
+     SPI3.init();
+     ADC1.init();
+     ADC2.init();
+     ADC3.init();
+     ADC4.init();
  //VFLASH.init();
    FCACHE.init();
- //WDB.init();
-   BB.init();
-   M1K2.init();
-   M9K6.init();
+    //WDB.init();
+       BB.init();
+     M1K2.init();
+     M9K6.init();
+    CTCS0.init();
+      FPX.init();
 
    _selPin.in().noPull();
    _inhPin.in().pullUp();

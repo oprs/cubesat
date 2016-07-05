@@ -11,8 +11,7 @@ using namespace qb50;
 
 Timer::Timer()
 {
-   _incr = 0;
-   _prev = 0;
+   prev = 0;
 }
 
 
@@ -24,21 +23,30 @@ Timer::~Timer()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
+Timer& Timer::reset( void )
+{
+   prev = ::xTaskGetTickCount();
+
+   return *this;
+}
+
+
 Timer& Timer::every( unsigned ms )
 {
-   if( ms > portMAX_DELAY ) {
-      ms = portMAX_DELAY;
+   if( prev == 0 ) {
+      reset();
    }
 
-   if( _prev == 0 ) {
-      _prev = ::xTaskGetTickCount();
-   }
+   TickType_t incr = (TickType_t)ms / portTICK_RATE_MS;
+   (void)::vTaskDelayUntil( &prev, incr );
 
-   _incr = (TickType_t)ms / portTICK_RATE_MS;
- //kprintf( YELLOW( "_INCR: %lu" ) "\r\n", _incr );
+   return *this;
+}
 
-   (void)::vTaskDelayUntil( &_prev, _incr );
 
+Timer& Timer::until( TickType_t tick )
+{
+   (void)::vTaskDelayUntil( &prev, tick );
    return *this;
 }
 
