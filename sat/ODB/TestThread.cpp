@@ -31,6 +31,7 @@ TestThread::~TestThread()
 
 void TestThread::onSuspend( void )
 {
+ //MAG0.disable();
    Thread::onSuspend();
 }
 
@@ -38,32 +39,17 @@ void TestThread::onSuspend( void )
 void TestThread::onResume( void )
 {
    Thread::onResume();
+ //MAG0.enable();
 }
 
 
 void TestThread::run( void )
 {
-   Event *ev;
-
    for( ;; ) {
 
       _wait();
 
-      if( SAT.aState() == ODB::DEPLOYED ) {
-         if( _mode == OFF ) {
-            _mode = ON;
-            ev = new Event( Event::AD_SUCCESS );
-            xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
-         }
-      } else {
-         if( _mode == ON ) {
-            _mode = OFF;
-            ev = new Event( Event::AD_FAILURE );
-            xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
-         }
-      }
-
-      delay( 100 );
+      delay( 1000 );
 
    }
 }

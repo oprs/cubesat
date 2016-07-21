@@ -12,10 +12,12 @@ static const uint8_t WHO_AM_I_Cmd[ 2 ]     = { 0x8f, 0xff };
 static const uint8_t ENABLE_XYZ_Cmd[ 2 ]   = { 0x20, 0x0f };
 static const uint8_t DISABLE_XYZ_Cmd[ 2 ]  = { 0x20, 0x00 };
 static const uint8_t STATUS_REG_Cmd[ 2 ]   = { 0xa7, 0xff };
-static const uint8_t OMEGA_Cmd[ 7 ]        = { 0xe8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+static const uint8_t OMEGA_Cmd[ 7 ]        = { 0xc8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 static const uint8_t RATE_250DPS_Cmd[ 2 ]  = { 0x23, 0x00 };
 static const uint8_t RATE_500DPS_Cmd[ 2 ]  = { 0x23, 0x01 };
 static const uint8_t RATE_2000DPS_Cmd[ 2 ] = { 0x23, 0x02 };
+
+static const uint8_t MAG_INIT_Cmd[ 4 ]  = { 0x64, 0x64, 0x20, 0x00 };
 
 static const float m250DPS  = 0.00875F;
 static const float m500DPS  = 0.01750F;
@@ -48,7 +50,7 @@ LSM303& LSM303::init( void )
 {
    (void)SPI_Device::init();
 
- //(void)reset();
+   (void)reset();
 
    kprintf( "%s: Onboard LSM303 MEMS accelerometer/magnetometer, cs: %s\r\n",
             _name, _csPin.name() );
@@ -60,16 +62,23 @@ LSM303& LSM303::init( void )
 
 LSM303& LSM303::reset( void )
 {
+   uint8_t res[ 4 ];
    uint8_t id;
 
    (void)enable( true );
 
-   _WHO_AM_I( id  );
+   _WHO_AM_I( id );
    kprintf( "%s: id: 0x%02x\r\n", _name, id );
 
-   range( R250DPS );
+   _spi.lock();
+   _select();
+   _spi.pollXfer( MAG_INIT_Cmd, res, 4 );
+   _deselect();
+   _spi.unlock();
 
-   (void)disable( true );
+ //range( R250DPS );
+
+   (void)disable( /*true*/ );
 
    return *this;
 }
@@ -82,11 +91,13 @@ LSM303& LSM303::enable( bool silent )
 
    _spi.enable( silent );
 
+/*
    _spi.lock();
    _select();
    _spi.pollXfer( ENABLE_XYZ_Cmd, NULL, 2 );
    _deselect();
    _spi.unlock();
+*/
 
    if( !silent ) {
       kprintf( "%s: enabled\r\n", _name );
@@ -101,11 +112,13 @@ LSM303& LSM303::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
+/*
    _spi.lock();
    _select();
    _spi.pollXfer( DISABLE_XYZ_Cmd, NULL, 2 );
    _deselect();
    _spi.unlock();
+*/
 
    _spi.disable( silent );
 
@@ -118,7 +131,7 @@ LSM303& LSM303::disable( bool silent )
 
 
 
-LSM303& LSM303::omega( vec3d& v )
+LSM303& LSM303::omega( Vec3D& v )
 {
    uint8_t res[ 8 ];
    float coef;
@@ -139,9 +152,9 @@ LSM303& LSM303::omega( vec3d& v )
       case R2000DPS: coef = m2000DPS; break;
    }
 
-   v.xr = coef * ( xr - _calX );
-   v.yr = coef * ( yr - _calY );
-   v.zr = coef * ( zr - _calZ );
+   v.x = coef * ( xr - _calX );
+   v.y = coef * ( yr - _calY );
+   v.z = coef * ( zr - _calZ );
 
    return *this;
 }

@@ -20,13 +20,14 @@ extern QueueHandle_t evQueue;
 FipexThread::FipexThread()
    : Thread( "Fipex", 1, SUSPENDED, 512 )
 {
-   rx = new uint8_t[ 256 ];
+   _st = START_WAIT;
+   _rx = new uint8_t[ 256 ];
 }
 
 
 FipexThread::~FipexThread()
 {
-   delete[] rx;
+   delete[] _rx;
 }
 
 
@@ -203,7 +204,7 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
    time_t ts;
 
    UART2.write( cmd, len );
-   n = UART2.read( rx, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
+   n = UART2.read( _rx, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
 
    if( n == 0 ) {
       kprintf( RED( "%s: n: %lu" ) "\r\n", name, n );
@@ -211,48 +212,48 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
    } else {
       kprintf( GREEN( "%s: n: %lu" ) "\r\n", name, n );
 
-      dlen = rx[2];
+      dlen = _rx[2];
 
       kprintf( "%s: len: %lu\r\n", name, dlen );
-      kprintf( "%s: seq: %d\r\n", name, rx[3] );
-    //hexdump( rx, n );
+      kprintf( "%s: seq: %d\r\n", name, _rx[3] );
+    //hexdump( _rx, n );
 
-      switch( rx[1] ) {
+      switch( _rx[1] ) {
 
          case 0x20: /* SU_R_HK */
          case 0x30: /* SU_R_SDP */
 
             RTC0.getTime( tm );
             ts = RTC::conv( tm ) - VKI_EPOCH;
-            rx[ dlen +  5 ] = ( ts       ) & 0xff;
-            rx[ dlen +  6 ] = ( ts >>  8 ) & 0xff;
-            rx[ dlen +  7 ] = ( ts >> 16 ) & 0xff;
-            rx[ dlen +  8 ] = ( ts >> 24 ) & 0xff;
+            _rx[ dlen +  5 ] = ( ts       ) & 0xff;
+            _rx[ dlen +  6 ] = ( ts >>  8 ) & 0xff;
+            _rx[ dlen +  7 ] = ( ts >> 16 ) & 0xff;
+            _rx[ dlen +  8 ] = ( ts >> 24 ) & 0xff;
 
-            rx[ dlen +  9 ] = 0x00;  // Q1L
-            rx[ dlen + 10 ] = 0x00;  // Q1H
-            rx[ dlen + 11 ] = 0x00;  // Q2L
-            rx[ dlen + 12 ] = 0x00;  // Q2H
-            rx[ dlen + 13 ] = 0x00;  // Q3L
-            rx[ dlen + 14 ] = 0x00;  // Q3H
-            rx[ dlen + 15 ] = 0x00;  // Q4L
-            rx[ dlen + 16 ] = 0x00;  // Q4H
+            _rx[ dlen +  9 ] = 0x00;  // Q1L
+            _rx[ dlen + 10 ] = 0x00;  // Q1H
+            _rx[ dlen + 11 ] = 0x00;  // Q2L
+            _rx[ dlen + 12 ] = 0x00;  // Q2H
+            _rx[ dlen + 13 ] = 0x00;  // Q3L
+            _rx[ dlen + 14 ] = 0x00;  // Q3H
+            _rx[ dlen + 15 ] = 0x00;  // Q4L
+            _rx[ dlen + 16 ] = 0x00;  // Q4H
 
-            rx[ dlen + 17 ] = 0x00;  // XDL
-            rx[ dlen + 18 ] = 0x00;  // XDH
-            rx[ dlen + 19 ] = 0x00;  // YDL
-            rx[ dlen + 20 ] = 0x00;  // YDH
-            rx[ dlen + 21 ] = 0x00;  // ZDL
-            rx[ dlen + 22 ] = 0x00;  // ZDH
+            _rx[ dlen + 17 ] = 0x00;  // XDL
+            _rx[ dlen + 18 ] = 0x00;  // XDH
+            _rx[ dlen + 19 ] = 0x00;  // YDL
+            _rx[ dlen + 20 ] = 0x00;  // YDH
+            _rx[ dlen + 21 ] = 0x00;  // ZDL
+            _rx[ dlen + 22 ] = 0x00;  // ZDH
 
-            rx[ dlen + 23 ] = 0x00;  // XPL
-            rx[ dlen + 24 ] = 0x00;  // XPH
-            rx[ dlen + 25 ] = 0x00;  // YPL
-            rx[ dlen + 26 ] = 0x00;  // YPH
-            rx[ dlen + 27 ] = 0x00;  // ZPL
-            rx[ dlen + 28 ] = 0x00;  // ZPH
+            _rx[ dlen + 23 ] = 0x00;  // XPL
+            _rx[ dlen + 24 ] = 0x00;  // XPH
+            _rx[ dlen + 25 ] = 0x00;  // YPL
+            _rx[ dlen + 26 ] = 0x00;  // YPH
+            _rx[ dlen + 27 ] = 0x00;  // ZPL
+            _rx[ dlen + 28 ] = 0x00;  // ZPH
 
-            (void)WOD.write( WodStore::FIPEX, rx + 1, dlen + 28, &hdr );
+            (void)WOD.write( WodStore::FIPEX, _rx + 1, dlen + 28, &hdr );
 
             if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
                modem = &M1K2;
@@ -261,7 +262,7 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
             }
 
             modem->enable();
-            modem->send( &hdr, rx + 1, -1 );
+            modem->send( &hdr, _rx + 1, -1 );
             modem->disable();
 
             break;
@@ -433,9 +434,45 @@ void FipexThread::run( void )
       _wait();
 
       sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
+
+#if 0
+      switch( _st ) {
+
+         case START_WAIT:
+
+            sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
+
+            break;
+
+         case REPEAT_WAIT:
+            break;
+
+         case RUNNING:
+            break;
+
+      }
+#endif
+
       kprintf( GREEN( "%s: RUNNING SCRIPT: %d" ) "\r\n", name, sn );
 
-      _runScript( sv[ sn - 1 ], true );
+      try {
+
+         Fipex::Script sc;
+         sc.load( (Fipex::Script::ScriptHeader*)( sv[ sn - 1 ] ));
+
+         Fipex::Script::CmdHeader *ch = sc.next();
+
+         while( ch != 0 ) {
+            FPX.runCommand( ch, (Fipex::Script::RspHeader*)_rx );
+            delay( 5000 );
+            ch = sc.next();
+         }
+
+      } catch( FipexException& e ) {
+         kprintf( RED( "%s: %s" ) "\r\n", name, e.what() );
+      }
+
+      //_runScript( sv[ sn - 1 ], true );
 
       //test();
       delay( 5000 );

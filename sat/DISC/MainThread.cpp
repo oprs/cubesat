@@ -90,7 +90,7 @@ for( ;; ) {
    LED1.toggle();
 }
 
-   Gyro::vec3d v;
+   Vec3D v;
 
    FLASH0.enable();
    FLASH1.enable();
@@ -108,7 +108,7 @@ for( ;; ) {
    for( ;; ) {
       GYR0.omega( v );
     //GYR1.omega( v );
-      kprintf( "%d\t%d\t%d\r\n", v.xr, v.yr, v.zr );
+      kprintf( "%d\t%d\t%d\r\n", v.x, v.y, v.z );
       delay( 1000 );
    }
 }

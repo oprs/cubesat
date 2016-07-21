@@ -156,8 +156,8 @@ namespace qb50 {
 
                   /* bus   iobase       periph                        name */
    STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1",
-                     PB7,               /* rx pin        */
-                     PB6,               /* tx pin        */
+                     PA10,              /* rx pin        */
+                     PA9,               /* tx pin        */
                      USART1_IRQn,       /* IRQ number    */
                      STM32_GPIO::UART1  /* alt. function */
    );

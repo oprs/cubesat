@@ -66,7 +66,7 @@ namespace qb50 {
         struct quaternion QUAT;
         struct test_adc TADC;
         struct moment_mag MOMAG;
-        enum Commands_ODB LCR;
+        enum   CmdID LCR;
     } Sat_state;
 
     extern qb50::Sat_state Current_state;

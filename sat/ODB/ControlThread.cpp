@@ -9,7 +9,7 @@
 #include "FiPEX/FipexThread.h"
 #include "TelemThread.h"
 #include "CTCSSThread.h"
-#include "ADCSThread.h"
+#include "ADCS/ADCSThread.h"
 #include "TestThread.h"
 
 #include "Event.h"
@@ -101,10 +101,6 @@ void ControlThread::run( void )
 uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
 kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
 */
-
-   // ADCS off
-
-   PC13.out().off();
 
    /*
     * Hardware reset ?

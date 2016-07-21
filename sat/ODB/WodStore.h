@@ -40,9 +40,9 @@ namespace qb50 {
 
          enum EntryType {
             NONE  = 0,
-            ADC   = 1,
+            WODEX = 1,
             FIPEX = 2,
-            GPS   = 3
+            ADCS  = 3
          };
 
          WodStore( const char *name, FlashCache &mem );

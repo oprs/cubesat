@@ -3,12 +3,12 @@
 #define _QB50_SYS_DEVICE_SPI_LSM303_H
 
 #include "SPI/Device.h"
-#include "Gyro.h"
+#include "Compass.h"
 
 
 namespace qb50 {
 
-   class LSM303 : public SPI_Device, public Gyro
+   class LSM303 : public SPI_Device, public Compass
    {
 
       public:
@@ -30,7 +30,7 @@ namespace qb50 {
          LSM303& enable    ( bool silent = false );
          LSM303& disable   ( bool silent = false );
 
-         LSM303& omega     ( vec3d& v );
+         LSM303& omega     ( Vec3D& v );
          LSM303& range     ( Range  r );
          LSM303& calibrate ( void );
 

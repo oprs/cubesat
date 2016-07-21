@@ -3,6 +3,7 @@
 #define _QB50_ODB_ADCS_THREAD_H
 
 #include "system/qb50.h"
+#include "ADCS.h"
 
 
 namespace qb50 {
@@ -22,9 +23,7 @@ namespace qb50 {
 
       private:
 
-         enum Mode { LOW = 0, HIGH = 1 };
-
-         Mode _mode;
+         uint8_t *_x;
 
    };
 

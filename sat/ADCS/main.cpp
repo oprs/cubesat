@@ -115,51 +115,22 @@ void Main_Thread( Thread *self )
 
 void initDevices( void )
 {
-/*
    SYSLOG.init();
    RCC.init();
    PWR.init();
    BKP.init();
-   RTC.init();
-   DMA1.init();
-   GPIOA.init();
-   GPIOB.init();
-   GPIOC.init();
-   UART1.init();
-   UART2.init();
-   UART3.init();
-   UART6.init();
-   SPI3.init();
-   ADC1.init();
-   ADC2.init();
-   ADC3.init();
-   ADC4.init();
-*/
-
-   SYSLOG.init();
-   RCC.init();
-   PWR.init();
-   BKP.init();
-   GPIOA.init();
-   GPIOB.init();
-   GPIOC.init();
-
-GPIOA.enable();
-GPIOB.enable();
-GPIOC.enable();
-
-PA15.out().on();
-PC8.out().on();
-PC9.out().on();
-
+   GPIOA.init().enable();
+   GPIOB.init().enable();
+   GPIOC.init().enable();
    UART1.init();
    UART6.init();
    SPI3.init();
    ADC1.init();
    FLASH0.init();
-   MAG0.init();
    GYR0.init();
+   MAG0.init();
 }
+
 
 int main( void )
 {
@@ -185,12 +156,6 @@ int main( void )
 
    initDevices();
 
-/*
-   GPIOA.enable();
-   GPIOB.enable();
-   GPIOC.enable();
-*/
-
    PB15.out().on();
    R1.out().on();
    R2.out().on();
@@ -205,8 +170,11 @@ int main( void )
 
    /* create worker threads */
 
+#if 0
 PC8.out().on();  // XXX disable LSM303D
-//PA15.out().on(); // XXX disable flash
+PC9.out().on();  // XXX disable LSM303D
+PA15.out().on(); // XXX disable flash
+#endif
 
    (void)registerThread( new MainThread() );
    createThread( "Coil Thread", CoilThread );

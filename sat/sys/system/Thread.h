@@ -12,14 +12,14 @@ namespace qb50 {
 
       public:
 
-         enum State {
+         enum ThreadState {
             SUSPENDED  = 0,
             RUNNING    = 1,
             SUSPENDING = 2,
             RESUMING   = 3
          };
 
-         Thread( const char *name, int prio, State state = RUNNING, unsigned stackDepth = 256 );
+         Thread( const char *name, int prio, ThreadState state = RUNNING, unsigned stackDepth = 256 );
          ~Thread();
 
                  void suspend   ( void );
@@ -44,7 +44,7 @@ namespace qb50 {
 
       protected:
 
-         State    _state;
+         ThreadState _thst;
 
          void     _wait     ( void );
          unsigned _stackHWM ( void );

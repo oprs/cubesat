@@ -63,7 +63,7 @@ L3GD20& L3GD20::reset( void )
 
    (void)enable( true );
 
-   _WHO_AM_I( id  );
+   _WHO_AM_I( id );
    kprintf( "%s: id: 0x%02x\r\n", _name, id );
 
    range( R250DPS );
@@ -116,7 +116,7 @@ L3GD20& L3GD20::disable( bool silent )
 }
 
 
-L3GD20& L3GD20::omega( vec3d& v )
+L3GD20& L3GD20::omega( Vec3D& v )
 {
    uint8_t res[ 8 ];
    float coef;
@@ -137,9 +137,9 @@ L3GD20& L3GD20::omega( vec3d& v )
       case R2000DPS: coef = m2000DPS; break;
    }
 
-   v.xr = coef * ( xr - _calX );
-   v.yr = coef * ( yr - _calY );
-   v.zr = coef * ( zr - _calZ );
+   v.x = coef * ( xr - _calX );
+   v.y = coef * ( yr - _calY );
+   v.z = coef * ( zr - _calZ );
 
    return *this;
 }

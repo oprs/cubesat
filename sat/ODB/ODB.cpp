@@ -3,6 +3,7 @@
 #include "AX25Modem.h"
 #include "Baseband.h"
 #include "CTCSS.h"
+#include "ADCS/ADCS.h"
 #include "FiPEX/Fipex.h"
 
 using namespace qb50;
@@ -69,6 +70,7 @@ ODB& ODB::init( void )
      M1K2.init();
      M9K6.init();
     CTCS0.init();
+    ADCS0.init();
       FPX.init();
 
    _selPin.in().noPull();

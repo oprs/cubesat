@@ -167,7 +167,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - - -  //
 
    /*                bus   iobase       periph                        name    rxPin txPin  IRQ number   alt. function */
-   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PA10, PB6,  USART1_IRQn, STM32_GPIO::UART1 );
+   STM32_UART UART1( APB2, USART1_BASE, STM32_RCC::APB2Periph_USART1, "UART1", PA10, PA9,  USART1_IRQn, STM32_GPIO::UART1 );
    STM32_UART UART6( APB2, USART6_BASE, STM32_RCC::APB2Periph_USART6, "UART6", PC7,  PC6,  USART6_IRQn, STM32_GPIO::UART6 );
 
 //  - - - - - - - - - - -  //
@@ -222,9 +222,9 @@ namespace qb50 {
    STM32_ADC::Channel& GS4_2 = SUN8;
    STM32_ADC::Channel& GS5   = SUN9;
 
-//  - - - - - - - - - - - - - - -  //
-//  T I M   C O N T R O L L E R S  //
-//  - - - - - - - - - - - - - - -  //
+//  - - - - - - - - - - - - - - - - -  //
+//  T I M E R   C O N T R O L L E R S  //
+//  - - - - - - - - - - - - - - - - -  //
 
    /*            bus   iobase     periph                      pin   Mode */
  //TIMER TIMER1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, PB13, STM32_GPIO::AF1);

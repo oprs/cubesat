@@ -16,6 +16,12 @@ namespace qb50 {
          FipexThread();
          ~FipexThread();
 
+         enum State {
+            START_WAIT  = 0,
+            REPEAT_WAIT = 1,
+            RUNNING     = 2
+         };
+
          void run       ( void );
          void test      ( void );
          void cmd       ( const uint8_t *x, size_t len );
@@ -30,7 +36,8 @@ namespace qb50 {
 
          void _runScript( const uint8_t *x, bool debug = false );
 
-         uint8_t *rx;  // receive buffer
+         State    _st;  // current state
+         uint8_t *_rx;  // receive buffer
 
    };
 

@@ -14,6 +14,9 @@ Fipex qb50::FPX( "FPX", UART2, PB14 );
 static FormatException ScriptFormatException;
 
 
+static uint8_t cmd_rsp[ 4 ] = { 0x7e, 0x10, 0x00, 0x10 };
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -97,49 +100,145 @@ Fipex& Fipex::activeScript( unsigned sn )
 }
 
 
-Fipex& Fipex::storeScript( unsigned sn, const uint8_t *x, unsigned len )
+Fipex& Fipex::loadScript( unsigned sn, Script& sc )
+{
+/*
+   uint8_t *base = _st + sn * 256;
+   sc.load( base, );
+*/
+
+   return *this;
+}
+
+
+Fipex& Fipex::storeScript( unsigned sn, Fipex::Script::ScriptHeader *sh )
 {
    Fipex::Script sc;
 
-   hexdump( x, len );
+   if( sn > 7 ) {
 
-   try {
-      sc.load( x, len );
-      uint8_t *base = _st + sn * 256;
-      (void)memcpy( base, x, len );
-      kprintf( GREEN( "%s: storing script #%lu" ) "\r\n", _name, sn );
-   } catch( FipexException& e ) {
-      kprintf( RED( "%s: %s" ) "\r\n", _name, e.what() );
+      kprintf( RED( "%s: invalid script number #%lu" ) "\r\n", _name, sn );
+
+   } else {
+
+      hexdump( sh, sh->len + 1 );
+
+      try {
+         sc.load( sh );
+         uint8_t *base = _st + sn * 256;
+         (void)memcpy( base, sh, sh->len + 1 );
+         kprintf( GREEN( "%s: storing script #%lu" ) "\r\n", _name, sn );
+      } catch( FipexException& e ) {
+         kprintf( RED( "%s: %s" ) "\r\n", _name, e.what() );
+      }
+
    }
 
    return *this;
 }
 
 
-Fipex& Fipex::op_SU_ON( void )
+Fipex& Fipex::runCommand( Script::CmdHeader *ch, Script::RspHeader *rh )
 {
-   enable();
+   switch( ch->id ) {
+
+      case Script::OBC_SU_ON:
+         enable();
+         // XXX set state
+         break;
+
+      case Script::OBC_SU_OFF:
+         disable();
+         // XXX set state
+         break;
+
+      case Script::OBC_SU_END:
+         disable();
+         // XXX set state
+         break;
+
+      case Script::SU_PING:
+      case Script::SU_INIT:
+      case Script::SU_ID:
+      case Script::SU_STDBY:
+      case Script::SU_SC:
+      case Script::SU_SM:
+      case Script::SU_RSP:
+      case Script::SU_SP:
+      case Script::SU_HK:
+      case Script::SU_DP:
+      case Script::SU_CAL:
+
+         if( !_send( ch, rh, 500 )) {
+            kprintf( RED( "%s: _send() failed, retrying with SU_RSP" ) "\r\n", _name );
+            if( !_send( (Script::CmdHeader*)cmd_rsp, rh, 500 )) {
+               kprintf( RED( "%s: _send() failed again, aborting" ) "\r\n", _name );
+               // XXX switch to ERROR state
+               break;
+            }
+         }
+
+         // XXX set state
+         break;
+   }
+
    return *this;
 }
 
 
-Fipex& Fipex::op_SU_OFF( void )
+Fipex& Fipex::abort( void )
 {
-   disable();
    return *this;
 }
 
 
-Fipex& Fipex::op_SU_END( void )
+//  - - - - - - - - - - - - - - -  //
+//  P R I V A T E   M E T H O D S  //
+//  - - - - - - - - - - - - - - -  //
+
+bool Fipex::_send( Script::CmdHeader *ch, Script::RspHeader *rh, int toms )
 {
-   disable();
-   return *this;
+   size_t n = _uart.write( (const uint8_t*)ch, ch->len + 4U, toms );
+
+hexdump( (const uint8_t*)ch, ch->len + 4U );
+
+   if( n != ( ch->len + 4U )) {
+      kprintf( RED( "%s: timeout in _send()" ) "\r\n", _name );
+      return false;
+   }
+
+   return
+      _recv( rh, toms );
 }
 
 
-Fipex& Fipex::op_CMD( void )
+bool Fipex::_recv( Script::RspHeader *rh, int toms )
 {
-   return *this;
+   (void)memset( rh, 0, 205 );
+
+   size_t n = _uart.read( rh, 205, toms );
+
+   if( n != 205 ) {
+      kprintf( RED( "%s: timeout in _recv()" ) "\r\n", _name );
+      return false;
+   }
+
+   if( rh->sb != 0x7e ) {
+      kprintf( RED( "%s: start byte not found in SU response" ) "\r\n", _name );
+      return false;
+   }
+
+   uint8_t sum = rh->id ^ rh->len ^ rh->seq;
+   for( size_t i = 0 ; i < rh->len ; ++i )
+      sum ^= rh->x[i];
+
+   const uint8_t *x = (const uint8_t *)rh;
+   if( sum != x[ rh->len + 4U ] ) {
+      kprintf( RED( "%s: checksum mismatch in SU response" ) "\r\n", _name );
+      return false;
+   }
+
+   return true;
 }
 
 

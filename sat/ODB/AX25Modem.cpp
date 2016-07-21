@@ -197,12 +197,16 @@ size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
    char wt;
 
    switch( hdr->type ) {
-      case WodStore::ADC:
+      case WodStore::WODEX:
          wt = '!';
          break;
 
       case WodStore::FIPEX:
          wt = '#';
+         break;
+
+      case WodStore::ADCS:
+         wt = '%';
          break;
 
       default:

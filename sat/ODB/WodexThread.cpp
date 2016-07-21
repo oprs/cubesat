@@ -146,7 +146,7 @@ void WodexThread::run( void )
 #endif
 
       _updateSamples();
-      (void)WOD.write( WodStore::ADC, _raw8, 32, &hdr );
+      (void)WOD.write( WodStore::WODEX, _raw8, 32, &hdr );
 
       if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
          _modem = &M1K2;

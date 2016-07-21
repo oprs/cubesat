@@ -331,10 +331,17 @@ CommandThread::_parseFForm( void )
 
    len = _parseHex( _x, 256 );
 
-   if( len == 0 )
+   if( len == 0 ) {
+      kprintf( RED( "empty script" ) "\r\n" );
       return 0;
+   }
 
-   FPX.storeScript( n, _x, len );
+   if( len != (unsigned)( _x[0] + 1 )) {
+      kprintf( RED( "script length mismatch" ) "\r\n" );
+      return 0;
+   }
+
+   FPX.storeScript( n, (Fipex::Script::ScriptHeader*)_x );
 
    return 1;
 }

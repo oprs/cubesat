@@ -13,8 +13,8 @@ using namespace qb50;
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Thread::Thread( const char *name, int prio, State state, unsigned stackDepth )
-   : _state( state )
+Thread::Thread( const char *name, int prio, ThreadState state, unsigned stackDepth )
+   : _thst( state )
 {
    this->name       = name == NULL ? "(generic thread)" : name;
    this->priority   = prio;
@@ -36,11 +36,11 @@ Thread::~Thread()
 
 void Thread::suspend( void )
 {
-   switch( _state ) {
+   switch( _thst ) {
 
       case RUNNING:
       case RESUMING:
-         _state = SUSPENDING;
+         _thst = SUSPENDING;
          break;
 
       case SUSPENDED:
@@ -57,15 +57,15 @@ void Thread::suspend( void )
 
 void Thread::resume( void )
 {
-   switch( _state ) {
+   switch( _thst ) {
 
       case SUSPENDED:
-         _state = RESUMING;
+         _thst = RESUMING;
          (void)xTaskNotifyGive( (TaskHandle_t)handle );
          break;
 
       case SUSPENDING:
-         _state = RESUMING;
+         _thst = RESUMING;
          break;
 
       case RUNNING:
@@ -78,8 +78,8 @@ void Thread::resume( void )
 
    }
 
-   if( _state == SUSPENDED ) {
-      _state = RUNNING;
+   if( _thst == SUSPENDED ) {
+      _thst = RUNNING;
       (void)xTaskNotifyGive( (TaskHandle_t)handle );
    }
 }
@@ -136,9 +136,9 @@ void Thread::operator delete( void *p )
 void Thread::_wait( void )
 {
 
-   while( _state != RUNNING ) {
+   while( _thst != RUNNING ) {
 
-      switch( _state ) {
+      switch( _thst ) {
 
          case RUNNING:
             /* can't happen - keep gcc happy */
@@ -146,12 +146,12 @@ void Thread::_wait( void )
 
          case RESUMING:
             onResume();
-            _state = RUNNING;
+            _thst = RUNNING;
             break;
 
          case SUSPENDING:
             onSuspend();
-            _state = SUSPENDED;
+            _thst = SUSPENDED;
             break;
 
          case SUSPENDED:
@@ -162,7 +162,7 @@ void Thread::_wait( void )
    }
 
 /*
-   while( _state == SUSPENDED) {
+   while( _thst == SUSPENDED) {
       onSuspend();
       ::ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
       onResume();

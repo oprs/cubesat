@@ -30,7 +30,7 @@ namespace qb50 {
          L3GD20& enable    ( bool silent = false );
          L3GD20& disable   ( bool silent = false );
 
-         L3GD20& omega     ( vec3d& v );
+         L3GD20& omega     ( Vec3D& v );
          L3GD20& range     ( Range  r );
          L3GD20& calibrate ( void );
 
