@@ -1,6 +1,6 @@
 
-#ifndef _QB50_FIFO_HPP
-#define _QB50_FIFO_HPP
+#ifndef _QB50_SYSTEM_FIFO_HPP
+#define _QB50_SYSTEM_FIFO_HPP
 
 
 namespace qb50 {
@@ -100,4 +100,4 @@ class FIFO
 
 } /* qb50 */
 
-#endif /*_QB50_FIFO_HPP*/
+#endif /*_QB50_SYSTEM_FIFO_HPP*/

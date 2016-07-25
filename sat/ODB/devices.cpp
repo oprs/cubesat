@@ -67,6 +67,7 @@ namespace qb50 {
 
    /*              bus   iobase     periph                      name */
    STM32_DMA DMA1( AHB1, DMA1_BASE, STM32_RCC::AHB1Periph_DMA1, "DMA1" );
+   STM32_DMA DMA2( AHB1, DMA2_BASE, STM32_RCC::AHB1Periph_DMA2, "DMA2" );
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
@@ -74,6 +75,9 @@ namespace qb50 {
 
    STM32_DMA::Stream DMA1ST2( DMA1, DMA1_Stream2_BASE, DMA1_Stream2_IRQn, "DMA1ST2", 0x10 );
    STM32_DMA::Stream DMA1ST5( DMA1, DMA1_Stream5_BASE, DMA1_Stream5_IRQn, "DMA1ST5", 0x26 );
+
+   STM32_DMA::Stream DMA2ST5( DMA2, DMA2_Stream5_BASE, DMA1_Stream5_IRQn, "DMA2ST5", 0x26 );
+   STM32_DMA::Stream DMA2ST7( DMA2, DMA2_Stream7_BASE, DMA1_Stream7_IRQn, "DMA2ST7", 0x36 );
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //
@@ -316,6 +320,12 @@ extern "C" void DMA1_Stream2_IRQHandler( void )
 
 extern "C" void DMA1_Stream5_IRQHandler( void )
 { qb50::DMA1ST5.isr(); }
+
+extern "C" void DMA2_Stream5_IRQHandler( void )
+{ qb50::DMA2ST5.isr(); }
+
+extern "C" void DMA2_Stream7_IRQHandler( void )
+{ qb50::DMA2ST7.isr(); }
 
 extern "C" void SPI3_IRQHandler( void )
 { qb50::SPI3.isr(); }

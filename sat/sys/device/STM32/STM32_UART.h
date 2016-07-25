@@ -4,8 +4,8 @@
 
 #include "STM32/STM32_Device.h"
 #include "STM32/STM32_GPIO.h"
+#include "system/FIFO.hpp"
 #include "device/UART.h"
-#include "device/FIFO.hpp"
 
 #include <task.h>
 
@@ -33,14 +33,11 @@ namespace qb50{
          STM32_UART& enable   ( bool silent = false );
          STM32_UART& disable  ( bool silent = false );
 
-         size_t      read     (       void *x, size_t len,  int toms = -1 );
-         size_t      readLine (       void *x, size_t len,  int toms = -1 );
-         size_t      write    ( const void *x, size_t len,  int toms = -1 );
-
-         size_t      write    ( const uint8_t tx,              int toms = -1 );
-         size_t      write    ( const uint8_t tx, uint8_t& rx, int toms = -1 );
-
          STM32_UART& baudRate ( unsigned rate );
+
+         size_t      read     (       uint8_t *x, size_t len, int toms = -1 );
+         size_t      readLine (       uint8_t *x, size_t len, int toms = -1 );
+         size_t      write    ( const uint8_t *x, size_t len, int toms = -1 );
 
          void isr( void );
 

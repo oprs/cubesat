@@ -143,21 +143,15 @@ namespace qb50 {
    extern qb50::STM32_ADC::Channel SUN4;
    extern qb50::STM32_ADC::Channel SUN5;
    extern qb50::STM32_ADC::Channel SUN6;
-   extern qb50::STM32_ADC::Channel SUN7;
-   extern qb50::STM32_ADC::Channel SUN8;
-   extern qb50::STM32_ADC::Channel SUN9;
 
    /* aliases */
 
-   extern qb50::STM32_ADC::Channel& GS1_1;
-   extern qb50::STM32_ADC::Channel& GS1_2;
-   extern qb50::STM32_ADC::Channel& GS2_1;
-   extern qb50::STM32_ADC::Channel& GS2_2;
-   extern qb50::STM32_ADC::Channel& GS3_1;
-   extern qb50::STM32_ADC::Channel& GS3_2;
-   extern qb50::STM32_ADC::Channel& GS4_1;
-   extern qb50::STM32_ADC::Channel& GS4_2;
-   extern qb50::STM32_ADC::Channel& GS5;
+   extern qb50::STM32_ADC::Channel& GS1_1; // X front
+   extern qb50::STM32_ADC::Channel& GS4_1; // X rear
+   extern qb50::STM32_ADC::Channel& GS3_2; // Y front
+   extern qb50::STM32_ADC::Channel& GS2_1; // Y rear
+   extern qb50::STM32_ADC::Channel& GS5;   // Z front
+   extern qb50::STM32_ADC::Channel& GS3_1; // Z rear
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

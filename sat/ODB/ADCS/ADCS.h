@@ -2,12 +2,14 @@
 #ifndef _QB50_ADCS_H
 #define _QB50_ADCS_H
 
+#include "system/DataSource.hpp"
+#include "system/DataSink.hpp"
 #include "devices.h"
 
 
 namespace qb50 {
 
-   class ADCS : public Device
+   class ADCS : public Device, public DataSource<uint8_t>, public DataSink<uint8_t>
    {
 
       public:

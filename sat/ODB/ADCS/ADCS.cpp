@@ -41,7 +41,7 @@ ADCS& ADCS::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   _uart.enable( silent ).baudRate( 115200 );
+   _uart.enable( silent );
    _enPin.on();
 
    if( !silent ) {

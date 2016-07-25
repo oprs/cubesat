@@ -49,6 +49,7 @@ namespace qb50 {
 //  - - - - - - - - - - - - - - -  //
 
    extern qb50::STM32_DMA DMA1;
+   extern qb50::STM32_DMA DMA2;
 
 //  - - - - - - - - - - -  //
 //  D M A   S T R E A M S  //
@@ -56,6 +57,9 @@ namespace qb50 {
 
    extern qb50::STM32_DMA::Stream DMA1ST2;
    extern qb50::STM32_DMA::Stream DMA1ST5;
+
+   extern qb50::STM32_DMA::Stream DMA2ST5;
+   extern qb50::STM32_DMA::Stream DMA2ST7;
 
 //  - - - - - - - - -  //
 //  G P I O   P I N S  //

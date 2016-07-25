@@ -2,6 +2,7 @@
 #include "devices.h"
 #include "common/Message.h"
 #include "ADCSThread.h"
+#include "WodStore.h"
 
 
 using namespace qb50;
@@ -30,9 +31,23 @@ ADCSThread::~ADCSThread()
 
 void ADCSThread::run( void )
 {
-   unsigned n;
+   unsigned i, n;
+   WodStore::WEH hdr;
 
-   for( ;; ) {
+   for( i = 0 ; i < 10 ; ++i ) {
+      n = ADCS0.read( _x, 256, 500 );
+
+      if( n == 0 )
+         break;
+
+      kprintf( YELLOW( "%s: flushing %lu bytes from ADCS" ) "\r\n", name, n );
+   }
+
+   if( n > 0 ) {
+      kprintf( RED( "%s: garbage received from ADCS (tried %lu times)" ) "\r\n", name, i );
+   }
+
+   for( i = 0 ;; ++i ) {
       _wait();
 
       n = ADCS0.read( _x, sizeof( ADCSMeas ), 5000 );
@@ -41,9 +56,14 @@ void ADCSThread::run( void )
          continue;
       }
 
+      if(( i % 60 ) == 0 ) {
+         (void)WOD.write( WodStore::ADCS, _x, sizeof( ADCSMeas ), &hdr );
+      }
+
       ADCSMeas *mp = (ADCSMeas*)_x;
       (void)kprintf( "GOT GYR0: [ %.2f %.2f %.2f ]\r\n", mp->gyr.x, mp->gyr.y, mp->gyr.z );
       (void)kprintf( "GOT MAG0: [ %.2f %.2f %.2f ]\r\n", mp->mag.x, mp->mag.y, mp->mag.z );
+      (void)kprintf( "GOT SUNV: [ %u %u %u %u %u %u ]\r\n", mp->xf, mp->xr, mp->yf, mp->yr, mp->zf, mp->zr );
    }
 }
 

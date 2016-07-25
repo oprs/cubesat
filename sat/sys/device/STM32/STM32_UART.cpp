@@ -92,7 +92,7 @@ STM32_UART& STM32_UART::disable( bool silent )
 }
 
 
-size_t STM32_UART::read( void *x, size_t len, int toms )
+size_t STM32_UART::read( uint8_t *x, size_t len, int toms )
 {
    size_t n = 0;
 
@@ -106,14 +106,14 @@ size_t STM32_UART::read( void *x, size_t len, int toms )
          continue;
       }
 
-      ((uint8_t*)x)[ n++ ] = _rxFIFO.pull();
+      x[ n++ ] = _rxFIFO.pull();
    }
 
    return n;
 }
 
 
-size_t STM32_UART::readLine( void *x, size_t len, int toms )
+size_t STM32_UART::readLine( uint8_t *x, size_t len, int toms )
 {
    uint8_t ch = 0x00;
    size_t   n = 0;
@@ -133,7 +133,7 @@ size_t STM32_UART::readLine( void *x, size_t len, int toms )
       if( ch == 0x0a ) continue;
       if( ch == 0x0d ) break;
 
-      ((uint8_t*)x)[ n++ ] = ch;
+      x[ n++ ] = ch;
    }
 
    while( ch != 0x0d ) {
@@ -151,7 +151,7 @@ size_t STM32_UART::readLine( void *x, size_t len, int toms )
 }
 
 
-size_t STM32_UART::write( const void *x, size_t len, int toms )
+size_t STM32_UART::write( const uint8_t *x, size_t len, int toms )
 {
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
@@ -168,67 +168,11 @@ size_t STM32_UART::write( const void *x, size_t len, int toms )
          }
          continue;
       }
-      (void)_txFIFO.push( ((uint8_t*)x)[ n++ ] );
+      (void)_txFIFO.push( x[ n++ ] );
       USARTx->CR1 |= USART_CR1_TXEIE;
    }
 
    //unlock(); XXX
-
-   return n;
-}
-
-
-size_t STM32_UART::write( const uint8_t tx, int toms )
-{
-   USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-
-   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
-
-   /* send 1 byte */
-
-   if( _txFIFO.isFull() && ( xSemaphoreTake( _isrTXE, tk ) == pdFALSE )) {
-      return 0; /* timeout */
-   }
-
-   (void)_txFIFO.push( tx );
-   USARTx->CR1 |= USART_CR1_TXEIE;
-
-   return 1;
-}
-
-
-size_t STM32_UART::write( const uint8_t tx, uint8_t& rx, int toms )
-{
-   USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
-
-   size_t n = 0;
-
-   TickType_t tk = toms < 0 ? portMAX_DELAY : ( toms / portTICK_RATE_MS );
-
-   /* flush the rx fifo */
-
-   while( !_rxFIFO.isEmpty() ) {
-      (void)_rxFIFO.pull();
-      ++n;
-   }
-
-   /* send 1 byte */
-
-   if( _txFIFO.isFull() && ( xSemaphoreTake( _isrTXE, tk ) == pdFALSE )) {
-      return 0; /* timeout */
-   }
-
-   (void)_txFIFO.push( tx );
-   USARTx->CR1 |= USART_CR1_TXEIE;
-
-   /* read 1 byte */
-
-   if( _rxFIFO.isEmpty() && ( xSemaphoreTake( _isrRXNE, tk ) == pdFALSE )) {
-      return 0; /* timeout */
-   }
-
-   rx = _rxFIFO.pull();
-   ++n;
 
    return n;
 }

@@ -56,7 +56,7 @@ Syslog& Syslog::printf( const char *fmt, ... )
 
       len += n;
 
-      if( _ring.avail() >= len )
+      if( _ring.avail() >= (unsigned)len )
          _ring.write( _line, len );
 
    } while( 0 );

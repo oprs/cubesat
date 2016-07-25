@@ -100,17 +100,6 @@ Fipex& Fipex::activeScript( unsigned sn )
 }
 
 
-Fipex& Fipex::loadScript( unsigned sn, Script& sc )
-{
-/*
-   uint8_t *base = _st + sn * 256;
-   sc.load( base, );
-*/
-
-   return *this;
-}
-
-
 Fipex& Fipex::storeScript( unsigned sn, Fipex::Script::ScriptHeader *sh )
 {
    Fipex::Script sc;
@@ -216,7 +205,7 @@ bool Fipex::_recv( Script::RspHeader *rh, int toms )
 {
    (void)memset( rh, 0, 205 );
 
-   size_t n = _uart.read( rh, 205, toms );
+   size_t n = _uart.read( (uint8_t*)rh, 205, toms );
 
    if( n != 205 ) {
       kprintf( RED( "%s: timeout in _recv()" ) "\r\n", _name );

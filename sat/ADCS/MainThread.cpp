@@ -49,12 +49,22 @@ void MainThread::onResume( void )
 
 void MainThread::run( void )
 {
+   SensorSample<uint16_t> sunv[ 6 ];
+
    ADCSMeas msg;
    Timer    tm;
 
+    SUN1.enable();
+    SUN2.enable();
+    SUN3.enable();
+    SUN4.enable();
+    SUN5.enable();
+    SUN6.enable();
+
     GYR0.enable();
     MAG0.enable();
-   UART1.enable().baudRate( 115200 );
+
+   UART1.enable();
 
    GYR0.calibrate(); // XXX !
 
@@ -68,14 +78,27 @@ void MainThread::run( void )
       MAG0.omega( msg.mag );
       kprintf( "MAG0: [ %0.2f %0.2f %0.2f ]\r\n", msg.mag.x, msg.mag.y, msg.mag.z );
 
-      msg.xf = 0.0f;
-      msg.xr = 0.0f;
-      msg.yf = 0.0f;
-      msg.yr = 0.0f;
-      msg.zf = 0.0f;
-      msg.zr = 0.0f;
+      ADC1.read( SUN1, &sunv[ 0 ]);
+      ADC1.read( SUN2, &sunv[ 1 ]);
+      ADC1.read( SUN3, &sunv[ 2 ]);
+      ADC1.read( SUN4, &sunv[ 3 ]);
+      ADC1.read( SUN5, &sunv[ 4 ]);
+      ADC1.read( SUN6, &sunv[ 5 ]);
 
-      (void)UART1.write( &msg, sizeof( ADCSMeas ), 100 );
+      kprintf(
+         "SUNV: [ %u %u %u %u %u %u ]\r\n",
+         sunv[0].value, sunv[1].value, sunv[2].value,
+         sunv[3].value, sunv[4].value, sunv[5].value
+      );
+
+      msg.xf = sunv[0].value >> 4;
+      msg.xr = sunv[1].value >> 4;
+      msg.yf = sunv[2].value >> 4;
+      msg.yr = sunv[3].value >> 4;
+      msg.zf = sunv[4].value >> 4;
+      msg.zr = sunv[5].value >> 4;
+
+      (void)UART1.write( (const uint8_t*)&msg, sizeof( ADCSMeas ), 100 );
 
    }
 }

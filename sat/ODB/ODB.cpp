@@ -52,6 +52,7 @@ ODB& ODB::init( void )
      NVIC.init();
      EXTI.init();
      DMA1.init();
+     DMA2.init();
     GPIOA.init().enable();
     GPIOB.init().enable();
     GPIOC.init().enable();

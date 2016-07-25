@@ -3,7 +3,7 @@
 #define _QB50_SYS_STM32_EXTI_H
 
 #include "STM32/STM32_GPIO.h"
-#include "FIFO.hpp"
+#include "system/FIFO.hpp"
 #include "Device.h"
 
 

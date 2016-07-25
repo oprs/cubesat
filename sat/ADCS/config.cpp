@@ -201,34 +201,30 @@ namespace qb50 {
 
    /*                       adc   name    channel#         pin */
    STM32_ADC::Channel SUN1( ADC1, "SUN1", STM32_ADC::CH9,  PB1 );
-   STM32_ADC::Channel SUN2( ADC1, "SUN2", STM32_ADC::CH8,  PB0 );
-   STM32_ADC::Channel SUN3( ADC1, "SUN3", STM32_ADC::CH15, PC5 );
-   STM32_ADC::Channel SUN4( ADC1, "SUN4", STM32_ADC::CH14, PC4 );
-   STM32_ADC::Channel SUN5( ADC1, "SUN5", STM32_ADC::CH4,  PA4 );
-   STM32_ADC::Channel SUN6( ADC1, "SUN6", STM32_ADC::CH13, PC3 );
-   STM32_ADC::Channel SUN7( ADC1, "SUN7", STM32_ADC::CH10, PC0 );
-   STM32_ADC::Channel SUN8( ADC1, "SUN8", STM32_ADC::CH11, PC1 );
-   STM32_ADC::Channel SUN9( ADC1, "SUN9", STM32_ADC::CH12, PC2 );
+   STM32_ADC::Channel SUN2( ADC1, "SUN2", STM32_ADC::CH10, PC0 );
+   STM32_ADC::Channel SUN3( ADC1, "SUN3", STM32_ADC::CH13, PC3 );
+   STM32_ADC::Channel SUN4( ADC1, "SUN4", STM32_ADC::CH15, PC5 );
+   STM32_ADC::Channel SUN5( ADC1, "SUN5", STM32_ADC::CH12, PC2 );
+   STM32_ADC::Channel SUN6( ADC1, "SUN6", STM32_ADC::CH4,  PA4 );
 
    /* aliases */
 
    STM32_ADC::Channel& GS1_1 = SUN1;
-   STM32_ADC::Channel& GS1_2 = SUN2;
-   STM32_ADC::Channel& GS2_1 = SUN3;
-   STM32_ADC::Channel& GS2_2 = SUN4;
-   STM32_ADC::Channel& GS3_1 = SUN5;
-   STM32_ADC::Channel& GS3_2 = SUN6;
-   STM32_ADC::Channel& GS4_1 = SUN7;
-   STM32_ADC::Channel& GS4_2 = SUN8;
-   STM32_ADC::Channel& GS5   = SUN9;
+   STM32_ADC::Channel& GS4_1 = SUN2;
+   STM32_ADC::Channel& GS3_2 = SUN3;
+   STM32_ADC::Channel& GS2_1 = SUN4;
+   STM32_ADC::Channel& GS5   = SUN5;
+   STM32_ADC::Channel& GS3_1 = SUN6;
 
 //  - - - - - - - - - - - - - - - - -  //
 //  T I M E R   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - - -  //
 
+#if 0
    /*            bus   iobase     periph                      pin   Mode */
- //TIMER TIMER1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, PB13, STM32_GPIO::AF1);
- //TIMER TIMER2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, PB11, STM32_GPIO::AF1);
+   TIMER TIMER1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, PB13, STM32_GPIO::AF1);
+   TIMER TIMER2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, PB11, STM32_GPIO::AF1);
+#endif
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //

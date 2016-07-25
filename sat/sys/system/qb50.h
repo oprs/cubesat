@@ -23,13 +23,13 @@
 #include "device/SPI/L3GD20.h"
 #include "device/FlashArray.h"
 #include "device/FlashCache.h"
-#include "device/FIFO.hpp"
 
 #include "system/Application.h"
 #include "system/UserLock.h"
 #include "system/Logger.h"
 #include "system/Timer.h"
 #include "system/Ring.hpp"
+#include "system/FIFO.hpp"
 #include "system/mBuf.h"
 
 

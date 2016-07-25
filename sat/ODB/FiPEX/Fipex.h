@@ -24,7 +24,6 @@ namespace qb50 {
 
          Fipex& activeScript ( unsigned sn );
          Fipex& storeScript  ( unsigned sn, Script::ScriptHeader *sh );
-         Fipex& loadScript   ( unsigned sn, Script& sc );
 
          Fipex& runCommand   ( Script::CmdHeader *ch, Script::RspHeader *rh );
          Fipex& abort        ( void );

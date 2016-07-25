@@ -2,7 +2,7 @@
 ARCH   ?= stm32f4
 TOPDIR ?= $(CURDIR)
 
-default: ODB ADCS DISC
+default: ODB ADCS
 
 doc:
 	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) doc
@@ -16,16 +16,16 @@ clean:
 tags:
 	find . -type f \( -name "*.[ch]" -o -name "*.cpp" \) -print0 | xargs -0 ctags
 
-ODB ADCS DISC:
+ODB ADCS:
 	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) $@
 
-flashODB flashADCS flashDISC:
+flashODB flashADCS:
 	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) $@
 
-cleanODB cleanADCS cleanDISC:
+cleanODB cleanADCS:
 	@$(MAKE) -C $(TOPDIR)/sat TOPDIR=$(TOPDIR) $@
 
 .PHONY: default doc check clean tags
-.PHONY: ODB ADCS DISC
-.PHONY: flashODB flashADCS flashDISC
-.PHONY: cleanODB cleanADCS cleanDISC
+.PHONY: ODB ADCS
+.PHONY: flashODB flashADCS
+.PHONY: cleanODB cleanADCS
