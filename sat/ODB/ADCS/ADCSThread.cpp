@@ -3,6 +3,7 @@
 #include "common/Message.h"
 #include "ADCSThread.h"
 #include "WodStore.h"
+#include "Config.h"
 
 
 using namespace qb50;
@@ -32,7 +33,13 @@ ADCSThread::~ADCSThread()
 void ADCSThread::run( void )
 {
    unsigned i, n;
+   Config::pval_t dt;
    WodStore::WEH hdr;
+   ADCSCtrl m;
+
+   ADCSBeat *bp;
+   ADCSCtrl *cp;
+   ADCSMeas *mp;
 
    for( i = 0 ; i < 10 ; ++i ) {
       n = ADCS0.read( _x, 256, 500 );
@@ -50,19 +57,36 @@ void ADCSThread::run( void )
    for( i = 0 ;; ++i ) {
       _wait();
 
-      n = ADCS0.read( _x, sizeof( ADCSMeas ), 5000 );
+      n = ADCS0.read( _x, sizeof( ADCSBeat ), 5000 );
       if( n == 0 ) {
          (void)kprintf( "%s: waiting...\r\n", name );
          continue;
       }
 
-      if(( i % 60 ) == 0 ) {
-         (void)WOD.write( WodStore::ADCS, _x, sizeof( ADCSMeas ), &hdr );
+      bp = (ADCSBeat*)_x;
+      cp = &bp->ctrl;
+      mp = &bp->meas;
+
+      m.d = CONF.getParam( Config::PARAM_ADCS_PWM_D );
+      m.x = CONF.getParam( Config::PARAM_ADCS_PWM_X );
+      m.y = CONF.getParam( Config::PARAM_ADCS_PWM_Y );
+      m.z = CONF.getParam( Config::PARAM_ADCS_PWM_Z );
+
+      if(( cp->d != m.d ) || ( cp->x != m.x ) || ( cp->y != m.y ) || ( cp->z != m.z )) {
+         kprintf( YELLOW( "%s: configuring ADCS" ) "\r\n", name );
+         (void)ADCS0.write( (const uint8_t*)&m, sizeof( ADCSCtrl ), 1000 );
       }
 
-      ADCSMeas *mp = (ADCSMeas*)_x;
-      (void)kprintf( "GOT GYR0: [ %.2f %.2f %.2f ]\r\n", mp->gyr.x, mp->gyr.y, mp->gyr.z );
-      (void)kprintf( "GOT MAG0: [ %.2f %.2f %.2f ]\r\n", mp->mag.x, mp->mag.y, mp->mag.z );
+      dt = 15 * CONF.getParam( Config::PARAM_ADCS_CYCLE_MEAS );
+
+      if(( i % dt ) == 0 ) {
+         kprintf( YELLOW( "%s: ADCS MEASURE" ) "\r\n", name );
+         (void)WOD.write( WodStore::ADCS, (const uint8_t*)mp, sizeof( ADCSMeas ), &hdr );
+      }
+
+      (void)kprintf( "GOT CTRL: [ %d %d %d %d ]\r\n", cp->d, cp->x, cp->y, cp->z );
+      (void)kprintf( "GOT GYR0: [ %d %d %d ]\r\n", mp->gxyz[0], mp->gxyz[1], mp->gxyz[2] );
+      (void)kprintf( "GOT MAG0: [ %d %d %d ]\r\n", mp->mxyz[0], mp->mxyz[1], mp->mxyz[2] );
       (void)kprintf( "GOT SUNV: [ %u %u %u %u %u %u ]\r\n", mp->xf, mp->xr, mp->yf, mp->yr, mp->zf, mp->zr );
    }
 }

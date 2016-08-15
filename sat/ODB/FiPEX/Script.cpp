@@ -84,8 +84,11 @@ time_t Fipex::Script::nextTime( ScriptHeader *sh )
 
 unsigned Fipex::Script::delay( CmdHeader *ch )
 {
-   const uint8_t *x = &ch->x[ ch->len + 4U ];
-   return ((unsigned)x[1]) << 8 | x[0];
+   const uint8_t *x = &ch->x[ ch->len + 1U ];
+   unsigned sec = ((unsigned)x[1]) << 8 | x[0];
+
+   return
+      ( sec == 0xffff ) ? 0 : sec;
 }
 
 
@@ -113,7 +116,8 @@ Fipex::Script& Fipex::Script::load( ScriptHeader *sh )
          kprintf( "%s\r\n", cmdv[ cid ]->name );
       } else {
          clen = ch->len;
-         sec  = ch->x[ clen + 1 ] | ( ch->x[ clen + 2 ] << 8 );
+       //sec  = ch->x[ clen + 1 ] | ( ch->x[ clen + 2 ] << 8 );
+         sec  = delay( ch );
          kprintf( "%s @%02d:%02d\r\n", cmdv[ cid ]->name, sec / 60, sec % 60 );
       }
 

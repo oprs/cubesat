@@ -220,11 +220,10 @@ namespace qb50 {
 //  T I M E R   C O N T R O L L E R S  //
 //  - - - - - - - - - - - - - - - - -  //
 
-#if 0
-   /*            bus   iobase     periph                      pin   Mode */
-   TIMER TIMER1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, PB13, STM32_GPIO::AF1);
-   TIMER TIMER2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, PB11, STM32_GPIO::AF1);
-#endif
+   /*                bus   iobase     periph */
+   STM32_Timer TIM1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, "TIM1", 40000, 1000 );
+   STM32_Timer TIM2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, "TIM2", 40000, 1000 );
+
 
 //  - - - - - - - - - - - - - -  //
 //  O N B O A R D   M E M O R Y  //
@@ -252,8 +251,7 @@ namespace qb50 {
 //        S T A T E        //
 //  - - - - - - - - - - -  //
 
-    Sat_state Current_state;
-    Sat_raw   Current_raw;
+   ADCSState AST0;
 
 } /* qb50 */
 

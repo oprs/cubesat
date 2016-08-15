@@ -17,6 +17,8 @@
 #include "device/STM32/STM32_GPIO.h"
 #include "device/STM32/STM32_UART.h"
 #include "device/STM32/STM32_ADC.h"
+#include "device/STM32/STM32_Timer.h"
+#include "device/STM32/STM32_PWM.h"
 #include "device/SPI/A25Lxxx.h"
 #include "device/SPI/MAX111x.h"
 #include "device/SPI/LSM303.h"

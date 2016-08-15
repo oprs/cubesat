@@ -129,13 +129,7 @@ void CommandThread::run( void )
 
          case Form::FORM_TYPE_P:
          {
-            if( _form.P.pid == Config::PARAM_NONE ) {
-               kprintf( "- P%d: parameter out of bounds\r\n", _form.P.pid );
-               break;
-            }
-
             (void)CONF.setParam( _form.P.pid, _form.P.pval );
-
             break;
          }
 
@@ -182,15 +176,24 @@ void CommandThread::run( void )
 int
 CommandThread::_parseForm( void )
 {
+   char last = '\0';
+
    /* look for separator ':' */
 
    while( _m.avail() > 0 ) {
       if( *_m == ':' ) break;
+      last = *_m;
       ++_m;
    }
 
    if(( _m.avail() < 2 ) || ( *_m != ':' ))
       return 0;
+
+   switch( SAT.id() ) {
+      case ODB::FR01: if( last != '1' ) return 0; break;
+      case ODB::FR05: if( last != '5' ) return 0; break;
+      default: return 0;
+   }
 
    ++_m; // skip ':'
 
@@ -236,7 +239,7 @@ CommandThread::_parseCForm( void )
 {
    int i;
 
-   for( i = 0 ; i < 4 ; ++i ) {
+   for( i = 0 ; i < 8 ; ++i ) {
       if( !_parseInteger( _form.C.argv[i] ))
          return 0;
 

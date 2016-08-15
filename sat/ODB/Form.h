@@ -13,7 +13,7 @@ namespace qb50 {
 
    struct CForm {
       int  argc;
-      long argv[4];
+      long argv[8];
    };
 
    struct HForm {

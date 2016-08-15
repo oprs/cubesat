@@ -29,8 +29,8 @@ namespace qb50{
 
    struct ADCSMeas {
 
-      Vec3D   gyr;  // gyro
-      Vec3D   mag;  // compass
+      int8_t gxyz[3];
+      int8_t mxyz[3];
 
       uint8_t xf;   // X (front) - GS1_1
       uint8_t xr;   // X (rear)  - GS4_1
@@ -42,6 +42,25 @@ namespace qb50{
       uint8_t zr;   // Z (rear)  - GS3_1
 
    } __attribute__(( packed ));
+
+
+   struct ADCSCtrl {
+
+      long d;
+      long x;
+      long y;
+      long z;
+
+   } __attribute__(( packed ));
+
+
+   struct ADCSBeat {
+
+      ADCSCtrl ctrl;
+      ADCSMeas meas;
+
+   } __attribute__(( packed ));
+
 
 } /* qb50 */
 

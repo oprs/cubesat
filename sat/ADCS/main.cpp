@@ -43,9 +43,9 @@ void Main_Thread( Thread *self )
    GPIOC.enable();
 
    PB15.out().off();
-   R1.out().on();
-   R2.out().on();
-   R3.out().on();
+   R1.out().off();
+   R2.out().off();
+   R3.out().off();
    F1.out().off();
    F2.out().off();
    F3.out().off();
@@ -116,24 +116,27 @@ void Main_Thread( Thread *self )
 void initDevices( void )
 {
    SYSLOG.init();
-   RCC.init();
-   PWR.init();
-   BKP.init();
-   GPIOA.init().enable();
-   GPIOB.init().enable();
-   GPIOC.init().enable();
-   UART1.init();
-   UART6.init();
-   SPI3.init();
-   ADC1.init();
+      RCC.init();
+      PWR.init();
+      BKP.init();
+    GPIOA.init().enable();
+    GPIOB.init().enable();
+    GPIOC.init().enable();
+    UART1.init();
+    UART6.init();
+     SPI3.init();
+     ADC1.init();
    FLASH0.init();
-   GYR0.init();
-   MAG0.init();
+     GYR0.init();
+     MAG0.init();
+     TIM1.init();
+     TIM2.init();
 }
 
 
 int main( void )
 {
+#if 0
    //Initialize the state to some standard values
    //For testing purposes only
 
@@ -151,15 +154,16 @@ int main( void )
    Current_state.SUNVEC.s_x = -0.5;
    Current_state.SUNVEC.s_y =  0.6;
    Current_state.SUNVEC.s_z = -0.7;
+#endif
 
    /* initialize devices */
 
    initDevices();
 
    PB15.out().on();
-   R1.out().on();
-   R2.out().on();
-   R3.out().on();
+   R1.out().off();
+   R2.out().off();
+   R3.out().off();
    F1.out().off();
    F2.out().off();
    F3.out().off();
@@ -177,7 +181,7 @@ PA15.out().on(); // XXX disable flash
 #endif
 
    (void)registerThread( new MainThread() );
-   createThread( "Coil Thread", CoilThread );
+ //createThread( "Coil Thread", CoilThread );
 
    run();
 

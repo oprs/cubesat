@@ -14,6 +14,11 @@ namespace qb50 {
 
       public:
 
+         enum State {
+            MEASURE = 0,
+            CONTROL = 1
+         };
+
          ADCS( const char *name, STM32_UART& uart, STM32_GPIO::Pin& enPin );
          virtual ~ADCS();
 
@@ -21,13 +26,20 @@ namespace qb50 {
          ADCS& enable  ( bool silent = false );
          ADCS& disable ( bool silent = false );
 
+         ADCS& setPWM  ( long d, long x, long y, long z );
+
+         State state   ( void     ) const;                  // get state
+         State state   ( State st, bool silent = false );   // set state
+
          unsigned read  (       uint8_t *x, unsigned len, int toms = 0 );
          unsigned write ( const uint8_t *x, unsigned len, int toms = 0 );
+
 
       private:
 
          STM32_UART&      _uart;
          STM32_GPIO::Pin& _enPin;
+         State            _state;
 
    };
 

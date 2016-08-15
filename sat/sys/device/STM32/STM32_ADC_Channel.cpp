@@ -24,7 +24,6 @@ STM32_ADC::Channel::~Channel()
 STM32_ADC::Channel&
 STM32_ADC::Channel::init( void )
 {
- //_adc.init();
    return *this;
 }
 
@@ -38,7 +37,6 @@ STM32_ADC::Channel::enable( bool silent )
    _pin.pullUp()
        .mode( STM32_GPIO::ANALOG );
 
- //_adc.enable( silent )
    STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
    adc.enable( silent );
 
@@ -52,7 +50,6 @@ STM32_ADC::Channel::disable( bool silent )
    if( _decRef() > 0 )
       return *this;
 
- //_adc.disable( silent )
    STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
    adc.disable( silent );
 

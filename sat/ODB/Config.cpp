@@ -12,45 +12,45 @@ Config qb50::CONF; // global config object
 
 const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
-   /* params[ 0 .. 15 ]       min max def                               min max def */
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_CW_CYCLE_TX,        0, 10,  4 },
-   { PARAM_WODEX_CYCLE_TX,     1,  3,  3 },  { PARAM_FIPEX_SCRIPT_N,     0,  7,  1 },
-   { PARAM_MODEM,              1,  2,  1 },  { PARAM_ADCS_CYCLE_MEAS,    1,  4,  1 },
-   { PARAM_GPS_CYCLE_ON,       1,  5,  2 },  { PARAM_VBAT_LOW,           1,  7,  7 },
-   { PARAM_ADCS_CYCLE_DTMB,    0, 24,  0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,  4,  2 },
-   { PARAM_ADCS_CYCLE_CTRL,    0, 24,  0 },  { PARAM_FM_CYCLE_ON,        1, 96, 16 },
-   { PARAM_VBAT_HIGH,          1,  5,  1 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_PA_TEMP_HIGH,       0,  7,  1 },  { PARAM_PA_TEMP_LOW,        0,  5,  4 },
+   /* params[ 0 .. 15 ]       min  max  def                               min  max  def */
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_CW_CYCLE_TX,        0,  10,   4 },
+   { PARAM_WODEX_CYCLE_TX,     1,   3,   3 },  { PARAM_FIPEX_SCRIPT_N,     0,   7,   1 },
+   { PARAM_MODEM,              1,   2,   1 },  { PARAM_ADCS_CYCLE_MEAS,    1,   4,   4 },
+   { PARAM_GPS_CYCLE_ON,       1,   5,   2 },  { PARAM_VBAT_LOW,           1,   7,   7 },
+   { PARAM_ADCS_CYCLE_DTMB,    0,  24,   0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,   4,   2 },
+   { PARAM_ADCS_CYCLE_CTRL,    0,  24,   0 },  { PARAM_FM_CYCLE_ON,        1,  96,  16 },
+   { PARAM_VBAT_HIGH,          1,   5,   1 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_PA_TEMP_HIGH,       0,   7,   1 },  { PARAM_PA_TEMP_LOW,        0,   5,   4 },
 
-   /* params[ 16 .. 31 ]      min max def                               min max def */
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
+   /* params[ 16 .. 31 ]      min  max  def                               min  max  def */
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
 
-   /* params[ 32 .. 47 ]      min max def                               min max def */
-   { PARAM_CW_POWER,           1,  4,  1 },  { PARAM_WODEX_POWER,        1,  4,  1 },
-   { PARAM_FM_POWER,           1,  4,  1 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
+   /* params[ 32 .. 47 ]      min  max  def                               min  max  def */
+   { PARAM_CW_POWER,           1,   4,   1 },  { PARAM_WODEX_POWER,        1,   4,   1 },
+   { PARAM_FM_POWER,           1,   4,   1 },  { PARAM_ADCS_PWM_D,         0,  45,   1 },
+   { PARAM_ADCS_PWM_X,      -100, 100,   0 },  { PARAM_ADCS_PWM_Y,      -100, 100,   0 },
+   { PARAM_ADCS_PWM_Z,      -100, 100,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
 
-   /* params[ 48 .. 63 ]      min max def                               min max def */
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 },
-   { PARAM_NONE,               0,  0,  0 },  { PARAM_NONE,               0,  0,  0 }
+   /* params[ 48 .. 63 ]      min  max  def                               min  max  def */
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 }
 
 };
 
@@ -157,15 +157,23 @@ Config::pval_t Config::setParam( Config::pid_t pid, Config::pval_t pval )
    _Store *st = (_Store*)BKPSRAM_BASE;
 
    Config::pval_t old = st->pv[ pid ];
-   st->pv[ pid ] = pval;
+
+   if( chkParam( pid, pval ) == Config::PARAM_NONE ) {
+
+      kprintf( RED( "- P%d: parameter out of bounds" ) "\r\n", pid );
+
+   } else {
+
+      st->pv[ pid ] = pval;
+
+      if( pval == old ) {
+         kprintf( "+ P%d,%d (unchanged)\r\n", pid, pval );
+      } else {
+         kprintf( "+ P%d,%d (was: %d)\r\n", pid, pval, old );
+      }
+   }
 
    unlock();
-
-   if( pval == old ) {
-      kprintf( "+ P%d,%d (unchanged)\r\n", pid, pval );
-   } else {
-      kprintf( "+ P%d,%d (was: %d)\r\n", pid, pval, old );
-   }
 
    return old;
 }

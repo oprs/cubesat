@@ -14,7 +14,7 @@ ADCS qb50::ADCS0( "ADCS0", UART1, PC13 );
 //  - - - - - - - - -  //
 
 ADCS::ADCS( const char *name, STM32_UART& uart, STM32_GPIO::Pin& enPin )
-   : Device( name ), _uart( uart ), _enPin( enPin )
+   : Device( name ), _uart( uart ), _enPin( enPin ), _state( ADCS::MEASURE )
 { ; }
 
 
@@ -65,6 +65,33 @@ ADCS& ADCS::disable( bool silent )
    }
 
    return *this;
+}
+
+
+ADCS& ADCS::setPWM( long d, long x, long y, long z )
+{
+   return *this;
+}
+
+
+ADCS::State ADCS::state( void ) const
+{
+   return _state;
+}
+
+
+ADCS::State ADCS::state( ADCS::State st, bool silent )
+{
+   ADCS::State old = _state;
+
+   if( st != old ) {
+      _state = st;
+      if( !silent ) {
+         kprintf( YELLOW( "%s: switching modes (%ld -> %ld)" ) "\r\n", _name, old, st );
+      }
+   }
+
+   return old;
 }
 
 

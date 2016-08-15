@@ -154,7 +154,7 @@ void WodexThread::run( void )
          _modem = &M9K6;
       }
 
-      if( mode != Config::TELEM ) {
+      if(( mode != Config::TELEM ) && ( mode != Config::POWER )) {
          _modem->enable();
          _sendBacklog( _modem );
          _modem->send( &hdr, _raw8, -1 );
@@ -169,11 +169,12 @@ void WodexThread::run( void )
          min = 5300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_LOW  ));
          max = 6300.0 + ( 100 * CONF.getParam( Config::PARAM_VBAT_HIGH ));
 
+kprintf( YELLOW( "%s: V_BAT: %.2fmV (raw: %u)" ) "\r\n", name, mvBat, _raw[ SAMPLE_V_Bat ].value );
          if( mvBat <= max ) {
             if( mvBat <= min ) {
                if( _modeBat != LOW ) {
                   Event *ev = new Event( Event::VBAT_LOW );
-kprintf( YELLOW( "%s: V_BAT: %.2fmV (raw: %u)" ) "\r\n", name, mvBat, _raw[ SAMPLE_V_Bat ].value );
+//kprintf( YELLOW( "%s: V_BAT: %.2fmV (raw: %u)" ) "\r\n", name, mvBat, _raw[ SAMPLE_V_Bat ].value );
                   xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
                   _modeBat = LOW;
                }

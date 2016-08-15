@@ -58,7 +58,7 @@ Fipex& Fipex::enable( bool silent )
    if( _incRef() > 0 )
       return *this;
 
-   _enPin.on();
+   _enPin.off();
 
    // Req: FPX-SW-0240 - "The OBC shall wait 500ms before initializing the UART interface [...]"
 
@@ -79,7 +79,7 @@ Fipex& Fipex::disable( bool silent )
       return *this;
 
    _uart.disable( silent );
-   _enPin.off();
+   _enPin.on();
 
    if( !silent ) {
       kprintf( "%s: disabled\r\n", _name );
@@ -100,7 +100,7 @@ Fipex& Fipex::activeScript( unsigned sn )
 }
 
 
-Fipex& Fipex::storeScript( unsigned sn, Fipex::Script::ScriptHeader *sh )
+Fipex& Fipex::storeScript( unsigned sn, Script::ScriptHeader *sh )
 {
    Fipex::Script sc;
 
@@ -124,6 +124,14 @@ Fipex& Fipex::storeScript( unsigned sn, Fipex::Script::ScriptHeader *sh )
    }
 
    return *this;
+}
+
+
+Fipex::Script::ScriptHeader *Fipex::loadScript( unsigned sn )
+{
+   uint8_t *base = _st + sn * 256;
+
+   return (Script::ScriptHeader*)base;
 }
 
 

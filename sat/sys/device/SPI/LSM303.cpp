@@ -17,7 +17,7 @@ static const uint8_t RATE_250DPS_Cmd[ 2 ]  = { 0x23, 0x00 };
 static const uint8_t RATE_500DPS_Cmd[ 2 ]  = { 0x23, 0x01 };
 static const uint8_t RATE_2000DPS_Cmd[ 2 ] = { 0x23, 0x02 };
 
-static const uint8_t MAG_INIT_Cmd[ 4 ]  = { 0x64, 0x64, 0x20, 0x00 };
+static const uint8_t MAG_INIT_Cmd[ 4 ]  = { 0x64, 0x64, 0x00, 0x00 };
 
 static const float m250DPS  = 0.00875F;
 static const float m500DPS  = 0.01750F;
@@ -146,11 +146,15 @@ LSM303& LSM303::omega( Vec3D& v )
    int16_t yr = (uint16_t)res[3] | ( (uint16_t)res[4] << 8 );
    int16_t zr = (uint16_t)res[5] | ( (uint16_t)res[6] << 8 );
 
+/*
    switch( _range ) {
       case R250DPS:  coef = m250DPS;  break;
       case R500DPS:  coef = m500DPS;  break;
       case R2000DPS: coef = m2000DPS; break;
    }
+*/
+
+   coef = 3.0;
 
    v.x = coef * ( xr - _calX );
    v.y = coef * ( yr - _calY );

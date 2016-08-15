@@ -38,11 +38,12 @@ uint32_t ControlThread::_mt[ _QB50_NMODES ] = {
    0b01000110, /* mode FIPEX     */
    0b00010010, /* mode TELEM     */
    0b00100010, /* mode FM        */
-   0b00000010, /* mode (11)      */
-   0b00000010, /* mode (12)      */
-   0b00000010, /* mode (13)      */
-   0b00000010, /* mode (14)      */
-   0b00000010, /* mode (15)      */
+   0b00000010, /* mode (0x08)    */
+   0b00000010, /* mode (0x09)    */
+   0b00000010, /* mode (0x0a)    */
+   0b00000010, /* mode (0x0b)    */
+   0b00000010, /* mode (0x0c)    */
+   0b00000010, /* mode (0x0d)    */
    0b00000010, /* mode POWER     */
    0b00000000  /* mode STDBY     */
 };
@@ -96,11 +97,6 @@ void ControlThread::run( void )
    RTC0.enable();
    BKP.enable();
    //WOD.enable();
-
-/*
-uint32_t hwm = uxTaskGetStackHighWaterMark( handle );
-kprintf( "%s: stack high water mark: %lu\r\n", name, hwm );
-*/
 
    /*
     * Hardware reset ?
@@ -303,6 +299,11 @@ void ControlThread::_handleCForm( CForm *fp )
             (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[1] );
          }
 
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_D, 0 );
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_X, 0 );
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_Y, 0 );
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_Z, 0 );
+
          if( mode != Config::AMEAS ) {
             _switchModes( Config::AMEAS );
          }
@@ -314,9 +315,15 @@ void ControlThread::_handleCForm( CForm *fp )
       case 5:
 
          if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_CTRL, fp->argv[1] );
+            (void)CONF.setParam( Config::PARAM_ADCS_PWM_D, fp->argv[1] );
             if( fp->argc > 2 ) {
-               (void)CONF.setParam( Config::PARAM_ADCS_CYCLE_MEAS, fp->argv[2] );
+               (void)CONF.setParam( Config::PARAM_ADCS_PWM_X, fp->argv[2] );
+               if( fp->argc > 3 ) {
+                  (void)CONF.setParam( Config::PARAM_ADCS_PWM_Y, fp->argv[3] );
+                  if( fp->argc > 4 ) {
+                     (void)CONF.setParam( Config::PARAM_ADCS_PWM_Z, fp->argv[4] );
+                  }
+               }
             }
          }
 

@@ -47,6 +47,10 @@ namespace qb50 {
             PARAM_CW_POWER          = 32,
             PARAM_WODEX_POWER       = 33,
             PARAM_FM_POWER          = 34,
+            PARAM_ADCS_PWM_D        = 35,
+            PARAM_ADCS_PWM_X        = 36,
+            PARAM_ADCS_PWM_Y        = 37,
+            PARAM_ADCS_PWM_Z        = 38
          };
 
          typedef int16_t pval_t;
