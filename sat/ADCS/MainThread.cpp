@@ -4,6 +4,14 @@
 #include "common/Message.h"
 #include "config.h"
 
+#include <cstring>
+
+#include <stm32f4xx_rcc.h>
+#include <stm32f4xx_tim.h>
+
+#undef ADC1
+
+
 using namespace qb50;
 
 
@@ -27,6 +35,98 @@ MainThread::~MainThread()
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
+
+void MainThread::initTimers( int period )
+{
+   RCC_APB2PeriphClockCmd( RCC_APB2Periph_TIM1, ENABLE );
+   RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM2, ENABLE );
+   RCC_APB2PeriphClockCmd( RCC_APB2Periph_TIM8, ENABLE );
+
+   TIM_TimeBaseInitTypeDef timerInitStructure;
+
+   /* initialize timer 1 */
+
+   TIM_TimeBaseStructInit( &timerInitStructure );
+
+   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_RepetitionCounter = 0;
+   TIM_TimeBaseInit( TIM1, &timerInitStructure );
+ //TIM_ARRPreloadConfig( TIM1, ENABLE );
+
+   TIM_Cmd( TIM1, ENABLE );
+
+   /* initialize timer 2 */
+
+   TIM_TimeBaseStructInit( &timerInitStructure );
+
+   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_RepetitionCounter = 0;
+   TIM_TimeBaseInit( TIM2, &timerInitStructure );
+
+   TIM_Cmd( TIM2, ENABLE );
+
+   /* initialize timer 8 */
+
+   TIM_TimeBaseStructInit( &timerInitStructure );
+
+   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_RepetitionCounter = 0;
+   TIM_TimeBaseInit( TIM8, &timerInitStructure );
+
+   TIM_Cmd( TIM8, ENABLE );
+}
+
+
+void MainThread::initPWMChans( void )
+{
+   TIM_OCInitTypeDef outputChannelInit;
+
+   /* initialize PWM for TIM1_CH1N */
+
+   TIM_OCStructInit( &outputChannelInit );
+
+   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
+   outputChannelInit.TIM_Pulse = 25;
+   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_Low;
+
+   TIM_OC1Init( TIM1, &outputChannelInit );
+   TIM_OC1PreloadConfig( TIM1, TIM_OCPreload_Enable );
+
+   /* initialize PWM for TIM2_CH4 */
+
+   TIM_OCStructInit( &outputChannelInit );
+
+   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
+   outputChannelInit.TIM_Pulse = 25;
+   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
+
+   TIM_OC4Init( TIM2, &outputChannelInit );
+   TIM_OC4PreloadConfig( TIM2, TIM_OCPreload_Enable );
+
+   /* initialize PWM for TIM8_CH1N */
+
+   TIM_OCStructInit( &outputChannelInit );
+
+   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
+   outputChannelInit.TIM_Pulse = 25;
+   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_Low;
+
+   TIM_OC1Init( TIM8, &outputChannelInit );
+   TIM_OC1PreloadConfig( TIM8, TIM_OCPreload_Enable );
+}
+
 
 void MainThread::onSuspend( void )
 {
@@ -64,10 +164,18 @@ void MainThread::run( void )
    GYR0.enable();
    MAG0.enable();
 
-   TIM1.enable();
-   TIM2.enable();
-
    UART1.enable();
+
+   initTimers( 50 );
+   initPWMChans();
+
+#undef TIM1
+#undef TIM2
+#undef TIM8
+
+   R1.out().alt( STM32_GPIO::TIM1 ); /* PB13 */
+   R2.out().alt( STM32_GPIO::TIM2 ); /* PB11 */
+   R3.out().alt( STM32_GPIO::TIM8 ); /* PA5  */
 
    (void)registerThread( new CommandThread() );
 

@@ -177,9 +177,6 @@ namespace qb50 {
 //        S T A T E        //
 //  - - - - - - - - - - -  //
 
-   extern qb50::STM32_Timer TIM1;
-   extern qb50::STM32_Timer TIM2;
-
    extern qb50::ADCSState AST0;
 
 } /* qb50 */

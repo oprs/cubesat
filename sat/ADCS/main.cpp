@@ -43,12 +43,25 @@ void Main_Thread( Thread *self )
    GPIOC.enable();
 
    PB15.out().off();
+
+/*
    R1.out().off();
    R2.out().off();
    R3.out().off();
+*/
    F1.out().off();
    F2.out().off();
    F3.out().off();
+
+/*
+   R1 - PB13 - TIM1_CH1N
+   R2 - PB11 - TIM2_CH4
+ */
+
+   R1.out().alt( STM32_GPIO::TIM1 ); /* PB13 */
+   R2.out().alt( STM32_GPIO::TIM2 ); /* PB11 */
+//   R3.out().alt( STM32_GPIO::TIM8 ); /* PA5  */
+   R3.out().on();
 
    UART6.enable();
    SYSLOG.enable();
@@ -129,8 +142,6 @@ void initDevices( void )
    FLASH0.init();
      GYR0.init();
      MAG0.init();
-     TIM1.init();
-     TIM2.init();
 }
 
 
@@ -161,6 +172,13 @@ int main( void )
    initDevices();
 
    PB15.out().on();
+
+/*
+   R1.out().off();
+   R2.out().off();
+   R3.out().off();
+*/
+
    R1.out().off();
    R2.out().off();
    R3.out().off();

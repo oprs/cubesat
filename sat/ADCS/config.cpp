@@ -179,8 +179,8 @@ namespace qb50 {
     *  sec. 10.3.3 "Channel Selection", pp. 306-307
     */
 
-   STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4,  STM32_GPIO::SPI3 );
-   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5,  STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MISO( DMA1ST2, STM32_DMA::CH0, "SPI3MISO", PB4, STM32_GPIO::SPI3 );
+   STM32_SPI::Stream SPI3_MOSI( DMA1ST5, STM32_DMA::CH0, "SPI3MOSI", PB5, STM32_GPIO::SPI3 );
 
 //  - - - - - - - - - - - - - - -  //
 //  S P I   C O N T R O L L E R S  //
@@ -216,13 +216,13 @@ namespace qb50 {
    STM32_ADC::Channel& GS5   = SUN5;
    STM32_ADC::Channel& GS3_1 = SUN6;
 
-//  - - - - - - - - - - - - - - - - -  //
-//  T I M E R   C O N T R O L L E R S  //
-//  - - - - - - - - - - - - - - - - -  //
+/*
 
-   /*                bus   iobase     periph */
-   STM32_Timer TIM1( APB2, TIM1_BASE, STM32_RCC::APB2Periph_TIM1, "TIM1", 40000, 1000 );
-   STM32_Timer TIM2( APB1, TIM2_BASE, STM32_RCC::APB1Periph_TIM2, "TIM2", 40000, 1000 );
+   R1: PB13
+   R2: PB11
+   R3: PA5
+
+ */
 
 
 //  - - - - - - - - - - - - - -  //

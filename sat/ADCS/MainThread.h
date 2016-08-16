@@ -19,6 +19,11 @@ namespace qb50 {
          void onSuspend ( void );
          void onResume  ( void );
 
+      private:
+
+         void initTimers   ( int period );
+         void initPWMChans ( void );
+
    };
 
 } /* qb50 */
