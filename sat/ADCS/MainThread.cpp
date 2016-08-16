@@ -98,23 +98,12 @@ void MainThread::initPWMChans( void )
 
    TIM_OCStructInit( &outputChannelInit );
 
-#if 0
-   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
-   outputChannelInit.TIM_Pulse        = _T_PULSE;
-   outputChannelInit.TIM_OutputState  = TIM_OutputState_Enable;
-   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
-   outputChannelInit.TIM_OCPolarity   = TIM_OCPolarity_High;
-   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
-   outputChannelInit.TIM_OCIdleState  = TIM_OCIdleState_Set;
-   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
-#else
    outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM1;
    outputChannelInit.TIM_Pulse        = _T_PULSE;
    outputChannelInit.TIM_OutputState  = TIM_OutputState_Disable;
    outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
    outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
    outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
-#endif
 
    TIM_OC1Init( TIM1, &outputChannelInit );
    TIM_OC1PreloadConfig( TIM1, TIM_OCPreload_Enable );
@@ -138,23 +127,12 @@ void MainThread::initPWMChans( void )
 
    TIM_OCStructInit( &outputChannelInit );
 
-#if 0
-   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
-   outputChannelInit.TIM_Pulse        = _T_PULSE;
-   outputChannelInit.TIM_OutputState  = TIM_OutputState_Enable;
-   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
-   outputChannelInit.TIM_OCPolarity   = TIM_OCPolarity_High;
-   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
-   outputChannelInit.TIM_OCIdleState  = TIM_OCIdleState_Set;
-   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
-#else
-   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM1;
    outputChannelInit.TIM_Pulse        = _T_PULSE;
    outputChannelInit.TIM_OutputState  = TIM_OutputState_Disable;
    outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
-   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_Low;
+   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
    outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
-#endif
 
    TIM_OC1Init( TIM8, &outputChannelInit );
    TIM_OC1PreloadConfig( TIM8, TIM_OCPreload_Enable );
