@@ -21,7 +21,7 @@ namespace qb50 {
 
       private:
 
-         void initTimers   ( int period );
+         void initTimers   ( void );
          void initPWMChans ( void );
 
    };

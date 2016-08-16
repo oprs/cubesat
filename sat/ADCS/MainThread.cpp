@@ -11,6 +11,10 @@
 
 #undef ADC1
 
+/* _T_PERIOD = 640 */
+#define _T_PERIOD ( 16000000 / 25000 )
+#define _T_PULSE  ( _T_PERIOD / 10 )
+
 
 using namespace qb50;
 
@@ -36,7 +40,7 @@ MainThread::~MainThread()
 //  M E T H O D S  //
 //  - - - - - - -  //
 
-void MainThread::initTimers( int period )
+void MainThread::initTimers( void )
 {
    RCC_APB2PeriphClockCmd( RCC_APB2Periph_TIM1, ENABLE );
    RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM2, ENABLE );
@@ -48,13 +52,13 @@ void MainThread::initTimers( int period )
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_Prescaler = 0;
    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_Period = _T_PERIOD;
    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM1, &timerInitStructure );
- //TIM_ARRPreloadConfig( TIM1, ENABLE );
+TIM_ARRPreloadConfig( TIM1, ENABLE );
 
    TIM_Cmd( TIM1, ENABLE );
 
@@ -62,9 +66,9 @@ void MainThread::initTimers( int period )
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_Prescaler = 0;
    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_Period = _T_PERIOD;
    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM2, &timerInitStructure );
@@ -75,9 +79,9 @@ void MainThread::initTimers( int period )
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 8;
+   timerInitStructure.TIM_Prescaler = 0;
    timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = period;
+   timerInitStructure.TIM_Period = _T_PERIOD;
    timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM8, &timerInitStructure );
@@ -94,22 +98,38 @@ void MainThread::initPWMChans( void )
 
    TIM_OCStructInit( &outputChannelInit );
 
-   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-   outputChannelInit.TIM_Pulse = 25;
-   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
-   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_Low;
+#if 0
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
+   outputChannelInit.TIM_Pulse        = _T_PULSE;
+   outputChannelInit.TIM_OutputState  = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
+   outputChannelInit.TIM_OCPolarity   = TIM_OCPolarity_High;
+   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
+   outputChannelInit.TIM_OCIdleState  = TIM_OCIdleState_Set;
+   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
+#else
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM1;
+   outputChannelInit.TIM_Pulse        = _T_PULSE;
+   outputChannelInit.TIM_OutputState  = TIM_OutputState_Disable;
+   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
+   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
+   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
+#endif
 
    TIM_OC1Init( TIM1, &outputChannelInit );
    TIM_OC1PreloadConfig( TIM1, TIM_OCPreload_Enable );
+
+   TIM_CtrlPWMOutputs( TIM1, ENABLE );
 
    /* initialize PWM for TIM2_CH4 */
 
    TIM_OCStructInit( &outputChannelInit );
 
-   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-   outputChannelInit.TIM_Pulse = 25;
-   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
-   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM1;
+   outputChannelInit.TIM_Pulse        = _T_PULSE;
+   outputChannelInit.TIM_OutputState  = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OCPolarity   = TIM_OCPolarity_High;
+   outputChannelInit.TIM_OCIdleState  = TIM_OCIdleState_Reset;
 
    TIM_OC4Init( TIM2, &outputChannelInit );
    TIM_OC4PreloadConfig( TIM2, TIM_OCPreload_Enable );
@@ -118,13 +138,28 @@ void MainThread::initPWMChans( void )
 
    TIM_OCStructInit( &outputChannelInit );
 
-   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-   outputChannelInit.TIM_Pulse = 25;
-   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
-   outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_Low;
+#if 0
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
+   outputChannelInit.TIM_Pulse        = _T_PULSE;
+   outputChannelInit.TIM_OutputState  = TIM_OutputState_Enable;
+   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
+   outputChannelInit.TIM_OCPolarity   = TIM_OCPolarity_High;
+   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_High;
+   outputChannelInit.TIM_OCIdleState  = TIM_OCIdleState_Set;
+   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
+#else
+   outputChannelInit.TIM_OCMode       = TIM_OCMode_PWM2;
+   outputChannelInit.TIM_Pulse        = _T_PULSE;
+   outputChannelInit.TIM_OutputState  = TIM_OutputState_Disable;
+   outputChannelInit.TIM_OutputNState = TIM_OutputNState_Enable;
+   outputChannelInit.TIM_OCNPolarity  = TIM_OCNPolarity_Low;
+   outputChannelInit.TIM_OCNIdleState = TIM_OCIdleState_Reset;
+#endif
 
    TIM_OC1Init( TIM8, &outputChannelInit );
    TIM_OC1PreloadConfig( TIM8, TIM_OCPreload_Enable );
+
+   TIM_CtrlPWMOutputs( TIM8, ENABLE );
 }
 
 
@@ -166,16 +201,16 @@ void MainThread::run( void )
 
    UART1.enable();
 
-   initTimers( 50 );
-   initPWMChans();
-
 #undef TIM1
 #undef TIM2
 #undef TIM8
 
-   R1.out().alt( STM32_GPIO::TIM1 ); /* PB13 */
-   R2.out().alt( STM32_GPIO::TIM2 ); /* PB11 */
-   R3.out().alt( STM32_GPIO::TIM8 ); /* PA5  */
+   R1.oType( STM32_GPIO::PUSHPULL ).noPull().alt( STM32_GPIO::TIM1 ); /* PB13 */
+   R2.oType( STM32_GPIO::PUSHPULL ).noPull().alt( STM32_GPIO::TIM2 ); /* PB11 */
+   R3.oType( STM32_GPIO::PUSHPULL ).noPull().alt( STM32_GPIO::TIM8 ); /* PA5  */
+
+   initTimers();
+   initPWMChans();
 
    (void)registerThread( new CommandThread() );
 
@@ -184,6 +219,10 @@ void MainThread::run( void )
    for( ;; ) {
 
       tm.every( 1000 );
+
+F1.toggle();
+F2.toggle();
+F3.toggle();
 
       GYR0.omega( gyr );
       kprintf( "GYR0: [ %0.2f %0.2f %0.2f ]\r\n", gyr.x, gyr.y, gyr.z );
