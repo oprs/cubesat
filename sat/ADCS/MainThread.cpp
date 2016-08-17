@@ -52,13 +52,12 @@ void MainThread::initTimers( void )
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 0;
-   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = _T_PERIOD;
-   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_Prescaler         = 0;
+   timerInitStructure.TIM_Period            = _T_PERIOD;
+   timerInitStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+   timerInitStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM1, &timerInitStructure );
-TIM_ARRPreloadConfig( TIM1, ENABLE );
 
    TIM_Cmd( TIM1, ENABLE );
 
@@ -66,10 +65,10 @@ TIM_ARRPreloadConfig( TIM1, ENABLE );
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 0;
-   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = _T_PERIOD;
-   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_Prescaler         = 0;
+   timerInitStructure.TIM_Period            = _T_PERIOD;
+   timerInitStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+   timerInitStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM2, &timerInitStructure );
 
@@ -79,10 +78,10 @@ TIM_ARRPreloadConfig( TIM1, ENABLE );
 
    TIM_TimeBaseStructInit( &timerInitStructure );
 
-   timerInitStructure.TIM_Prescaler = 0;
-   timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-   timerInitStructure.TIM_Period = _T_PERIOD;
-   timerInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+   timerInitStructure.TIM_Prescaler         = 0;
+   timerInitStructure.TIM_Period            = _T_PERIOD;
+   timerInitStructure.TIM_CounterMode       = TIM_CounterMode_Up;
+   timerInitStructure.TIM_ClockDivision     = TIM_CKD_DIV1;
    timerInitStructure.TIM_RepetitionCounter = 0;
    TIM_TimeBaseInit( TIM8, &timerInitStructure );
 
@@ -141,6 +140,34 @@ void MainThread::initPWMChans( void )
 }
 
 
+void MainThread::setCoils( int x, int y, int z )
+{
+   if( x < 0 ) {
+      F2.on();
+      TIM2->CCR4 = ( 100 + x ) * _T_PERIOD / 100;
+   } else {
+      F2.off();
+      TIM2->CCR4 =         x   * _T_PERIOD / 100;
+   }
+
+   if( y < 0 ) {
+      F3.on();
+      TIM8->CCR1 = ( 100 + y ) * _T_PERIOD / 100;
+   } else {
+      F3.off();
+      TIM8->CCR1 =         y   * _T_PERIOD / 100;
+   }
+
+   if( z < 0 ) {
+      F1.on();
+      TIM1->CCR1 = ( 100 + z ) * _T_PERIOD / 100;
+   } else {
+      F1.off();
+      TIM1->CCR1 =         z   * _T_PERIOD / 100;
+   }
+}
+
+
 void MainThread::onSuspend( void )
 {
    Thread::onSuspend();
@@ -190,6 +217,8 @@ void MainThread::run( void )
    initTimers();
    initPWMChans();
 
+   setCoils( 0, 0, 0 );
+
    (void)registerThread( new CommandThread() );
 
    ADCSBeat *bp = new ADCSBeat();
@@ -198,9 +227,11 @@ void MainThread::run( void )
 
       tm.every( 1000 );
 
+/*
 F1.toggle();
 F2.toggle();
 F3.toggle();
+*/
 
       GYR0.omega( gyr );
       kprintf( "GYR0: [ %0.2f %0.2f %0.2f ]\r\n", gyr.x, gyr.y, gyr.z );
@@ -221,6 +252,14 @@ F3.toggle();
          sunv[3].value, sunv[4].value, sunv[5].value
       );
 
+      if( AST0.d == 0 ) {
+         setCoils( 0, 0, 0 );
+      } else {
+         setCoils( AST0.x, AST0.y, AST0.z );
+         --AST0.d;
+      }
+
+      bp->ctrl.n = AST0.n;
       bp->ctrl.d = AST0.d;
       bp->ctrl.x = AST0.x;
       bp->ctrl.y = AST0.y;

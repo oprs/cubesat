@@ -7,6 +7,7 @@ namespace qb50 {
 
    struct ADCSState
    {
+      long n;
       long d;
       long x;
       long y;

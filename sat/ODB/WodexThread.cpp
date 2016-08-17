@@ -293,7 +293,7 @@ void WodexThread::_updateSamples( void )
 
 void WodexThread::_sendBacklog( Modem *_modem )
 {
-   char tmp[ 16 ];
+   char tmp[ 32 ];
    Form form;
 
    while( CBL.pop( form )) {
@@ -305,11 +305,12 @@ void WodexThread::_sendBacklog( Modem *_modem )
 
             int n = snprintf(
                tmp, sizeof( tmp ),
-               "$C%lu,%lu,%lu,%lu",
+               "$C%ld,%ld,%ld,%ld,%ld",
                cform->argv[0],
                cform->argv[1],
                cform->argv[2],
-               cform->argv[3]
+               cform->argv[3],
+               cform->argv[4]
              );
 
             if( n > 0 ) {

@@ -68,12 +68,6 @@ ADCS& ADCS::disable( bool silent )
 }
 
 
-ADCS& ADCS::setPWM( long d, long x, long y, long z )
-{
-   return *this;
-}
-
-
 ADCS::State ADCS::state( void ) const
 {
    return _state;

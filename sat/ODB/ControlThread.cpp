@@ -233,6 +233,7 @@ void ControlThread::_handleForm( Form *fp )
 void ControlThread::_handleCForm( CForm *fp )
 {
    Config::mode_t mode = CONF.mode();
+   Config::pval_t n;
 
    switch( fp->argv[0] ) {
 
@@ -304,6 +305,9 @@ void ControlThread::_handleCForm( CForm *fp )
          (void)CONF.setParam( Config::PARAM_ADCS_PWM_Y, 0 );
          (void)CONF.setParam( Config::PARAM_ADCS_PWM_Z, 0 );
 
+         n = CONF.getParam( Config::PARAM_ADCS_PWM_N );
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_N, n+1 );
+
          if( mode != Config::AMEAS ) {
             _switchModes( Config::AMEAS );
          }
@@ -315,7 +319,7 @@ void ControlThread::_handleCForm( CForm *fp )
       case 5:
 
          if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_ADCS_PWM_D, fp->argv[1] );
+            (void)CONF.setParam( Config::PARAM_ADCS_PWM_D, 60 * fp->argv[1] );
             if( fp->argc > 2 ) {
                (void)CONF.setParam( Config::PARAM_ADCS_PWM_X, fp->argv[2] );
                if( fp->argc > 3 ) {
@@ -326,6 +330,9 @@ void ControlThread::_handleCForm( CForm *fp )
                }
             }
          }
+
+         n = CONF.getParam( Config::PARAM_ADCS_PWM_N );
+         (void)CONF.setParam( Config::PARAM_ADCS_PWM_N, n+1 );
 
          if( mode != Config::ACTRL ) {
             _switchModes( Config::ACTRL );

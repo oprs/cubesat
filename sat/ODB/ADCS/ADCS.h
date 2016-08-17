@@ -26,8 +26,6 @@ namespace qb50 {
          ADCS& enable  ( bool silent = false );
          ADCS& disable ( bool silent = false );
 
-         ADCS& setPWM  ( long d, long x, long y, long z );
-
          State state   ( void     ) const;                  // get state
          State state   ( State st, bool silent = false );   // set state
 

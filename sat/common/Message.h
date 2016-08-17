@@ -46,6 +46,7 @@ namespace qb50{
 
    struct ADCSCtrl {
 
+      long n;
       long d;
       long x;
       long y;

@@ -50,7 +50,8 @@ namespace qb50 {
             PARAM_ADCS_PWM_D        = 35,
             PARAM_ADCS_PWM_X        = 36,
             PARAM_ADCS_PWM_Y        = 37,
-            PARAM_ADCS_PWM_Z        = 38
+            PARAM_ADCS_PWM_Z        = 38,
+            PARAM_ADCS_PWM_N        = 39
          };
 
          typedef int16_t pval_t;

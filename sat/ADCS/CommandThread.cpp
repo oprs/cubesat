@@ -57,6 +57,7 @@ void CommandThread::run( void )
 
       kprintf( GREEN( "D: %ld, X: %ld, Y: %ld, Z: %ld" ) "\r\n", m->d, m->x, m->y, m->z );
 
+      AST0.n = m->n;
       AST0.d = m->d;
       AST0.x = m->x;
       AST0.y = m->y;

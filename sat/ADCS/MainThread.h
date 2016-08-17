@@ -19,6 +19,8 @@ namespace qb50 {
          void onSuspend ( void );
          void onResume  ( void );
 
+         void setCoils  ( int x, int y, int z );
+
       private:
 
          void initTimers   ( void );

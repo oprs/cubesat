@@ -9,6 +9,7 @@ using namespace qb50;
 
 Config qb50::CONF; // global config object
 
+#define INF 0xffff
 
 const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
@@ -34,9 +35,9 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
 
    /* params[ 32 .. 47 ]      min  max  def                               min  max  def */
    { PARAM_CW_POWER,           1,   4,   1 },  { PARAM_WODEX_POWER,        1,   4,   1 },
-   { PARAM_FM_POWER,           1,   4,   1 },  { PARAM_ADCS_PWM_D,         0,  45,   1 },
+   { PARAM_FM_POWER,           1,   4,   1 },  { PARAM_ADCS_PWM_D,         0, 60*45, 1 },
    { PARAM_ADCS_PWM_X,      -100, 100,   0 },  { PARAM_ADCS_PWM_Y,      -100, 100,   0 },
-   { PARAM_ADCS_PWM_Z,      -100, 100,   0 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_ADCS_PWM_Z,      -100, 100,   0 },  { PARAM_ADCS_PWM_N,         0,  -1,   0 },
    { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
    { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
    { PARAM_NONE,               0,   0,   0 },  { PARAM_NONE,               0,   0,   0 },
@@ -143,7 +144,10 @@ Config::pid_t Config::chkParam( long p, long v )
 
    def = &defs[ p ];
 
-   if(( def->pid == PARAM_NONE ) || ( v < def->min ) || ( v > def->max ))
+   if( def->pid == PARAM_NONE )
+      return PARAM_NONE;
+
+   if(( def->max > def->min ) && (( v < def->min ) || ( v > def->max )))
       return PARAM_NONE;
 
    return def->pid;

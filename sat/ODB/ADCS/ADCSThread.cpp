@@ -67,12 +67,13 @@ void ADCSThread::run( void )
       cp = &bp->ctrl;
       mp = &bp->meas;
 
+      m.n = CONF.getParam( Config::PARAM_ADCS_PWM_N );
       m.d = CONF.getParam( Config::PARAM_ADCS_PWM_D );
       m.x = CONF.getParam( Config::PARAM_ADCS_PWM_X );
       m.y = CONF.getParam( Config::PARAM_ADCS_PWM_Y );
       m.z = CONF.getParam( Config::PARAM_ADCS_PWM_Z );
 
-      if(( cp->d != m.d ) || ( cp->x != m.x ) || ( cp->y != m.y ) || ( cp->z != m.z )) {
+      if( m.n > cp->n ) {
          kprintf( YELLOW( "%s: configuring ADCS" ) "\r\n", name );
          (void)ADCS0.write( (const uint8_t*)&m, sizeof( ADCSCtrl ), 1000 );
       }
