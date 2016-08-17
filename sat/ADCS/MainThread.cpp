@@ -232,6 +232,8 @@ F1.toggle();
 F2.toggle();
 F3.toggle();
 */
+      setCoils( 0, 0, 0 );
+      delay( 200 );
 
       GYR0.omega( gyr );
       kprintf( "GYR0: [ %0.2f %0.2f %0.2f ]\r\n", gyr.x, gyr.y, gyr.z );

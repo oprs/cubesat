@@ -182,18 +182,25 @@ CommandThread::_parseForm( void )
    /* look for separator ':' */
 
    while( _m.avail() > 0 ) {
-      if( *_m == '>' ) break;
-   }
 
-   while( _m.avail() > 0 ) {
       if( *_m == ':' ) break;
-      x[ n % 8 ] = *_m;
-      ++n; ++_m;
+
+      if( *_m == '>' ) {
+         n = 0;
+      } else {
+         x[ n % 8 ] = *_m;
+         ++n;
+      }
+
+      ++_m;
    }
 
-   if(( x[0] != 'O' ) || ( x[1] != 'N' )
-   || ( x[2] != '0' )
-   || ( x[4] != 'F' ) || ( x[5] != 'R' ))
+   /*
+   kprintf( "n: %d\r\n", n );
+   hexdump( x, n );
+   */
+
+   if(( x[0] != 'O' ) || ( x[1] != 'N' ) || ( x[2] != '0' ) || ( x[4] != 'F' ) || ( x[5] != 'R' ))
       return 0;
 
    if(( _m.avail() < 2 ) || ( *_m != ':' ))
