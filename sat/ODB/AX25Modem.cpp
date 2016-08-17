@@ -95,11 +95,11 @@ AX25Modem& AX25Modem::init( void )
 
    switch( SAT.id() ) {
       case ODB::FR01:
-         mycall( "ON0FR1", 0 );
+         mycall( "ON01FR", 0 );
          break;
 
       case ODB::FR05:
-         mycall( "ON0FR5", 0 );
+         mycall( "ON05FR", 0 );
          break;
    }
 

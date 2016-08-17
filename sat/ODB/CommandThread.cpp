@@ -176,22 +176,32 @@ void CommandThread::run( void )
 int
 CommandThread::_parseForm( void )
 {
-   char last = '\0';
+   char x[ 8 ];
+   int n = 0;
 
    /* look for separator ':' */
 
    while( _m.avail() > 0 ) {
-      if( *_m == ':' ) break;
-      last = *_m;
-      ++_m;
+      if( *_m == '>' ) break;
    }
+
+   while( _m.avail() > 0 ) {
+      if( *_m == ':' ) break;
+      x[ n % 8 ] = *_m;
+      ++n; ++_m;
+   }
+
+   if(( x[0] != 'O' ) || ( x[1] != 'N' )
+   || ( x[2] != '0' )
+   || ( x[4] != 'F' ) || ( x[5] != 'R' ))
+      return 0;
 
    if(( _m.avail() < 2 ) || ( *_m != ':' ))
       return 0;
 
    switch( SAT.id() ) {
-      case ODB::FR01: if( last != '1' ) return 0; break;
-      case ODB::FR05: if( last != '5' ) return 0; break;
+      case ODB::FR01: if( x[3] != '1' ) return 0; break;
+      case ODB::FR05: if( x[3] != '5' ) return 0; break;
       default: return 0;
    }
 

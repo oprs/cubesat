@@ -122,11 +122,11 @@ void ControlThread::run( void )
    switch( SAT.id() ) {
 
       case ODB::FR01:
-         kprintf( "ON0FR1 (X-CubeSat - Ecole Polytechnique)\r\n" );
+         kprintf( "ON01FR (X-CubeSat - Ecole Polytechnique)\r\n" );
          break;
 
       case ODB::FR05:
-         kprintf( "ON0FR5 (SpaceCube - Mines ParisTech)\r\n" );
+         kprintf( "ON05FR (SpaceCube - Mines ParisTech)\r\n" );
          break;
 
       default:
