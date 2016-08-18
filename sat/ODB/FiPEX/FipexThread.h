@@ -23,7 +23,6 @@ namespace qb50 {
          };
 
          void run       ( void );
-         void test      ( void );
          void cmd       ( const uint8_t *x, size_t len );
 
          void dump      ( uint8_t *x, size_t len );
@@ -34,7 +33,9 @@ namespace qb50 {
 
       private:
 
+#if 0
          void _runScript( const uint8_t *x, bool debug = false );
+#endif
 
          State    _st;  // current state
          uint8_t *_rx;  // receive buffer
