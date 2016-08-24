@@ -4,6 +4,7 @@
 
 #include "system/DataSource.hpp"
 #include "system/DataSink.hpp"
+#include "common/Message.h"
 #include "devices.h"
 
 
@@ -26,6 +27,9 @@ namespace qb50 {
          ADCS& enable  ( bool silent = false );
          ADCS& disable ( bool silent = false );
 
+         ADCS& setMeas( const ADCSMeas *mp );
+         ADCS& getMeas(       ADCSMeas *mp );
+
          State state   ( void     ) const;                  // get state
          State state   ( State st, bool silent = false );   // set state
 
@@ -38,6 +42,8 @@ namespace qb50 {
          STM32_UART&      _uart;
          STM32_GPIO::Pin& _enPin;
          State            _state;
+
+         ADCSMeas        *_mp;
 
    };
 

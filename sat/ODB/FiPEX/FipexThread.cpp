@@ -1,8 +1,10 @@
 
 #include "FipexThread.h"
+#include "Fipex.h"
 #include "WodStore.h"
 #include "Config.h"
 #include "AX25Modem.h"
+#include "ADCS/ADCS.h"
 #include "devices.h"
 
 #define VKI_EPOCH 946684800
@@ -13,20 +15,27 @@ using namespace qb50;
 extern QueueHandle_t evQueue;
 
 
+static uint8_t cmd_rsp[ 4 ] = { 0x7e, 0x10, 0x00, 0x10 };
+static uint8_t cmd_hk [ 4 ] = { 0x7e, 0x20, 0x00, 0x20 };
+static uint8_t cmd_dp [ 4 ] = { 0x7e, 0x21, 0x00, 0x21 };
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
 FipexThread::FipexThread()
-   : Thread( "Fipex", 1, SUSPENDED, 512 )
+   : Thread( "Fipex", 1, SUSPENDED, 1024 )
 {
-   _st = START_WAIT;
-   _rx = new uint8_t[ 256 ];
+   _st  = ST_INIT;
+   _rx  = new uint8_t[ 256 ];
+   _mp  = new ADCSMeas;
 }
 
 
 FipexThread::~FipexThread()
 {
+   delete   _mp;
    delete[] _rx;
 }
 
@@ -347,163 +356,204 @@ void FipexThread::dump_sdp( uint8_t *x, size_t len )
 }
 
 
-#if 0
-void FipexThread::test( void )
-{
-   uint8_t *x = new uint8_t[ 256 ];
-   char    *o = new char[ 32 ];
-   MAX111x::Sample i3, i5;
-   size_t   i, n;
-
-   kprintf( "%s: FIPEX Functional Test Procedure\r\n", name );
-
-/*
-   kprintf( "%s: STEP #5 - switching FIPEX on\r\n", name );
-   PB14.out().off();
-*/
-   // Req: FPX-SW-0240 - "The OBC shall wait 500ms before initializing the UART interface [...]"
-(void)ADC4CH5.read( &i5 );
-(void)ADC4CH3.read( &i3 );
-kprintf( "i5: %lu\r\n", i5 );
-kprintf( "i3: %lu\r\n", i3 );
-   delay( 500 );
-(void)ADC4CH5.read( &i5 );
-(void)ADC4CH3.read( &i3 );
-kprintf( "i5: %lu\r\n", i5 );
-kprintf( "i3: %lu\r\n", i3 );
-
-   kprintf( "%s: STEP #6 - SU_PING @NOW\r\n", name );
-   cmd( cmd_ping, 4 );
-   delay( 100 );
-
-   kprintf( "%s: STEP #7 - SU_HK @NOW\r\n", name );
-   cmd( cmd_hk, 4 );
-   delay( 100 );
-
-   kprintf( "%s: STEP #8 - SU_SP meas_time = 10 @00:01\r\n", name );
-   cmd( cmd_sp_mt10, 7 );
-   delay( 1000 );
-
-   kprintf( "%s: STEP #9 - SU_SM @NOW\r\n", name );
-   cmd( cmd_sm, 4 );
-   delay( 100 );
-
-   for( i = 0 ; i < 32 ; ++i ) {
-      n = UART2.read( x, 205, 1000 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
-      if( n > 0 ) {
-       //kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
-/*
-         kprintf( "%s: len: %d\r\n", name, x[2] );
-         kprintf( "%s: seq: %d\r\n", name, x[3] );
-         hexdump( x, n );
-*/
-         dump( x, n );
-      } else {
-         kprintf( RED( "%s: UART2.read() timeout" ) "\r\n", name );
-         (void)ADC4CH5.read( &i5 );
-         (void)ADC4CH3.read( &i3 );
-         kprintf( "i5: %lu\r\n", i5 );
-         kprintf( "i3: %lu\r\n", i3 );
-         if( i5.value < 3 ) {
-            kprintf( GREEN( "%s: i5 < 3" ) "\r\n", name );
-            break;
-         }
-      }
-   }
-
-   kprintf( "%s: STEP #11 - SU_SP stm_interval = 1 @01:00\r\n", name );
-   cmd( cmd_sp_si1, 7);
-
-   for( i = 0 ; i < 5 ; ++i ) {
-      _wait();
-      UART2.read( x, 205 ); // Req: FPX-SW-0190 - "The response packet size shall be 205 bytes."
-    //kprintf( "%s: < 0x%02x 0x%02x 0x%02x 0x%02x\r\n", name, x[0], x[1], x[2], x[3] );
-      kprintf( "%s: len: %d\r\n", name, x[2] );
-      kprintf( "%s: seq: %d\r\n", name, x[3] );
-      //hexdump( x, 205 );
-      dump( x, 205 );
-(void)ADC4CH5.read( &i5 );
-(void)ADC4CH3.read( &i3 );
-kprintf( "i5: %lu\r\n", i5 );
-kprintf( "i3: %lu\r\n", i3 );
-   }
-
-   cmd( cmd_stdby, 4 );
-
-   delay( 60 * 1000 );
-
-   ;
-
-   delete[] o;
-   delete[] x;
-}
-#endif
-
-
 void FipexThread::run( void )
 {
-   unsigned ms;
+   unsigned now;
+   unsigned tNextStart;
+   unsigned tNextCmd;
 
-   // retrieve script
+   unsigned dt, rt;
+   unsigned n;
+
+   RTC::Time tm;
 
    Config::pval_t sn;
+
+   Fipex::Script sc;
+   Fipex::Script::Header *sh;
+
+   Fipex::CmdHeader *ch;
+   Fipex::RspHeader *rh = (Fipex::RspHeader*)_rx;
 
    for( ;; ) {
       _wait();
 
-      sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
+kprintf( YELLOW( "%s: --- state #%d ---" ) "\r\n", name, _st );
 
-#if 0
+      RTC0.getTime( tm );
+      now = RTC::conv( tm );
+
       switch( _st ) {
 
-         case START_WAIT:
+         case ST_INIT:
 
+kprintf( RED( "%s: ST_INIT" ) "\r\n", name );
             sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
+            sh = SU.loadScript( sn );
 
-            break;
-
-         case REPEAT_WAIT:
-            break;
-
-         case RUNNING:
-            break;
-
-      }
-#endif
-
-      kprintf( GREEN( "%s: RUNNING SCRIPT: %d" ) "\r\n", name, sn );
-
-      try {
-
-         Fipex::Script sc;
-         Fipex::Script::ScriptHeader *sp;
-         sp = FPX.loadScript( sn );
-         sc.load( (Fipex::Script::ScriptHeader*) sp );
-
-         Fipex::Script::CmdHeader *ch = sc.next();
-
-         while( ch != 0 ) {
-            FPX.runCommand( ch, (Fipex::Script::RspHeader*)_rx );
-            if( ch != 0 ) {
-               ms = 1000 * sc.delay( ch );
-               kprintf( YELLOW( "%s: WAITING FOR %lums" ) "\r\n", name, ms );
-               delay( ms );
+            try {
+               sc.load( (Fipex::Script::Header*)sh );
             }
-            ch = sc.next();
-         }
 
-      } catch( FipexException& e ) {
-         kprintf( RED( "%s: %s" ) "\r\n", name, e.what() );
+            catch( Fipex::Exception& e ) {
+               kprintf( RED( "%s: *** EXCEPTION CAUGHT ***" ) "\r\n", name );
+               kprintf( RED( "%s: %s" ) "\r\n", name, e.what() );
+               _st = ST_ERROR;
+            }
+
+            tNextStart = Fipex::Script::startTime( sh );
+
+            if( tNextStart == VKI_EPOCH ) {
+               // start time == EPOCH ?
+               // -> set tNextStart to now and run the script right away
+               tNextStart = now;
+               _st = ST_START_SCRIPT;
+            } else {
+               _st = ST_WAIT_SCRIPT;
+            }
+
+            break;
+
+
+         case ST_IDLE:
+
+kprintf( RED( "%s: ST_IDLE" ) "\r\n", name );
+            delay( 5000 );
+
+            break;
+
+
+         case ST_WAIT_SCRIPT:
+
+            sc.reset();
+
+kprintf( RED( "%s: ST_WAIT_SCRIPT" ) "\r\n", name );
+
+            if( now > tNextStart ) {
+
+               rt = Fipex::Script::repeatTime( sh );
+
+               if( rt == 0 ) {
+                  kprintf( "%s: start time in the past and no repeat time\r\n", name );
+                  _st = ST_IDLE;
+                  break;
+               }
+
+               while( now > tNextStart ) {
+                  tNextStart += rt;
+               }
+            }
+
+            dt = tNextStart - now;
+
+            kprintf( YELLOW( "%s: script due to start in %lu sec" ) "\r\n", name, dt );
+
+            if( dt > 0 ) {
+               delay( 1000 );
+            } else {
+               _st = ST_START_SCRIPT;
+            }
+
+            break;
+
+
+         case ST_START_SCRIPT:
+
+kprintf( RED( "%s: ST_START_SCRIPT" ) "\r\n", name );
+
+            tNextCmd = tNextStart;
+            _st = ST_SYNC_WAIT;
+
+            break;
+
+
+         case ST_EXEC_CMD:
+
+kprintf( RED( "%s: ST_EXEC_CMD" ) "\r\n", name );
+
+            try {
+               ch = sc.next();
+               dt = sc.delay( ch );
+               tNextCmd += dt;
+               _runCmd( ch, rh );
+            }
+
+            catch( Fipex::Exception& e ) {
+               kprintf( RED( "%s: *** EXCEPTION CAUGHT ***" ) "\r\n", name );
+               kprintf( RED( "%s: %s" ) "\r\n", name, e.what() );
+               _st = ST_ERROR;
+            }
+
+
+            break;
+
+
+         case ST_SYNC_WAIT:
+
+kprintf( RED( "%s: ST_SYNC_WAIT" ) "\r\n", name );
+
+            if( now < tNextCmd ) {
+               kprintf( YELLOW( "%s: sync wait: %lu sec" ) "\r\n", name, tNextCmd - now );
+               delay( 1000 );
+            } else {
+               _st = ST_EXEC_CMD;
+            }
+
+            break;
+
+
+         case ST_ASYNC_WAIT:
+
+kprintf( RED( "%s: ST_ASYNC_WAIT" ) "\r\n", name );
+
+            if( now < tNextCmd ) {
+               n = SU.recv( rh, 1000 );
+
+               if( n == 0 ) {
+                  kprintf( YELLOW( "%s: async wait: %lu sec" ) "\r\n", name, tNextCmd - now );
+               } else {
+                  kprintf( YELLOW( "%s: *** SCIENCE DATA ***" ) "\r\n", name );
+                  _handleRsp( rh );
+               }
+
+               break;
+            }
+
+            _st = ST_EXEC_CMD;
+
+            break;
+
+
+         case ST_ERROR:
+
+kprintf( RED( "%s: ST_ERROR" ) "\r\n", name );
+
+            n = SU.send( (Fipex::CmdHeader*)cmd_dp, rh, 500 );
+            if( n > 0 ) {
+               kprintf( YELLOW( "%s: ERROR RECOVERY - got science data packet" ) "\r\n", name );
+               _handleRsp( rh );
+            }
+
+            n = SU.send( (Fipex::CmdHeader*)cmd_hk, rh, 500 );
+            if( n > 0 ) {
+               kprintf( YELLOW( "%s: ERROR RECOVERY - got housekeeping packet" ) "\r\n", name );
+               _handleRsp( rh );
+            }
+
+            SU.disable();
+            _st = ST_IDLE;
+
+            break;
+
       }
 
-      delay( 60 * 1000 );
    }
 }
 
 
 void FipexThread::onSuspend( void )
 {
-   FPX.disable();
+   SU.disable();
    Thread::onSuspend();
 }
 
@@ -511,7 +561,7 @@ void FipexThread::onSuspend( void )
 void FipexThread::onResume( void )
 {
    Thread::onResume();
-   FPX.enable();
+   _st = ST_INIT;
 }
 
 
@@ -519,114 +569,100 @@ void FipexThread::onResume( void )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-struct FipexHeader
+void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
 {
-   uint8_t  len;   // script length
-   uint32_t stime; // start time
-   uint16_t rtime; // repeat time
-   uint8_t  cnt;   // command count
-} __attribute__(( packed ));
+   switch( ch->id ) {
 
-#define HDRLEN    sizeof( FipexHeader )
+      case Fipex::OBC_SU_ON:
 
+         kprintf( "%s: > OBC_SU_ON\r\n", name );
+         SU.enable();
+         _st = ST_SYNC_WAIT;
 
-#if 0
-void FipexThread::_runScript( const uint8_t *x, bool debug )
-{
-   const FipexHeader *fh = (const FipexHeader*)x;
-   int   len = fh->len;
-   int   dt, clen;
-   uint8_t sum;
-
-   x   += HDRLEN;
-   len -= HDRLEN + 1;
-
-   struct tm stm;
-   time_t t = fh->stime + VKI_EPOCH;
-   (void)gmtime_r( &t, &stm );
-
-   if( debug ) {
-      RTC::Time now;
-      RTC0.getTime( now );
-      int dt = t - RTC::conv( now );
-
-      kprintf( "%s: script length: %d bytes\r\n", name, fh->len   );
-      kprintf( "%s:    start time: %04d-%02d-%02d %02d:%02d:%02d\r\n",
-               name, 1900 + stm.tm_year, stm.tm_mon, stm.tm_mday,
-                            stm.tm_hour, stm.tm_min, stm.tm_sec );
-      if( dt < 0 ) {
-         kprintf( "%s:                (%d seconds ago)\r\n", name, -dt );
-      } else {
-         kprintf( "%s:                (%d seconds from now)\r\n", name, dt );
-      }
-      kprintf( "%s:   repeat time: %d sec.\r\n",  name, fh->rtime );
-      kprintf( "%s: command count: %d\r\n",       name, fh->cnt   );
-   }
-
-   for( int i = 0 ; i < fh->cnt; ++i ) {
-      if( x[0] != 0x7e ) {
-         kprintf( RED( "%s: start byte not found - aborting" ) "\r\n", name );
          break;
-      }
 
-      if( x[2] == 0xff ) {
 
-         /* end of script marker */
+      case Fipex::OBC_SU_OFF:
 
-         if(( x[2] == 0x01 ) && ( x[3] == 0xfe )) {
-            if( i != ( fh->cnt - 1 )) {
-               kprintf( RED( "%s: unexpected end of script - aborting" ) "\r\n", name );
-               break;
-            } else {
-               kprintf( "%s: END OF SCRIPT\r\n", name );
+         kprintf( "%s: > OBC_SU_OFF\r\n", name );
+         SU.disable();
+         _st = ST_SYNC_WAIT;
+
+         break;
+
+
+      case Fipex::OBC_SU_END:
+
+         kprintf( "%s: > OBC_SU_END\r\n", name );
+         _st = ST_WAIT_SCRIPT;
+
+         break;
+
+
+      default:
+
+         if( !SU.send( ch, rh, 500 )) {
+            kprintf( RED( "%s: SU.send() failed, retrying with SU_RSP" ) "\r\n", name );
+            if( !SU.send( (Fipex::CmdHeader*)cmd_rsp, rh, 500 )) {
+               kprintf( RED( "%s: SU.send() failed again, aborting" ) "\r\n", name );
+               _st = ST_ERROR;
                break;
             }
-         } else {
-               kprintf( RED( "%s: got some garbage - aborting" ) "\r\n", name );
-               break;
          }
 
-      } else {
+         _handleRsp( rh );
 
-         /* regular command */
-
-         if( i == ( fh->cnt - 1 )) {
-            kprintf( RED( "%s: end of script not found - aborting" ) "\r\n", name );
-            break;
-         }
-
-         clen = x[2];
-         sum  = 0;
-
-hexdump( x, clen + 6 );
-
-         for( int j = 0 ; j < ( clen + 2 ) ; ++j )
-            sum ^= x[ 1 + j ];
-
-         if( sum != x[ clen + 3 ] ) {
-            kprintf( RED( "%s: checksum mismatch - aborting" ) "\r\n", name );
-            break;
-         }
-
-         if( debug ) {
-            kprintf( "%s: command 0x%02x, len: %d\r\n", name, x[1], clen );
-         }
-
-         cmd( x, clen + 4 );
-
-         x += clen + 4;
-         dt = x[0] | ( (int)x[1] << 8 );
-         x += 2;
-
-         if( debug ) {
-            kprintf( "%s: delay: %d sec.\r\n", name, dt );
-         }
-
-         delay( dt * 1000 );
-
-      }
+         break;
    }
 }
-#endif
+
+
+void FipexThread::_handleRsp( Fipex::RspHeader *rh )
+{
+   WodStore::WEH hdr;
+
+   switch( rh->id ) {
+
+      case Fipex::SU_R_ACK:
+
+         kprintf( "%s: < SU_R_ACK\r\n", name );
+         _st = ST_ASYNC_WAIT;
+
+         break;
+
+
+      case Fipex::SU_R_ID:
+
+         kprintf( "%s: < SU_R_ID\r\n", name );
+         _st = ST_ASYNC_WAIT;
+
+         break;
+
+
+      case Fipex::SU_R_NACK:
+
+         kprintf( RED( "%s: < SU_R_NACK" ) "\r\n", name );
+         /* XXX resend command */
+         _st = ST_ERROR;
+
+         break;
+
+
+      default:
+
+         kprintf( "%s: < SU_R_*\r\n", name );
+         /* store data */
+
+         (void)ADCS0.getMeas( _mp );
+         (void)WOD.write( WodStore::ADCS, _mp, sizeof( ADCSMeas ),                   &hdr );
+         (void)WOD.write( WodStore::FIPEX, rh, sizeof( Fipex::RspHeader ) + rh->len, &hdr );
+
+         _st = ST_ASYNC_WAIT;
+
+         break;
+
+   }
+}
+
 
 /*EoF*/

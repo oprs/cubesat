@@ -9,12 +9,11 @@
 using namespace qb50;
 
 
-Fipex qb50::FPX( "FPX", UART2, PB14 );
+Fipex::ScriptFormatException  qb50::FipexScriptFormatException;
+Fipex::ResponseException      qb50::FipexResponseException;
+Fipex::TimeoutException       qb50::FipexTimeoutException;
 
-static FormatException ScriptFormatException;
-
-
-static uint8_t cmd_rsp[ 4 ] = { 0x7e, 0x10, 0x00, 0x10 };
+Fipex qb50::SU( "SU", UART2, PB14 );
 
 
 //  - - - - - - - - -  //
@@ -100,7 +99,7 @@ Fipex& Fipex::activeScript( unsigned sn )
 }
 
 
-Fipex& Fipex::storeScript( unsigned sn, Script::ScriptHeader *sh )
+Fipex& Fipex::storeScript( unsigned sn, Script::Header *sh )
 {
    Fipex::Script sc;
 
@@ -117,7 +116,7 @@ Fipex& Fipex::storeScript( unsigned sn, Script::ScriptHeader *sh )
          uint8_t *base = _st + sn * 256;
          (void)memcpy( base, sh, sh->len + 1 );
          kprintf( GREEN( "%s: storing script #%lu" ) "\r\n", _name, sn );
-      } catch( FipexException& e ) {
+      } catch( Fipex::Exception& e ) {
          kprintf( RED( "%s: %s" ) "\r\n", _name, e.what() );
       }
 
@@ -127,59 +126,11 @@ Fipex& Fipex::storeScript( unsigned sn, Script::ScriptHeader *sh )
 }
 
 
-Fipex::Script::ScriptHeader *Fipex::loadScript( unsigned sn )
+Fipex::Script::Header *Fipex::loadScript( unsigned sn )
 {
    uint8_t *base = _st + sn * 256;
 
-   return (Script::ScriptHeader*)base;
-}
-
-
-Fipex& Fipex::runCommand( Script::CmdHeader *ch, Script::RspHeader *rh )
-{
-   switch( ch->id ) {
-
-      case Script::OBC_SU_ON:
-         enable();
-         // XXX set state
-         break;
-
-      case Script::OBC_SU_OFF:
-         disable();
-         // XXX set state
-         break;
-
-      case Script::OBC_SU_END:
-         disable();
-         // XXX set state
-         break;
-
-      case Script::SU_PING:
-      case Script::SU_INIT:
-      case Script::SU_ID:
-      case Script::SU_STDBY:
-      case Script::SU_SC:
-      case Script::SU_SM:
-      case Script::SU_RSP:
-      case Script::SU_SP:
-      case Script::SU_HK:
-      case Script::SU_DP:
-      case Script::SU_CAL:
-
-         if( !_send( ch, rh, 500 )) {
-            kprintf( RED( "%s: _send() failed, retrying with SU_RSP" ) "\r\n", _name );
-            if( !_send( (Script::CmdHeader*)cmd_rsp, rh, 500 )) {
-               kprintf( RED( "%s: _send() failed again, aborting" ) "\r\n", _name );
-               // XXX switch to ERROR state
-               break;
-            }
-         }
-
-         // XXX set state
-         break;
-   }
-
-   return *this;
+   return (Script::Header*)base;
 }
 
 
@@ -189,11 +140,7 @@ Fipex& Fipex::abort( void )
 }
 
 
-//  - - - - - - - - - - - - - - -  //
-//  P R I V A T E   M E T H O D S  //
-//  - - - - - - - - - - - - - - -  //
-
-bool Fipex::_send( Script::CmdHeader *ch, Script::RspHeader *rh, int toms )
+size_t Fipex::send( CmdHeader *ch, RspHeader *rh, int toms )
 {
    size_t n = _uart.write( (const uint8_t*)ch, ch->len + 4U, toms );
 
@@ -201,28 +148,34 @@ hexdump( (const uint8_t*)ch, ch->len + 4U );
 
    if( n != ( ch->len + 4U )) {
       kprintf( RED( "%s: timeout in _send()" ) "\r\n", _name );
-      return false;
+      return 0;
    }
 
    return
-      _recv( rh, toms );
+      recv( rh, toms );
 }
 
 
-bool Fipex::_recv( Script::RspHeader *rh, int toms )
+size_t Fipex::recv( RspHeader *rh, int toms )
 {
    (void)memset( rh, 0, 205 );
 
    size_t n = _uart.read( (uint8_t*)rh, 205, toms );
+kprintf( YELLOW( "%s: got %ld bytes" ) "\r\n", _name, n );
+
+   if( n == 0 ) {
+      kprintf( "%s: timeout in _recv()\r\n", _name );
+      return 0;
+   }
 
    if( n != 205 ) {
-      kprintf( RED( "%s: timeout in _recv()" ) "\r\n", _name );
-      return false;
+      kprintf( RED( "%s: got %ld bytes (expected 205)" ) "\r\n", _name, n );
+      return 0;
    }
 
    if( rh->sb != 0x7e ) {
       kprintf( RED( "%s: start byte not found in SU response" ) "\r\n", _name );
-      return false;
+      return 0;
    }
 
    uint8_t sum = rh->id ^ rh->len ^ rh->seq;
@@ -232,10 +185,10 @@ bool Fipex::_recv( Script::RspHeader *rh, int toms )
    const uint8_t *x = (const uint8_t *)rh;
    if( sum != x[ rh->len + 4U ] ) {
       kprintf( RED( "%s: checksum mismatch in SU response" ) "\r\n", _name );
-      return false;
+      return 0;
    }
 
-   return true;
+   return n;
 }
 
 

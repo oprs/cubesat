@@ -72,7 +72,7 @@ ODB& ODB::init( void )
      M9K6.init();
     CTCS0.init();
     ADCS0.init();
-      FPX.init();
+       SU.init();
 
    _selPin.in().noPull();
    _inhPin.in().pullUp();

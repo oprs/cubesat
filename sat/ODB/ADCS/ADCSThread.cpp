@@ -78,6 +78,8 @@ void ADCSThread::run( void )
          (void)ADCS0.write( (const uint8_t*)&m, sizeof( ADCSCtrl ), 1000 );
       }
 
+      (void)ADCS0.setMeas( mp );
+
       dt = 15 * CONF.getParam( Config::PARAM_ADCS_CYCLE_MEAS );
 
       if(( i % dt ) == 0 ) {
@@ -85,10 +87,12 @@ void ADCSThread::run( void )
          (void)WOD.write( WodStore::ADCS, (const uint8_t*)mp, sizeof( ADCSMeas ), &hdr );
       }
 
+/*
       (void)kprintf( "GOT CTRL: [ %d %d %d %d ]\r\n", cp->d, cp->x, cp->y, cp->z );
       (void)kprintf( "GOT GYR0: [ %d %d %d ]\r\n", mp->gxyz[0], mp->gxyz[1], mp->gxyz[2] );
       (void)kprintf( "GOT MAG0: [ %d %d %d ]\r\n", mp->mxyz[0], mp->mxyz[1], mp->mxyz[2] );
       (void)kprintf( "GOT SUNV: [ %u %u %u %u %u %u ]\r\n", mp->xf, mp->xr, mp->yf, mp->yr, mp->zf, mp->zr );
+*/
    }
 }
 

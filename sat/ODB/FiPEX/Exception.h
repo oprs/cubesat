@@ -2,39 +2,60 @@
 #ifndef _QB50_FIPEX_EXCEPTION_H
 #define _QB50_FIPEX_EXCEPTION_H
 
+#ifndef _QB50_FIPEX_H
+ #error "can't include Exception.h, try Fipex.h instead"
+#endif
+
 #include <exception>
 #include <stdexcept>
 
 
-namespace qb50 {
+class Exception : public std::runtime_error
+{
 
-   class FipexException : public std::runtime_error
-   {
+   public:
 
-      public:
+      Exception( const char *msg )
+         : std::runtime_error( msg )
+      { ; }
 
-         FipexException( const char *msg )
-            : std::runtime_error( msg )
-         { ; }
-
-   };
+};
 
 
-   class FormatException : public FipexException
-   {
+class TimeoutException : public Exception
+{
 
-      public:
+   public:
 
-         FormatException()
-            : FipexException( "Fipex script format exception" )
-         { ; }
+      TimeoutException()
+         : Exception( "Fipex I/O timeout exception" )
+      { ; }
 
-   };
+};
 
 
-   extern qb50::FormatException ScriptFormatException;
+class ScriptFormatException : public Exception
+{
 
-} /*qb50*/
+   public:
+
+      ScriptFormatException()
+         : Exception( "Fipex script format exception" )
+      { ; }
+
+};
+
+
+class ResponseException : public Exception
+{
+
+   public:
+
+      ResponseException()
+         : Exception( "Fipex response exception" )
+      { ; }
+
+};
 
 
 #endif /*_QB50_FIPEX_EXCEPTION_H*/

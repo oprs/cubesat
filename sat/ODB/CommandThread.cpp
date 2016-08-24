@@ -361,7 +361,9 @@ CommandThread::_parseFForm( void )
       return 0;
    }
 
-   FPX.storeScript( n, (Fipex::Script::ScriptHeader*)_x );
+   _form.type = Form::FORM_TYPE_F;
+
+   SU.storeScript( n, (Fipex::Script::Header*)_x );
 
    return 1;
 }

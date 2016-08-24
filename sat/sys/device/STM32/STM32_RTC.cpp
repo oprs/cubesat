@@ -42,7 +42,8 @@ STM32_RTC& STM32_RTC::init( void )
 
 STM32_RTC& STM32_RTC::enable( bool silent )
 {
-   Time t;
+   Time tm;
+   time_t ts;
 
    if( _incRef() > 0 )
       return *this;
@@ -76,10 +77,11 @@ STM32_RTC& STM32_RTC::enable( bool silent )
 
    _exitInit();
 
-   (void)getTime( t );
+   (void)getTime( tm );
+   ts = RTC::conv( tm );
 
-   kprintf( "%s: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", _name, t.year, t.mon, t.day );
-   kprintf( "%s: time is %02d:%02d:%02d (hh:mm:ss)\r\n", _name, t.hour, t.min, t.sec );
+   kprintf( "%s: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", _name, tm.year, tm.mon, tm.day );
+   kprintf( "%s: time is %02d:%02d:%02d (%lu)\r\n", _name, tm.hour, tm.min, tm.sec, ts );
 
    unlock();
 
@@ -191,10 +193,12 @@ STM32_RTC& STM32_RTC::setTime( Time &t )
    _exitInit();
 
    Time t1;
+   time_t ts;
    (void)getTime( t1 );
+   ts = RTC::conv( t1 );
 
    kprintf( "%s: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", _name, t1.year, t1.mon, t1.day );
-   kprintf( "%s: time is %02d:%02d:%02d (hh:mm:ss)\r\n", _name, t1.hour, t1.min, t1.sec );
+   kprintf( "%s: time is %02d:%02d:%02d (%lu)\r\n", _name, t1.hour, t1.min, t1.sec, ts );
 
    return *this;
 }

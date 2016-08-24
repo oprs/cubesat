@@ -2,6 +2,8 @@
 #include "Config.h"
 #include "ADCS.h"
 
+#include <cstring>
+
 
 using namespace qb50;
 
@@ -15,11 +17,15 @@ ADCS qb50::ADCS0( "ADCS0", UART1, PC13 );
 
 ADCS::ADCS( const char *name, STM32_UART& uart, STM32_GPIO::Pin& enPin )
    : Device( name ), _uart( uart ), _enPin( enPin ), _state( ADCS::MEASURE )
-{ ; }
+{
+   _mp = new ADCSMeas;
+}
 
 
 ADCS::~ADCS()
-{ ; }
+{
+   delete _mp;
+}
 
 
 //  - - - - - - - - - - - - - -  //
@@ -63,6 +69,26 @@ ADCS& ADCS::disable( bool silent )
    if( !silent ) {
       kprintf( "%s: disabled\r\n", _name );
    }
+
+   return *this;
+}
+
+
+ADCS& ADCS::setMeas( const ADCSMeas *mp )
+{
+   lock();
+   (void)memcpy( _mp, mp, sizeof( ADCSMeas ));
+   unlock();
+
+   return *this;
+}
+
+
+ADCS& ADCS::getMeas( ADCSMeas *mp )
+{
+   lock();
+   (void)memcpy( mp, _mp, sizeof( ADCSMeas ));
+   unlock();
 
    return *this;
 }
