@@ -1,5 +1,6 @@
 
 #include "b64.h"
+#include "device/Syslog.h"
 
 using namespace qb50;
 
@@ -159,5 +160,31 @@ size_t qb50::d64( uint8_t *dst, const char *src, size_t len )
 
    return id;
 }
+
+
+void qb50::b64dump( const void *src, unsigned len )
+{
+   char *buf = new char[ 80 ];
+   unsigned off = 0;
+   unsigned i, n;
+
+   while( len > 0 ) {
+      n = len > 57 ? 57 : len;
+      i = e64( buf + 1, (const uint8_t*)src + off, n );
+
+      off += n;
+      len -= n;
+
+      buf[   0 ] = len > 0 ? '+' : '=';
+      buf[ i+1 ] = '\r';
+      buf[ i+2 ] = '\n';
+      buf[ i+3 ] = '\0';
+
+      kprintf( buf );
+   }
+
+   delete[] buf;
+}
+
 
 /*EoF*/

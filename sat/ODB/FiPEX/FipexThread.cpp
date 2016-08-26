@@ -216,6 +216,7 @@ static const char *rsp_ids[ 64 ] = {
 };
 
 
+#if 0
 void FipexThread::cmd( const uint8_t *cmd, size_t len )
 {
    size_t n, dlen;
@@ -294,7 +295,7 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
       }
    }
 }
-
+#endif
 
 void FipexThread::dump( uint8_t *x, size_t len )
 {
@@ -621,11 +622,12 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 {
    WodStore::WEH hdr;
 
+   kprintf( "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
+
    switch( rh->id ) {
 
       case Fipex::SU_R_ACK:
 
-         kprintf( "%s: < SU_R_ACK\r\n", name );
          _st = ST_ASYNC_WAIT;
 
          break;
@@ -633,7 +635,6 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 
       case Fipex::SU_R_ID:
 
-         kprintf( "%s: < SU_R_ID\r\n", name );
          _st = ST_ASYNC_WAIT;
 
          break;
@@ -641,7 +642,6 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 
       case Fipex::SU_R_NACK:
 
-         kprintf( RED( "%s: < SU_R_NACK" ) "\r\n", name );
          /* XXX resend command */
          _st = ST_ERROR;
 
@@ -649,9 +649,6 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 
 
       default:
-
-         kprintf( "%s: < SU_R_*\r\n", name );
-         /* store data */
 
          (void)ADCS0.getMeas( _mp );
          (void)WOD.write( WodStore::ADCS, _mp, sizeof( ADCSMeas ),                   &hdr );

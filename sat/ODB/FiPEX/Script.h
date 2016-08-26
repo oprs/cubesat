@@ -47,6 +47,9 @@ class Script
       static unsigned repeatTime ( Header *sh );
       static unsigned delay      ( CmdHeader    *ch );
 
+      static const char* cmdName ( Fipex::CmdId id );
+      static const char* rspName ( Fipex::RspId id );
+
 #if 0
       /* dump command */
       static void     dump       ( Header    *sh );

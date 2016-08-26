@@ -111,15 +111,15 @@ WodStore& WodStore::write( EntryType type, const void *x, unsigned len, WEH *hdr
 
 void WodStore::_write( EntryType type, const void *x, unsigned len, WEH *hdr )
 {
-   struct tm stm;
-   RTC::Time rtm;
+   RTC::Time tm;
 
    uint32_t wHead = CONF.wHead();
-   uint32_t wTail = CONF.wTail();
+ //uint32_t wTail = CONF.wTail();
    uint32_t wNext;
 
 kprintf( "WodStore::_write(), wHead: 0x%08x\r\n", wHead );
 hexdump( x, len );
+b64dump( x, len );
 
    if( wHead == NIL ) {
       wNext = 0;
@@ -128,28 +128,15 @@ hexdump( x, len );
       wNext = wHead + hdr->len;
    }
 
-   /* time */
-
-   RTC0.getTime( rtm );
-
-   stm.tm_sec   = rtm.sec;
-   stm.tm_min   = rtm.min;
-   stm.tm_hour  = rtm.hour;
-   stm.tm_mday  = rtm.day;
-   stm.tm_mon   = rtm.mon - 1;
-   stm.tm_year  = rtm.year - 1900;
-   stm.tm_wday  = 0;
-   stm.tm_yday  = 0;
-   stm.tm_isdst = 0;
-
    /* WOD header */
+
+   RTC0.getTime( tm );
 
    hdr->type  = type;
    hdr->len   = len + sizeof( WEH );
-   hdr->seq   = 0;
-   hdr->ticks = 0;
+   hdr->ticks = ticks();
    hdr->prev  = wHead;
-   hdr->time  = mktime( &stm );
+   hdr->time  = RTC::conv( tm );
 
    (void)_mem.write( wNext, hdr, sizeof( WEH ));
    (void)_mem.write( wNext + sizeof( WEH ), x, len );
@@ -180,7 +167,6 @@ void WodStore::_peek( WEH *hdr, void *x )
 
       hdr->type  = NONE;
       hdr->len   = 0;
-      hdr->seq   = 0;
       hdr->ticks = 0;
       hdr->prev  = NIL;
       hdr->len   = 0;

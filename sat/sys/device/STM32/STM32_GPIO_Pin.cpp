@@ -136,8 +136,9 @@ STM32_GPIO::Pin& STM32_GPIO::Pin::PuPd( PullUpDn pud )
 
 STM32_GPIO::Pin& STM32_GPIO::Pin::setHandler( GPIO::Handler *handler, GPIO::Pin::Edge edge )
 {
-   //STM32_EXTI::EXTIn
-   //(void)handler;
+   (void)handler;
+   (void)edge;
+
    return *this;
 }
 

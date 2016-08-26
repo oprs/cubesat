@@ -35,7 +35,7 @@ STM32_Timer::Channel::~Channel()
 STM32_Timer::Channel&
 STM32_Timer::Channel::init( void )
 {
-   uint16_t ccer, ccmr, cr2;
+   uint16_t ccer, ccmr /*, cr2*/ ;
 
    (void)enable( true );
 
@@ -67,7 +67,7 @@ STM32_Timer::Channel::init( void )
 
    /* read control register */
 
-   cr2 = TIMx->CR2;
+ //cr2 = TIMx->CR2;
 
    (void)disable( true );
 

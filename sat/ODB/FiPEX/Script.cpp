@@ -5,11 +5,12 @@
 using namespace qb50;
 
 
+/* commands */
+
 struct Cmd {
    const Fipex::CmdId id;
    const char *name;
 };
-
 
 static const Cmd C00 = { Fipex::SU_PING,    "SU_PING"    };
 static const Cmd C01 = { Fipex::SU_INIT,    "SU_INIT"    };
@@ -51,6 +52,45 @@ static const Cmd* cmdv[ 256 ] = {
 };
 
 
+/* responses */
+
+struct Rsp {
+   const Fipex::RspId id;
+   const char *name;
+};
+
+static const Rsp R02 = { Fipex::SU_R_ACK,  "SU_R_ACK"  };
+static const Rsp R03 = { Fipex::SU_R_NACK, "SU_R_NACK" };
+static const Rsp R04 = { Fipex::SU_R_ID,   "SU_R_ID"   };
+static const Rsp R20 = { Fipex::SU_R_HK,   "SU_R_HK"   };
+static const Rsp R30 = { Fipex::SU_R_SDP,  "SU_R_SDP"  };
+static const Rsp R33 = { Fipex::SU_R_CAL,  "SU_R_CAL"  };
+
+#define ERSP (Rsp*)0
+
+static const Rsp* rspv[ 256 ] = {
+   ERSP, ERSP, &R02, &R03, &R04, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   &R20, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   &R30, ERSP, ERSP, &R33, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,
+   ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP,  ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP, ERSP
+};
+
+
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
@@ -67,6 +107,20 @@ Fipex::Script::~Script()
 //  - - - - - - -  //
 //  M E T H O D S  //
 //  - - - - - - -  //
+
+const char* Fipex::Script::cmdName( Fipex::CmdId id )
+{
+   const Cmd *cmd = cmdv[ id ];
+   return ( cmd == 0 ) ? "(UNKNOWN)" : cmd->name;
+}
+
+
+const char* Fipex::Script::rspName( Fipex::RspId id )
+{
+   const Rsp *rsp = rspv[ id ];
+   return ( rsp == 0 ) ? "(UNKNOWN)" : rsp->name;
+}
+
 
 time_t Fipex::Script::startTime( Header *sh )
 {
@@ -123,7 +177,7 @@ Fipex::Script& Fipex::Script::dump( void )
 Fipex::Script& Fipex::Script::load( Header *sh )
 {
    CmdHeader *ch;
-   unsigned clen, cid, sec;
+   unsigned cid, sec;
 
    if(( sh->len < 10 ) || ( sh->len > 254 )) {
       kprintf( RED( "Fipex::Script::load(): invalid script length" ) "\r\n" );
@@ -144,9 +198,7 @@ Fipex::Script& Fipex::Script::load( Header *sh )
          kprintf( "%s\r\n", cmdv[ cid ]->name );
          break;
       } else {
-         clen = ch->len;
-       //sec  = ch->x[ clen + 1 ] | ( ch->x[ clen + 2 ] << 8 );
-         sec  = delay( ch );
+         sec = delay( ch );
          kprintf( "%s @%02d:%02d\r\n", cmdv[ cid ]->name, sec / 60, sec % 60 );
       }
 

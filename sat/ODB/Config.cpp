@@ -20,7 +20,7 @@ const Config::definition Config::defs[ _QB50_NPARAMS ] = {
    { PARAM_GPS_CYCLE_ON,       1,   5,   2 },  { PARAM_VBAT_LOW,           1,   7,   7 },
    { PARAM_ADCS_CYCLE_DTMB,    0,  24,   0 },  { PARAM_FM_WODEX_CYCLE_TX,  1,   4,   2 },
    { PARAM_ADCS_CYCLE_CTRL,    0,  24,   0 },  { PARAM_FM_CYCLE_ON,        1,  96,  16 },
-   { PARAM_VBAT_HIGH,          1,   5,   1 },  { PARAM_NONE,               0,   0,   0 },
+   { PARAM_VBAT_HIGH,          1,   5,   1 },  { PARAM_TELEM_FORMAT,       0,   1,   0 },
    { PARAM_PA_TEMP_HIGH,       0,   7,   1 },  { PARAM_PA_TEMP_LOW,        0,   5,   4 },
 
    /* params[ 16 .. 31 ]      min  max  def                               min  max  def */

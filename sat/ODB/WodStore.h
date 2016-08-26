@@ -14,13 +14,27 @@ namespace qb50 {
 
       public:
 
+#if 1
+
+          struct WEH /* WOD Entry Header */
+          {
+            uint8_t  type;  // application specific
+            uint8_t  len;   // length in 32-bit words (incl. header)
+            uint16_t seq;   // sequence number % (2^16)
+            uint32_t ticks; // ticks since poweron
+            uint32_t prev;  // address of previous entry
+            uint32_t time;  // VKI time
+          };
+
+#else
+
       /*
-          +-------+-------+---------------+
-          | type  |  len  |      seq      |
-          +-------+-------+---------------+
-          |             ticks             |
           +-------------------------------+
           |              prev             |
+          +-------+-------+---------------+
+          | type  |  xxx  |      len      |
+          +-------+-------+---------------+
+          |             ticks             |
           +-------------------------------+
           |            VKI time           |
           +-------------------------------+
@@ -28,13 +42,15 @@ namespace qb50 {
 
          struct WEH /* WOD Entry Header */
          {
-            uint8_t  type;  // application specific
-            uint8_t  len;   // length in 32-bit words (incl. header)
-            uint16_t seq;   // sequence number % (2^16)
-            uint32_t ticks; // ticks since poweron
             uint32_t prev;  // address of previous entry
+            uint8_t  type;  // application specific
+            uint8_t  xxx;   // reserved
+            uint16_t len;   // payload length in bytes
+            uint32_t ticks; // ticks since poweron
             uint32_t time;  // VKI time
          };
+
+#endif
 
          enum : uint32_t { NIL = (uint32_t)-1 };
 

@@ -48,6 +48,8 @@ STM32_PWM& STM32_PWM::disable( bool silent )
 
 STM32_PWM& STM32_PWM::duty( unsigned dty )
 {
+   (void)dty;
+
    return *this;
 }
 

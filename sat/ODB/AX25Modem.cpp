@@ -190,6 +190,18 @@ AX25Modem& AX25Modem::unproto( const char *addr, int ssid )
 
 size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
 {
+   Config::pval_t fmt = CONF.getParam( Config::PARAM_TELEM_FORMAT );
+
+   if( fmt == 0 ) {
+      return sendHex( hdr, x, toms );
+   } else {
+      return sendB64( hdr, x, toms );
+   }
+}
+
+
+size_t AX25Modem::sendHex( WodStore::WEH *hdr, const uint8_t *x, int toms )
+{
    struct tm stm;
 
    unsigned len, i, n;
@@ -228,6 +240,16 @@ size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
 
    return
       send( _obuf, n + 2*i, toms );
+}
+
+
+size_t AX25Modem::sendB64( WodStore::WEH *hdr, const uint8_t *x, int toms )
+{
+   (void)hdr;
+   (void)x;
+   (void)toms;
+
+   return 0;
 }
 
 

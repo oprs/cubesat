@@ -40,7 +40,7 @@ namespace qb50 {
             PARAM_ADCS_CYCLE_CTRL   = 10,
             PARAM_FM_CYCLE_ON       = 11,
             PARAM_VBAT_HIGH         = 12,
-          //UNUSED                  = 13,
+            PARAM_TELEM_FORMAT      = 13,
             PARAM_PA_TEMP_HIGH      = 14,
             PARAM_PA_TEMP_LOW       = 15,
 

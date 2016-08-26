@@ -11,6 +11,8 @@ namespace qb50 {
    extern size_t e64( char *dst, const uint8_t *src, size_t len );
    extern size_t d64( uint8_t *dst, const char *src, size_t len );
 
+   extern void   b64dump( const void *src, unsigned len );
+
 } /* qb50 */
 
 

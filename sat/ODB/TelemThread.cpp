@@ -64,11 +64,7 @@ void TelemThread::run( void )
 
       _wait();
 
-#if 0
-   (void)WOD.peek( &hdr, _x ); // XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX ! XXX !
-#else
    (void)WOD.read( &hdr, _x );
-#endif
 
     //if( hdr.type == WodStore::NONE ) {
       if(( hdr.type == WodStore::NONE ) || ( hdr.prev == 0xffffffff )) {
