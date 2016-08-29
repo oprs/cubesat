@@ -453,7 +453,7 @@ void ControlThread::_handleCForm( CForm *fp )
          if( SAT.isInhibit() && ( mode == Config::STDBY )) {
             WOD.enable();
             WOD.clear();
-            FCACHE.clear();
+          //FCACHE.clear();
             WOD.disable();
          }
 

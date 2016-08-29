@@ -1,6 +1,7 @@
 
 #include "Config.h"
 #include "Syslog.h"
+#include "WodStore.h"
 
 #include <safe_stm32f4xx.h>
 
@@ -124,8 +125,8 @@ void Config::clear( void )
 
    st->nReset = 0;
    st->mode   = Config::INIT;
-   st->wHead  = 0;
-   st->wTail  = 0;
+   st->wHead  = WodStore::NIL;
+   st->wTail  = WodStore::NIL;
 
    unlock();
 }

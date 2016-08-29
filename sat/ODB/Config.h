@@ -109,6 +109,9 @@ namespace qb50 {
          uint32_t wTail    ( void );
          uint32_t wTail    ( uint32_t addr );
 
+         uint32_t wNext    ( void );
+         uint32_t wNext    ( uint32_t addr );
+
          //  - - - - - - -  //
          //  M E T H O D S  //
          //  - - - - - - -  //
@@ -134,10 +137,8 @@ namespace qb50 {
             uint16_t nReset;               /* reset counter                     */
             mode_t   mode;                 /* current mode                      */
             TLE      tle;                  /* latest TLE known to the satellite */
-          //MTT      mtt;                  /* mode-thread table                 */
-          //STT      stt;                  /* state-transition table            */
-            uint32_t wHead;                /* head of the WOD chain             */
-            uint32_t wTail;                /* tail of the WOD chain             */
+            uint32_t wHead;                /* head of the WOD chain (first)     */
+            uint32_t wTail;                /* tail of the WOD chain (last)      */
          };
 
    };

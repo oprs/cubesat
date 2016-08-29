@@ -10,6 +10,8 @@ using namespace qb50;
 AX25Modem qb50::M9K6( "M9K6", PC10, PC9,  PC8  ); // global Modem9600 object
 AX25Modem qb50::M1K2( "M1K2", PC3,  PB11, PB10 ); // global Modem1200 object
 
+#define BCHUNK 64
+
 
 static const uint8_t _hexv[ 16 ] = {
    '0', '1', '2', '3', '4', '5', '6', '7',
@@ -188,27 +190,27 @@ AX25Modem& AX25Modem::unproto( const char *addr, int ssid )
 }
 
 
-size_t AX25Modem::send( WodStore::WEH *hdr, const uint8_t *x, int toms )
+size_t AX25Modem::send( WodStore::WEnt *wod, const void *x, int toms )
 {
    Config::pval_t fmt = CONF.getParam( Config::PARAM_TELEM_FORMAT );
 
    if( fmt == 0 ) {
-      return sendHex( hdr, x, toms );
+      return sendHex( wod, x, toms );
    } else {
-      return sendB64( hdr, x, toms );
+      return sendB64( wod, x, toms );
    }
 }
 
 
-size_t AX25Modem::sendHex( WodStore::WEH *hdr, const uint8_t *x, int toms )
+size_t AX25Modem::sendHex( WodStore::WEnt *wod, const void *x, int toms )
 {
    struct tm stm;
 
-   unsigned len, i, n;
+   unsigned blen, off, on, i, n;
    uint8_t *o;
    char wt;
 
-   switch( hdr->type ) {
+   switch( wod->type ) {
       case WodStore::WODEX:
          wt = '!';
          break;
@@ -226,26 +228,42 @@ size_t AX25Modem::sendHex( WodStore::WEH *hdr, const uint8_t *x, int toms )
          break;
    }
 
-   (void)gmtime_r( (const time_t*)&hdr->time, &stm );
-   n  = snprintf ( (char*)_obuf,     32,     "%c%02x", wt, CONF.nrst() & 0xff );
-   n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
+   (void)gmtime_r( (const time_t*)&wod->time, &stm );
 
-   o   = _obuf + n;
-   len = hdr->len - sizeof( WodStore::WEH );
+   off = 0;
+   on  = 0;
 
-   for( i = 0 ; i < len ; ++i ) {
-      *(o++) = _hexv[ x[ i ] >> 4    ];
-      *(o++) = _hexv[ x[ i ]  & 0x0f ];
+   while( off < wod->len ) {
+
+      blen = wod->len - off;
+      if( blen > BCHUNK )
+         blen = BCHUNK;
+
+      n  = snprintf ( (char*)_obuf,     32,     "%c%02x", wt, CONF.nrst() & 0xff );
+      n += strftime ( (char*)_obuf + n, 32 - n, "%y%m%d@%H%M%S;", &stm );
+
+      if(( wod->type == WodStore::FIPEX ) || ( wod->len >= BCHUNK )) {
+         n += snprintf( (char*)_obuf + n, 32 - n, "%01x%01x;", ( off >> 6 ) + 1, ( wod->len >> 6 ) + 1 );
+      }
+
+      o = _obuf + n;
+
+      for( i = 0 ; i < blen ; ++i ) {
+         *(o++) = _hexv[ ((const uint8_t*)x)[ off + i ] >> 4    ];
+         *(o++) = _hexv[ ((const uint8_t*)x)[ off + i ]  & 0x0f ];
+      }
+
+      on  += send( _obuf, n + 2*i, toms );
+      off += blen;
    }
 
-   return
-      send( _obuf, n + 2*i, toms );
+   return on;
 }
 
 
-size_t AX25Modem::sendB64( WodStore::WEH *hdr, const uint8_t *x, int toms )
+size_t AX25Modem::sendB64( WodStore::WEnt *wod, const void *x, int toms )
 {
-   (void)hdr;
+   (void)wod;
    (void)x;
    (void)toms;
 

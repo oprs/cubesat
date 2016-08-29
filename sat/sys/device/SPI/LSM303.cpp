@@ -17,11 +17,43 @@ static const uint8_t RATE_250DPS_Cmd[ 2 ]  = { 0x23, 0x00 };
 static const uint8_t RATE_500DPS_Cmd[ 2 ]  = { 0x23, 0x01 };
 static const uint8_t RATE_2000DPS_Cmd[ 2 ] = { 0x23, 0x02 };
 
+/*
+          +-------- write
+          |+------- increment address
+          ||+------ CTRL5 (0x24)
+          |||_____
+   0x64 = 01100100
+
+          +-------- TEMP_EN (temperature sensor) disabled
+          |+------- M_RES (resolution): high
+          ||
+          || +----- M_ODR (data rate): 6.25Hz
+          || |
+          || |
+          || |  +-- LIR2 (interrupt not latched)
+          || |  |+- LIR1 (interrupt not latched)
+          ||_|__||
+   0x64 = 01100100  <- CTRL5
+
+           +------- MFS (mag. full scale): +/- 2 gauss
+           |_
+   0x00 = 00000000  <- CTRL6
+
+          +-------- AHPM (HP filter): normal mode
+          |
+          | +------ AFDS (filter): disabled
+          | |+----- T_ONLY: disabled
+          | ||
+          | || +--- MLP (mag. low power): mag. data rate set by CRTL5
+          | || |+-- MD (mag. sensor mode): continuous conversion
+          | || ||
+          |_|| ||_
+   0x00 = 00000000  <- CTRL7
+
+ */
+
 static const uint8_t MAG_INIT_Cmd[ 4 ]  = { 0x64, 0x64, 0x00, 0x00 };
 
-static const float m250DPS  = 0.00875F;
-static const float m500DPS  = 0.01750F;
-static const float m2000DPS = 0.07000F;
 
 //  - - - - - - - - -  //
 //  S T R U C T O R S  //
@@ -145,14 +177,6 @@ LSM303& LSM303::omega( Vec3D& v )
    int16_t xr = (uint16_t)res[1] | ( (uint16_t)res[2] << 8 );
    int16_t yr = (uint16_t)res[3] | ( (uint16_t)res[4] << 8 );
    int16_t zr = (uint16_t)res[5] | ( (uint16_t)res[6] << 8 );
-
-/*
-   switch( _range ) {
-      case R250DPS:  coef = m250DPS;  break;
-      case R500DPS:  coef = m500DPS;  break;
-      case R2000DPS: coef = m2000DPS; break;
-   }
-*/
 
    coef = 3.0;
 

@@ -112,7 +112,7 @@ void WodexThread::onResume( void )
 void WodexThread::run( void )
 {
    Config::pval_t dt;
-   WodStore::WEH hdr;
+   WodStore::WEnt wod;
    TickType_t prev;
    Timer tm;
 
@@ -133,8 +133,12 @@ void WodexThread::run( void )
       }
 
       kprintf( "%s: waiting for %.2f sec...\r\n", name, 0.001 * ms );
+#if 0
       prev = _timer.prev;
       tm.until( prev + (TickType_t)ms / portTICK_RATE_MS );
+#else
+      delay( ms );
+#endif
 
 #if 0
       if( mode == Config::FM ) {
@@ -146,7 +150,9 @@ void WodexThread::run( void )
 #endif
 
       _updateSamples();
-      (void)WOD.write( WodStore::WODEX, _raw8, 32, &hdr );
+      wod.type = WodStore::WODEX;
+      wod.len  = 32;
+      (void)WOD.write( &wod, _raw8 );
 
       if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
          _modem = &M1K2;
@@ -157,7 +163,7 @@ void WodexThread::run( void )
       if(( mode != Config::TELEM ) && ( mode != Config::POWER )) {
          _modem->enable();
          _sendBacklog( _modem );
-         _modem->send( &hdr, _raw8, -1 );
+         _modem->send( &wod, _raw8, -1 );
          _modem->disable();
       }
 

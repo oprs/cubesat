@@ -62,43 +62,30 @@ WodStore& WodStore::disable( bool silent )
 WodStore& WodStore::clear( void )
 {
    (void)lock();
+
    (void)CONF.wHead( NIL );
    (void)CONF.wTail( NIL );
+
    (void)unlock();
 
    return *this;
 }
 
 
-WodStore& WodStore::read( WEH *hdr, void *x )
+WodStore& WodStore::read( WEnt *wod, void *x )
 {
    (void)lock();
-   _read( hdr, x );
+   _read( wod, x );
    (void)unlock();
 
    return *this;
 }
 
 
-WodStore& WodStore::peek( WEH *hdr, void *x )
+WodStore& WodStore::write( WEnt *wod, const void *x )
 {
    (void)lock();
-   _peek( hdr, x );
-   (void)unlock();
-
-   return *this;
-}
-
-
-WodStore& WodStore::write( EntryType type, const void *x, unsigned len, WEH *hdr )
-{
-   WEH _hdr;
-
-   if( hdr == (WEH*)0 )
-      hdr = &_hdr;
-
-   (void)lock();
-   _write( type, x, len, hdr );
+   _write( wod, x );
    (void)unlock();
 
    return *this;
@@ -109,72 +96,83 @@ WodStore& WodStore::write( EntryType type, const void *x, unsigned len, WEH *hdr
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void WodStore::_write( EntryType type, const void *x, unsigned len, WEH *hdr )
+void WodStore::_write( WEnt *wod, const void *x )
 {
+   WEnt prev;
+
    RTC::Time tm;
 
+   RTC0.getTime( tm );
+   wod->time  = RTC::conv( tm );
+   wod->ticks = ticks();
+   wod->xxx   = 0;
+
    uint32_t wHead = CONF.wHead();
- //uint32_t wTail = CONF.wTail();
-   uint32_t wNext;
+   uint32_t wTail = CONF.wTail();
 
 kprintf( "WodStore::_write(), wHead: 0x%08x\r\n", wHead );
-hexdump( x, len );
-b64dump( x, len );
+hexdump( x, wod->len );
+b64dump( x, wod->len );
 
-   if( wHead == NIL ) {
-      wNext = 0;
-   } else {
-      (void)_mem.read( wHead, hdr, sizeof( WEH ));
-      wNext = wHead + hdr->len;
-   }
+   if(( wHead == NIL ) || ( wTail == NIL )) {
 
-   /* WOD header */
+      /* store is empty */
 
-   RTC0.getTime( tm );
+      wod->prev = NIL;
 
-   hdr->type  = type;
-   hdr->len   = len + sizeof( WEH );
-   hdr->ticks = ticks();
-   hdr->prev  = wHead;
-   hdr->time  = RTC::conv( tm );
+      (void)_mem.write( 0,                  wod, sizeof( WEnt ));
+      (void)_mem.write( 0 + sizeof( WEnt ), x,   wod->len      );
 
-   (void)_mem.write( wNext, hdr, sizeof( WEH ));
-   (void)_mem.write( wNext + sizeof( WEH ), x, len );
-
-   if( wHead == NIL ) {
+      (void)CONF.wHead( 0 );
       (void)CONF.wTail( 0 );
-   }
 
-   (void)CONF.wHead( wNext );
+   } else {
+
+      /* XXX check for overwriting */
+
+      (void)_mem.read( wHead, &prev, sizeof( WEnt ));
+
+      wod->prev = wHead;
+      wHead += sizeof( WEnt ) + prev.len;
+
+      (void)_mem.write( wHead,                  wod, sizeof( WEnt ));
+      (void)_mem.write( wHead + sizeof( WEnt ), x,   wod->len      );
+
+      (void)CONF.wHead( wHead );
+
+   }
 }
 
 
-void WodStore::_read( WEH *hdr, void *x )
-{
-   _peek( hdr, x );
-
-   if( hdr->prev != NIL ) {
-      (void)CONF.wHead( hdr->prev );
-   }
-}
-
-
-void WodStore::_peek( WEH *hdr, void *x )
+void WodStore::_read( WEnt *wod, void *x )
 {
    uint32_t wHead = CONF.wHead();
+   uint32_t wTail = CONF.wTail();
 
    if( wHead == NIL ) {
 
-      hdr->type  = NONE;
-      hdr->len   = 0;
-      hdr->ticks = 0;
-      hdr->prev  = NIL;
-      hdr->len   = 0;
+      wod->prev  = NIL;
+      wod->type  = NONE;
+      wod->xxx   = 0;
+      wod->len   = 0;
+      wod->ticks = 0;
+      wod->time  = 0;
 
    } else {
 
-      (void)_mem.read( wHead, hdr, sizeof( WEH ));
-      (void)_mem.read( wHead + sizeof( WEH ), x, hdr->len - sizeof( WEH ));
+      (void)_mem.read( wHead,                  wod, sizeof( WEnt ));
+      (void)_mem.read( wHead + sizeof( WEnt ), x,   wod->len      );
+
+      if( wHead == wTail ) {
+
+         (void)CONF.wHead( NIL );
+         (void)CONF.wTail( NIL );
+
+      } else {
+
+         (void)CONF.wHead( wod->prev );
+
+      }
 
    }
 }

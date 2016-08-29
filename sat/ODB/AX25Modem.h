@@ -20,11 +20,10 @@ namespace qb50 {
          AX25Modem&  enable  ( bool silent = false );
          AX25Modem&  disable ( bool silent = false );
 
-         size_t      send    ( WodStore::WEH *hdr, const uint8_t *x, int toms = -1 );
-         size_t      sendHex ( WodStore::WEH *hdr, const uint8_t *x, int toms = -1 );
-         size_t      sendB64 ( WodStore::WEH *hdr, const uint8_t *x, int toms = -1 );
-
-         size_t      send    ( const uint8_t *x,   unsigned len,     int toms = -1 );
+         size_t      send    ( WodStore::WEnt *wod, const void *x, int toms = -1 );
+         size_t      sendHex ( WodStore::WEnt *wod, const void *x, int toms = -1 );
+         size_t      sendB64 ( WodStore::WEnt *wod, const void *x, int toms = -1 );
+         size_t      send    ( const uint8_t  *x,   unsigned len,  int toms = -1 );
 
          AX25Modem&  mycall  ( const char *x, int ssid );
          AX25Modem&  unproto ( const char *x, int ssid );

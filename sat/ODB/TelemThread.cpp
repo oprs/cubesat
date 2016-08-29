@@ -58,30 +58,26 @@ void TelemThread::onResume( void )
 
 void TelemThread::run( void )
 {
-   WodStore::WEH hdr;
+ //WodStore::WEH hdr;
+   WodStore::WEnt wod;
 
    for( ;; ) {
 
       _wait();
 
-   (void)WOD.read( &hdr, _x );
+      (void)WOD.read( &wod, _x );
 
-    //if( hdr.type == WodStore::NONE ) {
-      if(( hdr.type == WodStore::NONE ) || ( hdr.prev == 0xffffffff )) {
+      if( wod.type == WodStore::NONE ) {
 
          Event *ev = new Event( Event::WOD_EMPTY );
          xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
 
-         delay( 100 );
+         delay( 1000 );
 
       } else {
 
-         kprintf(
-            "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n",
-            hdr.type, hdr.len, hdr.prev
-         );
-
-         _modem->send( &hdr, _x, -1 );
+         kprintf( "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n", wod.type, wod.len, wod.prev );
+         _modem->send( &wod, _x, -1 );
 
       }
    }

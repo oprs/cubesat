@@ -14,8 +14,7 @@ namespace qb50 {
 
       public:
 
-#if 1
-
+#if 0
           struct WEH /* WOD Entry Header */
           {
             uint8_t  type;  // application specific
@@ -26,39 +25,57 @@ namespace qb50 {
             uint32_t time;  // VKI time
           };
 
-#else
+         /*
+            +-------------------------------+
+            |              prev             |
+            +-------------------------------+
+            |              next             |
+            +-------------------------------+
+         */
 
-      /*
-          +-------------------------------+
-          |              prev             |
-          +-------+-------+---------------+
-          | type  |  xxx  |      len      |
-          +-------+-------+---------------+
-          |             ticks             |
-          +-------------------------------+
-          |            VKI time           |
-          +-------------------------------+
-      */
-
-         struct WEH /* WOD Entry Header */
+         struct WHdr /* WOD Header */
          {
-            uint32_t prev;  // address of previous entry
-            uint8_t  type;  // application specific
-            uint8_t  xxx;   // reserved
-            uint16_t len;   // payload length in bytes
-            uint32_t ticks; // ticks since poweron
-            uint32_t time;  // VKI time
-         };
-
+            uint32_t prev;  // previous header
+            uint32_t next;  // next header
+         } __attribute__(( packed ));
 #endif
+
+         /*
+            +-------------------------------+
+            |              prev             |
+            +-------+-------+---------------+
+            | type  |  xxx  |      len      |
+            +-------+-------+---------------+
+            |             ticks             |
+            +-------------------------------+
+            |            VKI time           |
+            +-------------------------------+
+         */
+
+         struct WEnt /* WOD Entry */
+         {
+            uint32_t prev;  // previous entry
+            uint8_t  type;  // entry type
+            uint8_t  xxx;   // reserved (zero)
+            uint16_t len;   // payload length in bytes
+            uint32_t ticks; // 1ms ticks since poweron
+            uint32_t time;  // VKI time
+         } __attribute__(( packed ));
 
          enum : uint32_t { NIL = (uint32_t)-1 };
 
+         /*
+            In an effort to make telemetry frames easier to identify for
+            humans (visual inspection), entry types were defined in such
+            a way that their base64-encoded representation yield a plain
+            type prefix (i.e. ADCS -> 'A', Fipex -> 'F', Wodex -> 'W').
+          */
+
          enum EntryType {
-            NONE  = 0,
-            WODEX = 1,
-            FIPEX = 2,
-            ADCS  = 3
+            ADCS  = 0x00, // 'A'
+            FIPEX = 0x14, // 'F'
+            WODEX = 0x58, // 'W'
+            NONE  = 0xff
          };
 
          WodStore( const char *name, FlashCache &mem );
@@ -69,19 +86,17 @@ namespace qb50 {
          WodStore& disable ( bool silent = false );
 
          WodStore& clear   ( void );
-         WodStore& read    ( WEH *hdr, void *x );
-         WodStore& peek    ( WEH *hdr, void *x );
-         WodStore& write   ( EntryType type, const void *x, unsigned len, WEH *hdr = (WEH*)0 );
 
+         WodStore& read    ( WEnt *wod, void *x );
+         WodStore& write   ( WEnt *wod, const void *x );
 
       private:
 
          FlashCache&  _mem;
          const char  *_name;
 
-         void _read  ( WEH *hdr, void *x );
-         void _peek  ( WEH *hdr, void *x );
-         void _write ( EntryType type, const void *x, unsigned len, WEH *hdr );
+         void _read  ( WEnt *wod, void *x );
+         void _write ( WEnt *wod, const void *x );
 
    };
 

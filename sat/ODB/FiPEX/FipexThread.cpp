@@ -620,7 +620,7 @@ void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
 
 void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 {
-   WodStore::WEH hdr;
+   WodStore::WEnt wod;
 
    kprintf( "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
 
@@ -651,8 +651,14 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
       default:
 
          (void)ADCS0.getMeas( _mp );
-         (void)WOD.write( WodStore::ADCS, _mp, sizeof( ADCSMeas ),                   &hdr );
-         (void)WOD.write( WodStore::FIPEX, rh, sizeof( Fipex::RspHeader ) + rh->len, &hdr );
+
+         wod.type = WodStore::ADCS;
+         wod.len  = sizeof( ADCSMeas );
+         (void)WOD.write( &wod, _mp );
+
+         wod.type = WodStore::FIPEX;
+         wod.len  = sizeof( Fipex::RspHeader ) + rh->len;
+         (void)WOD.write( &wod, rh );
 
          _st = ST_ASYNC_WAIT;
 

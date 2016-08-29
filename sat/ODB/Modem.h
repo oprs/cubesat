@@ -23,8 +23,8 @@ namespace qb50 {
          virtual Modem& enable  ( bool silent = false ) = 0;
          virtual Modem& disable ( bool silent = false ) = 0;
 
-         virtual size_t send ( WodStore::WEH *hdr, const uint8_t *x, int toms ) = 0;
-         virtual size_t send ( const uint8_t *x,   unsigned len,     int toms ) = 0;
+         virtual size_t send ( WodStore::WEnt *wod, const void *x,    int toms ) = 0;
+         virtual size_t send ( const uint8_t  *x,   unsigned len,     int toms ) = 0;
 
    };
 

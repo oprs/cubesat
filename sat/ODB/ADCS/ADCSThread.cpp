@@ -34,7 +34,7 @@ void ADCSThread::run( void )
 {
    unsigned i, n;
    Config::pval_t dt;
-   WodStore::WEH hdr;
+   WodStore::WEnt wod;
    ADCSCtrl m;
 
    ADCSBeat *bp;
@@ -84,7 +84,9 @@ void ADCSThread::run( void )
 
       if(( i % dt ) == 0 ) {
          kprintf( YELLOW( "%s: ADCS MEASURE" ) "\r\n", name );
-         (void)WOD.write( WodStore::ADCS, (const uint8_t*)mp, sizeof( ADCSMeas ), &hdr );
+         wod.type = WodStore::ADCS;
+         wod.len  = sizeof( ADCSMeas );
+         (void)WOD.write( &wod, mp );
       }
 
 /*
