@@ -97,7 +97,7 @@ LSM303& LSM303::reset( void )
    uint8_t res[ 4 ];
    uint8_t id;
 
-   (void)enable( true );
+   (void)enable();
 
    _WHO_AM_I( id );
    kprintf( "%s: id: 0x%02x\r\n", _name, id );
@@ -110,7 +110,7 @@ LSM303& LSM303::reset( void )
 
  //range( R250DPS );
 
-   (void)disable( /*true*/ );
+   (void)disable();
 
    return *this;
 }

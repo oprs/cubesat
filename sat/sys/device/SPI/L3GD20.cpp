@@ -61,14 +61,14 @@ L3GD20& L3GD20::reset( void )
 {
    uint8_t id;
 
-   (void)enable( true );
+   (void)enable();
 
    _WHO_AM_I( id );
    kprintf( "%s: id: 0x%02x\r\n", _name, id );
 
    range( R250DPS );
 
-   (void)disable( true );
+   (void)disable();
 
    return *this;
 }

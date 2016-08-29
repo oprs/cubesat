@@ -54,7 +54,7 @@ int main( void )
 
    UART6.enable();
    SYSLOG.enable();
-   BKP.enable( true );
+   BKP.enable();
 
    /* create worker threads */
 

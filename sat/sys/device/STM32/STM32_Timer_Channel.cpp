@@ -37,7 +37,7 @@ STM32_Timer::Channel::init( void )
 {
    uint16_t ccer, ccmr /*, cr2*/ ;
 
-   (void)enable( true );
+   (void)enable();
 
    TIM_TypeDef *TIMx = (TIM_TypeDef*)_tmr.iobase;
 
@@ -69,7 +69,7 @@ STM32_Timer::Channel::init( void )
 
  //cr2 = TIMx->CR2;
 
-   (void)disable( true );
+   (void)disable();
 
    return *this;
 }

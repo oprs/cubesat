@@ -81,9 +81,9 @@ A25Lxxx& A25Lxxx::init( void )
     * in order to read its identification ID */
 
    lock();
-   enable( true /* be quiet */ );
+   enable();
    _RDID( &rdid );
-   disable( true /* be quiet */ );
+   disable();
    unlock();
 
    /* display ID infos */

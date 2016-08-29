@@ -94,9 +94,7 @@ E64& E64::dump( void )
    unsigned off = 0;
 
    while( len > 0 ) {
-
-    //unsigned blen = len > 57 ? 57 : len;
-      unsigned blen = len > 63 ? 63 : len;
+      unsigned blen = len > 64 ? 64 : len;
 
       len -= blen;
       (void)kprintf( "%c%.*s\r\n", ( len > 0 ? '+' : '=' ), blen, _x + off );

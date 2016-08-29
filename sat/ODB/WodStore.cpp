@@ -111,7 +111,8 @@ void WodStore::_write( WEnt *wod, const void *x )
    uint32_t wHead = CONF.wHead();
    uint32_t wTail = CONF.wTail();
 
-kprintf( "WodStore::_write(), wHead: 0x%08x\r\n", wHead );
+kprintf( "WodStore::_write(), wHead: 0x%08x, len: %u\r\n", wHead, wod->len );
+hexdump( wod, sizeof( WEnt ));
 hexdump( x, wod->len );
    e64.push( (const uint8_t*)wod + 4, sizeof( WEnt ) - 4 );
    e64.push( x, wod->len );
@@ -134,9 +135,12 @@ hexdump( x, wod->len );
       /* XXX check for overwriting */
 
       (void)_mem.read( wHead, &prev, sizeof( WEnt ));
+hexdump( &prev, sizeof( WEnt ));
 
       wod->prev = wHead;
       wHead += sizeof( WEnt ) + prev.len;
+kprintf( "WodStore::_write(), wHead: 0x%08x (after)\r\n", wHead );
+kprintf( "WodStore::_write(), prev.len: %u\r\n", prev.len );
 
       (void)_mem.write( wHead,                  wod, sizeof( WEnt ));
       (void)_mem.write( wHead + sizeof( WEnt ), x,   wod->len      );

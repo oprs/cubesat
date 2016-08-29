@@ -13,7 +13,7 @@ namespace qb50 {
 
       public:
 
-         E64( unsigned len = 256 );
+         E64( unsigned len = 384 );
          virtual ~E64();
 
          E64& push( const void *src, unsigned len );
