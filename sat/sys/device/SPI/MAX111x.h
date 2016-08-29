@@ -40,8 +40,8 @@ namespace qb50 {
 
          MAX111x& init    ( void );
        //MAX111x& reset   ( void );
-         MAX111x& enable  ( bool silent = false );
-         MAX111x& disable ( bool silent = false );
+         MAX111x& enable  ( bool debug = false );
+         MAX111x& disable ( bool debug = false );
          MAX111x& read    ( ADC::Channel& ch, Sample *sample );
 
    };

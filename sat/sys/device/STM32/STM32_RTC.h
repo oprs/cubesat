@@ -23,8 +23,8 @@ namespace qb50 {
          ~STM32_RTC();
 
          STM32_RTC& init    ( void );
-         STM32_RTC& enable  ( bool silent = false );
-         STM32_RTC& disable ( bool silent = false );
+         STM32_RTC& enable  ( bool debug = false );
+         STM32_RTC& disable ( bool debug = false );
 
          STM32_RTC& getTime ( Time &t );
          STM32_RTC& setTime ( Time &t );

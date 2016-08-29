@@ -16,8 +16,8 @@ class Stream : public Device
       ~Stream();
 
       Stream& init    ( void );
-      Stream& enable  ( bool silent = false );
-      Stream& disable ( bool silent = false );
+      Stream& enable  ( bool debug = false );
+      Stream& disable ( bool debug = false );
 
       Stream& start   ( void );
       Stream& stop    ( void );

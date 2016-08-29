@@ -16,8 +16,8 @@ class Channel : public Device
       virtual ~Channel();
 
       Channel& init    ( void );
-      Channel& enable  ( bool silent = false );
-      Channel& disable ( bool silent = false );
+      Channel& enable  ( bool debug = false );
+      Channel& disable ( bool debug = false );
 
 
    private:

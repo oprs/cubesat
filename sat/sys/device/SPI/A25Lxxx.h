@@ -28,8 +28,8 @@ namespace qb50 {
          /* FlashMemory interface */
 
          A25Lxxx& init        ( void );
-         A25Lxxx& enable      ( bool silent = false );
-         A25Lxxx& disable     ( bool silent = false );
+         A25Lxxx& enable      ( bool debug = false );
+         A25Lxxx& disable     ( bool debug = false );
 
          A25Lxxx& pageRead    ( uint32_t addr, void *x       );
          A25Lxxx& pageWrite   ( uint32_t addr, const void *x );

@@ -35,13 +35,13 @@ STM32_GPIO& STM32_GPIO::init( void )
 }
 
 
-STM32_GPIO& STM32_GPIO::enable( bool silent )
+STM32_GPIO& STM32_GPIO::enable( bool debug )
 {
    if( _incRef() == 0 )
-      RCC.enable( this, silent );
+      RCC.enable( this, debug );
 
 /*
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s enabled\r\n", _name );
    }
 */
@@ -50,13 +50,13 @@ STM32_GPIO& STM32_GPIO::enable( bool silent )
 }
 
 
-STM32_GPIO& STM32_GPIO::disable( bool silent )
+STM32_GPIO& STM32_GPIO::disable( bool debug )
 {
    if( _decRef() == 0 )
-      RCC.disable( this, silent );
+      RCC.disable( this, debug );
 
 /*
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s disabled\r\n", _name );
    }
 */

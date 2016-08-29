@@ -27,8 +27,8 @@ namespace qb50 {
 
          L3GD20& init      ( void );
          L3GD20& reset     ( void );
-         L3GD20& enable    ( bool silent = false );
-         L3GD20& disable   ( bool silent = false );
+         L3GD20& enable    ( bool debug = false );
+         L3GD20& disable   ( bool debug = false );
 
          L3GD20& omega     ( Vec3D& v );
          L3GD20& range     ( Range  r );

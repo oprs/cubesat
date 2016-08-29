@@ -52,7 +52,7 @@ Fipex& Fipex::init()
 }
 
 
-Fipex& Fipex::enable( bool silent )
+Fipex& Fipex::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
@@ -62,9 +62,9 @@ Fipex& Fipex::enable( bool silent )
    // Req: FPX-SW-0240 - "The OBC shall wait 500ms before initializing the UART interface [...]"
 
    delay( 500 );
-   _uart.enable( silent );
+   _uart.enable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -72,15 +72,15 @@ Fipex& Fipex::enable( bool silent )
 }
 
 
-Fipex& Fipex::disable( bool silent )
+Fipex& Fipex::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _uart.disable( silent );
+   _uart.disable( debug );
    _enPin.on();
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

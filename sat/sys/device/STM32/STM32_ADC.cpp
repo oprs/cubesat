@@ -41,12 +41,12 @@ STM32_ADC& STM32_ADC::init( void )
 }
 
 
-STM32_ADC& STM32_ADC::enable( bool silent )
+STM32_ADC& STM32_ADC::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
 
@@ -69,7 +69,7 @@ STM32_ADC& STM32_ADC::enable( bool silent )
    ADCx->SQR1 = tmpreg;
    ADCx->CR2 |= ADC_CR2_ADON;
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -77,7 +77,7 @@ STM32_ADC& STM32_ADC::enable( bool silent )
 }
 
 
-STM32_ADC& STM32_ADC::disable( bool silent )
+STM32_ADC& STM32_ADC::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -85,9 +85,9 @@ STM32_ADC& STM32_ADC::disable( bool silent )
    ADC_TypeDef *ADCx = (ADC_TypeDef*)iobase;
    ADCx->CR2 &= ~ADC_CR2_ADON;
 
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

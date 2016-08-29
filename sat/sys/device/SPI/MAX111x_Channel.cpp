@@ -30,26 +30,26 @@ MAX111x::Channel::init( void )
 
 
 MAX111x::Channel&
-MAX111x::Channel::enable( bool silent )
+MAX111x::Channel::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
    MAX111x& adc = static_cast<MAX111x&>( _adc );
-   adc.enable( silent );
+   adc.enable( debug );
 
    return *this;
 }
 
 
 MAX111x::Channel&
-MAX111x::Channel::disable( bool silent )
+MAX111x::Channel::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
    MAX111x& adc = static_cast<MAX111x&>( _adc );
-   adc.disable( silent );
+   adc.disable( debug );
 
    return *this;
 }

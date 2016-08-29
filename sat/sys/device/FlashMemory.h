@@ -32,8 +32,8 @@ namespace qb50 {
          };
 
          virtual FlashMemory& init        ( void ) = 0;
-         virtual FlashMemory& enable      ( bool silent = false ) = 0;
-         virtual FlashMemory& disable     ( bool silent = false ) = 0;
+         virtual FlashMemory& enable      ( bool debug = false ) = 0;
+         virtual FlashMemory& disable     ( bool debug = false ) = 0;
 
          virtual FlashMemory& pageRead    ( uint32_t addr, void *x       ) = 0;
          virtual FlashMemory& pageWrite   ( uint32_t addr, const void *x ) = 0;

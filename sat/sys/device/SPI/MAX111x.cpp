@@ -74,14 +74,14 @@ MAX111x& MAX111x::init( void )
 }
 
 
-MAX111x& MAX111x::enable( bool silent )
+MAX111x& MAX111x::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+   _spi.enable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -89,14 +89,14 @@ MAX111x& MAX111x::enable( bool silent )
 }
 
 
-MAX111x& MAX111x::disable( bool silent )
+MAX111x& MAX111x::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _spi.disable( silent );
+   _spi.disable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

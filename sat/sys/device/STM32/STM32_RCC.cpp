@@ -55,11 +55,11 @@ STM32_RCC& STM32_RCC::init( void )
 }
 
 
-STM32_RCC& STM32_RCC::enable( STM32_Device *dev, bool silent )
+STM32_RCC& STM32_RCC::enable( STM32_Device *dev, bool debug )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
-   (void)silent;
+   (void)debug;
 
    switch( dev->bus.id ) {
 
@@ -71,7 +71,7 @@ STM32_RCC& STM32_RCC::enable( STM32_Device *dev, bool silent )
 
    };
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: %s enabled at %s\r\n", _name, dev->name(), dev->bus.name );
    }
 
@@ -79,11 +79,11 @@ STM32_RCC& STM32_RCC::enable( STM32_Device *dev, bool silent )
 }
 
 
-STM32_RCC& STM32_RCC::disable( STM32_Device *dev, bool silent )
+STM32_RCC& STM32_RCC::disable( STM32_Device *dev, bool debug )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
-   (void)silent;
+   (void)debug;
 
    switch( dev->bus.id ) {
 
@@ -95,7 +95,7 @@ STM32_RCC& STM32_RCC::disable( STM32_Device *dev, bool silent )
 
    };
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: %s disabled at %s\r\n", _name, dev->name(), dev->bus.name );
    }
 
@@ -103,13 +103,13 @@ STM32_RCC& STM32_RCC::disable( STM32_Device *dev, bool silent )
 }
 
 
-STM32_RCC& STM32_RCC::enableLSE( bool silent )
+STM32_RCC& STM32_RCC::enableLSE( bool debug )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
    if(( RCCx->BDCR & RCC_BDCR_LSERDY ) == 0 ) {
 
-      if( !silent ) {
+      if( debug ) {
          kprintf( "%s: enabling LSE...\r\n", _name );
       }
 
@@ -124,7 +124,7 @@ STM32_RCC& STM32_RCC::enableLSE( bool silent )
    if(( RCCx->BDCR & RCC_BDCR_LSERDY ) == 0 ) {
       kprintf( RED( "%s: timeout while waiting for RCC_BDCR_LSERDY" ) "\r\n", _name );
    } else {
-      if( !silent ) {
+      if( debug ) {
          kprintf( "%s: LSE enabled\r\n", _name );
       }
    }
@@ -133,14 +133,14 @@ STM32_RCC& STM32_RCC::enableLSE( bool silent )
 }
 
 
-STM32_RCC& STM32_RCC::enableRTC( uint32_t clkSrc, bool silent )
+STM32_RCC& STM32_RCC::enableRTC( uint32_t clkSrc, bool debug )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
    RCCx->BDCR |= ( clkSrc & 0x00000300 );
    RCCx->BDCR |=  (uint32_t)0x00008000;
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: RTC enabled\r\n", _name );
    }
 
@@ -148,13 +148,13 @@ STM32_RCC& STM32_RCC::enableRTC( uint32_t clkSrc, bool silent )
 }
 
 
-STM32_RCC& STM32_RCC::disableRTC( bool silent )
+STM32_RCC& STM32_RCC::disableRTC( bool debug )
 {
    RCC_TypeDef *RCCx = (RCC_TypeDef*)_iobase;
 
    RCCx->BDCR &= ~(uint32_t)0x00008000;
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: RTC disabled\r\n", _name );
    }
 

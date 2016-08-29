@@ -60,17 +60,17 @@ STM32_SPI& STM32_SPI::init( void )
 }
 
 
-STM32_SPI& STM32_SPI::enable( bool silent )
+STM32_SPI& STM32_SPI::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
    SPI_TypeDef *SPIx = (SPI_TypeDef*)iobase;
 
-   _stMISO.enable( silent );
-   _stMOSI.enable( silent );
+   _stMISO.enable( debug );
+   _stMOSI.enable( debug );
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
@@ -87,7 +87,7 @@ STM32_SPI& STM32_SPI::enable( bool silent )
 }
 
 
-STM32_SPI& STM32_SPI::disable( bool silent )
+STM32_SPI& STM32_SPI::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -96,10 +96,10 @@ STM32_SPI& STM32_SPI::disable( bool silent )
 
    SPIx->CR1 &= ~SPI_CR1_SPE;
 
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
-   _stMOSI.disable( silent );
-   _stMISO.disable( silent );
+   _stMOSI.disable( debug );
+   _stMISO.disable( debug );
 
    return *this;
 }

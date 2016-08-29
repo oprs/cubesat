@@ -74,12 +74,12 @@ L3GD20& L3GD20::reset( void )
 }
 
 
-L3GD20& L3GD20::enable( bool silent )
+L3GD20& L3GD20::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+   _spi.enable( debug );
 
    _spi.lock();
    _select();
@@ -87,7 +87,7 @@ L3GD20& L3GD20::enable( bool silent )
    _deselect();
    _spi.unlock();
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -95,7 +95,7 @@ L3GD20& L3GD20::enable( bool silent )
 }
 
 
-L3GD20& L3GD20::disable( bool silent )
+L3GD20& L3GD20::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -106,9 +106,9 @@ L3GD20& L3GD20::disable( bool silent )
    _deselect();
    _spi.unlock();
 
-   _spi.disable( silent );
+   _spi.disable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

@@ -27,8 +27,8 @@ namespace qb50 {
 
          LSM303& init      ( void );
          LSM303& reset     ( void );
-         LSM303& enable    ( bool silent = false );
-         LSM303& disable   ( bool silent = false );
+         LSM303& enable    ( bool debug = false );
+         LSM303& disable   ( bool debug = false );
 
          LSM303& omega     ( Vec3D& v );
          LSM303& range     ( Range  r );

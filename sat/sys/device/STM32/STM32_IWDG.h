@@ -17,8 +17,8 @@ namespace qb50{
          ~STM32_IWDG();
 
          STM32_IWDG& init    ( void );
-         STM32_IWDG& enable  ( bool silent = false );
-         STM32_IWDG& disable ( bool silent = false );
+         STM32_IWDG& enable  ( bool debug = false );
+         STM32_IWDG& disable ( bool debug = false );
 
          STM32_IWDG& refresh ( void );
 

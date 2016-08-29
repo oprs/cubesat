@@ -26,8 +26,8 @@ namespace qb50 {
          ~STM32_PWM();
 
          STM32_PWM& init    ( void );
-         STM32_PWM& enable  ( bool silent = false );
-         STM32_PWM& disable ( bool silent = false );
+         STM32_PWM& enable  ( bool debug = false );
+         STM32_PWM& disable ( bool debug = false );
 
          STM32_PWM& duty    ( unsigned dty );
 

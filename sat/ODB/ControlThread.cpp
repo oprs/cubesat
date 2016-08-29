@@ -88,15 +88,15 @@ void ControlThread::run( void )
    SAT.init();
    WOD.init();
 
-   WDG.enable();
-   GPIOA.enable();
-   GPIOB.enable();
-   GPIOC.enable();
-   UART6.enable();
+      WDG.enable();
+    GPIOA.enable();
+    GPIOB.enable();
+    GPIOC.enable();
+    UART6.enable();
    SYSLOG.enable();
-   RTC0.enable();
-   BKP.enable();
-   //WOD.enable();
+     RTC0.enable();
+      BKP.enable();
+    //WOD.enable();
 
    /*
     * Hardware reset ?
@@ -404,7 +404,7 @@ void ControlThread::_handleCForm( CForm *fp )
          (void)CONF.setParam( Config::PARAM_MODEM, 1 );
 
          if( fp->argc > 1 ) {
-            (void)CONF.setParam( Config::PARAM_GPS_CYCLE_ON, fp->argv[1] );
+            (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
          }
 
          if( mode != Config::TELEM ) {

@@ -24,14 +24,14 @@ namespace qb50 {
          virtual ~ADCS();
 
          ADCS& init    ( void );
-         ADCS& enable  ( bool silent = false );
-         ADCS& disable ( bool silent = false );
+         ADCS& enable  ( bool debug = false );
+         ADCS& disable ( bool debug = false );
 
          ADCS& setMeas( const ADCSMeas *mp );
          ADCS& getMeas(       ADCSMeas *mp );
 
-         State state   ( void     ) const;                  // get state
-         State state   ( State st, bool silent = false );   // set state
+         State state   ( void     ) const;                 // get state
+         State state   ( State st, bool debug = false );   // set state
 
          unsigned read  (       uint8_t *x, unsigned len, int toms = 0 );
          unsigned write ( const uint8_t *x, unsigned len, int toms = 0 );

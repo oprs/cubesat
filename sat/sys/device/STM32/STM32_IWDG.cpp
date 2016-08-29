@@ -42,14 +42,14 @@ STM32_IWDG& STM32_IWDG::init( void )
 
 // XXX lock/unlock
 
-STM32_IWDG& STM32_IWDG::enable( bool silent )
+STM32_IWDG& STM32_IWDG::enable( bool debug )
 {
    IWDG_TypeDef *WDGx = (IWDG_TypeDef*)_iobase;
 
    WDGx->KR  = 0x5555;
    WDGx->KR  = 0xcccc;
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -58,9 +58,9 @@ STM32_IWDG& STM32_IWDG::enable( bool silent )
 
 // XXX lock/unlock
 
-STM32_IWDG& STM32_IWDG::disable( bool silent )
+STM32_IWDG& STM32_IWDG::disable( bool debug )
 {
-   (void)silent;
+   (void)debug;
 
    kprintf( RED( "%s: disable(): not supported" ) "\r\n", _name );
 

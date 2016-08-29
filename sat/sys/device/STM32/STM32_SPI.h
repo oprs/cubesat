@@ -42,8 +42,8 @@ namespace qb50 {
          ~STM32_SPI();
 
          STM32_SPI& init     ( void );
-         STM32_SPI& enable   ( bool silent = false );
-         STM32_SPI& disable  ( bool silent = false );
+         STM32_SPI& enable   ( bool debug = false );
+         STM32_SPI& disable  ( bool debug = false );
 
          STM32_SPI& master   ( void );
          STM32_SPI& slave    ( void );

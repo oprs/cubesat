@@ -19,8 +19,8 @@ namespace qb50 {
          /* FlashMemory interface */
 
          FlashArray& init        ( void );
-         FlashArray& enable      ( bool silent = false );
-         FlashArray& disable     ( bool silent = false );
+         FlashArray& enable      ( bool debug = false );
+         FlashArray& disable     ( bool debug = false );
 
          FlashArray& pageRead    ( uint32_t addr, void *x       );
          FlashArray& pageWrite   ( uint32_t addr, const void *x );

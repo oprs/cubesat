@@ -42,8 +42,8 @@ namespace qb50{
          ~STM32_ADC();
 
          STM32_ADC& init    ( void );
-         STM32_ADC& enable  ( bool silent = false );
-         STM32_ADC& disable ( bool silent = false );
+         STM32_ADC& enable  ( bool debug = false );
+         STM32_ADC& disable ( bool debug = false );
          STM32_ADC& read    ( ADC::Channel& ch, SensorSample<uint16_t> *sample );
 
 

@@ -39,7 +39,7 @@ STM32_Timer& STM32_Timer::init( void )
 }
 
 
-STM32_Timer& STM32_Timer::enable( bool silent )
+STM32_Timer& STM32_Timer::enable( bool debug )
 {
    uint32_t tmp32;
 
@@ -48,7 +48,7 @@ STM32_Timer& STM32_Timer::enable( bool silent )
 
    TIM_TypeDef *TIMx = (TIM_TypeDef*)iobase;
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    /* set counter mode */
 
@@ -73,7 +73,7 @@ STM32_Timer& STM32_Timer::enable( bool silent )
 }
 
 
-STM32_Timer& STM32_Timer::disable( bool silent )
+STM32_Timer& STM32_Timer::disable( bool debug )
 {
    uint32_t tmp32;
 
@@ -88,7 +88,7 @@ STM32_Timer& STM32_Timer::disable( bool silent )
    tmp32 &= ~TIM_CR1_CEN;
    TIMx->CR1 = tmp32;
 
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
    return *this;
 }

@@ -34,8 +34,8 @@ namespace qb50 {
          ~STM32_Timer();
 
          STM32_Timer& init    ( void );
-         STM32_Timer& enable  ( bool silent = false );
-         STM32_Timer& disable ( bool silent = false );
+         STM32_Timer& enable  ( bool debug = false );
+         STM32_Timer& disable ( bool debug = false );
 
 
       private:

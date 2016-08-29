@@ -38,7 +38,7 @@ STM32_DMA::Stream& STM32_DMA::Stream::init( void )
 { return *this; }
 
 
-STM32_DMA::Stream& STM32_DMA::Stream::enable( bool silent )
+STM32_DMA::Stream& STM32_DMA::Stream::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
@@ -46,7 +46,7 @@ STM32_DMA::Stream& STM32_DMA::Stream::enable( bool silent )
    DMA_Stream_TypeDef *STRMx = (DMA_Stream_TypeDef*)_iobase;
 
    NVIC.enable( _IRQn );
-   _dma.enable( silent );
+   _dma.enable( debug );
 
    /* reset the stream */
 
@@ -66,12 +66,12 @@ STM32_DMA::Stream& STM32_DMA::Stream::enable( bool silent )
 }
 
 
-STM32_DMA::Stream& STM32_DMA::Stream::disable( bool silent )
+STM32_DMA::Stream& STM32_DMA::Stream::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _dma.disable( silent ); /* _dma.refcount */
+   _dma.disable( debug ); /* _dma.refcount */
    NVIC.disable( _IRQn );
 
    return *this;

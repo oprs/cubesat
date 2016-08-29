@@ -77,7 +77,7 @@ A25Lxxx& A25Lxxx::init( void )
 
    (void)SPI_Device::init();
 
-   /* temporarily (silently) enable the device
+   /* temporarily (debugly) enable the device
     * in order to read its identification ID */
 
    lock();
@@ -117,14 +117,14 @@ A25Lxxx& A25Lxxx::init( void )
 }
 
 
-A25Lxxx& A25Lxxx::enable( bool silent )
+A25Lxxx& A25Lxxx::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+   _spi.enable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -132,14 +132,14 @@ A25Lxxx& A25Lxxx::enable( bool silent )
 }
 
 
-A25Lxxx& A25Lxxx::disable( bool silent )
+A25Lxxx& A25Lxxx::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _spi.disable( silent );
+   _spi.disable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

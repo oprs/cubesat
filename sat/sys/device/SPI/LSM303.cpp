@@ -116,12 +116,12 @@ LSM303& LSM303::reset( void )
 }
 
 
-LSM303& LSM303::enable( bool silent )
+LSM303& LSM303::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _spi.enable( silent );
+   _spi.enable( debug );
 
 /*
    _spi.lock();
@@ -131,7 +131,7 @@ LSM303& LSM303::enable( bool silent )
    _spi.unlock();
 */
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -139,7 +139,7 @@ LSM303& LSM303::enable( bool silent )
 }
 
 
-LSM303& LSM303::disable( bool silent )
+LSM303& LSM303::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -152,9 +152,9 @@ LSM303& LSM303::disable( bool silent )
    _spi.unlock();
 */
 
-   _spi.disable( silent );
+   _spi.disable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

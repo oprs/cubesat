@@ -30,17 +30,17 @@ STM32_PWM& STM32_PWM::init( void )
 }
 
 
-STM32_PWM& STM32_PWM::enable( bool silent )
+STM32_PWM& STM32_PWM::enable( bool debug )
 {
-   STM32_Timer::Channel::enable( silent );
+   STM32_Timer::Channel::enable( debug );
 
    return *this;
 }
 
 
-STM32_PWM& STM32_PWM::disable( bool silent )
+STM32_PWM& STM32_PWM::disable( bool debug )
 {
-   STM32_Timer::Channel::disable( silent );
+   STM32_Timer::Channel::disable( debug );
 
    return *this;
 }

@@ -32,8 +32,8 @@ namespace qb50 {
          virtual ~Syslog();
 
          Syslog& init    ( void );
-         Syslog& enable  ( bool silent = false );
-         Syslog& disable ( bool silent = false );
+         Syslog& enable  ( bool debug = false );
+         Syslog& disable ( bool debug = false );
 
          Syslog& printf  ( const char *fmt, ... );
 

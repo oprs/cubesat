@@ -66,8 +66,8 @@ namespace qb50 {
          virtual ~Fipex();
 
          Fipex& init    ( void );
-         Fipex& enable  ( bool silent = false );
-         Fipex& disable ( bool silent = false );
+         Fipex& enable  ( bool debug = false );
+         Fipex& disable ( bool debug = false );
 
          Fipex& activeScript ( unsigned sn );
          Fipex& storeScript  ( unsigned sn, Script::Header *sh );

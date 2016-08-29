@@ -40,7 +40,7 @@ STM32_RTC& STM32_RTC::init( void )
 }
 
 
-STM32_RTC& STM32_RTC::enable( bool silent )
+STM32_RTC& STM32_RTC::enable( bool debug )
 {
    Time tm;
    time_t ts;
@@ -50,14 +50,14 @@ STM32_RTC& STM32_RTC::enable( bool silent )
 
    lock();
 
-   PWR.enable( silent );         // enable the power controller
+   PWR.enable( debug );         // enable the power controller
    PWR.enableBRE();              // enable access to backup domain
-   BKP.enable( silent );
+   BKP.enable( debug );
 
-   RCC.enableLSE( silent );
+   RCC.enableLSE( debug );
 
    // select the RTC source (LSE) and enable RTC
-   RCC.enableRTC( 0x00000100, silent );
+   RCC.enableRTC( 0x00000100, debug );
 
    RTC_TypeDef *RTCx = (RTC_TypeDef*)iobase;
 
@@ -89,7 +89,7 @@ STM32_RTC& STM32_RTC::enable( bool silent )
 }
 
 
-STM32_RTC& STM32_RTC::disable( bool silent )
+STM32_RTC& STM32_RTC::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -100,7 +100,7 @@ STM32_RTC& STM32_RTC::disable( bool silent )
 
    RTCx->WPR = 0x00;
 
-   RCC.disableRTC( silent );
+   RCC.disableRTC( debug );
 
    unlock();
 

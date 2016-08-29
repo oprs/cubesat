@@ -17,8 +17,8 @@ namespace qb50 {
          ~FlashCache();
 
          FlashCache& init    ( void );
-         FlashCache& enable  ( bool silent = false );
-         FlashCache& disable ( bool silent = false );
+         FlashCache& enable  ( bool debug = false );
+         FlashCache& disable ( bool debug = false );
 
          FlashCache& clear   ( void );
          FlashCache& read    ( uint32_t addr,       void *x, size_t len );

@@ -55,30 +55,30 @@ FlashArray& FlashArray::init( void )
 }
 
 
-FlashArray& FlashArray::enable( bool silent )
+FlashArray& FlashArray::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
    for( unsigned i = 0 ; i < _nSlaves ; ++i )
-      _slaves[i]->enable( silent );
+      _slaves[i]->enable( debug );
 
-   if( !silent )
+   if( debug )
       kprintf( "%s: enabled\r\n", _name );
 
    return *this;
 }
 
 
-FlashArray& FlashArray::disable( bool silent )
+FlashArray& FlashArray::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
    for( unsigned i = 0 ; i < _nSlaves ; ++i )
-      _slaves[i]->disable( silent );
+      _slaves[i]->disable( debug );
 
-   if( !silent )
+   if( debug )
       kprintf( "%s: disabled\r\n", _name );
 
    return *this;

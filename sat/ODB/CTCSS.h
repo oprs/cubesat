@@ -17,8 +17,8 @@ namespace qb50 {
          virtual ~CTCSS();
 
          CTCSS& init    ( void );
-         CTCSS& enable  ( bool silent = false );
-         CTCSS& disable ( bool silent = false );
+         CTCSS& enable  ( bool debug = false );
+         CTCSS& disable ( bool debug = false );
 
          bool   wait    ( unsigned ms );
          bool   decTone ( void );

@@ -19,9 +19,9 @@ namespace qb50 {
          ~Baseband();
 
          Baseband& init    ( void );
-         Baseband& enable  (          bool silent = false );
-         Baseband& enable  ( Power p, bool silent = false );
-         Baseband& disable (          bool silent = false );
+         Baseband& enable  (          bool debug = false );
+         Baseband& enable  ( Power p, bool debug = false );
+         Baseband& disable (          bool debug = false );
 
          Baseband& power   ( Power p );
          uint8_t   pMask   ( void ) const;

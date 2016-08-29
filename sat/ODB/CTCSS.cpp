@@ -42,14 +42,14 @@ CTCSS& CTCSS::init()
 }
 
 
-CTCSS& CTCSS::enable( bool silent )
+CTCSS& CTCSS::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
    _enPin.on();
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -57,14 +57,14 @@ CTCSS& CTCSS::enable( bool silent )
 }
 
 
-CTCSS& CTCSS::disable( bool silent )
+CTCSS& CTCSS::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
    _enPin.off();
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 

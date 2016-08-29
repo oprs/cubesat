@@ -21,8 +21,8 @@ class Stream : public Device, public SPI::Stream
       ~Stream();
 
       Stream& init    ( void );
-      Stream& enable  ( bool silent = false );
-      Stream& disable ( bool silent = false );
+      Stream& enable  ( bool debug = false );
+      Stream& disable ( bool debug = false );
 
       STM32_DMA::Stream& dmaStream;
       STM32_DMA::Channel dmaChannel;

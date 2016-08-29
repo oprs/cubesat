@@ -35,27 +35,27 @@ STM32_BKP& STM32_BKP::init( void )
 }
 
 
-STM32_BKP& STM32_BKP::enable( bool silent )
+STM32_BKP& STM32_BKP::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   PWR.enable( silent );
-   RCC.enable( this, silent );
-   PWR.enableBRE( silent );
+   PWR.enable( debug );
+   RCC.enable( this, debug );
+   PWR.enableBRE( debug );
 
    return *this;
 }
 
 
-STM32_BKP& STM32_BKP::disable( bool silent )
+STM32_BKP& STM32_BKP::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   PWR.disableBRE( silent );
-   RCC.disable( this, silent );
-   PWR.disable( silent );
+   PWR.disableBRE( debug );
+   RCC.disable( this, debug );
+   PWR.disable( debug );
 
    return *this;
 }

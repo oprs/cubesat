@@ -66,28 +66,28 @@ FlashCache& FlashCache::init( void )
 }
 
 
-FlashCache& FlashCache::enable( bool silent )
+FlashCache& FlashCache::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   (void)_mem.enable( silent );
+   (void)_mem.enable( debug );
 
-   if( !silent )
+   if( debug )
       kprintf( "%s: enabled\r\n", _name );
 
    return *this;
 }
 
 
-FlashCache& FlashCache::disable( bool silent )
+FlashCache& FlashCache::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   (void)_mem.disable( silent );
+   (void)_mem.disable( debug );
 
-   if( !silent )
+   if( debug )
       kprintf( "%s: disabled\r\n", _name );
 
    return *this;

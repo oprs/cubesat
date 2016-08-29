@@ -42,15 +42,15 @@ ADCS& ADCS::init()
 }
 
 
-ADCS& ADCS::enable( bool silent )
+ADCS& ADCS::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _uart.enable( silent );
+   _uart.enable( debug );
    _enPin.on();
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -58,15 +58,15 @@ ADCS& ADCS::enable( bool silent )
 }
 
 
-ADCS& ADCS::disable( bool silent )
+ADCS& ADCS::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
    _enPin.off();
-   _uart.disable( silent );
+   _uart.disable( debug );
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: disabled\r\n", _name );
    }
 
@@ -100,13 +100,13 @@ ADCS::State ADCS::state( void ) const
 }
 
 
-ADCS::State ADCS::state( ADCS::State st, bool silent )
+ADCS::State ADCS::state( ADCS::State st, bool debug )
 {
    ADCS::State old = _state;
 
    if( st != old ) {
       _state = st;
-      if( !silent ) {
+      if( debug ) {
          kprintf( YELLOW( "%s: switching modes (%ld -> %ld)" ) "\r\n", _name, old, st );
       }
    }

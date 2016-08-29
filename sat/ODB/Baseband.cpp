@@ -43,7 +43,7 @@ Baseband& Baseband::init( void )
 
 #define POWPIN PC5
 
-Baseband& Baseband::enable( bool silent )
+Baseband& Baseband::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
@@ -54,7 +54,7 @@ Baseband& Baseband::enable( bool silent )
    _enTXPin.on();
 
    _enPAPin.on();
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: enabled\r\n", _name );
    }
 
@@ -62,16 +62,16 @@ Baseband& Baseband::enable( bool silent )
 }
 
 
-Baseband& Baseband::enable( Power p, bool silent )
+Baseband& Baseband::enable( Power p, bool debug )
 {
-   enable( silent );
+   enable( debug );
    power( p );
 
    return *this;
 }
 
 
-Baseband& Baseband::disable( bool silent )
+Baseband& Baseband::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -84,7 +84,7 @@ Baseband& Baseband::disable( bool silent )
 
    power( P0 );
 
-   if( !silent ) {
+   if( debug ) {
       if( tpa.stdev > 2.0 ) {
          kprintf( RED( "%s: T_PA not steady" ) "\r\n", _name );
       } else {

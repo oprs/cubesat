@@ -71,17 +71,17 @@ Syslog& Syslog::printf( const char *fmt, ... )
 }
 
 
-Syslog& Syslog::enable( bool silent )
+Syslog& Syslog::enable( bool debug )
 {
-   //_uart.enable( silent ).baudRate( 115200 );
-   (void)silent;
+   //_uart.enable( debug ).baudRate( 115200 );
+   (void)debug;
    return *this;
 }
 
 
-Syslog& Syslog::disable( bool silent )
+Syslog& Syslog::disable( bool debug )
 {
-   (void)silent;
+   (void)debug;
    return *this;
 }
 

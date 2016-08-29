@@ -17,8 +17,8 @@ namespace qb50 {
          ~AX25Modem();
 
          AX25Modem&  init    ( void );
-         AX25Modem&  enable  ( bool silent = false );
-         AX25Modem&  disable ( bool silent = false );
+         AX25Modem&  enable  ( bool debug = false );
+         AX25Modem&  disable ( bool debug = false );
 
          size_t      send    ( WodStore::WEnt *wod, const void *x, int toms = -1 );
          size_t      sendHex ( WodStore::WEnt *wod, const void *x, int toms = -1 );

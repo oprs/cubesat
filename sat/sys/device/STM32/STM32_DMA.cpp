@@ -35,23 +35,23 @@ STM32_DMA& STM32_DMA::init( void )
 }
 
 
-STM32_DMA& STM32_DMA::enable( bool silent )
+STM32_DMA& STM32_DMA::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    return *this;
 }
 
 
-STM32_DMA& STM32_DMA::disable( bool silent )
+STM32_DMA& STM32_DMA::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
    return *this;
 }

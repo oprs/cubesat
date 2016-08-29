@@ -85,11 +85,11 @@ WodexThread::~WodexThread()
 
 void WodexThread::onSuspend( void )
 {
-   ADC4.disable();
-   ADC3.disable();
-   ADC2.disable();
-   ADC1.disable();
-   FCACHE.disable();
+     ADC4.disable( true );
+     ADC3.disable( true );
+     ADC2.disable( true );
+     ADC1.disable( true );
+   FCACHE.disable( true );
 
    Thread::onSuspend();
 }
@@ -99,11 +99,11 @@ void WodexThread::onResume( void )
 {
    Thread::onResume();
 
-   FCACHE.enable();
-   ADC1.enable();
-   ADC2.enable();
-   ADC3.enable();
-   ADC4.enable();
+   FCACHE.enable( true );
+     ADC1.enable( true );
+     ADC2.enable( true );
+     ADC3.enable( true );
+     ADC4.enable( true );
 
    _timer.reset();
 }

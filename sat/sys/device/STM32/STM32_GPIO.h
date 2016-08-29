@@ -101,8 +101,8 @@ namespace qb50 {
          ~STM32_GPIO();
 
          STM32_GPIO& init    ( void );
-         STM32_GPIO& enable  ( bool silent = false );
-         STM32_GPIO& disable ( bool silent = false );
+         STM32_GPIO& enable  ( bool debug = false );
+         STM32_GPIO& disable ( bool debug = false );
 
          unsigned id ( void ) const { return _id;   }
 

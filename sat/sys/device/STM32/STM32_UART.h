@@ -30,8 +30,8 @@ namespace qb50{
          ~STM32_UART();
 
          STM32_UART& init     ( void );
-         STM32_UART& enable   ( bool silent = false );
-         STM32_UART& disable  ( bool silent = false );
+         STM32_UART& enable   ( bool debug = false );
+         STM32_UART& disable  ( bool debug = false );
 
          STM32_UART& baudRate ( unsigned rate );
 

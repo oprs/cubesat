@@ -86,8 +86,8 @@ namespace qb50 {
          ~STM32_DMA();
 
          STM32_DMA& init    ( void );
-         STM32_DMA& enable  ( bool silent = false );
-         STM32_DMA& disable ( bool silent = false );
+         STM32_DMA& enable  ( bool debug = false );
+         STM32_DMA& disable ( bool debug = false );
 
    };
 

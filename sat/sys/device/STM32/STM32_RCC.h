@@ -99,13 +99,13 @@ namespace qb50 {
          ~STM32_RCC();
 
          STM32_RCC&  init    ( void );
-         STM32_RCC&  enable  ( STM32_Device *dev, bool silent = false );
-         STM32_RCC&  disable ( STM32_Device *dev, bool silent = false );
+         STM32_RCC&  enable  ( STM32_Device *dev, bool debug = false );
+         STM32_RCC&  disable ( STM32_Device *dev, bool debug = false );
 
-         STM32_RCC&  enableLSE  ( bool silent = false );
+         STM32_RCC&  enableLSE  ( bool debug = false );
 
-         STM32_RCC&  enableRTC  ( uint32_t clkSrc, bool silent = false );
-         STM32_RCC&  disableRTC (                  bool silent = false );
+         STM32_RCC&  enableRTC  ( uint32_t clkSrc, bool debug = false );
+         STM32_RCC&  disableRTC (                  bool debug = false );
 
          STM32_RCC&  clocks  ( Clocks *clk );
          uint32_t    freq    ( Bus& bus );

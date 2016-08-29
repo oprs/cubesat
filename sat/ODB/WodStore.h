@@ -82,8 +82,8 @@ namespace qb50 {
          ~WodStore();
 
          WodStore& init    ( void );
-         WodStore& enable  ( bool silent = false );
-         WodStore& disable ( bool silent = false );
+         WodStore& enable  ( bool debug = false );
+         WodStore& disable ( bool debug = false );
 
          WodStore& clear   ( void );
 

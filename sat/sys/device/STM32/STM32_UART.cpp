@@ -52,7 +52,7 @@ STM32_UART& STM32_UART::init( void )
 }
 
 
-STM32_UART& STM32_UART::enable( bool silent )
+STM32_UART& STM32_UART::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
@@ -62,7 +62,7 @@ STM32_UART& STM32_UART::enable( bool silent )
 
    USART_TypeDef *USARTx = (USART_TypeDef*)iobase;
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    USARTx->CR1 = USART_CR1_TE | USART_CR1_RE;
    USARTx->CR2 = 0;
@@ -77,7 +77,7 @@ STM32_UART& STM32_UART::enable( bool silent )
 }
 
 
-STM32_UART& STM32_UART::disable( bool silent )
+STM32_UART& STM32_UART::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
@@ -86,7 +86,7 @@ STM32_UART& STM32_UART::disable( bool silent )
 
    NVIC.disable( _IRQn );
    USARTx->CR1 &= ~( USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TXEIE );
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
    return *this;
 }

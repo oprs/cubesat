@@ -36,10 +36,10 @@ WodStore& WodStore::init( void )
 }
 
 
-WodStore& WodStore::enable( bool silent )
+WodStore& WodStore::enable( bool debug )
 {
    (void)lock();
-   _mem.enable( silent );
+   _mem.enable( debug );
    (void)unlock();
 
 kprintf( "wHead: 0x%08x\r\n", CONF.wHead() );
@@ -49,10 +49,10 @@ kprintf( "wTail: 0x%08x\r\n", CONF.wTail() );
 }
 
 
-WodStore& WodStore::disable( bool silent )
+WodStore& WodStore::disable( bool debug )
 {
    (void)lock();
-   _mem.disable( silent );
+   _mem.disable( debug );
    (void)unlock();
 
    return *this;
@@ -98,6 +98,7 @@ WodStore& WodStore::write( WEnt *wod, const void *x )
 
 void WodStore::_write( WEnt *wod, const void *x )
 {
+   E64 e64;
    WEnt prev;
 
    RTC::Time tm;
@@ -112,7 +113,9 @@ void WodStore::_write( WEnt *wod, const void *x )
 
 kprintf( "WodStore::_write(), wHead: 0x%08x\r\n", wHead );
 hexdump( x, wod->len );
-b64dump( x, wod->len );
+   e64.push( (const uint8_t*)wod + 4, sizeof( WEnt ) - 4 );
+   e64.push( x, wod->len );
+   e64.dump();
 
    if(( wHead == NIL ) || ( wTail == NIL )) {
 

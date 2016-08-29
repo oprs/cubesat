@@ -37,24 +37,24 @@ STM32_SPI::Stream& STM32_SPI::Stream::init( void )
 }
 
 
-STM32_SPI::Stream& STM32_SPI::Stream::enable( bool silent )
+STM32_SPI::Stream& STM32_SPI::Stream::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   dmaStream.enable( silent )
+   dmaStream.enable( debug )
             .channel( dmaChannel );
 
    return *this;
 }
 
 
-STM32_SPI::Stream& STM32_SPI::Stream::disable( bool silent )
+STM32_SPI::Stream& STM32_SPI::Stream::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   dmaStream.disable( silent );
+   dmaStream.disable( debug );
 
    return *this;
 }

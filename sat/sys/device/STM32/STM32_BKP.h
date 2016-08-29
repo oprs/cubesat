@@ -21,8 +21,8 @@ namespace qb50 {
          ~STM32_BKP();
 
          STM32_BKP& init    ( void );
-         STM32_BKP& enable  ( bool silent = false );
-         STM32_BKP& disable ( bool silent = false );
+         STM32_BKP& enable  ( bool debug = false );
+         STM32_BKP& disable ( bool debug = false );
 
    };
 

@@ -38,29 +38,29 @@ STM32_PWR& STM32_PWR::init( void )
 }
 
 
-STM32_PWR& STM32_PWR::enable( bool silent )
+STM32_PWR& STM32_PWR::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   RCC.enable( this, silent );
+   RCC.enable( this, debug );
 
    return *this;
 }
 
 
-STM32_PWR& STM32_PWR::disable( bool silent )
+STM32_PWR& STM32_PWR::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   RCC.disable( this, silent );
+   RCC.disable( this, debug );
 
    return *this;
 }
 
 
-STM32_PWR& STM32_PWR::enableBRE( bool silent )
+STM32_PWR& STM32_PWR::enableBRE( bool debug )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
@@ -82,7 +82,7 @@ STM32_PWR& STM32_PWR::enableBRE( bool silent )
       return *this;
    }
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: Backup regulator enabled\r\n", _name );
    }
 
@@ -90,7 +90,7 @@ STM32_PWR& STM32_PWR::enableBRE( bool silent )
 }
 
 
-STM32_PWR& STM32_PWR::disableBRE( bool silent )
+STM32_PWR& STM32_PWR::disableBRE( bool debug )
 {
    PWR_TypeDef *PWRx = (PWR_TypeDef*)iobase;
 
@@ -102,7 +102,7 @@ STM32_PWR& STM32_PWR::disableBRE( bool silent )
    PWRx->CSR &= ~PWR_CSR_BRE;
    PWRx->CR  &= ~PWR_CR_DBP;
 
-   if( !silent ) {
+   if( debug ) {
       kprintf( "%s: Backup regulator disabled\r\n", _name );
    }
 

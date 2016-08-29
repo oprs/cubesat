@@ -76,24 +76,24 @@ STM32_Timer::Channel::init( void )
 
 
 STM32_Timer::Channel&
-STM32_Timer::Channel::enable( bool silent )
+STM32_Timer::Channel::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
 
-   _tmr.enable( silent );
+   _tmr.enable( debug );
 
    return *this;
 }
 
 
 STM32_Timer::Channel&
-STM32_Timer::Channel::disable( bool silent )
+STM32_Timer::Channel::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
-   _tmr.disable( silent );
+   _tmr.disable( debug );
 
    return *this;
 }

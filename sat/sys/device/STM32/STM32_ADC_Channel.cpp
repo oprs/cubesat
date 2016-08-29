@@ -29,7 +29,7 @@ STM32_ADC::Channel::init( void )
 
 
 STM32_ADC::Channel&
-STM32_ADC::Channel::enable( bool silent )
+STM32_ADC::Channel::enable( bool debug )
 {
    if( _incRef() > 0 )
       return *this;
@@ -38,20 +38,20 @@ STM32_ADC::Channel::enable( bool silent )
        .mode( STM32_GPIO::ANALOG );
 
    STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
-   adc.enable( silent );
+   adc.enable( debug );
 
    return *this;
 }
 
 
 STM32_ADC::Channel&
-STM32_ADC::Channel::disable( bool silent )
+STM32_ADC::Channel::disable( bool debug )
 {
    if( _decRef() > 0 )
       return *this;
 
    STM32_ADC& adc = static_cast<STM32_ADC&>( _adc );
-   adc.disable( silent );
+   adc.disable( debug );
 
    return *this;
 }
