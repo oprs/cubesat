@@ -90,13 +90,15 @@ void CommandThread::run( void )
 
    for( ;; ) {
 
-      n = UART6.readLine( _c, 256 - 1, 30 * 1000 );
+      n = UART6.readLine( _c, 256 - 1, 1000 );
       if( n == 0 ) {
+         WDG.refresh();
+/*
          RTC0.getTime( tm );
          ts = RTC::conv( tm );
-       //kprintf( "RTC: date is %04d-%02d-%02d (YYYY-MM-DD)\r\n", t.year, t.mon, t.day );
          kprintf( "RTC: time is %02d:%02d:%02d (%lu)\r\n", tm.hour, tm.min, tm.sec, ts );
          delay( 100 );
+*/
          continue;
       }
 

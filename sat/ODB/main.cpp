@@ -15,7 +15,7 @@ using namespace qb50;
 
 int main( void )
 {
-   (void)registerThread( new WatchdogThread() );
+ //(void)registerThread( new WatchdogThread() );
    (void)registerThread( new ControlThread() );
    run(); // FreeRTOS RUN.
 }

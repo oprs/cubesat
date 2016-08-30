@@ -47,8 +47,10 @@ namespace qb50 {
          uint8_t  *_rx;  // receive buffer
          ADCSMeas *_mp;  // last known attitude
 
-         void _runCmd    ( Fipex::CmdHeader *ch, Fipex::RspHeader *rh );
-         void _handleRsp ( Fipex::RspHeader *rh );
+         void _runCmd    ( Fipex::CmdHeader *ch, Fipex::RspHeader *rh, bool debug = false );
+         void _handleRsp (                       Fipex::RspHeader *rh, bool debug = false );
+
+         Fipex::Script::Header* _whatNext( bool debug = false );
 
    };
 

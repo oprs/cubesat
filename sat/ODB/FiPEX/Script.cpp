@@ -174,7 +174,7 @@ Fipex::Script& Fipex::Script::dump( void )
 #endif
 
 
-Fipex::Script& Fipex::Script::load( Header *sh )
+Fipex::Script& Fipex::Script::load( Header *sh, bool debug )
 {
    CmdHeader *ch;
    unsigned cid, sec;
@@ -195,11 +195,15 @@ Fipex::Script& Fipex::Script::load( Header *sh )
       cid = ch->id;
 
       if( cid == OBC_SU_END ) {
-         kprintf( "%s\r\n", cmdv[ cid ]->name );
+         if( debug ) {
+            kprintf( "%s\r\n", cmdv[ cid ]->name );
+         }
          break;
       } else {
-         sec = delay( ch );
-         kprintf( "%s @%02d:%02d\r\n", cmdv[ cid ]->name, sec / 60, sec % 60 );
+         if( debug ) {
+            sec = delay( ch );
+            kprintf( "%s @%02d:%02d\r\n", cmdv[ cid ]->name, sec / 60, sec % 60 );
+         }
       }
 
       ch = next();

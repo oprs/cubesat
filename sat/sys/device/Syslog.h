@@ -20,6 +20,9 @@
 
 #define kprintf SYSLOG.printf
 
+#define kdebug( debug, ... ) \
+ if( debug ) { SYSLOG.printf( __VA_ARGS__ ); }
+
 
 namespace qb50 {
 

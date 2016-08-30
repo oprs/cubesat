@@ -57,7 +57,7 @@ class Script
       static void     dump       ( CmdHeader *ch );
 #endif
 
-      Script&    load  ( Header *sh );
+      Script&    load  ( Header *sh, bool debug = false );
       Script&    dump  ( void );
       Script&    reset ( void );
       CmdHeader* next  ( void );

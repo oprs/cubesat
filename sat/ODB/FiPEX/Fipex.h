@@ -5,6 +5,7 @@
 #include "devices.h"
 
 #define VKI_EPOCH 946684800
+#define VKI_NEVER 0xffffffff
 
 
 namespace qb50 {

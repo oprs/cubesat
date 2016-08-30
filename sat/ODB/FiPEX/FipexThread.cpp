@@ -366,6 +366,8 @@ void FipexThread::run( void )
    unsigned dt, rt;
    unsigned n;
 
+   bool debug = true;
+
    RTC::Time tm;
 
    Config::pval_t sn;
@@ -379,7 +381,7 @@ void FipexThread::run( void )
    for( ;; ) {
       _wait();
 
-kprintf( YELLOW( "%s: --- state #%d ---" ) "\r\n", name, _st );
+      kdebug( true, YELLOW( "%s: --- state #%d ---" ) "\r\n", name, _st );
 
       RTC0.getTime( tm );
       now = RTC::conv( tm );
@@ -388,18 +390,29 @@ kprintf( YELLOW( "%s: --- state #%d ---" ) "\r\n", name, _st );
 
          case ST_INIT:
 
-kprintf( RED( "%s: ST_INIT" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_INIT" ) "\r\n", name );
+
             sn = CONF.getParam( Config::PARAM_FIPEX_SCRIPT_N );
-            sh = SU.loadScript( sn );
+            if( sn == 0 ) {
+               sh = _whatNext( true );
+            } else {
+               sh = SU.loadScript( sn );
+            }
+
+            if( sh == 0 ) {
+               delay( 5000 );
+               break;
+            }
 
             try {
-               sc.load( (Fipex::Script::Header*)sh );
+               sc.load( sh );
             }
 
             catch( Fipex::Exception& e ) {
-               kprintf( RED( "%s: *** EXCEPTION CAUGHT ***" ) "\r\n", name );
-               kprintf( RED( "%s: %s" ) "\r\n", name, e.what() );
-               _st = ST_ERROR;
+               kdebug( debug, RED( "%s: *** EXCEPTION CAUGHT ***" ) "\r\n", name );
+               kdebug( debug, RED( "%s: %s" ) "\r\n", name, e.what() );
+               delay( 5000 );
+               break;
             }
 
             tNextStart = Fipex::Script::startTime( sh );
@@ -418,7 +431,15 @@ kprintf( RED( "%s: ST_INIT" ) "\r\n", name );
 
          case ST_IDLE:
 
-kprintf( RED( "%s: ST_IDLE" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_IDLE" ) "\r\n", name );
+
+            sh = _whatNext( debug );
+            if( sh ) {
+               kdebug( debug, "%s: next script found\r\n", name );
+            } else {
+               kdebug( debug, "%s: no script to run\r\n", name );
+            }
+
             delay( 5000 );
 
             break;
@@ -428,14 +449,14 @@ kprintf( RED( "%s: ST_IDLE" ) "\r\n", name );
 
             sc.reset();
 
-kprintf( RED( "%s: ST_WAIT_SCRIPT" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_WAIT_SCRIPT" ) "\r\n", name );
 
             if( now > tNextStart ) {
 
                rt = Fipex::Script::repeatTime( sh );
 
                if( rt == 0 ) {
-                  kprintf( "%s: start time in the past and no repeat time\r\n", name );
+                  kdebug( debug, "%s: start time in the past and no repeat time\r\n", name );
                   _st = ST_IDLE;
                   break;
                }
@@ -447,7 +468,7 @@ kprintf( RED( "%s: ST_WAIT_SCRIPT" ) "\r\n", name );
 
             dt = tNextStart - now;
 
-            kprintf( YELLOW( "%s: script due to start in %lu sec" ) "\r\n", name, dt );
+            kdebug( debug, YELLOW( "%s: script due to start in %lu sec" ) "\r\n", name, dt );
 
             if( dt > 0 ) {
                delay( 1000 );
@@ -460,7 +481,7 @@ kprintf( RED( "%s: ST_WAIT_SCRIPT" ) "\r\n", name );
 
          case ST_START_SCRIPT:
 
-kprintf( RED( "%s: ST_START_SCRIPT" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_START_SCRIPT" ) "\r\n", name );
 
             tNextCmd = tNextStart;
             _st = ST_SYNC_WAIT;
@@ -470,7 +491,7 @@ kprintf( RED( "%s: ST_START_SCRIPT" ) "\r\n", name );
 
          case ST_EXEC_CMD:
 
-kprintf( RED( "%s: ST_EXEC_CMD" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_EXEC_CMD" ) "\r\n", name );
 
             try {
                ch = sc.next();
@@ -491,10 +512,10 @@ kprintf( RED( "%s: ST_EXEC_CMD" ) "\r\n", name );
 
          case ST_SYNC_WAIT:
 
-kprintf( RED( "%s: ST_SYNC_WAIT" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_SYNC_WAIT" ) "\r\n", name );
 
             if( now < tNextCmd ) {
-               kprintf( YELLOW( "%s: sync wait: %lu sec" ) "\r\n", name, tNextCmd - now );
+               kdebug( debug, YELLOW( "%s: sync wait: %lu sec" ) "\r\n", name, tNextCmd - now );
                delay( 1000 );
             } else {
                _st = ST_EXEC_CMD;
@@ -505,15 +526,15 @@ kprintf( RED( "%s: ST_SYNC_WAIT" ) "\r\n", name );
 
          case ST_ASYNC_WAIT:
 
-kprintf( RED( "%s: ST_ASYNC_WAIT" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_ASYNC_WAIT" ) "\r\n", name );
 
             if( now < tNextCmd ) {
                n = SU.recv( rh, 1000 );
 
                if( n == 0 ) {
-                  kprintf( YELLOW( "%s: async wait: %lu sec" ) "\r\n", name, tNextCmd - now );
+                  kdebug( debug, YELLOW( "%s: async wait: %lu sec" ) "\r\n", name, tNextCmd - now );
                } else {
-                  kprintf( YELLOW( "%s: *** SCIENCE DATA ***" ) "\r\n", name );
+                  kdebug( debug, YELLOW( "%s: *** SCIENCE DATA ***" ) "\r\n", name );
                   _handleRsp( rh );
                }
 
@@ -527,22 +548,22 @@ kprintf( RED( "%s: ST_ASYNC_WAIT" ) "\r\n", name );
 
          case ST_ERROR:
 
-kprintf( RED( "%s: ST_ERROR" ) "\r\n", name );
+            kdebug( debug, RED( "%s: ST_ERROR" ) "\r\n", name );
 
             n = SU.send( (Fipex::CmdHeader*)cmd_dp, rh, 500 );
             if( n > 0 ) {
-               kprintf( YELLOW( "%s: ERROR RECOVERY - got science data packet" ) "\r\n", name );
+               kdebug( debug, YELLOW( "%s: ERROR RECOVERY - got science data packet" ) "\r\n", name );
                _handleRsp( rh );
             }
 
             n = SU.send( (Fipex::CmdHeader*)cmd_hk, rh, 500 );
             if( n > 0 ) {
-               kprintf( YELLOW( "%s: ERROR RECOVERY - got housekeeping packet" ) "\r\n", name );
+               kdebug( debug, YELLOW( "%s: ERROR RECOVERY - got housekeeping packet" ) "\r\n", name );
                _handleRsp( rh );
             }
 
             SU.disable();
-            _st = ST_IDLE;
+            _st = ST_INIT;
 
             break;
 
@@ -570,14 +591,85 @@ void FipexThread::onResume( void )
 //  P R I V A T E   M E T H O D S  //
 //  - - - - - - - - - - - - - - -  //
 
-void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
+Fipex::Script::Header*
+FipexThread::_whatNext( bool debug )
+{
+   RTC::Time tm;
+
+   Fipex::Script sc;
+   Fipex::Script::Header *sh;
+   Fipex::Script::Header *nh;
+
+   unsigned now;  // current time
+   unsigned sn;   // script number
+   unsigned ts;   // timestamp
+   unsigned rt;   // repeat time
+   unsigned nt;   // next time
+
+   RTC0.getTime( tm );
+   now = RTC::conv( tm );
+
+   kdebug( debug, "%s: now is @%lu\r\n", name, now );
+
+   nh = (Fipex::Script::Header*)0;
+   nt = VKI_NEVER;
+
+   for( sn = 0 ; sn < 8 ; ++sn ) {
+
+      kdebug( debug, "%s: considering script #%u...\r\n", name, sn );
+      sh = SU.loadScript( sn );
+
+      try {
+         sc.load( sh );
+      }
+
+      catch( Fipex::Exception& e ) {
+         kdebug( debug, "%s: skipping script #%u (can't load)\r\n", name );
+         continue;
+      }
+
+      ts = Fipex::Script::startTime( sh );
+
+      if(( now <= ts ) && ( ts < nt )) {
+
+         kdebug( debug, "%s: best candidate: script #%u (start) @%lu\r\n", name, sn, ts );
+         nt = ts;
+         nh = sh;
+
+      } else {
+
+         rt = Fipex::Script::repeatTime( sh );
+
+         if( rt == 0 ) {
+            kdebug( debug, "%s: skipping script #%u (not scheduled)\r\n", name, sn );
+            continue;
+         }
+
+         while( now > ts ) {
+            ts += rt;
+         }
+
+         if( ts < nt ) {
+            kdebug( debug, "%s: best candidate: script #%u (repeat) @%lu\r\n", name, sn, ts );
+            nt = ts;
+            nh = sh;
+         }
+
+      }
+   }
+
+   return nh;
+}
+
+
+void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh, bool debug )
 {
    switch( ch->id ) {
 
       case Fipex::OBC_SU_ON:
 
-         kprintf( "%s: > OBC_SU_ON\r\n", name );
-         SU.enable();
+         kdebug( debug, "%s: > OBC_SU_ON\r\n", name );
+         SU.enable( debug );
          _st = ST_SYNC_WAIT;
 
          break;
@@ -585,8 +677,8 @@ void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
 
       case Fipex::OBC_SU_OFF:
 
-         kprintf( "%s: > OBC_SU_OFF\r\n", name );
-         SU.disable();
+         kdebug( debug, "%s: > OBC_SU_OFF\r\n", name );
+         SU.disable( debug );
          _st = ST_SYNC_WAIT;
 
          break;
@@ -594,8 +686,8 @@ void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
 
       case Fipex::OBC_SU_END:
 
-         kprintf( "%s: > OBC_SU_END\r\n", name );
-         _st = ST_WAIT_SCRIPT;
+         kdebug( debug, "%s: > OBC_SU_END\r\n", name );
+         _st = ST_INIT;
 
          break;
 
@@ -618,11 +710,11 @@ void FipexThread::_runCmd( Fipex::CmdHeader *ch, Fipex::RspHeader *rh )
 }
 
 
-void FipexThread::_handleRsp( Fipex::RspHeader *rh )
+void FipexThread::_handleRsp( Fipex::RspHeader *rh, bool debug )
 {
    WodStore::WEnt wod;
 
-   kprintf( "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
+   kdebug( debug, "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
 
    switch( rh->id ) {
 
