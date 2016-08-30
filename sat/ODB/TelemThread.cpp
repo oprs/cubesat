@@ -36,7 +36,6 @@ TelemThread::~TelemThread()
 void TelemThread::onSuspend( void )
 {
    _modem->disable();
-   WOD.disable();
    Thread::onSuspend();
 }
 
@@ -44,7 +43,6 @@ void TelemThread::onSuspend( void )
 void TelemThread::onResume( void )
 {
    Thread::onResume();
-   WOD.enable();
 
    if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
       _modem = &M1K2;
@@ -65,19 +63,33 @@ void TelemThread::run( void )
 
       _wait();
 
-      (void)WOD.read( &wod, _x );
+      /* science data is priority #1 */
 
-      if( wod.type == WodStore::NONE ) {
+      (void)WOD1.read( &wod, _x );
+
+      if( wod.type != WodStore::NONE ) {
+
+         kprintf( "FIPEX WOD - type: %d, len: %d, prev: 0x%08x\r\n", wod.type, wod.len, wod.prev );
+         _modem->send( &wod, _x, -1);
+
+         continue;  // <- YES, CONTINUE (SCI data first)
+      }
+
+      /* transmit regular telemetry if no science data is available */
+
+      (void)WOD0.read( &wod, _x );
+
+      if( wod.type != WodStore::NONE ) {
+
+         kprintf( "WODEX WOD - type: %d, len: %d, prev: 0x%08x\r\n", wod.type, wod.len, wod.prev );
+         _modem->send( &wod, _x, -1 );
+
+      } else {
 
          Event *ev = new Event( Event::WOD_EMPTY );
          xQueueSendToBack( evQueue, &ev, portMAX_DELAY );
 
          delay( 1000 );
-
-      } else {
-
-         kprintf( "WOD HEADER - type: %d, len: %d, prev: 0x%08x\r\n", wod.type, wod.len, wod.prev );
-         _modem->send( &wod, _x, -1 );
 
       }
    }

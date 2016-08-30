@@ -154,8 +154,8 @@ namespace qb50 {
    extern qb50::A25Lxxx FLASH0;
    extern qb50::A25Lxxx FLASH1;
 
-   extern qb50::FlashArray VFLASH;
-   extern qb50::FlashCache FCACHE;
+   extern qb50::FlashCache FCH0; // flash cache #0
+   extern qb50::FlashCache FCH1; // flash cache #1
 
 //  - - -  //
 //  O D B  //

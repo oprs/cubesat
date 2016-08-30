@@ -86,7 +86,7 @@ void ADCSThread::run( void )
          kprintf( YELLOW( "%s: ADCS MEASURE" ) "\r\n", name );
          wod.type = WodStore::ADCS;
          wod.len  = sizeof( ADCSMeas );
-         (void)WOD.write( &wod, mp );
+         (void)WOD0.write( &wod, mp );
       }
 
 /*

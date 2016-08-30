@@ -308,7 +308,11 @@ void AX25Modem::_sendUI( const uint8_t *x, unsigned len, int toms )
    unsigned i;
    uint16_t fcs, w;
 
-kprintf( "%s: [%.*s]\r\n", _name, len, x );
+   if( len > 96 ) {
+      kprintf( "%s: [%.*s ...]\r\n", _name, 96, x );
+   } else {
+      kprintf( "%s: [%.*s]\r\n", _name, len, x );
+   }
 
    _ones = 0;
 

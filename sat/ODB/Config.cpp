@@ -125,8 +125,6 @@ void Config::clear( void )
 
    st->nReset = 0;
    st->mode   = Config::INIT;
-   st->wHead  = WodStore::NIL;
-   st->wTail  = WodStore::NIL;
 
    unlock();
 }
@@ -195,21 +193,21 @@ Config::pval_t Config::getParam( Config::pid_t pid )
 //  W O D E X  //
 //  - - - - -  //
 
-uint32_t Config::wHead( void )
+uint32_t Config::wHead( unsigned idx )
 {
    _Store *st = (_Store*)BKPSRAM_BASE;
-   return st->wHead;
+   return st->wHead[ idx ];
 }
 
 
-uint32_t Config::wHead( uint32_t addr )
+uint32_t Config::wHead( unsigned idx, uint32_t addr )
 {
    lock();
 
    _Store *st = (_Store*)BKPSRAM_BASE;
 
-   uint32_t old = st->wHead;
-   st->wHead = addr;
+   uint32_t old = st->wHead[ idx ];
+   st->wHead[ idx ] = addr;
 
    unlock();
 
@@ -217,21 +215,21 @@ uint32_t Config::wHead( uint32_t addr )
 }
 
 
-uint32_t Config::wTail( void )
+uint32_t Config::wTail( unsigned idx )
 {
    _Store *st = (_Store*)BKPSRAM_BASE;
-   return st->wTail;
+   return st->wTail[ idx ];
 }
 
 
-uint32_t Config::wTail( uint32_t addr )
+uint32_t Config::wTail( unsigned idx, uint32_t addr )
 {
    lock();
 
    _Store *st = (_Store*)BKPSRAM_BASE;
 
-   uint32_t old = st->wTail;
-   st->wTail = addr;
+   uint32_t old = st->wTail[ idx ];
+   st->wTail[ idx ] = addr;
 
    unlock();
 

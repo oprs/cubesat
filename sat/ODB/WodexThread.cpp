@@ -89,7 +89,6 @@ void WodexThread::onSuspend( void )
      ADC3.disable();
      ADC2.disable();
      ADC1.disable();
-   FCACHE.disable();
 
    Thread::onSuspend();
 }
@@ -99,7 +98,6 @@ void WodexThread::onResume( void )
 {
    Thread::onResume();
 
-   FCACHE.enable();
      ADC1.enable();
      ADC2.enable();
      ADC3.enable();
@@ -152,7 +150,7 @@ void WodexThread::run( void )
       _updateSamples();
       wod.type = WodStore::WODEX;
       wod.len  = 32;
-      (void)WOD.write( &wod, _raw8 );
+      (void)WOD0.write( &wod, _raw8 );
 
       if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
          _modem = &M1K2;

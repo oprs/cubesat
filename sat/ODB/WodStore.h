@@ -52,7 +52,7 @@ namespace qb50 {
             NONE  = 0xff
          };
 
-         WodStore( const char *name, FlashCache &mem );
+         WodStore( const char *name, FlashCache &mem, unsigned idx );
          ~WodStore();
 
          WodStore& init    ( void );
@@ -62,19 +62,21 @@ namespace qb50 {
          WodStore& clear   ( void );
 
          WodStore& read    ( WEnt *wod, void *x );
-         WodStore& write   ( WEnt *wod, const void *x );
+         WodStore& write   ( WEnt *wod, const void *x, bool sync = false );
 
       private:
 
-         FlashCache&  _mem;
          const char  *_name;
+         FlashCache&  _mem;
+         unsigned     _idx;
 
          void _read  ( WEnt *wod, void *x );
-         void _write ( WEnt *wod, const void *x );
+         void _write ( WEnt *wod, const void *x, bool sync );
 
    };
 
-   extern qb50::WodStore WOD;
+   extern qb50::WodStore WOD0;
+   extern qb50::WodStore WOD1;
 
 } /*qb50*/
 

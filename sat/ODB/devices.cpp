@@ -215,10 +215,8 @@ namespace qb50 {
    A25Lxxx FLASH0( SPI3, "FLASH0", PA0 /*CS6*/ );  /* U9 - "mémoire soft"    */
    A25Lxxx FLASH1( SPI3, "FLASH1", PA7 /*CS4*/ );  /* U5 - "mémoire données" */
 
-   static FlashMemory *VFLASH_Memories[ 2 ] = { &FLASH0, &FLASH1 };
-
-   FlashArray VFLASH( "VFLASH", 2, VFLASH_Memories );
-   FlashCache FCACHE( "FCACHE", VFLASH );
+   FlashCache FCH0( "FCH0", FLASH0 );
+   FlashCache FCH1( "FCH1", FLASH1 );
 
 //  - - - - - - - - - - - - - - -  //
 //  A D C   C O N T R O L L E R S  //

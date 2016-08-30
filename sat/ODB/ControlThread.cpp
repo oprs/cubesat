@@ -85,8 +85,7 @@ void ControlThread::run( void )
 {
    Event *ev;
 
-   SAT.init();
-   WOD.init();
+      SAT.init();
 
       WDG.enable();
     GPIOA.enable();
@@ -96,22 +95,21 @@ void ControlThread::run( void )
    SYSLOG.enable();
      RTC0.enable();
       BKP.enable();
-    //WOD.enable();
+     WOD0.enable();
+     WOD1.enable();
 
    /*
     * Hardware reset ?
     * -> load the default configuration
     */
 
- //FCACHE.enable();
    if( RCC.isPwrOn() ) {
       kprintf( "POWER ON - loading default configuration\r\n" );
       CONF.clear();
       CONF.reset();
-      WOD.clear();
-    //FCACHE.clear();
+      WOD0.clear();
+      WOD1.clear();
    }
- //FCACHE.clear( 10 );
 
    /* increment the reset counter */
 
@@ -451,20 +449,8 @@ void ControlThread::_handleCForm( CForm *fp )
       case 1001:
 
          if( SAT.isInhibit() && ( mode == Config::STDBY )) {
-            WOD.enable();
-            WOD.clear();
-          //FCACHE.clear();
-            WOD.disable();
-         }
-
-         break;
-
-      /* C1002 - reconfiguration du PIC 1200 */
-
-      case 1002:
-
-         if( SAT.isInhibit() && ( mode == Config::STDBY )) {
-          //M1K2.configure();
+            WOD0.clear();
+            WOD1.clear();
          }
 
          break;

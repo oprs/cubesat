@@ -275,7 +275,7 @@ void FipexThread::cmd( const uint8_t *cmd, size_t len )
             _rx[ dlen + 27 ] = 0x00;  // ZPL
             _rx[ dlen + 28 ] = 0x00;  // ZPH
 
-            (void)WOD.write( WodStore::FIPEX, _rx + 1, dlen + 28, &hdr );
+            (void)WOD1.write( WodStore::FIPEX, _rx + 1, dlen + 28, &hdr );
 
             if( CONF.getParam( Config::PARAM_MODEM ) == 1 ) {
                modem = &M1K2;
@@ -654,11 +654,11 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh )
 
          wod.type = WodStore::ADCS;
          wod.len  = sizeof( ADCSMeas );
-         (void)WOD.write( &wod, _mp );
+         (void)WOD1.write( &wod, _mp );
 
          wod.type = WodStore::FIPEX;
          wod.len  = sizeof( Fipex::RspHeader ) + rh->len;
-         (void)WOD.write( &wod, rh );
+         (void)WOD1.write( &wod, rh, true ); // <- SYNC WOD1
 
          _st = ST_ASYNC_WAIT;
 
