@@ -123,6 +123,8 @@ void CTCSSThread::run( void )
 
             kprintf( GREEN( "CTCSS ON" ) "\r\n" );
             BB.enable();
+            Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_WODEX_POWER );
+            BB.power( p );
             _sec   = 20;
             _state = ON;
 

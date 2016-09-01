@@ -5,6 +5,7 @@
 #include <cstddef>
 
 #include "device/GPIO.h"
+#include "Baseband.h"
 
 
 namespace qb50 {
@@ -14,7 +15,7 @@ namespace qb50 {
 
       public:
 
-         Morse( GPIO::Pin& pin );
+         Morse( Baseband::Power pow );
          ~Morse();
 
          void writeChar ( char c );
@@ -24,7 +25,7 @@ namespace qb50 {
 
       private:
 
-         GPIO::Pin& _pin;
+         Baseband::Power _pow;
 
    };
 

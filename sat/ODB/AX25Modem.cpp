@@ -127,7 +127,7 @@ AX25Modem& AX25Modem::enable( bool debug )
    _enPin.on(); // ON_OFF_9600
    delay( 100 );
 
-   if( debug )
+ //if( debug )
       kprintf( "%s: enabled\r\n", _name );
 
    return *this;
@@ -143,7 +143,7 @@ AX25Modem& AX25Modem::disable( bool debug )
    _enPin.off(); // CLK_9600
    BB.disable();
 
-   if( debug )
+ //if( debug )
       kprintf( "%s: disabled\r\n", _name );
 
    return *this;

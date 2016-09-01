@@ -714,7 +714,7 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh, bool debug )
 {
    WodStore::WEnt wod;
 
-   kdebug( debug, "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
+   kdebug( true, "%s: < %s\r\n", name, Fipex::Script::rspName( (Fipex::RspId)rh->id ));
 
    switch( rh->id ) {
 
@@ -733,6 +733,10 @@ void FipexThread::_handleRsp( Fipex::RspHeader *rh, bool debug )
 
 
       case Fipex::SU_R_NACK:
+
+         wod.type = WodStore::FIPEX;
+         wod.len  = sizeof( Fipex::RspHeader ) + rh->len;
+         (void)WOD1.write( &wod, rh, true ); // <- SYNC WOD1
 
          /* XXX resend command */
          _st = ST_ERROR;

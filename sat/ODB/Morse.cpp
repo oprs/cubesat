@@ -1,5 +1,6 @@
 
 #include "Morse.h"
+#include "Baseband.h"
 #include "system/qb50.h"
 
 using namespace qb50;
@@ -39,11 +40,9 @@ static const uint32_t bits[ 128 ] = {
 //  S T R U C T O R S  //
 //  - - - - - - - - -  //
 
-Morse::Morse( GPIO::Pin& pin )
-   : _pin( pin )
-{
-   _pin.out().off();
-}
+Morse::Morse( Baseband::Power pow )
+   : _pow( pow )
+{ ; }
 
 
 Morse::~Morse()
@@ -60,16 +59,16 @@ void Morse::writeChar( char c )
 
    while( x ) {
       if( x & 1 ) {
-         _pin.on();
+         BB.power( _pow );
       } else {
-         _pin.off();
+         BB.power( Baseband::P0 );
       }
       delay( DOTMS );
 
       x >>= 1;
    }
 
-   _pin.off();
+   BB.power( Baseband::P0 );
 
    delay( 3 * DOTMS );
 }

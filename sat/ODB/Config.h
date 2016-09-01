@@ -33,7 +33,7 @@ namespace qb50 {
             PARAM_FIPEX_SCRIPT_N    = 3,
             PARAM_MODEM             = 4,
             PARAM_ADCS_CYCLE_MEAS   = 5,
-            PARAM_GPS_CYCLE_ON      = 6,
+            PARAM_TELEM_TIMER       = 6,
             PARAM_VBAT_LOW          = 7,
             PARAM_ADCS_CYCLE_DTMB   = 8,
             PARAM_FM_WODEX_CYCLE_TX = 9,

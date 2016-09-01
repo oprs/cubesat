@@ -387,6 +387,9 @@ void ControlThread::_handleCForm( CForm *fp )
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_TELEM_TIMER, fp->argv[2] );
+            }
          }
 
          if( mode != Config::TELEM ) {
@@ -403,6 +406,9 @@ void ControlThread::_handleCForm( CForm *fp )
 
          if( fp->argc > 1 ) {
             (void)CONF.setParam( Config::PARAM_WODEX_POWER, fp->argv[1] );
+            if( fp->argc > 2 ) {
+               (void)CONF.setParam( Config::PARAM_TELEM_TIMER, fp->argv[2] );
+            }
          }
 
          if( mode != Config::TELEM ) {

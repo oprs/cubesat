@@ -23,6 +23,7 @@ namespace qb50 {
       private:
 
          Modem   *_modem;
+         unsigned _tsMax;
          uint8_t *_x;
 
    };

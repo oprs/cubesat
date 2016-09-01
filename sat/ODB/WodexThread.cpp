@@ -158,7 +158,7 @@ void WodexThread::run( void )
          _modem = &M9K6;
       }
 
-      if(( mode != Config::TELEM ) && ( mode != Config::POWER )) {
+      if(( mode != Config::TELEM ) && ( mode != Config::POWER ) && ( mode != Config::CW )) {
          _modem->enable();
          _sendBacklog( _modem );
          _modem->send( &wod, _raw8, -1 );

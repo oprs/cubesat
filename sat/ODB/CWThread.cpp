@@ -59,9 +59,7 @@ static char dcCode( int dc )
 
 void CWThread::onSuspend( void )
 {
-   PC5.off();
-   PB15.off();
-   PB13.off();
+   BB.disable();
    Thread::onSuspend();
 }
 
@@ -69,6 +67,7 @@ void CWThread::onSuspend( void )
 void CWThread::onResume( void )
 {
    Thread::onResume();
+   BB.enable();
 }
 
 
@@ -77,9 +76,8 @@ void CWThread::run( void )
    char x[16];
    unsigned dt;
 
-   PB13.out().off();
-   PB15.out().off();
-   Morse cw( PC5 );
+   Baseband::Power p = (Baseband::Power)CONF.getParam( Config::PARAM_CW_POWER );
+   Morse cw( p );
 
    for( unsigned i = 0 ;; ++i ) {
 
