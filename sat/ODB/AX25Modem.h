@@ -3,18 +3,19 @@
 #define _QB50_ODB_AX25_MODEM_H
 
 #include "Modem.h"
+#include "system/E64.h"
 #include "device/STM32/STM32_EXTI.h"
 
 
 namespace qb50 {
 
-   class AX25Modem : public Modem, public STM32_EXTIHandler
+   class AX25Modem : public Modem, public STM32_EXTIHandler, public E64::Dumper
    {
 
       public:
 
          AX25Modem( const char *name, STM32_GPIO::Pin& enPin, STM32_GPIO::Pin& ckPin, STM32_GPIO::Pin& txPin );
-         ~AX25Modem();
+         virtual ~AX25Modem();
 
          AX25Modem&  init    ( void );
          AX25Modem&  enable  ( bool debug = false );
@@ -30,14 +31,17 @@ namespace qb50 {
 
          void handle( STM32_EXTI::EXTIn );
 
+         void dump( const char *x, unsigned len, bool mf );
+
 
       private:
 
          uint16_t _crc16   ( const uint8_t *x, unsigned len, uint16_t crc = 0xffff );
          void     _push    ( const uint16_t w, int toms );
 
-         void     _sendUI  ( const uint8_t *x, unsigned len, int toms = -1 );
-         void     _sendUIH ( const uint8_t *x, unsigned len, int toms = -1 );
+         void     _sendUI  ( const uint8_t *x, unsigned len,              int toms = -1 );
+         void     _sendUIX ( const uint8_t *x, unsigned len, uint8_t pfx, int toms = -1 );
+         void     _sendUIH ( const uint8_t *x, unsigned len,              int toms = -1 );
          void     _flush   ( void );
 
          STM32_GPIO::Pin& _enPin;   // enable pin

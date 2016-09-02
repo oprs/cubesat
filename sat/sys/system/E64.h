@@ -13,10 +13,21 @@ namespace qb50 {
 
       public:
 
+         class Dumper
+         {
+
+            public:
+
+               virtual ~Dumper() { ; }
+               virtual void dump( const char *x, unsigned len, bool mf ) = 0;
+
+         };
+
          E64( unsigned len = 384 );
          virtual ~E64();
 
          E64& push( const void *src, unsigned len );
+         E64& dump( Dumper *dumper );
          E64& dump( void );
 
 

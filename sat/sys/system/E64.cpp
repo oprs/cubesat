@@ -104,4 +104,22 @@ E64& E64::dump( void )
    return *this;
 }
 
+
+E64& E64::dump( Dumper *dumper )
+{
+   unsigned len = _off;
+   unsigned off = 0;
+
+   while( len > 0 ) {
+      bool     mf   = ( len > 64 );
+      unsigned blen = mf ? 64 : len;
+
+      len -= blen;
+      dumper->dump( _x + off, blen, mf );
+      off += blen;
+   }
+
+   return *this;
+}
+
 /*EoF*/

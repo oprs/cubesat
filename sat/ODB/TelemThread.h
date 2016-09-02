@@ -16,9 +16,10 @@ namespace qb50 {
          TelemThread();
          ~TelemThread();
 
-         void run       ( void );
-         void onSuspend ( void );
-         void onResume  ( void );
+         void     run       ( void );
+         void     onSuspend ( void );
+         void     onResume  ( void );
+
 
       private:
 

@@ -267,7 +267,23 @@ size_t AX25Modem::sendB64( WodStore::WEnt *wod, const void *x, int toms )
    (void)x;
    (void)toms;
 
+   E64 e64;
+
+   e64.push( (const uint8_t*)wod + 4, sizeof( WodStore::WEnt ) - 4 );
+   e64.push( x, wod->len );
+   e64.dump( this );
+
    return 0;
+}
+
+
+void AX25Modem::dump( const char *x, unsigned len, bool mf )
+{
+   if( mf ) {
+      _sendUIX( (const uint8_t*)x, len, '+', 1000 );
+   } else {
+      _sendUIX( (const uint8_t*)x, len, '=', 1000 );
+   }
 }
 
 
@@ -334,6 +350,59 @@ void AX25Modem::_sendUI( const uint8_t *x, unsigned len, int toms )
    /* FCS */
 
    fcs = _crc16( _ohdr, 16       );
+   fcs = _crc16( x,     len, fcs );
+   fcs ^= 0xffff;
+
+   w = fcs & 0xff;
+   _push( w, toms );
+
+   w = ( fcs >> 8 ) & 0xff;
+   _push( w, toms );
+
+   /* end flag */
+
+   _push( 0x017e, toms );
+
+   _flush();
+}
+
+
+void AX25Modem::_sendUIX( const uint8_t *x, unsigned len, uint8_t pfx, int toms )
+{
+   unsigned i;
+   uint16_t fcs, w;
+
+   if( len > 96 ) {
+      kprintf( "%s: [%.*s ...]\r\n", _name, 96, x );
+   } else {
+      kprintf( "%s: [%.*s]\r\n", _name, len, x );
+   }
+
+   _ones = 0;
+
+   /* start flags */
+
+   for( i = 0 ; i < 10 ; ++i )
+      _push( 0x017e, toms );
+
+   /* header */
+
+   for( i = 0 ; i < 16 ; ++i )
+      _push( _ohdr[ i ], toms );
+
+   /* prefix */
+
+   _push( pfx, toms );
+
+   /* data */
+
+   for( i = 0 ; i < len ; ++i )
+      _push( x[ i ], toms );
+
+   /* FCS */
+
+   fcs = _crc16( _ohdr, 16       );
+   fcs = _crc16( &pfx,  1,   fcs );
    fcs = _crc16( x,     len, fcs );
    fcs ^= 0xffff;
 
